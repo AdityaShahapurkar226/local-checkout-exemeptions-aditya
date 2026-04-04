@@ -1,0 +1,381 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare (strict_types = 1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductPage;
+use Magento\Catalog\Model\Product;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var ProductPage $productViewModel */
+$productViewModel = $viewModels->require(ProductPage::class);
+/** @var Product $product */
+$product    = $productViewModel->getProduct();
+$_helper    = $this->helper('Webkul\Marketplace\Helper\data');
+$ahyHelper  = $this->helper('Ahy\ThemeCustomization\Helper\Data');
+$sellerData = $_helper->getSellerProductDataByProductId($product->getId())->getData()[0] ?? null;
+
+$sellerId   = $sellerData['seller_id'] ?? 0;
+$shopUrl    = null;
+
+if ($sellerId) {
+    $sellerData = $_helper->getSellerDataBySellerId($sellerId)->getData()[0] ?? [];
+    $shopUrl    = strtolower(string: $sellerData['shop_url']) ?? null;
+}
+$isPatriotCooler = $shopUrl == 'patriotcoolers' ? 'true' : 'false';
+
+if (!$product->getDescription()) {
+    return;
+}
+
+$cssClasses = $block->getData('css_classes') ?? 'prose';
+$isAddProp69WarningEnabled = $product->hasData('add_prop_69_warning') ? $product->getData('add_prop_69_warning') : null;
+?>
+<div class="<?=$escaper->escapeHtmlAttr($cssClasses)?> description-ahy">
+    <div class="">
+        <div x-data="toggleText()">
+            <div
+                class="relative"
+                x-bind:class="{
+                    'max-h-96 md:max-h-[650px] overflow-hidden': !expanded && getShowCondition(),
+                    'text-ahy-blue overflow-visible': expanded || !getShowCondition()
+                }"
+                x-ref="container"
+                x-bind:style="expanded ? 'height: ' + ($refs.container.offsetHeight + 20) + 'px' : ''"
+            >
+
+                <?=html_entity_decode($productViewModel->productAttributeHtml($product, $product->getDescription(), 'description'))?>
+
+                <?php if ($isAddProp69WarningEnabled): ?>
+                    <div class="prop-69-warning">
+                        <p class="text-ahy-blue relative">
+                            <span class="warning-title" @click=""></span><span class=""></span>
+                            <div x-data="{ open: false }" class="relative">
+                                <div
+                                    class="ahy-warning-tooltip-arrow bg-white shadow-xl p-4 hidden 2xl:left-0 bottom-14 md:w-[83%] border-b-5 border-ahy-blue"
+                                    :class="{ 'hidden' : !open, 'flex flex-col absolute': open }"
+                                    x-show="open" @click.away="open = false"
+                                >
+                                    <div class="ahy-warning-tooltip-header flex items-baseline justify-between">
+                                        <div class="flex gap-2 items-center">
+                                            <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16">
+                                                <defs>
+                                                    <style>
+                                                        .cls-1123 {
+                                                            fill: none;
+                                                        }
+                                                        .cls-2123 {
+                                                            fill: #fff200;
+                                                            fill-rule: evenodd;
+                                                            stroke: #000;
+                                                            stroke-miterlimit: 10;
+                                                        }
+                                                    </style>
+                                                </defs>
+                                                <path class="cls-1123" d="m0,0h16v16H0V0Z" />
+                                                <path class="cls-2123" d="m6.9,1.7c.3-.6,1.1-.9,1.7-.6.2.1.4.2.5.4l.1.1,5.8,11.5c.3.6.1,1.4-.6,1.7-.2.1-.4.2-.5.2H2.2c-.6,0-1.2-.6-1.2-1.2,0-.1,0-.3.1-.4l.1-.1L6.9,1.7h0Z" />
+                                                <path d="m7.2,12.3c0-.4.3-.7.7-.7s.7.3.7.7-.3.7-.7.7-.7-.3-.7-.7Zm.3-1.7l-.2-5.8h1.2l-.2,5.8h-.8Z" />
+                                            </svg>
+                                            <span class="capitalize text-base sm:text-lg font-bold">WARNING - California Proposition 65</span>
+                                        </div>
+                                        <button @click="open=false" aria-label="Close panel" class="p-2 card rounded-full text-ahy-blue transition duration-150 ease-in-out hover:text-black">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="ahy-warning-tooltip-description">
+                                        <p class="text-sm font-medium">
+                                            This product contains chemicals known to the State of California to cause cancer and birth defects or other reproductive harm
+                                        </p>
+                                    </div>
+                                    <div class="ahy-warning-tooltip-button">
+                                        <span @click.prevent="redirectToLink('https://www.p65warnings.ca.gov')"  class="underline-offset-6 cursor-pointer">
+                                            www.p65warnings.ca.gov
+                                        </span>
+                                    </div>
+                                </div>
+                                <button @click="open = !open" class="ahy-warning-tooltip-button button">
+                                    <p><span class="ahy-warning-tooltip-text uppercase font-extrabold hover:underline underline-offset-6" :class="{'underline' : open}">warning</span> - California Proposition 65</p>
+                                </button>
+                            </div>
+
+                        </p>
+                    </div>
+                    <style>
+                        .ahy-warning-tooltip-arrow::after {
+                            content: "";
+                            position: absolute;
+                            top: 100%;
+                            left: 10%;
+                            margin-left: -15px;
+                            border-width: 15px;
+                            border-style: solid;
+                            border-color: #0d2f47 transparent transparent transparent;
+                        }
+                    </style>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", async function () {
+                            try {
+                                setTimeout(async function () {
+                                    var paragraphs = document.querySelectorAll('p');
+                                    var textToFind = "WARNING: This product can expose you to chemicals which are known to the State of California to cause cancer, birth defects or other reproductive harm. For more information go to P65Warnings.ca.gov.";
+                                    paragraphs.forEach(function (paragraph) {
+                                        if (paragraph.textContent.indexOf(textToFind) !== -1) {
+                                            paragraph.remove();
+                                        }
+                                    });
+                                }, 0);
+                            } catch (error) {
+                                console.error(error);
+                            }
+                        });
+                    </script>
+                <?php endif;?>
+                <div
+                    class="text-primary-500 read-more absolute left-0 right-0 flex justify-center items-end bottom-0 z-10 mx-auto cursor-pointer pb-12 text-center font-bold"
+                    @click="expanded = !expanded"
+                    x-bind:style="expanded ? 'display:none' : 'height: 100px'"
+                    x-show="getShowCondition()"
+                >
+                    <button x-text="expanded ? 'Read Less' : 'Read More' "
+                        class="test-ahy-blue h-16 w-48 rounded-full bg-ahy-blue text-center text-sm font-bold capitalize text-white hover:bg-[#092233]">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleText() {
+        return {
+            expanded: false,
+            init(){
+                this.removeEmptyPTags();
+                this.removeUnwantedTextFromDescription();
+                this.removeExtraBrTags();
+                this.removeInstallmentNote();
+                this.replaceAllLinks();
+                this.removeImageTags();
+                this.removeClickHereText();
+                this.removeH5DescriptionText();
+                this.removeIframe();
+            },
+            getShowCondition() {
+                if (window.innerWidth < 767) {
+                    return this.$refs.container.offsetHeight >= 200;
+                } else  {
+                    return this.$refs.container.offsetHeight >= 600;
+                }
+            },
+            removeEmptyPTags() {
+                const tabWrapper = document.getElementById('tab_wrapper');
+                if (tabWrapper) {
+                    const paragraphs = tabWrapper.querySelectorAll('p');
+                    paragraphs.forEach(paragraph => {
+                        if (!paragraph.textContent.trim()) {
+                            paragraph.remove();
+                        }
+                    });
+                }
+            },
+            removeImageTags() {
+                const container = this.$refs.container;
+                var isPatriotCooler = <?= $isPatriotCooler ?>;
+                if (container && isPatriotCooler) {
+                    const imageTags = container.querySelectorAll('img');
+                    if (imageTags.length > 0) {
+                        imageTags.forEach(image => {
+                            if(image){
+                                image.remove();
+                            }
+                        });
+                    }
+                }
+            },
+            removeExtraBrTags() {
+                const tabWrapper = document.getElementById('tab_wrapper');
+                if (tabWrapper) {
+                    const paragraphs = tabWrapper.querySelectorAll('p');
+                    paragraphs.forEach(paragraph => {
+                        let previousWasBr = false;  // Track if the previous element was a <br>
+                        const childNodes = Array.from(paragraph.childNodes); // Get child nodes
+
+                        childNodes.forEach(node => {
+                            if (node.nodeName === 'BR') {
+                                if (previousWasBr) {
+                                    node.remove(); // Remove extra <br> if there was already a <br> before
+                                } else {
+                                    previousWasBr = true; // Set to true when a <br> is encountered
+                                }
+                            } else if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+                                previousWasBr = false; // Reset when non-empty text is found
+                            }
+                        });
+                    });
+                }
+            },
+            removeIframe() {
+                const container = this.$refs.container;
+                if (container) {
+                    // Remove the div with ID 'popupContainer'
+                    const popupContainer = container.querySelector('#popupContainer');
+                    if (popupContainer) {
+                        popupContainer.remove();
+                    }
+
+                    // Remove the iframe with ID 'fitmixWidgetIframeContainer'
+                    const fitmixIframe = container.querySelector('#fitmixWidgetIframeContainer');
+                    if (fitmixIframe) {
+                        fitmixIframe.remove();
+                    }
+
+                    // Remove all buttons related to fitmix
+                    const fitmixButtons = container.querySelectorAll('button[onclick^="myFitmixWidget.setFrame"]');
+                    fitmixButtons.forEach(button => button.remove());
+
+                    // Remove the external script for 'fitmix.js'
+                    const fitmixScript = document.querySelector('script[src="//static.fittingbox.com/api/v1/fitmix.js"]');
+                    if (fitmixScript) {
+                        fitmixScript.remove();
+                    }
+
+                    // Remove inline styles or scripts specific to fitmix
+                    const fitmixStyles = container.querySelector('style');
+                    if (fitmixStyles && fitmixStyles.textContent.includes('#fitmixContainer')) {
+                        fitmixStyles.remove();
+                    }
+
+                    const inlineScripts = container.querySelectorAll('script');
+                    inlineScripts.forEach(script => {
+                        if (script.textContent.includes('FitMix') || script.textContent.includes('fitmix')) {
+                            script.remove();
+                        }
+                    });
+                }
+
+            },
+            removeH5DescriptionText() {
+                const container = this.$refs.container;
+                if (container) {
+                    // Select all h5 elements within the container
+                    const elements = container.querySelectorAll('h5');
+
+                    // Loop through the elements and remove those with "DESCRIPTION" text
+                    elements.forEach(element => {
+                        if (element.textContent.trim().toUpperCase() === 'DESCRIPTION') {
+                            element.remove();
+                        }
+                    });
+                }
+            },
+            removeUnwantedTextFromDescription() {
+                // Select the container using Alpine.js reference
+                let container = this.$refs.container;
+
+                if (container) {
+                    // Define the list of unwanted phrases
+                    const unwantedPhrases = [
+                        "Don't see your size? Shop our authorized retailers",
+                        "Fleet Farm",
+                        "Check out our unboxing on YouTube:",
+                        "Check out the YouTube video for more information:",
+                        "https://youtu.be/",
+                        "Lastly, we include Free Shipping in the continental United States (a $100+ value with today's shipping rates"
+                    ];
+
+                    // Find and remove elements containing any unwanted phrase
+                    container.querySelectorAll('p').forEach(element => {
+                        if (unwantedPhrases.some(phrase => element.textContent.includes(phrase))) {
+                            element.remove();
+                        }
+                    });
+                }
+            },
+            removeClickHereText() {
+                // Select the container using Alpine.js reference
+                let container = this.$refs.container;
+
+                if (container) {
+                    // Find all elements within the container
+                    let elements = container.querySelectorAll('*');
+
+                    // Loop through each element to check its text content
+                    elements.forEach(element => {
+                        if (element.textContent.includes('Click here to learn more about Maniac Outdoors Mineral Supplement & Attractant')) {
+                            // Remove the specific text from the element's content
+                            element.textContent = element.textContent.replace('Click here to learn more about Maniac Outdoors Mineral Supplement & Attractant', '');
+                        }
+                    });
+                }
+            },
+            removeInstallmentNote() {
+                // Select all anchor elements that contain the specific statement
+                var anchors = this.$refs.container.querySelectorAll('a[href="http://www.monsterbass.com/warranty"]');
+                // Check if any anchors were found
+                if (anchors) {
+                    // Loop through each selected anchor element
+                    anchors.forEach(function(anchor) {
+                        // Check if the anchor's text content contains the specific statement
+                        if (anchor.textContent.includes('NOTE: You can also pay in 4 monthly installments when you select SHOP Pay at checkout.')) {
+                            // Remove the anchor element from the DOM
+                            anchor.remove();
+                        }
+                    });
+                }
+            },
+            replaceAllLinks() {
+                const container = this.$refs.container;
+
+                if (!container) {
+                    return;
+                }
+
+                const links = container.querySelectorAll('a');
+
+                if (links.length === 0) {
+                    return;
+                }
+
+                links.forEach(link => {
+                    const span = document.createElement('span');
+                    span.innerHTML = link.innerHTML;
+                    link.parentNode.replaceChild(span, link);
+                });
+            },
+            redirectToLink(url) {
+                const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+                if (newWindow) {
+                    newWindow.opener = null;
+                }
+            }
+        }
+    }
+</script>
+
+<style>
+    .read-more{
+        background-image: linear-gradient(0deg, #fafafa 80%, rgba(255,254,255,0) 100%);
+    }
+    .read-more button{
+        filter: drop-shadow(0px 14px 17.5px rgba(13,47,71,0.38));
+    }
+    .prose.description-ahy :where(h2):not(:where([class~=not-prose],[class~=not-prose] *)),
+    .prose.description-ahy :where(p):not(:where([class~=not-prose],[class~=not-prose] *)){
+        margin-top: 0;
+        margin-bottom: 0.5em !important;
+    }
+</style>
+

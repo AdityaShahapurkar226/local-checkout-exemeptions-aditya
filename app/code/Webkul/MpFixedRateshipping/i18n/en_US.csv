@@ -1,0 +1,25 @@
+"Prices can't be negative.","Prices can't be negative."
+"Fixed Rate Shipping details saved successfully.","Fixed Rate Shipping details saved successfully."
+"Manage Fixed Rate Shipping","Manage Fixed Rate Shipping"
+Vendor,Vendor
+Product,Product
+"Fixed Rate Shipping","Fixed Rate Shipping"
+"* Required Fields","* Required Fields"
+"Fixed Rate Shipping Details","Fixed Rate Shipping Details"
+Save,Save
+"Shipping Cost","Shipping Cost"
+"Allow Free Shipping From Amount","Allow Free Shipping From Amount"
+"Webkul Marketplace Fixed Rate Shipping","Webkul Marketplace Fixed Rate Shipping"
+"Enabled for Checkout","Enabled for Checkout"
+Title,Title
+"Method Title","Method Title"
+"Default Shipping Price","Default Shipping Price"
+"Default Free Shipping From Amount","Default Free Shipping From Amount"
+"Ship to Applicable Countries","Ship to Applicable Countries"
+"All Allowed Countries","All Allowed Countries"
+"Ship to Specific Countries","Ship to Specific Countries"
+"Specific Countries","Specific Countries"
+"Shipping Based On","Shipping Based On"
+"Displayed Error Message","Displayed Error Message"
+"Show Method if Not Applicable","Show Method if Not Applicable"
+Debug,Debug

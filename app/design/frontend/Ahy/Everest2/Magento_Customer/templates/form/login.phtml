@@ -1,0 +1,173 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Customer\LoginButton;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\ViewModel\HeroiconsSolid;
+use Hyva\Theme\ViewModel\ReCaptcha;
+use Magento\Customer\Block\Form\Login;
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var Login $block */
+/** @var LoginButton $loginButtonViewModel */
+/** @var ViewModelRegistry $viewModels */
+/** @var ReCaptcha $recaptcha */
+/** @var HeroiconsOutline $heroiconsoutline */
+/** @var HeroiconsSolid $heroiconssolid */
+
+$heroiconsoutline = $viewModels->require(HeroiconsOutline::class);
+$heroiconssolid = $viewModels->require(HeroiconsSolid::class);
+$loginButtonViewModel = $viewModels->require(LoginButton::class);
+
+// Do not replace this with $viewModels->require(ReCaptcha::class); that might break the dependency
+// on the Magento_ReCaptchaCustomer module
+$recaptcha = $block->getData('viewModelRecaptcha');
+?>
+<div class="w-full md:w-4/5 card mr-12 bg-ahy-yellow-card p-8">
+    <div aria-labelledby="block-customer-login-heading">
+        <form class="form form-login"
+              action="<?= $escaper->escapeUrl($block->getPostActionUrl()) ?>"
+              method="post"
+              x-data="initCustomerLoginForm()"
+              @submit.prevent="submitForm()"
+              id="customer-login-form">
+            <?= $block->getBlockHtml('formkey') ?>
+            <fieldset class="fieldset login">
+                <legend class="mb-3">
+                    <h2 class="text-xl font-extrabold title-font text-primary ">
+                        <?= $escaper->escapeHtml(__('Sign In with Email')) ?>
+                    </h2>
+                </legend>
+                <div class="text-secondary-darker text-xs  mb-8">
+                    <span class="font-extrabold">
+                        <?= $escaper->escapeHtml(
+                            __('Sign In')
+                        ) ?>
+                    </span>
+                    <span class="font-medium">
+                        <?= $escaper->escapeHtml(
+                            __('to speed up checkout')
+                        ) ?>
+                    </span>
+                </div>
+                <div class="field email required pb-6">
+                    <label class="label font-bold" for="email"><span><?= $escaper->escapeHtml(__('Email *')) ?></span></label>
+                    <div class="control w-full">
+                        <input name="login[username]"
+                               class="form-input w-full !h-14"
+                               required
+                               value="<?= $escaper->escapeHtmlAttr($block->getUsername()) ?>"
+                            <?php if ($block->isAutocompleteDisabled()): ?>
+                                autocomplete="off"
+                            <?php endif; ?>
+                               id="email"
+                               type="email"
+                               title="<?= $escaper->escapeHtmlAttr(__('Email')) ?>"/>
+                    </div>
+                </div>
+                <div class="field password required pb-6">
+                    <label for="pass" class="label font-bold"><span><?= $escaper->escapeHtml(__('Password *')) ?></span></label>
+                    <div class="control flex items-center w-full relative pb-2">
+                        <input name="login[password]"
+                               class="form-input w-full !h-14"
+                               required
+                               :type="showPassword ? 'text' : 'password'"
+                            <?php if ($block->isAutocompleteDisabled()): ?>
+                                autocomplete="off"
+                            <?php endif; ?>
+                               id="pass"
+                               title="<?= $escaper->escapeHtmlAttr(__('Password')) ?>"/>
+                        <div x-on:click="showPassword = !showPassword"
+                             class="cursor-pointer px-4 absolute right-0"
+                             :aria-label="showPassword ? '<?= $escaper->escapeJs(__('Hide Password')) ?>' : '<?= $escaper->escapeJs(__('Show Password')) ?>'"
+                        >
+                            <template x-if="!showPassword">
+                                <?= $heroiconssolid->eyeHtml('w-5 h-5'); ?>
+                            </template>
+                            <template x-if="showPassword">
+                                <?= $heroiconssolid->eyeOffHtml('w-5 h-5'); ?>
+                            </template>
+                        </div>
+                    </div>
+                    <a href="<?= $escaper->escapeUrl( $block->getForgotPasswordUrl()) ?>">
+                        <span class="text-ahy-blue-light text-xs hover:text-primary-400 font-medium" >
+                            <?= $escaper->escapeHtml(__('Forgot password?')) ?>
+                        </span>
+                    </a>
+                </div>
+
+                <?= $recaptcha ? $recaptcha->getInputHtml(ReCaptcha::RECAPTCHA_FORM_ID_CUSTOMER_LOGIN) : '' ?>
+                <?= $block->getChildHtml('form_additional_info') ?>
+                <div class="flex justify-between pt-6 pb-2 items-center">
+                        <button 
+                            type="submit" 
+                            title="sign in" 
+                            name="send"
+                            class="btn ahy-custom-btn font-bold bg-ahy-red hover:bg-ahy-red-light h-12 rounded-full w-full focus:ring-transparent disabled:opacity-75"
+                            <?php if ($loginButtonViewModel->disabled()): ?> disabled="disabled" data-recaptcha-btn<?php endif; ?>
+                        >
+                            <span class="w-full text-sm py-3 md:py-0">
+                                <?= $escaper->escapeHtml(__('Sign In')) ?>
+                            </span>
+                        </button>
+                        
+                </div>
+                <div>
+                    <template x-if="displayErrorMessage">
+                        <p class="text-red flex items-center">
+                            <span class="inline-block w-8 h-8 mr-3">
+                                <?= $heroiconsoutline->exclamationCircleHtml(); ?>
+                            </span>
+                            <template x-for="errorMessage in errorMessages">
+                                <span x-html="errorMessage"></span>
+                            </template>
+                        </p>
+                    </template>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="w-full">
+        <?= $recaptcha ? $recaptcha->getLegalNoticeHtml(ReCaptcha::RECAPTCHA_FORM_ID_CUSTOMER_LOGIN) : '' ?>
+    </div>
+    <script>
+        function initCustomerLoginForm() {
+            return {
+                errors: 0,
+                hasCaptchaToken: 0,
+                showPassword: false,
+                displayErrorMessage: false,
+                errorMessages: [],
+                setErrorMessages(messages) {
+                    this.errorMessages = [messages]
+                    this.displayErrorMessage = this.errorMessages.length
+                },
+                submitForm() {
+                    // do not rename $form, the variable is the expected name in the recaptcha output
+                    const $form = document.querySelector('#customer-login-form');
+                    <?= $recaptcha ? $recaptcha->getValidationJsHtml(ReCaptcha::RECAPTCHA_FORM_ID_CUSTOMER_LOGIN) : '' ?>
+
+                    if (this.errors === 0) {
+                        $form.submit();
+                    }
+                }
+            }
+        }
+    </script>
+</div>
+
+<style>
+    .customer-account-login #customer-login-container.login-container{
+        max-width: 72rem;
+        margin: auto;
+    }
+</style>

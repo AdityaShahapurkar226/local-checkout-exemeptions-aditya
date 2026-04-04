@@ -1,0 +1,337 @@
+<section
+	class="Bethany Beathard h-full text-ahy-blue container relative text-white before:absolute before:bg-[#E2E0D7] before:-inset-1 before:left-1/2 before:z-[-1] before:-translate-x-1/2 before:w-screen h-full"
+>
+	<div class="hero-section text-center text-white sm:text-left flex flex-col mb-6  items-center justify-center gap-3 relative w-full h-[890px] sm:h-[1080px] md:h-[1340px] lg:h-[661px] xl:h-[677px] 2xl:h-[720px]  before:bg-[#687C4D] before:bg-no-repeat before:bg-left-top before:md:bg-[center_0] before:bg-cover before:absolute before:-inset-1 before:left-1/2 before:z-[-1] before:-translate-x-1/2 before:w-screen before:h-full">
+        <div class="flex lg:flex-row flex-col-reverse h-[100%] w-screen">
+            <div class="lg:w-[50%] w-[100%] flex flex-col justify-center items-center xl:gap-[24px] h-full sm:gap-[18px] gap-[36px]"><img src="/media/wysiwyg/creators/Bethany/Bethanylogo.png" width="83px" height="83px" alt="bethany Logo" " />
+		<h1 class="text-center leading-none text-[44px] sm:text-5xl md:text-[2.2rem] lg:text-[3.2rem] xl:text-[4.4rem] 2xl:text-[82px] font-extrabold uppercase xl:w-3/4 2xl:w-2/3 text-[#E9E6DE]">
+		Find Your Special Place
+		</h1>
+		<div class="flex justify-center items-center pt-[0.5rem]"><span class="border border-white w-[15rem] lg:w-72"></span></div>
+		<p class="text-center container pt-[0.5rem] sm:pt-[0.5rem] text-sm md:text-[0.7rem] lg:text-[0.88rem] xl:text-lg  md:w-[500px] text-[#E9E6DE] md:pt-[0px] text-white ">
+		Bethany's Personally Chosen Gear - Helping You Get To Your Very Own Special Place Outdoors
+		</p></div>
+        <div class="lg:w-[50%] w-[100%]">
+         <img src="/media/wysiwyg/creators/Bethany/Bethany-Beathard.png" class="h-full w-[100%] object-cover hidden lg:block" alt="image">
+		 <img src="/media/wysiwyg/creators/Bethany/hero-mobile.png" alt="Mobile image" class="h-full w-[100%] object-cover block lg:hidden">
+        </div>
+
+        </div>
+		<!-- <img src="/media/wysiwyg/creators/Bethany/Bethany_logo%402x.png" alt="bethany Logo"  class="w-[65px]" />
+		<h1 class="text-[44px] sm:text-5xl md:text-6xl text-center leading-none sm:leading-none lg:text-4rem font-extrabold uppercase xl:w-3/4 2xl:w-2/3 text-[#E9E6DE]">
+        Find Your Special Place With Bethany's Curated Gear
+		</h1>
+		<div class="flex justify-center items-center pt-2"><span class="border border-white w-32 lg:w-72"></span></div>
+		<p class="text-center pt-2 sm:pt-6 text-sm md:text-lg w-[500px] text-[#E9E6DE] ">
+		Bethany's Personally Chosen Gear - Helping You Get To Your Very Own Special Place Outdoors
+		</p> -->
+		<div x-data="scrollSmoothOnClick()" id="tab_wrapper" class="absolute -bottom-10 w-full">
+			<div class="tab-bg-line-desktop relative pb-4 flex justify-center">
+				<div class="bg-[#D8D2BE] tab-bg-mobile relative flex shadow-[4px_4px_40px_0px_rgba(0,0,0,0.5)] justify-center w-full md:w-[554px] rounded-full">
+					<button	
+						@click.prevent="scrollToRecommendation()"
+						class="mx-2 sm:mx-4 text-black uppercase h-16 text-xs sm:text-sm flex items-center hover:underline hover:decoration-2 hover:underline-offset-6 font-bold"
+					>
+						My Picks
+					</button>
+
+					<button
+						@click.prevent="scrollToAboutUs()"
+						class="mx-2 sm:mx-4 text-black uppercase h-16 text-xs sm:text-sm flex items-center hover:underline hover:decoration-2 hover:underline-offset-6 font-bold"
+					>
+						About
+					</button>
+
+					<button
+						@click.prevent="scrollToFeatured()"
+						class="mx-2 sm:mx-4 text-black uppercase h-16 text-xs sm:text-sm flex items-center hover:underline hover:decoration-2 hover:underline-offset-6 font-bold"
+					>
+                    gear up
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="curated-just-for-you flex flex-col lg:flex-row gap-6 py-12 my-12 justify-between relative">
+		<!-- <div class="absolute -translate-x-1/2 lg:-translate-x-1/2 top-[-1%] left-[-2%] lg:block hidden ">
+			
+			<img src="/media/wysiwyg/creators/Bethany/plant_background%402x.png" alt=" Bethany Beathard Curated Just For You" class="w-[57%]" />
+			<img src="/media/wysiwyg/creators/Bethany/Vector%402x.png" class="" alt="">
+		</div> -->
+		<!-- <div class="absolute -translate-x-1/2 lg:-translate-x-1/2 top-[-1%] left-[-2%] lg:hidden block ">
+		
+			<img src="/media/wysiwyg/creators/Bethany/Vector%402x.png" class="w-[57%]" alt="">
+		</div> -->
+		<div class="curated-products flex flex-col lg:flex-row gap-6 lg:gap-4 lg:w-[55%] order-2 lg:order-1 py-4">
+			<a href="/bexley-3-0-ripstop-tech-shirt-1.html" class="curated-main-product flex flex-col w-full lg:w-8/12 text-ahy-blue">
+				<div class="w-full flex justify-center items-center bg-white py-6">
+					<img src="/media/wysiwyg/creators/Bethany/Curated-Just-For-You/Bexley-3-Pullover.jpg" alt="Curated Main Product" class="w-full max-w-[400px] max-h-[400px] aspect-3/3 object-contain" />
+				</div>
+				<div class="flex justify-center items-center py-4 bg-white px-6"><span class="border-2 border-ahy-blue w-full px-6"></span></div>
+				<div class="curated-main-product-text bg-white px-6 pb-6 xl:pb-11">
+					<h1 class="font-bold pt-4 line-clamp-2 overflow-hidden h-16 xl:h-24 capitalize">Bexley 3.0 Shirt</h1>
+					<!-- <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p> -->
+				</div>
+			</a>
+			<div class="curated-thumb-product flex lg:flex-col gap-6 w-full lg:w-[30%] justify-between lg:justify-start items-center overflow-scroll lg:overflow-auto">
+				<a href="/bexley-3-0-ripstop-tech-pants-1.html">
+					<img src="/media/wysiwyg/creators/Bethany/Curated-Just-For-You/Bexley_3_RT_Edge.jpg" class="aspect-3/3 bg-white object-contain" width="192" height="192" alt="Curated Thumb Product" />
+				</a>
+				<a href="/dsg-heated-socks-5v-1.html">
+					<img src="/media/wysiwyg/creators/Bethany/Curated-Just-For-You/Heat_Sock.jpg" class="aspect-3/3 bg-white object-contain" width="192" height="192" alt="Curated Thumb Product" />
+				</a>
+				<a href="/malea-softshell-jacket-1.html">
+					<img src="/media/wysiwyg/creators/Bethany/Curated-Just-For-You/Malea_Softshell_Jacket.jpg" class="aspect-3/3 bg-white object-contain" width="192" height="192" alt="Curated Thumb Product" />
+				</a>
+			</div>
+		</div>
+		<div class="curated-content lg:w-2/5 order-1 lg:order-2 py-4 text-black">
+			<div class="flex flex-row items-center justify-start gap-6 pb-6 ">
+				<img src="/media/wysiwyg/creators/Bethany/Bethanylogo.png" alt="bethany Beathard Logo"  class="w-[43px]" />
+				<div class="font-bold text-4xl">X</div>
+				<div class="font-bold text-3xl">everest</div>
+			</div>
+			<h1 class="text-3xl lg:4xl xl:text-5xl lg:max-w-[400px] font-extrabold">CURATED JUST <br> FOR YOU.</h1>
+			<div class="flex justify-start items-center py-4"><span class="border  border-black w-32 lg:w-44"></span></div>
+			<p class="text-sm lg:max-w-[420px]">
+             We understand that every adventure is unique, and so is every adventurer. That's why we've chosen to partner with a creator that truly understands the outdoors.  We have worked closely with Bethany Beathard to curate a selection of gear tailored specifically for your next adventure, ensuring you're well-equipped for whatever challenges you face. Our experts have handpicked items based on Bethany's preferences for durability, adaptibility, and efficiency. From the latest in ultralight gear to weather-resistant apparel and high-tech gadgets, each piece is chosen to enhance your experience and performance. Our goal is to help you elevate your next journey with gear that's as ready as you are to explore the great outdoors, so you can forget the rest and focus on your next adventure.
+
+			</p>
+			<div class="hidden lg:flex mt-6 pt-6" x-data="scrollSmoothOnClick()">
+				<button class="rounded-full bg-black text-white h-16 w-full lg:w-52  font-extrabold hover:bg-ahy-blue-light hover:text-white duration-300 transition ease-in-out"	@click.prevent="scrollToRecommendation()">
+					Shop Now
+				</button>
+			</div>
+		</div>
+		<div class="lg:hidden order-3 w-full py-4" x-data="scrollSmoothOnClick()">
+			<button class="rounded-full bg-black text-white h-16 w-full lg:w-52  font-extrabold hover:bg-ahy-blue-light hover:text-white duration-300 transition ease-in-out"	@click.prevent="scrollToRecommendation()">
+				Shop Now
+			</button>
+		</div>
+	</div>
+	<div class="about-bethany flex flex-col lg:flex-row gap-4 lg:justify-between pb-12 mb-12" id="about-us">
+		<div class="about-content order-2 lg:order-1 w-full lg:w-[55.3%] xl:w-[43.8%] 2xl:w-[36.3%]">
+			<h1 class="text-3xl lg:4xl xl:text-5xl max-w-[500px] uppercase text-black font-extrabold">ABOUT BETHANY BEATHARD</h1>
+			<div class="flex justify-start items-center py-4"><span class="border border-black w-32 lg:w-44"></span></div>
+			<p class="text-sm text-black">
+            Bethany Beathard is an outdoor freelance writer and content creator. She is an avid sportswoman who is passionate about conservation and hunting heritage. She is a military wife and homeschooling mother of five. She grew up in rural Oklahoma on 55 acres. Her free range childhood has provided the foundation to advocate for parenting outdoor kids herself and sharing with others. She has written for several outdoor and hunting publications such as Hunting Life, Field & Stream, Everest, NWTF Turkey Call and more. She has done several speaking events geared towards women in the outdoors and supporting hunting heritage programs. Bethany graduated from California Baptist University in 2015, with a Bachelor of Science in Kinesiology.
+			</p>
+		</div>
+		<div class="bethany-Beathard-image order-1 lg:order-2 w-full lg:w-5/12 flex justify-center lg:justify-end">
+			<img src="/media/wysiwyg/creators/Bethany/secondary-image-desktop.webp" alt="bethany" height="610" width="610" class="hidden md:block" />
+			<img src="/media/wysiwyg/creators/Bethany/secondary-image-mobile.png" alt="bethany" height="610" width="610" class="block md:hidden" />
+		</div>
+	</div>
+	<div class="featured-product pb-8 md:pb-12 relative" id="featured">
+		
+		<div class="featured-product-heading flex gap-6 items-center justify-between">
+			<div class="flex justify-center hidden lg:block">
+				<img src="/media/wysiwyg/creators/Bethany/Bethanylogo.png" alt="Bethany" height="103px" width="103px" class="" />
+			</div>
+			<div class="lg:w-1/2 xl:w-3/5 2xl:w-8/12 hidden lg:block">
+				<div class="flex justify-start items-center py-4"><span class="border border-black w-full"></span></div>
+			</div>
+			<div class="flex justify-end">
+				<h1 class="font-bold text-lg text-black uppercase">
+					featured products
+				</h1>
+			</div>
+		</div>
+		<div class="featured-products-klevu">
+			<!-- Klevu Smart Recommendation products -->
+			<div class="klevu-recs h-[610px] klevuTarget" id="k-fa64a298-13c5-455e-9706-6eb60b2ee519" x-data="{ shown: false }" x-intersect="shown = true"></div>
+			<!-- initialization code for the swiper JS -->
+			<?php
+				echo $this->getLayout()
+				->createBlock('Magento\Cms\Block\Block')
+				->setBlockId('swiperjs-init-code')
+				->toHtml();
+			?>
+			<!-- get product swatches for configurable products in lightbox  -->
+			<?php
+				echo $this->getLayout()
+				->createBlock('Magento\Cms\Block\Block')
+				->setBlockId('get_product_swatches')
+				->toHtml();
+			?>
+		</div>
+	</div>
+	<div class="quote md:py-12 mb-12 flex flex-col items-center justify-center gap-8 relative">
+	<!-- <div class="absolute -translate-x-[-14%] top-[11%] left-[-12%] z-0">
+			<img src="/media/wysiwyg/creators/Bethany/antlers_background%402x.png" alt="  Bethany Beathard Curated Just For You" class="w-[50%]" />
+		</div> -->
+    
+        <div class="absolute top-[86%] -translate-x-1/2 right-[-1%] z-0 w-[16rem] h-[10rem]">
+			<img src="/media/wysiwyg/creators/Bethany/plant2-background.png" alt="Bethany Beathard Curated Just For You" class="w-[100%]" />
+		</div> 
+		<div class="flex flex-col items-center ">
+			<h1 class="font-league-gothic text-center pb-5 w-full md:w-4/5 lg:w-full xl:w-4/5 2xl:w-[74%] m-auto leading-none text-[42px] uppercase lg:text-[88px] text-[#687C4D]">"I'm just a traditional mom trying to raise my babies right! Jesus, Love, and the Outdoors"
+</h1>
+<span class="text-black">- Bethany Beathard</span>
+		</div>
+		<iframe 
+			width="1027" 
+			height="578" 
+			class="max-w-[1027px] w-full shadow-[4px_4px_40px_0px_rgba(0,0,0,0.5)] z-10 "
+			src="https://www.youtube.com/embed/NJczLogYRb0?si=TFeoPjCLJr_66pzB" 
+			title="YouTube video player" 
+			frameborder="0" 
+			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+			referrerpolicy="strict-origin-when-cross-origin" 
+			allowfullscreen
+            
+		>
+		</iframe>
+	</div>
+	<div class="complete-the-situation flex flex-col lg:flex-row justify-between items-start gap-8 pb-[10rem]  relative">
+		
+		<div class="complete-the-situation-heading lg:w-3/5">
+			<div class="flex gap-6 items-center py-6 lg:pt-12 lg:pb-8">
+				<h1 class="font-extrabold text-black text-lg md:text-xl uppercase w-full">
+					Complete The Situation
+				</h1>
+				<div class="lg:w-8/12 xl:w-full 2xl:w-[160%] hidden lg:block">
+					<div class="flex justify-start items-center py-4"><span class="border border-black w-full"></span></div>
+				</div>
+			</div>
+			<p class="text-sm pb-6 mb-6 md:pb-8 md:mb-8 lg:w-4/6 text-black">
+				Check out these top picks curated just for you to help complete the situation.  These picks will help you conquer your goals and make getting outdoors more exciting!
+			</p>
+			<div class="thumb-products flex  gap-6 w-full items-start overflow-scroll md:overflow-auto  ">
+				<a href="/heated-sock-5v-2-0-1.html" class="flex flex-col gap-8 w-1/3 items-center justify-center">
+					<div class="flex justify-center items-center bg-white w-full"><img src="/media/wysiwyg/creators/Bethany/Complete-The-Situation/Heated_Sock.jpg" class="aspect-3/3 bg-white object-contain" width="225" height="225" alt="Curated Thumb Product" /></div>
+					<div class="font-bold line-clamp-2 overflow-hidden h-12 text-black capitalize max-sm:hidden">Heated Sock 5V 2.0</div>
+				</a>
+				<a href="/ultra-lightweight-hunting-shirt-upf-50-1.html" class="flex flex-col gap-8 w-1/3 items-center justify-center">
+					<div class="flex justify-center items-center bg-white w-full"><img src="/media/wysiwyg/creators/Bethany/Complete-The-Situation/ULWCS.jpg" class="aspect-3/3 bg-white object-contain" width="225" height="225" alt="Curated Thumb Product" /></div>
+					<div class="font-bold line-clamp-2 overflow-hidden h-12 text-black capitalize max-sm:hidden">Ultra Lightweight Shirt - UPF 50+</div>
+				</a>
+				<a href="/breanna-2-0-fleece-drop-seat-bib-1.html" class="flex flex-col gap-8 w-1/3 items-center justify-center">
+					<div class="flex justify-center items-center bg-white w-full"><img src="/media/wysiwyg/creators/Bethany/Complete-The-Situation/DSG-Jacket.jpg" class="aspect-3/3 bg-white object-contain" width="225" height="225" alt="Curated Thumb Product" /></div>
+					<div class="font-bold line-clamp-2 overflow-hidden h-12 text-black capitalize max-sm:hidden">Breanna 2.0 Bib</div>
+				</a>
+			</div>
+		</div>
+		<div class="w-full lg:w-2/5 flex justify-end">
+			<div class="complete-the-situation-main-product flex flex-col w-full lg:w-10/12 text-ahy-blue">
+				<div class="w-full flex justify-center items-center bg-white py-6">
+					<img src="/media/wysiwyg/creators/Bethany/Complete-The-Situation/Breanna_2.0_Bib.jpg" alt="complete-the-situation Main Product" class="w-full max-w-[400px] max-h-[400px] aspect-3/3 object-contain" />
+				</div>
+				<div class="flex justify-center items-center py-4 bg-white px-6"><span class="border-2 border-ahy-blue w-full px-6"></span></div>
+				<div class="complete-the-situation-main-product-text bg-white px-6 pb-11">
+					<h1 class="font-bold py-4 capitalize">Breanna 2.0 Pullover</h1>
+					<a href="/breanna-2-0-fleece-pullover-1.html"
+						><button class="rounded-full bg-black h-16 w-full lg:w-52 text-white font-extrabold hover:bg-ahy-blue-light hover:text-white duration-300 transition ease-in-out">
+							Explore
+						</button></a
+					>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="other-recommendations pb-48 md:pb-56 lg:pb-60 relative before:absolute before:bg-[#687C4D] before:-inset-1 before:left-1/2 before:z-[-1] before:-translate-x-1/2 before:w-screen h-full" >
+		<div class="other-recommendations-heading flex gap-6 items-center justify-center h-[30px] lg:h-[70px] w-full">
+			<div class="flex justify-center relative bottom-[20px] lg:bottom-[44px] w-full">
+				<div class="w-full lg:w-1/2 xl:w-3/5 2xl:w-8/12 opacity-0">
+					<div class="flex justify-start items-center py-4"><span class="border border-ahy-white w-full"></span></div>
+				</div>
+				<div class="flex justify-center">
+					<img src="/media/wysiwyg/creators/Bethany/avatar.png" alt="Bethany Beathard Logo" height="192" width="192" class="" />
+				</div>
+				<div class="w-full lg:w-1/2 xl:w-3/5 2xl:w-8/12 opacity-0">
+					<div class="flex justify-start items-center py-4"><span class="border border-ahy-white w-full"></span></div>
+				</div>
+			</div>
+		</div>
+		<div class="py-8" id="recommendation">
+			<h1 class="text-center pb-5  m-auto text-[25px] font-extrabold md:text-[33px] w-full text-[#E9E6DE]">OTHER RECOMMENDATIONS FROM BETHANY</h1>
+			<p class="text-sm text-center text-white lg:w-[58%]  2xl:w-[38%] md:w-[69%] xl:w-[47%] w-[88%] m-auto">
+					
+			Gear specifically chosen so you can meet your potential in your passion outdoors.  The below handpicked gear will help you find your Everest.
+			</p>
+		</div>
+		<div class="other-recommendations-klevu xl:pl-[7rem] xl:pr-[7rem] pl-[2rem] pr-[2rem] lg:pr-[8.6rem] lg:pl-[8.6rem] 2xl:pr-[3.2rem] 2xl:pl-[3.2rem]" >
+			<!-- Klevu Smart Recommendation products -->
+			<div class="klevu-recs h-[610px] klevuTarget" id="k-ea69e3be-d329-45db-9ce2-e5f4c7a5764a"" x-data="{ shown: false }" x-intersect="shown = true"></div>
+			<!-- initialization code for the swiper JS -->
+			<?php
+				echo $this->getLayout()
+				->createBlock('Magento\Cms\Block\Block')
+				->setBlockId('swiperjs-init-code')
+				->toHtml();
+			?>
+			<!-- get product swatches for configurable products in lightbox  -->
+			<?php
+				echo $this->getLayout()
+				->createBlock('Magento\Cms\Block\Block')
+				->setBlockId('get_product_swatches')
+				->toHtml();
+			?>
+		</div>
+	</div>
+</section>
+<script id="smooth-scroll">
+	function scrollSmoothOnClick() {
+		return {
+			scrollToAboutUs() {
+				const aboutUsEl = document.getElementById("about-us");
+				if (aboutUsEl) {
+					aboutUsEl.scrollIntoView({
+						behavior: "smooth",
+					});
+				}
+			},
+			scrollToFeatured() {
+				const featuredEl = document.getElementById("featured");
+				if (featuredEl) {
+					featuredEl.scrollIntoView({
+						behavior: "smooth",
+					});
+				}
+			},
+			scrollToRecommendation() {
+				const recommendationEl = document.getElementById("recommendation");
+				if (recommendationEl) {
+					recommendationEl.scrollIntoView({
+						behavior: "smooth",
+					});
+				}
+			},
+		};
+	}
+</script>
+<script>
+	// Get all elements with the class "capitalize"
+	var elements = document.querySelectorAll('.capitalize');
+
+	// Function to capitalize the first letter of each word
+	function capitalizeFirstLetter(str) {
+		return str.toLowerCase().replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+	}
+
+	// Iterate over each element
+	elements.forEach(function(element) {
+		// Get the text content of the element
+		var text = element.textContent || element.innerText;
+
+		// Capitalize the text
+		var capitalizedText = capitalizeFirstLetter(text);
+
+		// Set the capitalized text as the new content of the element
+		element.textContent = capitalizedText;
+	});
+
+</script>
+<style>
+	.featured-products-klevu h3.kuRECSTitle.uppercase.text-ahy-blue,
+	.other-recommendations-klevu h3.kuRECSTitle.uppercase.text-ahy-blue 
+	{
+		display: none;
+	}
+	[data-pb-style="NDRAL2K"]>div,
+	[data-pb-style="DRI0V0M"],
+	[data-pb-style="OIXNYXR"]
+	{
+		padding: 0 !important;
+	}
+</style>

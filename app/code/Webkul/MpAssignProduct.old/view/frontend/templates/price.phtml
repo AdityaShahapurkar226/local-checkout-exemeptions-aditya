@@ -1,0 +1,26 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+    $mpAssignBlock = $block->getLayout()->createBlock(\Webkul\MpAssignProduct\Block\Link::class);
+    $productId = $block->getProduct()->getId();
+    $helper = $mpAssignBlock->getHelperObject();
+    $collection = $helper->getAssignProductCollection($productId);
+    $collection->addFieldToFilter('main_table.status', 1);
+    $totalSellers = $collection->getSize();
+?>
+<?php if ($totalSellers > 0): ?>
+    <div class="wk-ap-price-block">
+        <div class="wk-ap-available-sellers">
+            <a href="#wk_list_header"><?= /* @noEscape */ __('Available from %1 more seller(s)', $totalSellers);  ?></a>
+        </div>
+    </div>
+<?php endif; ?>

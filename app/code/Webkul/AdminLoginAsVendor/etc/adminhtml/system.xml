@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_AdminLoginAsVendor
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="webkul" translate="label" sortOrder="10" class="wk-config-tab-class">
+            <label>Webkul</label>
+        </tab>
+        <section id="adminloginasvendor" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>AdminLoginAsVendor</label>
+            <tab>webkul</tab>
+            <resource>Webkul_AdminLoginAsVendor::adminloginasvendor_config</resource>
+            <!-- create group for fields in section -->
+            <group id="general_settings" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+                <field id="enable" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Module Enable/Disable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,20 @@
+{
+    "name": "webkul/seller-price-comparision",
+    "description": "Magento 2 Marketplace Seller Price Comparison",
+    "require": {
+        "webkul/module-marketplace": "5.0.*"
+    },
+    "type": "magento2-module",
+    "version": "4.1.0",
+    "license": [
+        "proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Webkul\\MpAssignProduct\\": ""
+        }
+    }
+}

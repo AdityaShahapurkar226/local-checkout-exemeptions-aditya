@@ -1,0 +1,70 @@
+//
+// Porto Compatibility Styles
+// __________________________
+
+//
+//  Common
+//  ----------------------------------------------
+
+& when (@media-common = true) {
+    .am-porto-cmtb {
+        .amrelated .product-item-details .product-item-actions {
+            & {
+                display: flex;
+                justify-content: center;
+                margin: 0;
+            }
+            
+            .actions-primary {
+                margin: 0 5px 0 0;
+            }
+        }
+        
+        .products-grid {
+            .product-item-details .product-item-actions {
+                margin: 0;
+                text-align: left;
+            }
+            
+            .product-item .product-item-inner {
+                margin: 10px 0;
+            }
+            
+            .product-item-actions .actions-secondary {
+                padding: 0;
+            }
+        }
+        
+        .wishlist.split.button {
+            & {
+                margin-right: 0;
+            }
+            
+            .change.action {
+                display: none;
+            }
+        }
+        
+        .product-items.slick-slider .slick-slide {
+            & {
+                margin: 0 10px;
+            }
+            
+            .to-cart {
+                padding: 0 8px;
+            }
+            
+            .product-item {
+                max-width: 100%;
+            }
+            
+            .product-item-actions {
+                text-align: center;
+            }
+            
+            .action.split {
+                margin-right: 0;
+            }
+        }
+    }
+}

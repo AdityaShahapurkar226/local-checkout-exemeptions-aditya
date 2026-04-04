@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceBaseShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */ 
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Webkul_MarketplaceBaseShipping::css/style.css"/>
+    </head>
+    <body>
+        <referenceContainer name="marketplace_order_shipment_view">
+            <block class="Webkul\Marketplace\Block\Order\View"  name="base_shipping_create_shipment" template="Webkul_MarketplaceBaseShipping::order/manageorder.phtml"/>
+        </referenceContainer>
+        <referenceBlock name="base_shipping_create_shipment">
+            <!-- <block class="Magento\Shipping\Block\Adminhtml\Order\Tracking" name="shipment_tracking" template="Magento_Shipping::order/tracking.phtml"/> -->
+            <block class="Webkul\MarketplaceBaseShipping\Block\Order\Packaging" name="shipment_packaging" template="Webkul_MarketplaceBaseShipping::order/packaging/popup.phtml"/>
+        </referenceBlock>
+    </body>
+</page>

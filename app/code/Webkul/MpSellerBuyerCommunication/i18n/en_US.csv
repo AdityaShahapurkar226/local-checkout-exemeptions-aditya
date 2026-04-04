@@ -1,0 +1,158 @@
+Back,Back
+"Send Message","Send Message"
+Reply,Reply
+"My Seller Communication History","My Seller Communication History"
+"Buyer's Communication History","Buyer's Communication History"
+"My Communication History","My Communication History"
+"Seller Buyer Communication Query List","Seller Buyer Communication Query List"
+"A total of %1 record(s) have been approved.","A total of %1 record(s) have been approved."
+"A total of %1 record(s) have been deleted.","A total of %1 record(s) have been deleted."
+"A total of %1 record(s) have been disapproved.","A total of %1 record(s) have been disapproved."
+"File can not be saved to the destination folder.","File can not be saved to the destination folder."
+"%1 is not a valid file.","%1 is not a valid file."
+Guest,Guest
+Seller,Seller
+Admin,Admin
+"The message has been sent successfully.","The message has been sent successfully."
+"Seller Buyer Communication Query View","Seller Buyer Communication Query View"
+Customer,Customer
+--Select--,--Select--
+Presale,Presale
+Support,Support
+Technical,Technical
+Other,Other
+Approved,Approved
+Disapprove,Disapprove
+Pending,Pending
+Resolved,Resolved
+Closed,Closed
+"Email Id","Email Id"
+Content,Content
+"Product Name","Product Name"
+"Unknown template type","Unknown template type"
+None,None
+Contact,Contact
+View,View
+"View Customer","View Customer"
+"View Product","View Product"
+"Customer: %1","Customer: %1"
+Administrator,Administrator
+"Seller: %1","Seller: %1"
+"Support Type","Support Type"
+"Customer Name","Customer Name"
+"Customer Email","Customer Email"
+Subject,Subject
+"Your Query","Your Query"
+"Add Image/File","Add Image/File"
+Remove,Remove
+"Add More","Add More"
+" enable to varifiy captcha"," enable to varifiy captcha"
+"Filter By ","Filter By "
+Search,Search
+Submit,Submit
+"No communication history available.","No communication history available."
+"Seller Name","Seller Name"
+"Query Status","Query Status"
+"Created At","Created At"
+Action,Action
+"* Required Fields","* Required Fields"
+"If you have an account, sign in with your email address.","If you have an account, sign in with your email address."
+Email,Email
+Password,Password
+"Please type the letters and numbers below","Please type the letters and numbers below"
+"Reload Captcha","Reload Captcha"
+"<strong>Attention</strong>: Captcha is case sensitive.","<strong>Attention</strong>: Captcha is case sensitive."
+"Sign In","Sign In"
+"Forgot Your Password?","Forgot Your Password?"
+"Query Regarding Product","Query Regarding Product"
+"Query Regarding Order","Query Regarding Order"
+Me,Me
+"Enter Message","Enter Message"
+"Add More image","Add More image"
+"Allowed Files","Allowed Files"
+"You are not authorize to view this conversation.","You are not authorize to view this conversation."
+"Your Name","Your Name"
+"Your Email","Your Email"
+"View Map","View Map"
+Profile,Profile
+Reviews,Reviews
+"Contact Sellers","Contact Sellers"
+"% response rate,","% response rate,"
+"-mins response time","-mins response time"
+"Return Policy","Return Policy"
+"Shipping Policy","Shipping Policy"
+"Seller's Collection","Seller's Collection"
+"%1 Products","%1 Products"
+"View Seller's Collection","View Seller's Collection"
+"View All","View All"
+"View Location on Map","View Location on Map"
+"To Become Seller Please Contact to Admin.","To Become Seller Please Contact to Admin."
+"%1 Product","%1 Product"
+"Visit Shop","Visit Shop"
+"positive feedback","positive feedback"
+"%1 ratings","%1 ratings"
+Price,Price
+Value,Value
+Quality,Quality
+"Contact Seller","Contact Seller"
+"View All %1 Products","View All %1 Products"
+"Sold By","Sold By"
+Close,Close
+"Choose an appropriate reason to flag","Choose an appropriate reason to flag"
+Reset,Reset
+"Thank you.","Thank you."
+"Your report against ","Your report against "
+" has been submitted."," has been submitted."
+"We will re-verify the product Information and 
+see if it violates any of our policy or selling guidelines.","We will re-verify the product Information and 
+see if it violates any of our policy or selling guidelines."
+"%customer_name,","%customer_name,"
+"I would like to ask a question regarding the product.","I would like to ask a question regarding the product."
+Question,Question
+"Custom image","Custom image"
+"A customer asked a query to seller.","A customer asked a query to seller."
+"Thank you for the query. We will reply you shortly.","Thank you for the query. We will reply you shortly."
+"A Reply mail has come from ","A Reply mail has come from "
+" regarding query. Please "," regarding query. Please "
+"Click Here","Click Here"
+" to view conversation."," to view conversation."
+Message,Message
+" regarding query."," regarding query."
+"Admin would like to ask a question regarding the order.","Admin would like to ask a question regarding the order."
+"Order Id","Order Id"
+"A customer asked a query to seller regarding order.","A customer asked a query to seller regarding order."
+"I would like to ask a question regarding the order.","I would like to ask a question regarding the order."
+"A seller asked a query to customer.","A seller asked a query to customer."
+"Seller Email","Seller Email"
+"Report Product","Report Product"
+"Invalid extension! allowed extension are ","Invalid extension! allowed extension are "
+"Seller Buyer Communication","Seller Buyer Communication"
+"Admin Settings","Admin Settings"
+"Enable Message Notification to Admin","Enable Message Notification to Admin"
+"Order Status","Order Status"
+"Query Auto Approval","Query Auto Approval"
+"Allow Guest Customer to ask Query","Allow Guest Customer to ask Query"
+"Conversations will only be visible to logged in customers","Conversations will only be visible to logged in customers"
+"Send Mail from Seller Email Id","Send Mail from Seller Email Id"
+"Transactional Emails","Transactional Emails"
+"Ask Query Mail Notification to Customer Regarding Product","Ask Query Mail Notification to Customer Regarding Product"
+"Ask Query Mail Notification to Admin Regarding Product","Ask Query Mail Notification to Admin Regarding Product"
+"Communication Mail Notification to Admin","Communication Mail Notification to Admin"
+"Communication Mail Notification to Customer","Communication Mail Notification to Customer"
+"Ask Order Query Mail Notification","Ask Order Query Mail Notification"
+"Ask Order Query from Seller Mail Notification to Admin","Ask Order Query from Seller Mail Notification to Admin"
+"Ask Order Query from Customer Mail Notification to Admin","Ask Order Query from Customer Mail Notification to Admin"
+"Ask Order Query From Admin Notification to Customer","Ask Order Query From Admin Notification to Customer"
+Approve,Approve
+Delete,Delete
+"Are you sure you wan't to delete selected query record?","Are you sure you wan't to delete selected query record?"
+ID,ID
+Status,Status
+Created,Created
+"Are you sure you want to delete selected message record?","Are you sure you want to delete selected message record?"
+"Sender Name","Sender Name"
+"Send By","Send By"
+"Data Information","Data Information"
+"Communication Details","Communication Details"
+"Allowed file types: jpeg, jpg, png, gif, zip, doc, pdf, rar, xls, xlsx, csv.","Allowed file types: jpeg, jpg, png, gif, zip, doc, pdf, rar, xls, xlsx, csv."
+"Seller Communication History","Seller Communication History"

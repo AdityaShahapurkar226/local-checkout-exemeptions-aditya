@@ -1,0 +1,42 @@
+<?php
+// $json = file_get_contents('/categories.json'); // Use this at the time of launch
+$categoriesFilePath = BP . '/pub/categories.json';
+
+$json = file_get_contents($categoriesFilePath);
+function displayCategory($category)
+{
+    if($category->status == 'Active'){
+        echo '<ul class="category-list">';
+        echo '<li>';
+        echo '<a href="' . $category->url . '">' . $category->name . '</a>';
+        if(!empty($category->children)) {
+            foreach($category->children as $subcategory) {
+                displayCategory($subcategory);
+            }
+        }
+        echo '</li>';
+        echo '</ul>';
+    }
+}
+?>
+<div class="sitemap-container">
+    <?php
+    foreach($categories as $category) {
+        displayCategory($category);
+    }
+    ?>
+</div>
+
+<style>
+.category-list {
+    margin-left: 20px;
+}
+.category-list a {
+    color: #333;
+    text-decoration: none;
+}
+.category-list a:hover {
+    color: #007BFF;
+    text-decoration: underline;
+}
+</style>

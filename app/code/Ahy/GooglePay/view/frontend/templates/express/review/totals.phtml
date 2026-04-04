@@ -1,0 +1,41 @@
+<?php
+/**
+ *
+ * @var \Ahy\GooglePay\Block\Cart\Totals $block
+ */
+
+$totals = $block->getTotals();
+
+?>
+
+<div class="mt-8 border-t pt-4 googlepay_review_border">
+    <table class="w-full text-sm text-gray-700">
+        <tbody>
+            <?php foreach ($totals as $code => $total): ?>
+                <?php
+                    $label = $total->getTitle();
+                    $value = $total->getValue();
+                    $formattedValue = $block->formatPrice($value);
+
+                    $isGrand = ($code === 'grand_total');
+                    $rowClass = $isGrand ? 'font-bold text-black border-t border-gray-300 pt-2 googlepay_review_border' : '';
+                ?>
+                <tr class="<?= $rowClass ?>">
+                    <th class="text-left py-2"><?= $block->escapeHtml($label) ?></th>
+                    <td class="text-right py-2"><?= $block->escapeHtml($formattedValue) ?></td>
+                </tr>
+            <?php endforeach; ?>
+
+            <?php if ($block->needDisplayBaseGrandtotal()): ?>
+                <tr class="text-gray-600 text-sm italic">
+                    <th class="text-left py-2">
+                        <?= $block->escapeHtml(__('Base Grand Total')) ?>
+                    </th>
+                    <td class="text-right py-2">
+                        <?= $block->displayBaseGrandtotal() ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>

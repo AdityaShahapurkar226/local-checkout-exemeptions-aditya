@@ -1,0 +1,32 @@
+<div class="checkout-header-content flex md:px-16 px-4 py-6 justify-between bg-ahy-bg">
+     <script>
+        function checkoutHeader() {
+            return {
+                isTooltipVisible: false,
+                handleLogoClicked() {
+                    this.isTooltipVisible = !this.isTooltipVisible;
+                },
+            }
+        }
+    </script>
+    <div class="everest-logo w-32 h-8 sm:w-44" x-data="checkoutHeader()">
+        <img src="/media/logo/default/everest-logo.png" alt="everest logo" @click="handleLogoClicked" @click.outside="isTooltipVisible = false" class="cursor-pointer">
+        <template x-if="isTooltipVisible" class="">
+            <div class="absolute bg-ahy-yellow-card p-4 rounded-md text-sm z-10 mt-4 card border-t-4 border-ahy-blue">
+                <svg class="transition text-ahy-blue duration-300 translate-x-12 -translate-y-4 transform ease-in-out absolute z-10 w-10 h-4 top-0 fill-current stroke-current" x-show="open" width="8" height="8">
+                    <rect x="18" y="-16" width="20" height="20" transform="rotate(45)"></rect>
+                </svg>
+                <div class="flex gap-2 ">
+                    <a href="javascript:void(0)"><button class="capitalize bg-ahy-green hover:bg-ahy-rating-green transition duration-300 ease-in-out text-white p-4 rounded-md font-bold">Stay in checkout</button></a>
+                    <a href="/checkout/cart"><button class="capitalize bg-ahy-yellow hover:bg-white transition duration-300 ease-in-out text-ahy-blue p-4 rounded-md font-semibold mr-2">Return to cart</button></a>
+                </div>
+            </div>
+        </template>
+    </div>
+    <div class="secured-logo flex items-end justify-center lending-[normal]">
+        <svg id="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.66 20" class="w-5 h-auto mr-2 mb-1"><defs><style>.cls-121{fill:#0d2f47;}</style></defs>
+            <path class="cls-1" d="M4,5.35a3.35,3.35,0,0,1,6.7,0v.87h2V5.35A5.35,5.35,0,0,0,2,5.35v.87H4Z"></path><path class="cls-121" d="M13.66,8.22H1a1,1,0,0,0-1,1V19a1,1,0,0,0,1,1H13.66a1,1,0,0,0,1-1V9.22A1,1,0,0,0,13.66,8.22ZM7.83,17.05a.5.5,0,0,1-1,0V15.12a2,2,0,1,1,1,0Z"></path>
+        </svg>
+        <span class="text-ahy-blue font-bold">SECURED</span>
+    </div>
+</div>

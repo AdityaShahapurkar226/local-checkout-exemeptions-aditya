@@ -1,0 +1,37 @@
+status,category,name,description,short_description,sku,price,special_price,special_from_date,special_to_date,tax_class_id,is_in_stock,stock,weight,images,meta_title,meta_keyword,meta_description,color,manufacturer,custom_option,tier_price,attribute_mapping_category,related_skus,crosssell_skus,upsell_skus,seller_id
+1,"Men,Women",Simple1,Simple1,Simple1,Simple1,100,80,2017-05-30,2018-05-29,Taxable Goods,In Stock,10000,1,"1.jpg,2.jpg",Simple Product,Simple Product 1,Simple Product,Red,Nike,"[
+  {
+    ""is_require"": 1,
+    ""title"": ""Color"",
+    ""type"": ""drop_down"",
+    ""sort_order"": 0,
+    ""sku"": ""co01"",
+    ""values"": [
+ {""title"":""cream"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co011"",""sort_order"": 5},{""title"":""cream1"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co012"",""sort_order"": 5}  ]
+  }, {
+    ""is_require"": 1,
+    ""title"": ""Color2"",
+    ""type"": ""drop_down"",
+    ""sort_order"": 0,
+    ""sku"": ""co02"",
+    ""values"": [
+ {""title"":""cream"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co021"",""sort_order"": 5},{""title"":""cream1"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co022"",""sort_order"": 5}  ]
+  }]","[
+  {
+    ""cust_group"": ""ALL GROUPS"",
+    ""price_qty"": ""2"",
+    ""price"": ""10""
+  }, {
+    ""cust_group"":""Wholesale"" ,
+    ""price_qty"": ""10"",
+    ""price"": ""40""
+  }]",Men,,,,
+1,"Men,Women",Simple2,Simple2,Simple2,Simple2,101,81,2017-05-29,2018-05-28,Taxable Goods,In Stock,10001,2,"3.jpg,4.jpg",Simple Product,Simple Product 1,Simple Product,Black,Nike,,,Men,Simple1,Simple1,Simple1,
+1,"Men,Women",Simple3,Simple3,Simple3,Simple3,102,82,2017-05-28,2018-05-27,Taxable Goods,In Stock,10002,3,"5.jpg,6.jpg",Simple Product,Simple Product 2,Simple Product,Blue,Nike,,,Men,"Simple1,Simple2","Simple1,Simple2","Simple1,Simple2",
+1,"Men,Women",Simple4,Simple4,Simple4,Simple4,103,83,2017-05-27,2018-05-26,Taxable Goods,In Stock,10003,4,"7.jpg,8.jpg",Simple Product,Simple Product 3,Simple Product,White,Nike,,,Women,"Simple2,Simple3","Simple2,Simple3","Simple2,Simple3",
+1,"Men,Women",Simple5,Simple5,Simple5,Simple5,104,84,2017-05-26,2018-05-25,Taxable Goods,In Stock,10004,5,"9.jpg,10.jpg",Simple Product,Simple Product 4,Simple Product,Black,Nike,,,Women,"Simple3,Simple4","Simple3,Simple4","Simple3,Simple4",
+1,"Men,Women",Simple6,Simple6,Simple6,Simple6,105,85,2017-05-25,2018-05-24,Taxable Goods,In Stock,10005,6,"11.jpg,12.jpg",Simple Product,Simple Product 5,Simple Product,Black,Nike,,,Women,"Simple4,Simple5","Simple4,Simple5","Simple4,Simple5",

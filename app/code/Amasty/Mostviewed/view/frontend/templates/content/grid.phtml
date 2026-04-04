@@ -1,0 +1,165 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */
+/**
+ * @var \Amasty\Mostviewed\Block\Widget\Related $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @codingStandardsIgnoreFile
+ */
+?>
+<?php if ($block->getProductCollection() && $block->getProductCollection()->getSize()) : ?>
+    <?php
+    $type = 'widget-product-grid';
+
+    $mode = 'grid';
+
+    $image = 'related_products_content';
+    $items = $block->getProductCollection()->getItems();
+
+    $isSlider = $block->getBlockLayout();
+    $tagWrap = $isSlider ? 'div' : 'ol';
+    $tag = $isSlider ? 'div' : 'li';
+
+    $showWishlist = $block->getDisplayButtonWishlist();
+    $showCompare = $block->getDisplayButtonCompare();
+    $showCart = $block->getAddToCart();
+    $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    $description = false;
+    ?>
+
+    <div class="block <?= /* @noEscape */ $block->getCssClass() ?> amrelated-grid-wrapper block-products-list <?= /* @noEscape */ $mode ?>"
+         id="amrelated-block-<?= (int)$block->getGroupId();?>">
+        <?php if ($block->getTitle()) : ?>
+            <div class="block-title">
+                <strong><?= $escaper->escapeHtml(__($block->getTitle())) ?></strong>
+            </div>
+        <?php endif; ?>
+        <div class="block-content">
+            <div class="products-<?= /* @noEscape */ $mode ?> <?= /* @noEscape */ $mode ?>">
+                <<?= /* @noEscape */ $tagWrap?> class="product-items <?= /* @noEscape */ $type ?>" <?= /* @noEscape */ $isSlider ? 'data-amrelated-js="slider"' : ''?>>
+                    <?php $iterator = 1; ?>
+                    <?php foreach ($items as $item) : ?>
+                        <?= /* @noEscape */ ($iterator++ == 1) ? '' : '</' . $tag . '>' ?><<?= /* @noEscape */ $tag?> class="product-item">
+
+                        <div class="product-item-info">
+                            <a href="<?= $escaper->escapeUrl($block->getProductUrl($item)) ?>" class="product-item-photo">
+                                <img src="<?= $escaper->escapeHtmlAttr($block->getImage($item, $image)->getImageUrl()) ?>"
+                                     alt="<?= $escaper->escapeHtml($item->getName()) ?>"/>
+                            </a>
+                            <div class="product-item-details">
+                                <strong class="product-item-name">
+                                    <a title="<?= $escaper->escapeHtml($item->getName()) ?>"
+                                       href="<?= $escaper->escapeUrl($block->getProductUrl($item)) ?>"
+                                       class="product-item-link">
+                                        <?= $escaper->escapeHtml($item->getName()) ?>
+                                    </a>
+                                </strong>
+                                <?php if ($templateType) : ?>
+                                    <?= /* @noEscape */ $block->getReviewsSummaryHtml($item, $templateType) ?>
+                                <?php endif; ?>
+                                <?= /* @noEscape */ $block->getProductPriceHtml($item, \Magento\Catalog\Pricing\Price\FinalPrice::PRICE_CODE) ?>
+                                <?= $block->getBrandLogoHtml($item) ?>
+                                <?php if ($showWishlist || $showCompare || $showCart) : ?>
+                                    <div class="product-item-actions">
+                                        <?php if ($showCart) : ?>
+                                            <div class="actions-primary">
+                                                <?php if ($item->isSaleable()) : ?>
+                                                    <?php
+                                                        $postDataHelper = $this->helper(\Magento\Framework\Data\Helper\PostHelper::class);
+                                                        $postData = $postDataHelper->getPostData($block->getAddToCartUrl($item), ['product' => $item->getEntityId()])
+                                                    ?>
+                                                    <button class="action tocart primary"
+                                                            data-post='<?= /* @noEscape */ $postData ?>'
+                                                            data-amrelated-button="tocart"
+                                                            type="button"
+                                                            title="<?= /* @noEscape */ __('Add to Cart') ?>">
+                                                        <?= /* @noEscape */ __('Add to Cart') ?>
+                                                    </button>
+                                                <?php else : ?>
+                                                    <?php if ($item->getIsSalable()) : ?>
+                                                        <div class="stock available">
+                                                            <span><?= $escaper->escapeHtml(__('In stock')) ?></span>
+                                                        </div>
+                                                    <?php else : ?>
+                                                        <div class="stock unavailable">
+                                                            <span><?= $escaper->escapeHtml(__('Out of stock')) ?></span>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                        <?php if ($showWishlist || $showCompare) : ?>
+                                            <div class="actions-secondary" data-role="add-to-links">
+                                                <?php if ($this->helper(\Magento\Wishlist\Helper\Data::class)->isAllow() && $showWishlist) : ?>
+                                                    <a href="#"
+                                                       data-post='<?= /* @noEscape */ $block->getAddToWishlistParams($item) ?>'
+                                                       class="action towishlist"
+                                                       data-action="add-to-wishlist"
+                                                       title="<?= $escaper->escapeHtml(__('Add to Wish List')) ?>">
+                                                        <span><?= $escaper->escapeHtml(__('Add to Wish List')) ?></span>
+                                                    </a>
+                                                <?php endif; ?>
+                                                <?php if ($block->getAddToCompareUrl() && $showCompare) : ?>
+                                                    <?php $compareHelper = $this->helper(\Magento\Catalog\Helper\Product\Compare::class);?>
+                                                    <a href="#" class="action tocompare"
+                                                       data-post='<?= /* @noEscape */ $compareHelper->getPostDataParams($item) ?>'
+                                                       title="<?= $escaper->escapeHtml(__('Add to Compare')) ?>">
+                                                        <span><?= $escaper->escapeHtml(__('Add to Compare')) ?></span>
+                                                    </a>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?= /* @noEscape */ ($iterator == count($items)+1) ? '</' . $tag . '>' : '' ?>
+                    <?php endforeach ?>
+                </<?= /* @noEscape */ $tagWrap?>>
+            </div>
+        </div>
+    </div>
+    <?php if ($isSlider) : ?>
+        <script type="text/javascript">
+            require([
+                "jquery",
+                "Amasty_Base/vendor/slick/slick.min"
+            ], function ($) {
+                $('#amrelated-block-<?= /* @noEscape */ (int)$block->getGroupId();?> [data-amrelated-js="slider"]').slick(
+                    {
+                        dots:true,
+                        infinite: true,
+                        slidesToShow: 4,
+                        slidesToScroll: 1,
+                        responsive: [
+                            {
+                                breakpoint: 1280,
+                                settings: {
+                                    slidesToShow: 3,
+                                    slidesToScroll: 3
+                                }
+                            },
+                            {
+                                breakpoint: 992,
+                                settings: {
+                                    slidesToShow: 2,
+                                    slidesToScroll: 2
+                                }
+                            },
+                            {
+                                breakpoint: 425,
+                                settings: {
+                                    slidesToShow: 1,
+                                    slidesToScroll: 1
+                                }
+                            }
+                        ]
+                    }
+                );
+            });
+        </script>
+    <?php endif; ?>
+<?php endif;?>

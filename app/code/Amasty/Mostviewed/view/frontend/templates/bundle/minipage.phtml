@@ -1,0 +1,61 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */
+/** @var $block \Amasty\Mostviewed\Block\Product\MiniPage */
+// @codingStandardsIgnoreFile
+
+$helper = $this->helper(\Magento\Catalog\Helper\Output::class);
+$product = $block->getProduct();
+$productName = $helper->productAttribute($product, $product->getName(), 'name');
+?>
+
+<div class="amrelated-product-info <?= /* @noEscape */ $product->getTypeId();?>">
+    <div class="amrelated-info -top">
+        <p class="amrelated-title">
+            <a href="<?= $block->escapeUrl($product->getProductUrl()); ?>"
+               title="<?= $block->escapeHtml($productName); ?>">
+                <?= $block->escapeHtml($productName); ?>
+            </a>
+        </p>
+        <div class="amrelated-rating"><?= /* @noEscape */ $block->getRatingSummary($product); ?></div>
+        <div class="amrelated-price product-info-price"><?= /* @noEscape */ $block->renderPriceHtml(); ?></div>
+    </div>
+
+    <div class="amrelated-image-container">
+        <a href="<?= $block->escapeUrl($product->getProductUrl()); ?>"
+           title="<?= $block->escapeHtml($productName); ?>"
+           tabindex="-1"
+           class="product-item-photo">
+            <?= /* @noEscape */ $block->getImageBlock($product); ?>
+        </a>
+    </div>
+
+    <div class="amrelated-info -bottom">
+        <div class="amrelated-description">
+            <?= /* @noEscape */ $helper->productAttribute($product, $product->getShortDescription(), 'short_description') ?>
+        </div>
+
+       <div class="product-options-bottom product-item">
+            <?= /* @noEscape */ $block->getOptions(); ?>
+       </div>
+    </div>
+    <div style="clear: both"></div>
+</div>
+
+<script>
+    require([
+        'jquery',
+        'priceBox'
+    ], function($){
+        var priceBoxes = $('#amrelated-product-container-<?= /* @noEscape */ (int)$product->getId(); ?> .price-box');
+
+        priceBoxes = priceBoxes.filter(function(index, elem){
+            return !$(elem).find('.price-from').length;
+        });
+
+        priceBoxes.priceBox({'priceConfig': <?= /* @noEscape */ $block->getJsonConfig() ?>});
+    });
+</script>

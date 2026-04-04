@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_order_item_cancel">
+        <observer name="Ewave_ExtendedBundleProduct::sales_order_item_cancel" instance="Ewave\ExtendedBundleProduct\Observer\CancelOrderItemObserver"/>
+    </event>
+    <event name="sales_order_creditmemo_save_after">
+        <observer name="Ewave_ExtendedBundleProduct::sales_order_creditmemo_save_after" instance="Ewave\ExtendedBundleProduct\Observer\RefundOrderInventoryObserver"/>
+    </event>
+    <event name="catalog_product_save_before">
+        <observer name="Ewave_ExtendedBundleProduct::catalog_product_save_before" instance="Ewave\ExtendedBundleProduct\Observer\BeforeProductSaveObserver"/>
+    </event>
+</config>

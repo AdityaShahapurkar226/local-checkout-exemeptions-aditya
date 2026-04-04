@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Bss_ProductStockAlert
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2015-2022 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<type name="Magento\Framework\App\Action\AbstractAction">
+        <plugin name="bss-productstockalert-dispatchController-context-plugin" type="Bss\ProductStockAlert\Plugin\App\Action\Context" sortOrder="10"/>
+    </type>
+    <type name="Magento\ConfigurableProduct\Plugin\Model\ResourceModel\Attribute\InStockOptionSelectBuilder">
+        <plugin name="bss-productstockalert-configurablecheck" type="Bss\ProductStockAlert\Plugin\Model\ResourceModel\Attribute\InStockOptionSelectBuilder" sortOrder="10"/>
+    </type>
+    <type name="Magento\InventoryConfigurableProduct\Plugin\Model\ResourceModel\Attribute\IsSalableOptionSelectBuilder">
+        <plugin name="bss-productstockalert-configurablecheck-inventory" type="Bss\ProductStockAlert\Plugin\Model\ResourceModel\Attribute\InStockOptionSelectBuilder" sortOrder="10"/>
+    </type>
+    <type name="Magento\ConfigurableProduct\Block\Product\View\Type\Configurable">
+        <plugin name="bss-productstockalert-jsonconfig-allowproducts" type="Bss\ProductStockAlert\Plugin\Block\Product\View\Type\Configurable" sortOrder="10"/>
+    </type>
+    <type name="Magento\Catalog\Pricing\Render\FinalPriceBox">
+        <plugin name="bss-productstockalert-plugin-finalprice" type="Bss\ProductStockAlert\Plugin\Pricing\Render\FinalPriceBox" sortOrder="10"/>
+    </type>
+    <type name="Magento\ConfigurableProduct\Model\Product\Type\Configurable">
+        <plugin name="bss-productstockalert-option-confi" type="Bss\ProductStockAlert\Plugin\Model\Product\Type\Configurable" sortOrder="10"/>
+    </type>
+    <type name="Magento\ConfigurableProduct\Helper\Data">
+        <plugin name="bss_show_out_of_stock_swatches_product" type="Bss\ProductStockAlert\Plugin\Helper\ConfigurableHelper" sortOrder="10"/>
+    </type>
+    <type name="\Magento\Customer\Controller\Account\LoginPost">
+        <plugin name="bss_get_data_stock_after_login" type="Bss\ProductStockAlert\Plugin\Account\LoginPostPlugin" sortOrder="10" />
+    </type>
+</config>

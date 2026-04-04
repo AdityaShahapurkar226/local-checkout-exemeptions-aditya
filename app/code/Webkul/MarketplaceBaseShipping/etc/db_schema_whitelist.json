@@ -1,0 +1,23 @@
+{
+    "marketplace_shipping_setting": {
+        "column": {
+            "entity_id": true,
+            "seller_id": true,
+            "company": true,
+            "telephone": true,
+            "country_id": true,
+            "region": true,
+            "region_id": true,
+            "postal_code": true,
+            "city": true,
+            "street": true,
+            "store_id": true
+        },
+        "index": {
+            "MARKETPLACE_SHIPPING_SETTING_SELLER_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

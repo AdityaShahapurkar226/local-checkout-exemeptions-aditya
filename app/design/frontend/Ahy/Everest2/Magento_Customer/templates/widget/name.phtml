@@ -1,0 +1,70 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+use Magento\Customer\Block\Widget\Name;
+use Magento\Framework\Escaper;
+
+/** @var Name $block */
+/** @var Escaper $escaper */
+
+/*
+<?= $block->getLayout()->createBlock('Magento\Customer\Block\Widget\Name')
+   ->setObject($block->getAddress())
+   ->toHtml() ?>
+
+For checkout/onepage/shipping.phtml:
+
+<?= $block->getLayout()->createBlock('Magento\Customer\Block\Widget\Name')
+   ->setObject($block->getAddress())
+   ->setFieldIdFormat('shipping:%s')
+   ->setFieldNameFormat('shipping[%s]')
+   ->toHtml() ?>
+*/
+
+$prefix = $block->showPrefix();
+$middle = $block->showMiddlename();
+$suffix = $block->showSuffix();
+?>
+<div class="field field-reserved pt-4 w-full field-name-firstname required">
+    <label class="label font-bold text-ahy-blue" for="<?= $escaper->escapeHtmlAttr($block->getFieldId('firstname')) ?>">
+        <span>
+            <?= $escaper->escapeHtml($block->getStoreLabel('firstname')) ?> *
+        </span>
+    </label>
+    <div class="control w-full">
+        <input type="text" id="<?= $escaper->escapeHtmlAttr($block->getFieldId('firstname')) ?>"
+                name="<?= $escaper->escapeHtmlAttr($block->getFieldName('firstname')) ?>"
+                value="<?= $escaper->escapeHtmlAttr($block->getObject()->getFirstname()) ?>"
+                required
+                title="<?= $escaper->escapeHtmlAttr($block->getStoreLabel('firstname')) ?>"
+                class="form-input w-full focus:ring-transparent !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue <?= $escaper->escapeHtmlAttr(
+                    $block->getAttributeValidationClass('firstname')
+                ) ?>"
+            <?= ($block->getAttributeValidationClass('firstname') == 'required-entry') ? ' required' : '' ?>
+        >
+    </div>
+</div>
+<div class="field field-reserved pt-4 w-full field-name-lastname required">
+    <label class="label font-bold text-ahy-blue" for="<?= $escaper->escapeHtmlAttr($block->getFieldId('lastname')) ?>">
+        <span>
+            <?= $escaper->escapeHtml($block->getStoreLabel('lastname')) ?> *
+        </span>
+    </label>
+    <div class="control">
+        <input type="text" id="<?= $escaper->escapeHtmlAttr($block->getFieldId('lastname')) ?>"
+                name="<?= $escaper->escapeHtmlAttr($block->getFieldName('lastname')) ?>"
+                required
+                value="<?= $escaper->escapeHtmlAttr($block->getObject()->getLastname()) ?>"
+                title="<?= $escaper->escapeHtmlAttr($block->getStoreLabel('lastname')) ?>"
+                class="form-input w-full focus:ring-transparent !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue <?= $escaper->escapeHtmlAttr(
+                    $block->getAttributeValidationClass('lastname')
+                ) ?>"
+            <?= ($block->getAttributeValidationClass('lastname') == 'required-entry') ? ' required' : '' ?>
+        >
+    </div>
+</div>

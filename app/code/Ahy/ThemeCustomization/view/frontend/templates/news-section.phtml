@@ -1,0 +1,97 @@
+<div id="newsletter" class="mx-auto t-12 grid max-w-lg gap-5 lg:max-w-none lg:grid-cols-3 py-4 ahy-newsletter-section" x-data="getNewsData()" x-init="getNewsDataFromJson()">
+    <template  x-for="(item, index) in newsData">
+        <div class="flex flex-col overflow-hidden">
+            <div class="flex-shrink-0 overflow-hidden">
+                <a
+                    :href="getNewsLink(index)"
+                    target="_blank" rel="noopener noreferrer"
+                >
+                    <img class="w-full object-cover object-top ahy-newsletter-title-image"
+                        :src="getFeaturedImage(index)"
+                        :alt="getNewsTitle(index)"
+                        loading="lazy"
+                    />
+                </a>
+            </div>
+            <div class="flex flex-1 flex-col pt-0 sm:py-4" >
+                <div class="ahy-newsletter-title ">
+                    <a class="mt-2 block"
+                        :href="getNewsLink(index)"
+                        target="_blank" rel="noopener noreferrer"
+                    >
+                        <p class="text-ahy-blue text-[2.2rem] leading-[2.15rem] md:text-5xl font-league-gothic underline-offset-6 md:leading-[1.09] h-[107px] md:h-[160px] hover:underline line-clamp-3" x-html="getNewsTitle(index)"></p>
+                    </a>
+                </div>
+                <div class="flex items-center">
+                    <div class="text-ahy-blue flex space-x-1 text-xs">
+                        <div class="">by <span class="capitalize font-bold" x-html="getAuthor(index)"><span></div>
+                        <span aria-hidden="true">-</span>
+                        <span x-html="getNewsDate(index)"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>
+
+<div class="read-more-outdoor-news flex justify-center py-8">
+    <a href="/everestdigest" target="_blank" rel="noopener noreferrer">
+        <button class="text-ahy-blue rounded-full border-4 border-ahy-blue px-8 py-3 text-[14px] font-bold capitalize">
+            read more outdoor news
+        </button>
+    </a>
+</div>
+
+<style>
+    .read-more-outdoor-news button:hover {
+        box-shadow: #0d2f47 0px 0px 0px 1px inset;
+    }
+    img.w-full.object-cover.ahy-newsletter-title-image {
+        aspect-ratio: 3/2;
+    }
+</style>
+
+<script defer>
+    function getNewsData(){
+        return {
+            newsData: [],
+            newsJsonEndpoint: `${BASE_URL}everest_news_latest_posts.json?v=${Date.now()}`,
+            getNewsTitle(i){
+                return this.newsData[i].title;
+            },
+            getNewsLink(i){
+                return this.newsData[i].link;
+            },
+            getFeaturedImage(i){
+                return this.newsData[i].featured_image_url;
+            },
+            getAuthor(i){
+                return this.newsData[i].author;
+            },
+            getNewsDate(i){
+                return this.newsData[i].date;
+            },
+            getNewsDataFromJson() {
+                fetch(this.newsJsonEndpoint)
+                    .then(res => res.json())
+                    .then(data => {
+                        this.newsData = data.slice(0,3);
+                    }
+                );
+            }
+        };
+    }
+</script>
+
+<style>
+    .ahy-newsletter-section .ahy-newsletter-title-image:hover {
+        -webkit-transform: scale(1.01);
+        transform: scale(1.01);
+    }
+    .ahy-newsletter-section .ahy-newsletter-title-image{
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        -webkit-transition: .45s ease-in-out;
+        transition: .45s ease-in-out;
+    }
+</style>

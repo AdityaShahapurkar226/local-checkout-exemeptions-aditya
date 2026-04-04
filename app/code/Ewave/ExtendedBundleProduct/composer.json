@@ -1,0 +1,14 @@
+{
+  "name": "ewave/extendedbundleproduct",
+  "description": "Ewave Configurable Products in Bundles",
+  "type": "magento2-module",
+  "version": "2.3.8",
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Ewave\\ExtendedBundleProduct\\": ""
+    }
+  }
+}

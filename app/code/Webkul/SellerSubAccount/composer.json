@@ -1,0 +1,20 @@
+{
+    "name": "webkul/marketplace-seller-sub-account",
+    "description": "Magento2 Seller Sub-Account Marketplace Add-on",
+    "require": {
+        "webkul/module-marketplace": "5.*.*"
+    },
+    "type": "magento2-module",
+    "version": "5.0.2",
+    "license": [
+        "proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Webkul\\SellerSubAccount\\": ""
+        }
+    }
+}

@@ -1,0 +1,22 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */
+/** @var \Amasty\Mostviewed\Block\Analytics\Viewed $block */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+
+<script type="text/x-magento-init">
+    {
+        "<?= $escaper->escapeHtml($block->getBlockSelector()) ?>": {
+            "amRelatedAnalytics": {
+                "viewUrl": "<?= $escaper->escapeUrl($block->getViewedUrl()) ?>",
+                "blockId":  <?= /* @noEscape */ $block->getBlockId() ?>,
+                "relatedProducts": <?= /* @noEscape */ $block->getProductsFilter() ?>,
+                "clickUrl": "<?= $escaper->escapeUrl($block->getClickUrl()) ?>"
+            }
+        }
+    }
+</script>

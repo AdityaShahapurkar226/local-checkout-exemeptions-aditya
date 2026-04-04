@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_SellerSubAccount
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="webkul" translate="label" sortOrder="10">
+            <label>Webkul</label>
+        </tab>
+        <section id="sellersubaccount" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Seller Sub Account Settings</label>
+            <!-- Assign section to tab -->
+            <tab>webkul</tab>
+            <resource>Webkul_SellerSubAccount::config_sellersubaccount</resource>
+            <!-- create group for fields in section -->
+            <group id="general_settings" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+                <field id="manage_sub_accounts" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="1">
+                    <label>Allow Seller to Manage Sub-Accounts</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <!-- <field id="manage_add_show" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="1">
+                    <label>Display Address fields When Add Sub Seller</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field> -->
+            </group>
+            <!-- select permission list which is seller provide to sub seller account -->
+            <group id="sub_account_permission" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Sub Account Permission</label>
+                <field id="manage_sub_account_permission" translate="label comment" sortOrder="1" type="multiselect" showInDefault="1" showInWebsite="1">
+                    <label>Select sub seller account permissions list</label>
+                    <source_model>Webkul\SellerSubAccount\Model\SubAccount\Source\Permissions</source_model>
+                    <can_be_empty>1</can_be_empty>
+                </field>
+            </group>
+             <group id="sellersubaccount_product_information" translate="label" type="text" sortOrder="700" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>Product Information</label>
+                <field id="author" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label><![CDATA[<p>Author: <a target="_blank" title="Webkul Software Private Limited" href="https://webkul.com/">Webkul</a></p>
+                        <p>Version: 5.0.2</p>
+                        <p>User Guide: <a target="_blank" href="https://webkul.com/blog/magento2-multi-vendor-user-accounts-marketplace/">Click here</a></p>
+                        <p>Store Extension: <a target="_blank" href="https://store.webkul.com/magento2-multi-vendor-sales-rep.html">Click here</a></p>
+                        <p>Ticket/Customisations: <a target="_blank" href="https://webkul.uvdesk.com/en/customer/create-ticket/">Click here</a></p>
+                        <p>Services: <a target="_blank" href="https://webkul.com/magento-development/">Click here</a></p>
+					]]></label>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,306 @@
+<?php
+    use Magento\Framework\Escaper;
+    /** @var Escaper $escaper */
+?>
+<?php
+    $userAddressDetailsForFfl = [
+        'streetAddress' => $magewire->getAddressList()->exportCustomerAddress()->getStreet()[0],
+        'zipcode'       => $magewire->getAddressList()->exportCustomerAddress()->getPostcode(),
+        'city'          => $magewire->getAddressList()->exportCustomerAddress()->getCity(),
+        'state'         => $magewire->getAddressList()->getRegion(),
+        'country'       => $magewire->getAddressList()->getCountry()
+    ];
+    $fflCentreArrCollection     = $magewire->getFflStoreDistanceInMiles($userAddressDetailsForFfl);
+    
+?> 
+<div class="ffl-centers flex flex-col gap-2 bg-ahy-yellow-card p-4 md:p-12"  
+x-data="{
+        selectedId: null,
+        acceptFflWarning: false,
+        addDomFromJsForSelectedFflCentreAcknowledgement: function (event, fflCentreId, fflCentreAddress) {
+            const target = event.target;
+            document.getElementById('ahy-ffl-hidden-checkbox').click();
+            const ahyDomElements = document.querySelectorAll('.ahyFflAcknowledgement');
+            ahyDomElements.forEach((element) => {
+                element.remove();
+            });
+
+            let fflAcknowledgementEl = target.parentElement;
+
+            while (fflAcknowledgementEl && !fflAcknowledgementEl.querySelector('.ffl-acknowledgement-' + fflCentreId)) {
+                fflAcknowledgementEl = fflAcknowledgementEl.parentElement;
+            }
+
+            if (fflAcknowledgementEl) {
+                const fflAcknowledgementTextEl = fflAcknowledgementEl.querySelector('.ffl-acknowledgement-text');
+
+                // Create the skeletal loading elements
+                const fflCentreAcknowledgementDiv = document.createElement('div');
+                fflCentreAcknowledgementDiv.className = 'flex justify-center ahyFflAcknowledgement';
+
+                const fflCentreAcknowledgementH2 = document.createElement('h2');
+                fflCentreAcknowledgementH2.className = 'text-center capitalize p-2 text-ahy-green font-bold';
+                fflCentreAcknowledgementH2.textContent = 'Amazing! Next, Please Review & Accept The Terms';
+                fflCentreAcknowledgementDiv.appendChild(fflCentreAcknowledgementH2);
+
+                const fflCentreAcknowledgementBorderDiv = document.createElement('div');
+                fflCentreAcknowledgementBorderDiv.className = 'border-ahy-red flex items-start border-2 p-6 ahyFflAcknowledgement';
+
+                const fflCentreAcknowledgementInput = document.createElement('input');
+                fflCentreAcknowledgementInput.className = 'h-4 w-4 mt-1';
+                fflCentreAcknowledgementInput.type = 'checkbox';
+                fflCentreAcknowledgementInput.setAttribute('x-model', 'acceptFflWarning'); // Add x-model attribute
+                fflCentreAcknowledgementInput.addEventListener('change', function() {
+                    Magewire.emit('updateAgreeOnTermAndCondition', true);
+                });
+                fflCentreAcknowledgementInput.setAttribute('x-bind:checked', 'acceptFflWarning ? true : null');
+                fflCentreAcknowledgementBorderDiv.appendChild(fflCentreAcknowledgementInput);
+
+
+                const contentP = document.createElement('p');
+                contentP.className = 'ml-4 text-ahy-blue';
+                const contentSpan = document.createElement('span');
+                contentSpan.className = 'font-bold uppercase break-all';
+                contentSpan.textContent = 'FFL Contact Acknowledgment* ';
+                contentP.appendChild(contentSpan);
+                contentP.innerHTML += 'I am responsible for contacting the FFL I chose to ensure they will accept my firearm transfer and any additional terms or conditions of the FFL. ';
+                contentP.className = 'ml-4 w-full';
+                fflCentreAcknowledgementBorderDiv.appendChild(contentP);
+
+                // Append the skeletal loading elements to fflAcknowledgementEl
+                fflAcknowledgementEl.appendChild(fflCentreAcknowledgementDiv);
+                fflAcknowledgementEl.appendChild(fflCentreAcknowledgementBorderDiv);
+                // Dispatch the fflCentreId event
+                this.$dispatch('fflCentreId-selected', {
+                    fflCentreId: fflCentreId,
+                    fflCentreAddress: fflCentreAddress
+                });
+            }
+        }
+    }"
+>  
+
+    <?php if(!$magewire->getSelectedOption() && $magewire->getSelectedFflCentreId() == 0): ?>
+        <div class="component-messenger message pl-6 mb-4 relative warning" 
+            x-data="{
+                component: null,
+                show: false,
+                message: {
+                    type: 'error',
+                    text: 'Something\u0020went\u0020wrong.'
+                },
+                dispatched: 0
+            }" 
+            @ffl:selection:error.window="
+                component = null
+                show = true
+                message = Object.assign(message, $event.detail.message)
+                if ($event.detail.component) {
+                    component = $event.detail.component.id || null
+                }
+
+                dispatched++
+
+                Magewire.hook('message.received', (message, component) => {
+                    if (component.id === $event.detail.component.id) {
+                        show = false
+                        dispatched = 0
+                    }
+                })
+            " 
+            x-on:ffl:selection:success.window="show = false" 
+            x-bind:class="message.type" 
+            x-bind:data-testid="component ? `${component}-message` : ''" 
+            x-show="show" x-transition:enter="transition ease-in duration-300" 
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" 
+            x-transition:leave="transition ease-out duration-300" x-transition:leave-start="opacity-100" 
+            x-transition:leave-end="opacity-0" data-testid="checkout.ffl.verification-message" style=""
+        >
+            <span x-text="message.text"></span>
+
+            <div class="absolute -left-1.5 -top-1.5" x-show="dispatched >= 2 &amp;&amp; message.type !== 'success'" x-transition.opacity="" x-transition:enter.scale.0.duration.600ms="" x-transition:leave.scale.0.duration.300ms="" style="display: none;">
+                <span class="flex h-4 w-4">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-white shadow-xl"></span>
+                </span>
+            </div>
+
+            <button class="close cursor-pointer" title="Close" x-on:click.prevent="show = false; dispatched = 0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="fill-current" width="18" height="18">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    <?php endif; ?>
+    <!-- <div class="">
+        <?//= $magewire->getSelectedFflCenterFromQuote() ?>
+    </div> -->
+    <form class="space-y-2 address-form" id="ahyVerificationStepForm">
+        <input type="hidden" data-validate-hidden required aria-invalid="true" name="isFflSelected" value="<?= $magewire->hasSelectedFflCentreAddressHtml(); ?>" />
+        <input type="hidden" data-validate-hidden required aria-invalid="true" name="fflCentreName" value="<?= $magewire->getSelectedFflCentreName(); ?>" />
+        <input type="hidden" data-validate-hidden required aria-invalid="true" name="fflCentreAddress" value="<?= $magewire->getSelectedFflCentreAddressHtml(); ?>" />
+
+        <div class="error-msg-verify" style="display:none">Verification Step Failed!</div>
+    </form>  
+    <?php if($magewire->getIsRequired()):?>
+        <div class="bg-red-500 p-8 text-white">
+            required
+        </div>
+    <?php endif; ?>
+    <?php if (is_array($fflCentreArrCollection)): ?>
+        <?php foreach ($fflCentreArrCollection as $fflCentre): ?>
+            <?php
+                $CenterName         = $fflCentre['CentreName'] ?? 'FFL center Name not available';
+                $fflZipcode         = $fflCentre['zipcode'] ?? 'Zip code not available';
+                $workingHour        = $fflCentre['working_time'] ?? 'Working Hours not available'; ;
+                $transferFee        = $fflCentre['transfer_fee'] ?? 'transfer fee not available' ;
+                $phoneNumber        = $fflCentre['phone_no'] ?? 'contact not available' ;
+                $fflStoreLatitude   = $fflCentre['lat'] ?? ''; 
+                $fflStoreLongitude  = $fflCentre['long'] ?? '';
+                $regionCode         = $fflCentre['region_id'] ?? '';
+                $city               = $fflCentre['City'] ?? '';
+                $fflAddress         = $fflCentre['AddressLine1'] ?? '';
+                $fflCentreId        = $fflCentre['fflcentres_id'];
+                $fflStoreDistanceFromUserInMiles = $fflCentre['miles'] ?? '';
+            ?>
+            <div class="border border-gray-300 px-4 md:px-12 py-8 bg-white"  x-data="{ open: false }">
+                <div class="flex justify-between flex-col gap-2 md:gap-0 md:flex-row">
+                    <div class="flex flex-col">
+                        <div class="ffl-distance text-ahy-blue font-bold text-2xl">
+                            <span class=""><?= number_format($fflStoreDistanceFromUserInMiles, 2); ?> Miles</span>
+                        </div>
+                        <div class="ffl-center-name text-ahy-blue text-sm font-bold">
+                            <?= $CenterName; ?>
+                        </div>
+                    </div>
+                    <div class="select-ffl-center">
+                        <button 
+                            x-bind:class="selectedId == <?= $fflCentreId ?> ? 'btn rounded-full !bg-ahy-blue w-32 disabled:!opacity-100 flex justify-center cursor-not-allowed' : 'btn rounded-full bg-ahy-red hover:bg-ahy-red-light w-32 flex justify-center'"
+                            id="<?= $CenterName ?>"
+                            wire:click.prevent='selectedFflCentre(<?= $fflCentreId ?>, <?= $escaper->escapeHtml(json_encode($fflCentre)) ?>)'
+                            @click='addDomFromJsForSelectedFflCentreAcknowledgement(event, <?= $fflCentreId ?>, <?= $escaper->escapeHtml(json_encode($fflCentre)) ?>)'
+                            x-on:click="selectedId = <?= $fflCentreId ?>"
+                            x-bind:disabled="selectedId == <?= $fflCentreId ?>"
+                            class="focus:ring-transparent"
+                        >
+                            <span x-show="selectedId != <?= $fflCentreId ?>">Select</span>
+                            <span x-show="selectedId == <?= $fflCentreId ?>">Selected</span>
+                        </button>
+                        <input type="checkbox" name="hidden-checkbox" id="ahy-ffl-hidden-checkbox" wire:model="updateSelection" style="display: none;">
+                    </div>
+                </div>
+                <div class="store-data flex mt-4">
+                    <div class="store-timing mr-1">
+                        Hour: <?= $workingHour ?> | 
+                    </div>
+                    <div class="store-details capitalize underline">
+                        <button 
+                            class="flex w-full justify-center items-center transition duration-300 ease-in-out"
+                            @click.prevent="open = !open"
+                        >
+                        <span class="">store details</span> <span class="transition duration-300 ease-in-out p-1 pr-2 pl-2 ml-2 bg-[url('/media/icons/arrow-nav.svg')] bg-contain bg-no-repeat bg-center rotate-180" :class="{ 'rotate-180': open }"></span>
+                        </button>
+                    </div>
+                </div>
+                <nav
+                    class="transition duration-300 ease-in-out"
+                    x-show="open" 
+                    aria-labelledby="ffl-center-map" 
+                >
+                    <div class="flex ffl-center-map-ui py-3 border-b flex flex-col">
+                        <?php 
+                            $apiKey = $magewire->getApiKey();
+                            $imageUrl = $magewire->getImageUrl() . $fflStoreLatitude .','. $fflStoreLongitude .';66&key='. $apiKey; 
+                        ?>
+                        <div class="store-map-image pb-6 flex justify-center">
+                            <img src="<?= $imageUrl; ?>" alt="<?= $CenterName; ?> map location" loading="lazy" class="" >
+                        </div>
+                        <div class="store-address-details flex justify-between">
+                            <div class="store-address">
+                                <address>
+                                    <?= $fflAddress ?>
+                                </address>
+                            </div>
+                            <div class="phone-number">
+                                <?= $phoneNumber ?>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                <div class="ffl-acknowledgement-<?=$fflCentreId?> mt-4 ">
+                    <?php if($magewire->getSelectedOption() && $fflCentreId == $magewire->getSelectedFflCentreId()): ?>
+                        <div class="component-messenger message pl-6 mb-4 relative warning ahyFflAcknowledgement"
+                            x-data="{
+                                component: null,
+                                show: false,
+                                message: {
+                                    type: 'error',
+                                    text: 'Something\u0020went\u0020wrong.'
+                                },
+                                dispatched: 0
+                            }"
+                            @ffl:selection:error.window="
+                                component = null
+                                show = true
+                                message = Object.assign(message, $event.detail.message)
+                                if ($event.detail.component) {
+                                    component = $event.detail.component.id || null
+                                }
+                                dispatched++
+                                Magewire.hook('message.received', (message, component) => {
+                                    if (component.id === $event.detail.component.id) {
+                                        show = false
+                                        dispatched = 0
+                                    }
+                                })
+                            "
+                            x-on:ffl:selection:success.window="show = false"
+                            x-bind:class="message.type"
+                            x-bind:data-testid="component ? `${component}-message` : ''"
+                            x-show="show" x-transition:enter="transition ease-in duration-300"
+                            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                            x-transition:leave="transition ease-out duration-300" x-transition:leave-start="opacity-100"
+                            x-transition:leave-end="opacity-0" data-testid="checkout.ffl.verification-message" style=""
+                        >
+                            <span x-text="message.text"></span>
+                            <div class="absolute -left-1.5 -top-1.5" x-show="dispatched >= 2 &amp;&amp; message.type !== 'success'" x-transition.opacity="" x-transition:enter.scale.0.duration.600ms="" x-transition:leave.scale.0.duration.300ms="" style="display: none;">
+                                <span class="flex h-4 w-4">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-white shadow-xl"></span>
+                                </span>
+                            </div>
+                            <button class="close cursor-pointer" title="Close" x-on:click.prevent="show = false; dispatched = 0">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="fill-current" width="18" height="18">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="ffl-acknowledgement-text flex flex-col ahyFflAcknowledgement">
+                            <h2 class="text-center text-ahy-green font-bold capitalize p-2">Amazing! Next, Please Review & Accept The Terms</h2>
+                            <div class="flex items-start p-6 border-2 border-ahy-red">
+                                <input
+                                    type="checkbox"
+                                    name="accept-ffl-warning"
+                                    id="accept-ffl-warning"
+                                    require class="mt-1"
+                                    x-model="acceptFflWarning"
+                                    x-on:change="$wire.set('agreeOnTermAndCondition', acceptFflWarning)"
+                                    x-bind:checked="acceptFflWarning ? true : null"
+                                >
+                                <p class="ml-4 text-ahy-blue">
+                                    <span class="font-bold uppercase break-all">FFL Contact Acknowledgment* </span> I am responsible for contacting the FFL I chose to ensure they will accept my firearm transfer and any additional terms or conditions of the FFL. 
+                                </p>
+                            </div>                        
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php elseif(is_string($fflCentreArrCollection)): ?>
+        <h2 class="font-bold text-ahy-blue text-xl md:text-3xl"><?= $fflCentreArrCollection ?></h2>
+        <a href="/checkout">
+            <button class="bg-ahy-green btn capitalize">edit address</button>
+        </a>
+    <?php endif; ?>
+</div>
+

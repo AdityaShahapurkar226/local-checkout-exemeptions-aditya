@@ -1,0 +1,227 @@
+<section class="give-back-fund text-ahy-blue">
+    <div class="md:text-center sm:text-left pt-8 sm:pt-20 md:py-24 xl:pt-10 pb-0">
+        <h1 class="text-6xl leading-none sm:leading-none sm:text-8xl md:text-[120px] lg:text-[160px] xl:text-[210px] uppercase font-league-gothic">Give Back</h1>
+        <p class="sm:text-2xl text-xs md:text-3xl !leading-normal font-extrabold uppercase mt-4">Celebrating the outdoors</p>
+    </div>
+
+    <div x-data="scrollSmoothOnClick()" id="tab_wrapper" class="py-8">
+        <div class="tab-bg-line-desktop relative pb-4 flex justify-center">
+            <div class="bg-white text-ahy-blue tab-bg-mobile relative flex sm:px-4 px-2 shadow-lg justify-center sm:pl-6 w-[675px] rounded-full md:pl-12 md:pr-8">
+                <button @click.prevent="scrollToConservation()" class="mx-2 sm:mx-4 uppercase h-16 text-xs sm:text-sm flex items-center hover:underline underline-offset-6 font-bold">Conservation</button>
+
+                <button @click.prevent="scrollToHowYouGive()" class="mx-2 sm:mx-4 uppercase h-16 text-xs sm:text-sm flex items-center hover:underline underline-offset-6 font-bold">How you give</button>
+
+                <button @click.prevent="scrollToPartners()" class="mx-2 sm:mx-4 uppercase h-16 text-xs sm:text-sm flex items-center hover:underline underline-offset-6 font-bold">Partners</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="pt-8">
+        <p class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl !leading-normal font-light text-left md:text-center mb-4">
+            For us, nature is the great connector of our richly diverse culture. And we believe it's everyone's right to thrive outside. See, when you step outside, something magical unlocks when your
+            skin touches crisp air.
+        </p>
+        <p class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl !leading-normal font-light text-left md:text-center mt-12 mb-7">We grow. We resolve. We connect.</p>
+    </div>
+
+    <div id="conservation" class="w-full lg:w-[90%] flex mx-auto justify-between mt-8 lg:!mt-36 flex-col lg:flex-row">
+        <div class="w-full lg:w-1/2">
+            <div class="h-3 bg-white md:w-[82%] my-10"></div>
+            <h2 class="font-extrabold text-3xl md:text-5xl uppercase md:pb-7 py-5 mt-2 md:mt-0">CONSERVATION</h2>
+            <div class="w-full lg:w-[80%]">
+                <p class="tracking-wide w-full m-auto pb-4 md:text-2xl text-base !leading-loose font-light mb-6">
+                    We celebrate hunting and fishing rights because it connects us authentically with the cycle of life.
+                </p>
+                <p class="tracking-wide w-full m-auto pb-7 md:pb-4 md:text-2xl text-base !leading-loose font-light">
+                    We celebrate hiking, backpacking, and bushcrafting rights empowering us to appreciate the purposes of our ecosystem.
+                </p>
+            </div>
+        </div>
+        <div class="w-full lg:w-1/2 flex justify-center items-center">
+            <img src="/media/give_back_fund/give-back-fund-conservation.png" alt="Conservation" />
+        </div>
+    </div>
+    <div class="w-full lg:w-[90%] flex mx-auto justify-between mt-8 lg:!mt-36 flex-col lg:flex-row">
+        <div class="w-full lg:w-1/2 flex justify-center items-center">
+            <img src="/media/give_back_fund/conservation-image2.png" alt="Conservation" />
+        </div>
+        <div class="w-full lg:w-1/2 flex items-center flex-col justify-center order-first lg:order-last">
+            <div class="w-full lg:w-[80%]">
+                <p class="tracking-wide w-full m-auto md:pt-0 pt-7 pb-6 md:pb-4 md:text-2xl text-base !leading-loose font-light">
+                    We prioritize serving those who serve nature, like our $100,000 contribution to the Congressional Sportsmen's Foundation, recognizing the transformative power of knowledge. Everest
+                    represents the boundless outdoors.
+                </p>
+                <p class="tracking-wide w-full m-auto pb-6 md:pb-4 md:text-2xl text-base !leading-loose mt-10 font-light">Everest is for all outdoors.</p>
+            </div>
+        </div>
+    </div>
+    <div id="how-you-give" class="w-full lg:w-[90%] flex mx-auto justify-between mt-8 lg:!mt-36 flex-col lg:flex-row">
+        <div class="w-full lg:w-1/2">
+            <div class="w-full lg:w-[80%]">
+                <div class="h-3 bg-white md:w-full my-10"></div>
+                <h2 class="font-extrabold text-3xl md:text-5xl uppercase md:pb-7 py-5 mt-2 md:mt-0">so, how does the give back program work?</h2>
+                <p class="tracking-wide w-full m-auto pb-4 md:text-2xl text-base !leading-loose font-light">
+                    We use several programs to empower our Give Back Fund. This strategy enables us to aggressively give back to our partner organizations and is explained in detail as follows:
+                </p>
+            </div>
+        </div>
+        <div class="w-full lg:w-1/2 flex items-center">
+            <div class="w-full lg:w-[80%]">
+                <ul class="list-inside">
+                    <li class="tracking-wide md:text-xl text-sm !leading-loose font-light list-disc mb-6">
+                        <span class="font-extrabold">Boost it.</span> At checkout, customers can add $ to their order. 100% of the $1 donation is transferred into the fund.
+                    </li>
+                    <li class="tracking-wide md:text-xl text-sm !leading-loose font-light list-disc mb-6">
+                        <span class="font-extrabold">Caliber extra.</span> $1 for every Caliber Member goes to every 501C Partner.
+                    </li>
+                    <li class="tracking-wide md:text-xl text-sm !leading-loose font-light list-disc mb-6">
+                        <span class="font-extrabold">End of the year give back.</span> 3% our net revenue is transferred to the fund.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="partners" class="w-full lg:w-[90%] flex mx-auto justify-between mt-8 lg:!mt-36 flex-col lg:flex-row">
+        <div class="w-full lg:w-1/2">
+            <div class="h-3 bg-white md:w-[82%] my-10"></div>
+            <h2 class="font-extrabold text-3xl md:text-6xl uppercase md:pb-7 pb-5 !pt-0 mt-2 md:mt-0">Our PARTNERS</h2>
+            <div class="w-full lg:w-[80%]">
+                <p class="tracking-wide w-full m-auto pb-4 md:text-2xl text-base !leading-loose font-light">
+                    Everest is committed to giving back to the communities and organizations where we live and work. We invest in philanthropic programs and rally around charitable work and
+                    fundamental causes that genuinely mean something to the industry in which we live and breathe.
+                </p>
+            </div>
+        </div>
+        <div class="w-full lg:w-1/2 flex justify-center items-center my-12 md:my-0">
+            <img src="/media/give_back_fund/Our-partners-image.png" alt="Our Partners" />
+        </div>
+    </div>
+    <div class="space-y-1">
+        <div class="w-full xl:w-[90%] flex mx-auto flex-col md:flex-row justify-between mt-8 lg:!mt-36 bg-white p-10 flex-col xl:flex-row">
+            <div class="w-full md:w-1/5 flex justify-center items-start">
+                <img class="max-w-[130px] aspect-3/3 object-contain" src="/media/give_back_fund/Congressional_Sportsmen's_Foundation_Logo.png" alt="Congressional Sportsmen's Foundation" />
+            </div>
+            <div class="w-full md:w-4/5 flex justify-center flex-col">
+                <p class="font-bold text-ahy-blue text-left py-5">Congressional Sportsmen's Foundation</p>
+                <p class="tracking-wide w-full xl:w-[80%] pb-4 md:text-lg text-sm !leading-relaxed font-light">
+                    We strongly support conservation efforts by partnering with The Congressional Sportsmen's Foundation to ensure the preservation of outdoor legacies and opportunities for future
+                    generations of sportsmen and women.
+                </p>
+                <p class="font-bold text-ahy-blue underline underline-offset-4 py-5"><a href="https://congressionalsportsmen.org/support/donate-now" target="_blank" rel="noopener noreferrer" class="hover:!text-ahy-blue-light">LEARN MORE</a></p>
+            </div>
+        </div>
+        <div class="w-full xl:w-[90%] flex mx-auto flex-col md:flex-row justify-between bg-white p-10 flex-col xl:flex-row">
+            <div class="w-full md:w-1/5 flex justify-center items-start">
+                <img class="max-w-[130px] aspect-3/3 object-contain" src="/media/give_back_fund/ducks-unlimetted.png" alt="Ducks Unlimited Logo" />
+            </div>
+            <div class="w-full md:w-4/5 flex justify-center flex-col">
+                <p class="font-bold text-ahy-blue text-left py-5">Ducks Unlimited</p>
+                <p class="tracking-wide w-full xl:w-[80%] pb-4 md:text-lg text-sm !leading-relaxed font-light">
+                    Ducks Unlimited conserves, restores, and manages wetlands and associated habitats for North America's waterfowl, benefiting wildlife and people through partnerships and addressing
+                    factors that erode waterfowl habitat, with a vision to reverse this trend.
+                </p>
+                <p class="font-bold text-ahy-blue underline underline-offset-4 py-5"><a href="https://www.ducks.org/" target="_blank" rel="noopener noreferrer" class="hover:!text-ahy-blue-light">LEARN MORE</a></p>
+            </div>
+        </div>
+        <div class="w-full xl:w-[90%] flex mx-auto flex-col md:flex-row justify-center bg-white p-10 flex-col xl:flex-row">
+            <div class="w-full md:w-1/5 flex justify-center items-start">
+                <img class="max-w-[130px] aspect-3/3 object-contain" src="/media/give_back_fund/USA Clay Target logo.png" alt="The USA Clay Target League Logo" />
+            </div>
+            <div class="w-full md:w-4/5 flex justify-center flex-col">
+                <p class="font-bold text-ahy-blue text-left py-5">The USA Clay Target League</p>
+                <p class="tracking-wide w-full pb-4 md:text-lg xl:w-[80%] text-sm !leading-relaxed font-light">
+                    The USA Clay Target League is a 501(c)(3) non-profit organization that provides clay target shooting sports for secondary and postsecondary schools, boasting over 35,000
+                    participants on 1,200+ school-approved teams nationwide, with a vision to engage 100,000 athletes by 2025 through fully-adaptive, Title IX compliant virtual competitions using True
+                    Team® Scoring.
+                </p>
+                <p class="font-bold text-ahy-blue underline underline-offset-4 py-5"><a href="https://www.usaclaytarget.com/" target="_blank" rel="noopener noreferrer" class="hover:!text-ahy-blue-light">LEARN MORE</a></p>
+            </div>
+        </div>
+        <div class="w-full xl:w-[90%] flex mx-auto flex-col md:flex-row justify-center bg-white p-10 flex-col xl:flex-row">
+            <div class="w-full md:w-1/5 flex justify-center items-start">
+                <img class="max-w-[130px] aspect-3/3 object-contain" src="/media/give_back_fund/MUFI-Logo-2016-PNG.png" alt="MidwayUSA Foundation Logo" />
+            </div>
+            <div class="w-full md:w-4/5 flex justify-center flex-col">
+                <p class="font-bold text-ahy-blue text-left py-5">MidwayUSA Foundation</p>
+                <p class="xl:w-[80%] tracking-wide w-full pb-4 md:text-lg text-sm !leading-relaxed font-light">
+                    Proudly supporting youth in shooting sports, MidwayUSA Foundation ensures financial sustainability for 2,800 national youth shooting teams in various disciplines, fostering the
+                    growth of outdoor shooting sports enthusiasts while promoting social skills, leadership, sportsmanship, character development, and preparing them for successful adulthood.
+                </p>
+                <p class="font-bold text-ahy-blue underline underline-offset-4 py-5"><a href="https://www.midwayusafoundation.org/" target="_blank" rel="noopener noreferrer" class="hover:!text-ahy-blue-light">LEARN MORE</a></p>
+            </div>
+        </div>
+        <div class="w-full xl:w-[90%] flex mx-auto flex-col md:flex-row justify-center bg-white p-10 flex-col xl:flex-row">
+            <div class="w-full md:w-1/5 flex justify-center items-start">
+                <img class="max-w-[130px] aspect-3/3 object-contain" src="/media/give_back_fund/Chive-Charities-Logo.png" alt="Chive Charities Logo.png" />
+            </div>
+            <div class="w-full md:w-4/5 flex justify-center flex-col">
+                <p class="font-bold text-ahy-blue text-left py-5">Chive Charities</p>
+                <p class="tracking-wide xl:w-[80%] w-full pb-4 md:text-lg text-sm !leading-relaxed font-light">
+                    Chive Charities revolutionizes giving by empowering recipients to raise awareness for their cause, connecting donors to their impactful journey, and supporting unique causes for
+                    long-term solutions, fostering a global community that values kindness, respect, and generosity to make the world a 10% happier place, while proudly maintaining a commitment to
+                    diversity and equal opportunity.
+                </p>
+                <p class="font-bold text-ahy-blue underline underline-offset-4 py-5"><a href="https://chivecharities.org/" target="_blank" rel="noopener noreferrer" class="hover:!text-ahy-blue-light">LEARN MORE</a></p>
+            </div>
+        </div>
+        <div class="w-full xl:w-[90%] flex mx-auto flex-col md:flex-row justify-center bg-white p-10 flex-col xl:flex-row">
+            <div class="w-full md:w-1/5 flex justify-center items-start">
+                <img class="max-w-[130px] aspect-3/3 object-contain" src="/media/give_back_fund/trinityOaks.png" alt="Trinity Oaks" />
+            </div>
+            <div class="w-full md:w-4/5 flex justify-center flex-col">
+                <p class="font-bold text-ahy-blue text-left py-5">Trinity Oaks</p>
+                <p class="tracking-wide w-full pb-4 md:text-lg text-sm !leading-relaxed font-light xl:w-[80%]">
+                    Trinity Oaks, a 501(c)3 nonprofit organization, harnesses the transformative power of outdoor activities such as hunting and fishing to make a meaningful difference in the lives of
+                    others, supporting diverse groups including combat veterans, families facing terminal illness, special needs children, and underprivileged youth through once-in-a-lifetime
+                    experiences, impacting tens of thousands of people since 2007, fostering firearms education, fulfilling last wishes, and providing solace, compassion, and uplifting spirits in the
+                    embrace of nature.
+                </p>
+                <p class="font-bold text-ahy-blue underline underline-offset-4 py-5"><a href="https://www.trinityoaks.org/" target="_blank" rel="noopener noreferrer" class="hover:!text-ahy-blue-light">LEARN MORE</a></p> 
+                
+            </div>
+        </div>
+    </div>
+    <div class="py-20">
+        <p class="text-center font-bold text-ahy-blue">Calling All Causes. Stand with Us.</p>
+        <p class="text-center font-light">
+            If you know of a foundation, organization, community project or charity that
+            <br />
+            is in need of help please let us know by emailing us at
+        </p>
+        <p class="text-center font-bold mt-10">
+            <a href="mailto:wecare@everest.com" class="hover:underline underline-offset-6 ">wecare@everest.com</a>
+        </p>
+    </div>
+</section>
+
+<script>
+    function scrollSmoothOnClick() {
+        return {
+            scrollToConservation() {
+                const conservationEl = document.getElementById("conservation");
+                if (conservationEl) {
+                    conservationEl.scrollIntoView({
+                        behavior: "smooth",
+                    });
+                }
+            },
+            scrollToHowYouGive() {
+                const howYouGiveEl = document.getElementById("how-you-give");
+                if (howYouGiveEl) {
+                    howYouGiveEl.scrollIntoView({
+                        behavior: "smooth",
+                    });
+                }
+            },
+            scrollToPartners() {
+                const partnersEl = document.getElementById("partners");
+                if (partnersEl) {
+                    partnersEl.scrollIntoView({
+                        behavior: "smooth",
+                    });
+                }
+            },
+        };
+    }
+
+</script>

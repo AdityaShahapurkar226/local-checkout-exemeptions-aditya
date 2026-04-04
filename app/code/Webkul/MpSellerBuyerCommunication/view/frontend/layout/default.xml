@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */  -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="layout2_seller_account_navigation">
+            <block class="Webkul\Marketplace\Block\Account\Navigation" name="layout2_seller_communication_list" template="Webkul_MpSellerBuyerCommunication::/layout2/account/navigation.phtml">
+            </block>
+        </referenceBlock>
+    </body>
+</page>

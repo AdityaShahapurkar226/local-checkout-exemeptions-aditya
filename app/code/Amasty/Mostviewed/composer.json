@@ -1,0 +1,27 @@
+{
+    "name": "amasty/mostviewed",
+    "description": "Automatic Related Products By Amasty",
+    "require": {
+        "php": ">=7.3",
+        "amasty/base": ">=1.14.5",
+        "amasty/cron-schedule-list": "*"
+    },
+    "suggest": {
+        "amasty/customers-also-viewed-graphql": "Install amasty/customers-also-viewed-graphql module to activate Graphql and Automatic Related Products integration.",
+        "amasty/module-mostviewed-mftf-2": "Install mostviewed-mftf-2 module to be able to run Mostviewed MFTF tests for Magento 2.3.5+ version",
+        "amasty/module-mostviewed-mftf-3": "Install mostviewed-mftf-3 module to be able to run Mostviewed MFTF tests for Magento 2.4.0+ version"
+    },
+    "type": "magento2-module",
+    "version": "2.14.0",
+    "license": [
+        "Commercial"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\Mostviewed\\": ""
+        }
+    }
+}

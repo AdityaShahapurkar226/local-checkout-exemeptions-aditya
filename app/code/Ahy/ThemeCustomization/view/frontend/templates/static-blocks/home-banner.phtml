@@ -1,0 +1,93 @@
+<section class="hero-banner">
+    <div class="hero-banner-container flex flex-col md:flex-row gap-4 justify-center">
+        <div class="hero-banner-content hero-banner-big-img w-full md:w-[58%] sm:h-[447px] md:h-[308px] lg:h-[420px] xl:h-[532px] 2xl:h-[644px]">
+            <div class="hero-banner-content-image overflow-hidden">
+                <a href="/camping-gear.html" title="Spring Deals">
+                    <img src="/media/wysiwyg/banners/hp_-_May_-_4-compressed.jpg" alt="Spring Deals" class="w-full hero-banner-main-img aspect-[7/5.28] object-cover" loading="eager" fetchpriority="high"/>
+                </a>
+            </div>
+        </div>
+        <div class="hero-banner-content hero-small-banner ahy-swipeable overflow-x-scroll md:overflow-x-auto flex flex-row md:flex-col justify-between gap-4 md:gap-0 md:w-[42%]">
+            <div class="hero-banner-content-image ahy-swipeable-content md:overflow-hidden">
+                <a href="/icebarrel" title="ice barrel">
+                      <img src="/media/wysiwyg/banners/hp-icebarrel-compressed-increased-height.png" alt="ice barrel" class="ahy-swipeable-content-image aspect-[2/1.023] object-cover" loading="eager"/>
+                </a>
+            </div>
+            <div class="hero-banner-content-image ahy-swipeable-content md:overflow-hidden">
+                <a href="/Grillyourassoff" title="Seller Spotlight Grill Your Ass Off">
+                     <img src="/media/wysiwyg/banners/hp_-_GYAO.jpg" alt="Everest Seller Spotlight Grill Your Ass Off" class="ahy-swipeable-content-image aspect-[2/1.023] object-cover" loading="eager"/>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.hero-small-banner img{
+    aspect-ratio: 2/1.023;
+    object-fit: cover;
+}
+.hero-banner-big-img img{
+    aspect-ratio: 7/5.28;
+    object-fit: cover;
+}
+    .homepage-category-option .category-image-ahy:hover img,
+.ahy-newsletter-section .ahy-newsletter-title-image:hover,
+picture.creator-content-img:hover .creator-content-img {
+        -webkit-transform: scale(1.01);
+        transform: scale(1.01);
+    }
+
+    .homepage-category-option .category-image-ahy img,
+.ahy-newsletter-section .ahy-newsletter-title-image,
+picture.creator-content-img .creator-content-img {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        -webkit-transition: .45s ease-in-out;
+        transition: .45s ease-in-out;
+    }
+
+
+    .homepage-category-option .category-image-ahy,
+picture.creator-content-img {
+        overflow: hidden;
+    }
+section.hero-banner .hero-banner-container img:hover {
+    filter: brightness(1.1);
+    -webkit-filter: brightness(1.1);
+}
+    .ahy-swipeable::-webkit-scrollbar {
+        width: 1px;
+        background-color: #ccc;
+        border-radius: 17px;
+    }
+
+    .ahy-swipeable::-webkit-scrollbar-thumb {
+        background-color: #064f84;
+        border-radius: 17px;
+    }
+
+    @media only screen and (max-width: 767px) and (min-width: 601px) {
+        section.hero-banner .ahy-swipeable-content-image {
+            width: 400px !important;
+        }
+    }
+
+    @media only screen and (max-width: 600px) and (min-width: 431px) {
+        section.hero-banner .ahy-swipeable-content-image {
+            width: 300px !important;
+        }
+    }
+
+    @media only screen and (max-width: 430px) {
+        section.hero-banner .ahy-swipeable-content-image {
+            width: 195px !important;
+        }
+    }
+    
+    @media only screen and (min-width: 768px){
+       .hero-banner-content{
+           overflow-x: hidden;
+        }
+   }
+</style>

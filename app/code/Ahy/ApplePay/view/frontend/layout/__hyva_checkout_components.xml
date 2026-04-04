@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- <referenceBlock name="checkout.payment.methods"> -->
+
+            <!-- <referenceBlock 
+                name="braintree_applepay"
+                template="Ahy_ApplePay::checkout/payment/method/applepay.phtml"
+            >
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        \Ahy\ApplePay\Magewire\Checkout\Payment\Method\ApplePay
+                    </argument>
+                </arguments>
+            </referenceBlock> -->
+
+            <!-- <block name="checkout.payment.method.applypay" as="braintree_applepay"
+                        template="Ahy_ApplePay::checkout/payment/method/applepay.phtml" /> -->
+
+        <!-- </referenceBlock> -->
+    </body>
+</page>

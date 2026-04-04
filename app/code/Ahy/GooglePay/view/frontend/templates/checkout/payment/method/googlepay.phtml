@@ -1,0 +1,280 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var Checkmo $method */
+/** @var AbstractBlock $block */
+/** @var Escaper $escaper */
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\AbstractBlock;
+use Ahy\PaymentIntegrations\ViewModel\Braintree as BraintreeViewModel;
+use Ahy\GooglePay\ViewModel\Payment\Method\GooglePay as GooglePayViewModel;
+use Hyva\Theme\Model\ViewModelRegistry;
+
+/** @var BraintreeViewModel $braintreeViewModel */
+$braintreeViewModel = $viewModels->require(BraintreeViewModel::class);
+/** @var GooglePayViewModel $googlePayViewModel */
+$googlePayViewModel = $viewModels->require(GooglePayViewModel::class);
+
+?>
+
+<div>
+    <div 
+        x-data="{ googlePayToken: false }" 
+        x-init="window.braintree.activateGooglePay" 
+        id="braintreeGooglePay" 
+        wire:key="<?= uniqid('', true) ?>" 
+        @braintree-set-google-token.window="googlePayToken = $event.detail.googlePayToken"
+    >
+        <template x-if="googlePayToken">
+            <p class="nonce_thankyou_message">
+                Thank you. Please click <span>Place Order</span> to finish checkout with Google Pay.
+            </p>
+        </template>
+        <template x-if="!googlePayToken">
+            <div id="braintreeGooglePayButton" class="relative z-10 px-4"></div>
+        </template>
+    </div>
+
+    <script>
+        const braintreeGooglePayMethod = "braintree-googlepay";
+        const braintreeGooglePayId = "braintreeGooglePay";
+
+        window.braintree = window.braintree || {};
+
+        window.braintree.activateGooglePay = async function() {
+            this.googlePayToken = window.braintree.googlePayToken || false;
+
+            const requiredJsFiles = [];
+
+            if (!window.braintree?.client) {
+                requiredJsFiles.push(createScriptLoadPromise('https://js.braintreegateway.com/web/3.111.0/js/client.min.js'));
+            }
+
+            if (!window.braintree?.googlePayment) {
+                requiredJsFiles.push(createScriptLoadPromise('https://js.braintreegateway.com/web/3.111.0/js/google-payment.min.js'));
+            }
+
+            if (!window.google) {
+                requiredJsFiles.push(createScriptLoadPromise('https://pay.google.com/gp/p/js/pay.js'));
+            }
+
+            Promise.all(requiredJsFiles)
+                .then(initialiseGooglePay)
+                .then(addEvents);
+        }
+
+        async function initialiseGooglePay() {
+            if (window.braintree.googlePayToken) {
+                return;
+            } else {
+                fetch('/rest/V1/googlepay/clear-nonce', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(async data => {
+                    await logFrontend(`Nonce status on from frontend: ${data}`, 'info');
+                })
+                .catch(async error => {
+                    await logFrontend('Error clearing nonce: ' + error.message, 'error');
+                });
+            }
+
+            const environment = '<?= $braintreeViewModel->getEnvironment() == 'sandbox' ? 'TEST' : 'PRODUCTION' ?>';
+            const paymentsClient = new google.payments.api.PaymentsClient({
+                environment,
+            });
+
+            const clientInstance = await window.braintree.client.create({
+                authorization: "<?= $escaper->escapeJs($braintreeViewModel->getClientToken()) ?>",
+            });
+
+            const googlePaymentInstance = await window.braintree.googlePayment.create({
+                client: clientInstance,
+                googlePayVersion: 2,
+                googleMerchantId: "<?= $escaper->escapeJs($googlePayViewModel->getMerchantId()) ?>",
+            });
+
+            await paymentsClient.isReadyToPay({
+                apiVersion: 2,
+                apiVersionMinor: 0,
+                allowedPaymentMethods: <?= json_encode($googlePayViewModel->getAvailableCardTypes()) ?>,
+            });
+
+            const paymentButton = paymentsClient.createButton({
+                buttonColor: "<?= $googlePayViewModel->getButtonColor() ? 'black' : 'white' ?>",
+                buttonLocale: document.documentElement.lang,
+                onClick: () => onClick(paymentsClient, googlePaymentInstance)
+            });
+
+            const googlePayElement = document.getElementById('braintreeGooglePayButton');
+
+            // console.log('Pravin 6', paymentButton);
+
+            const gpayButton = paymentButton.querySelector('button');
+
+            if (gpayButton) {
+                gpayButton.style.width = '100%';
+                gpayButton.style.borderRadius = '100vh';
+                gpayButton.style.display = 'block';
+            }
+
+            if (googlePayElement && !googlePayElement.childElementCount) {
+                googlePayElement.append(paymentButton);
+            }
+        }
+
+        function addEvents() {
+            window.addEventListener('checkout:init:after', event => {
+                hyvaCheckout.validation.register(braintreeGooglePayId, async function () {
+                if (!window.braintree.googlePayToken) {
+                    showError('<?= $escaper->escapeJs(__('Please complete payment validation with Google Pay first.')) ?>');
+                }
+
+                return window.braintree.googlePayToken || false;
+                }, document.getElementById(braintreeGooglePayId));
+            }, {
+                once: true
+            });
+
+            hyvaCheckout.validation.register(braintreeGooglePayId, async function () {
+                if (!window.braintree.googlePayToken) {
+                    showError('<?= $escaper->escapeJs(__('Please complete payment validation with Google Pay first.')) ?>');
+                }
+
+                return window.braintree.googlePayToken || false;
+            }, document.getElementById(braintreeGooglePayId));
+
+            window.Magewire.hook('message.processed', (message, component) => {
+                if (component.id === 'checkout.billing-details.address-list') {
+                    window.braintree.googlePayToken = false;
+                }
+            }, { once: true });
+        }
+
+        async function onClick(paymentsClient, googlePaymentInstance) {
+            showLoader();
+
+            const paymentDataRequest = googlePaymentInstance.createPaymentDataRequest({
+                transactionInfo: {
+                    totalPriceStatus: 'FINAL',
+                    totalPrice: '<?= $braintreeViewModel->getTotal() ?>',
+                    currencyCode: '<?= $braintreeViewModel->getCurrency() ?>',
+                },
+                merchantInfo: {
+                    merchantId: "<?= $escaper->escapeJs($googlePayViewModel->getMerchantId()) ?>",
+                },
+                allowedPaymentMethods: [{
+                    "type": "CARD",
+                    "parameters": {
+                        "allowedCardNetworks": <?= json_encode($googlePayViewModel->getAvailableCardTypes()) ?>,
+                        "billingAddressRequired": false,
+                        "billingAddressParameters": {
+                            format: 'FULL',
+                            phoneNumberRequired: true
+                        },
+                    },
+                }],
+                shippingAddressRequired: false,
+                emailRequired: false,
+            });
+
+            paymentsClient.loadPaymentData(paymentDataRequest)
+                .then(async response => {
+                    const {
+                        nonce
+                    } = await googlePaymentInstance.parseResponse(response);
+
+                    window.braintree.googlePayToken = true;
+
+                    await logFrontend('Nonce received from Google Pay', 'info');
+
+                    window.dispatchEvent(new CustomEvent('braintree-set-google-token', { detail: { googlePayToken: true } }));
+                    await Magewire.find('checkout.payment.method.' + braintreeGooglePayMethod).call('setToken', nonce);
+                    clearError();
+                    hideLoader();
+                })
+                .catch(error => {
+                    if (error.statusCode === 'CANCELED') {
+                        showError('<?= $escaper->escapeJs(__('Payment cancelled.')) ?>');
+                    } else {
+                        showError(error.message);
+                    }
+                });
+        }
+
+        function createScriptLoadPromise(url) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = url;
+
+                script.addEventListener('load', function() {
+                    resolve();
+                }, false);
+
+                script.addEventListener('error', function(event) {
+                    reject();
+                }, false);
+
+                document.body.appendChild(script);
+            })
+        }
+
+        function showLoader() {
+            window.dispatchEvent(new Event('magewire:loader:start'));
+        }
+
+        function hideLoader() {
+            window.dispatchEvent(new Event('magewire:loader:done'));
+        }
+
+        function showError(message) {
+            hideLoader();
+            hyvaCheckout.payment.dispatchExceptionMessage(
+                message,
+                'error'
+            );
+        }
+
+        function clearError() {
+            hyvaCheckout.payment.dispatchSuccessMessage('');
+        }
+
+        async function logFrontend(message, level = 'info') {
+            try {
+                await fetch('/rest/V1/googlepay/frontend/log', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ message, level })
+                });
+            } catch (err) {
+                console.error('Logging failed:', err);
+            }
+        }
+    </script>
+</div>
+<style>
+    /* TODO: Generate this through Tailwind: */
+    .nonce_thankyou_message {
+        font-size: 20px;
+        margin: 25px 0;
+        color: #a0802c;
+        font-weight: 500;
+    }
+
+    .nonce_thankyou_message span {
+        font-weight: 700;
+    }
+
+    .braintreeGooglePayButton .gpay-button {
+        width: 100%;
+    }
+</style>

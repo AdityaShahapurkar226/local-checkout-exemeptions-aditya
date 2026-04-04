@@ -1,0 +1,428 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\StoreConfig;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+
+$storeConfig = $viewModels->require(StoreConfig::class);
+$maxItemsToDisplay = $storeConfig->getStoreConfig('checkout/sidebar/max_items_display_count');
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+?>
+<script>
+    function initCartDrawer() {
+        return {
+            open: false,
+            isLoading: false,
+            cart: {},
+            maxItemsToDisplay: <?= (int) $maxItemsToDisplay ?>,
+            itemsCount: 0,
+            cartInterval: null,
+            innerHtmlBackup: null,
+            totalCartAmount: 0,
+            hasExtraActions: false, 
+            init() {
+                this.$watch('open', (value) => {
+                    if (!value) {
+                        clearInterval(this.cartInterval);
+                    }
+                });
+            },
+            getData(data) {
+                if (data.cart) {
+                    this.cart = data.cart;
+                    this.itemsCount = data.cart.items && data.cart.items.length || 0;
+                    this.totalCartAmount = this.cart.summary_count;
+
+                    // check if extra_actions has real content
+                    this.hasExtraActions = !!(
+                        data.cart.extra_actions &&
+                        data.cart.extra_actions.trim().length
+                    );
+
+                    this.setCartItems();
+                }
+                this.isLoading = false;
+            },
+            cartItems: [],
+            getItemCountTitle() {
+                return hyva.strf('(%0 <?= $escaper->escapeJs(__('of')) ?> %1)', this.maxItemsToDisplay, this.itemsCount)
+            },
+            setCartItems() {
+                this.cartItems = this.cart.items && this.cart.items.sort((a, b) => b.item_id - a.item_id) || [];
+
+                if (this.maxItemsToDisplay > 0) {
+                    this.cartItems = this.cartItems.slice(0, parseInt(this.maxItemsToDisplay, 10));
+                }
+            },
+            getTotalProductPrice(price, qty){
+                var totalPrice = price * qty;
+                return totalPrice;
+            },
+            ahyToggleCart() {
+                this.removeElementsBasedOnCart();
+                this.open = true;
+                if (this.open) {
+                    this.removeElementsBasedOnCart;
+                }
+            },
+            removeElementsBasedOnCart() {
+                // Access cart data from local storage
+                window.dispatchEvent(new CustomEvent('reload-customer-section-data'));
+                var cartData = JSON.parse(localStorage.getItem('mage-cache-storage'));
+                var cart = cartData.cart;
+
+                var targetElement = document.querySelector('.cart-extra-actions-container');
+                if (!targetElement) return;
+
+                if (cart.hasOwnProperty('extra_actions') && cart.extra_actions === "") {
+                    // Store the inner HTML of the target element
+                    if (!this.innerHtmlBackup) {
+                        this.innerHtmlBackup = targetElement.innerHTML;
+                    }
+                    // Remove all child elements of targetElement
+                    while (targetElement.firstChild) {
+                        targetElement.removeChild(targetElement.firstChild);
+                    }
+                } else {
+                    // Restore the inner HTML if condition is false
+                    if (this.innerHtmlBackup) {
+                        targetElement.innerHTML = this.innerHtmlBackup;
+                        this.innerHtmlBackup = null; // Reset the backup
+                    }
+                }
+            },
+            deleteItemFromCart(itemId) {
+                this.isLoading = true;
+
+                const formKey = hyva.getFormKey();
+                const postUrl = BASE_URL + 'checkout/sidebar/removeItem/';
+
+                fetch(postUrl, {
+                    "headers": {
+                        "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    },
+                    "body": "form_key=" + formKey + "&item_id=" + itemId,
+                    "method": "POST",
+                    "mode": "cors",
+                    "credentials": "include"
+                }).then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else if (response.ok) {
+                        return response.json();
+                    } else {
+                        window.dispatchMessages && window.dispatchMessages([{
+                            type: 'warning',
+                            text: '<?= $escaper->escapeJs(__('Could not remove item from quote.')) ?>'
+                        }]);
+                        this.isLoading = false;
+                    }
+                }).then(result => {
+                    window.dispatchMessages && window.dispatchMessages([{
+                        type: result.success ? 'success' : 'error',
+                        text: result.success
+                            ? '<?= $escaper->escapeJs(__('You removed the item.')) ?>'
+                            : result.error_message
+                    }], result.success ? 5000 : 0)
+                    window.dispatchEvent(new CustomEvent('reload-customer-section-data'));
+                });
+            },
+            //This line needs to be removed as this is dev 1 instance.
+            updateItemQty(itemId, newQty) {
+                if (newQty < 1) {
+                    this.deleteItemFromCart(itemId);
+                    return;
+                }
+                this.isLoading = true;
+                const formKey = hyva.getFormKey();
+                const postUrl = BASE_URL + 'checkout/sidebar/updateItemQty/';
+                fetch(postUrl, {
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    },
+                    body: 'form_key=' + formKey + '&item_id=' + itemId + '&item_qty=' + newQty,
+                    method: 'POST',
+                    mode: 'cors',
+                    credentials: 'include'
+                }).then(response => {
+                    if (response.ok) return response.json();
+                    this.isLoading = false;
+                }).then(result => {
+                    if (result && result.success) {
+                        window.dispatchEvent(new CustomEvent('reload-customer-section-data'));
+                    } else {
+                        this.isLoading = false;
+                    }
+                });
+            },
+            getSectionDataExtraActions() {
+                if (! this.cart.extra_actions) {
+                    return '';
+                }
+
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(`<html><body><div id="__extra_actions">${this.cart.extra_actions}</div></body></html>`, 'text/html');
+                const contentNode = doc.getElementById('__extra_actions')
+
+                if (!contentNode || !contentNode.innerHTML.length) {
+                    return;
+                }
+
+                // Extract all the script tags from the new content.
+                // Script tags won't execute when inserted into a dom-element directly,
+                // therefore we need to inject them to the head of the document.
+                const tmpScripts = contentNode.getElementsByTagName('script');
+
+                if (tmpScripts.length > 0) {
+                    // Push all script tags into an array
+                    // (to prevent dom manipulation while iterating over dom nodes)
+                    const scripts = [];
+                    for (let i = 0; i < tmpScripts.length; i++) {
+                        scripts.push(tmpScripts[i]);
+                    }
+
+                    // Iterate over all script tags and duplicate+inject each into the head
+                    for (let i = 0; i < scripts.length; i++) {
+                        let script = document.createElement('script');
+                        script.innerHTML = scripts[i].innerHTML;
+
+                        document.head.appendChild(script);
+
+                        // Remove the original (non-executing) node from the page
+                        // scripts[i].parentNode.removeChild(scripts[i]);
+                    }
+                }
+                return contentNode.innerHTML;
+            }
+        }
+    }
+</script>
+<section id="cart-drawer"
+        x-data="initCartDrawer()"
+        @private-content-loaded.window="getData($event.detail.data)"
+        @toggle-cart.window="ahyToggleCart()"
+        @keydown.window.escape="open=false"
+>
+    <template x-if="cart && cart.summary_count">
+        <div role="dialog"
+            aria-labelledby="cart-drawer-title"
+            aria-modal="true"
+            @click.outside="open=false"
+            class="fixed inset-y-0 ahy-minicart-drawer right-0 z-30 flex max-w-full overflow-y-auto">
+            <div class="backdrop"
+                x-show="open"
+                x-transition:enter="ease-in-out duration-500"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="ease-in-out duration-500"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                @click="open=false"
+                aria-label="Close panel"></div>
+            <div class="relative w-screen max-w-xl shadow-2xl"
+                x-show="open"
+                x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700"
+                x-transition:enter-start="translate-x-full"
+                x-transition:enter-end="translate-x-0"
+                x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
+                x-transition:leave-start="translate-x-0"
+                x-transition:leave-end="translate-x-full"
+            >
+                <div
+                    x-show="open"
+                    x-transition:enter="ease-in-out duration-500"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="ease-in-out duration-500"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0" class="absolute top-0 right-0 flex p-2 mt-2">
+                    <button @click="open=false" aria-label="Close panel"
+                            class="p-2 card rounded-full text-ahy-blue transition duration-150 ease-in-out hover:text-black">
+                        <?= $heroicons->xHtml(); ?>
+                    </button>
+                </div>
+                <div class="flex flex-col min-h-full h-auto pt-6 bg-white shadow-xl">
+                    <?= $block->getChildHtml('cart-drawer.top'); ?>
+
+                    <header class="px-4 sm:px-6">
+                        <h2 id="cart-drawer-title" class="text-lg pb-4 border-b border-ahy-blue font-extrabold leading-7 text-ahy-blue">
+                            <span class="flex gap-4">
+                                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.54 11.78" class="w-8 h-8">
+                                    <defs>
+                                        <style>.checkmark{fill:none;stroke:#0d2f47;stroke-miterlimit:10;stroke-width:3px;fill-rule:evenodd;}</style>
+                                    </defs>
+                                    <path class="checkmark" d="M1.06,5.84,4.88,9.65l8.6-8.59"/>
+                                </svg>
+                                <?= $escaper->escapeHtml(__('Item Added to cart')) ?>
+                                <span class="items-total text-xs"
+                                      x-show="maxItemsToDisplay && maxItemsToDisplay < itemsCount"
+                                      x-text="getItemCountTitle()">
+                                </span>
+                            </span>
+                        </h2>
+                    </header>
+
+                    <?= $block->getChildHtml('cart-drawer.items.before'); ?>
+
+                    <div class="relative grid gap-6 px-4 py-6 bg-white sm:gap-8 sm:px-6">
+                        <template x-for="item in cartItems">
+                            <div class="flex items-start p-3 -m-3 space-x-4 transition duration-150
+                                ease-in-out rounded-lg hover:bg-gray-100">
+                                <a :href="item.product_url" class="w-1/4">
+                                    <img
+                                        :src="item.product_image.src"
+                                        :width="item.product_image.width"
+                                        :height="item.product_image.height"
+                                        loading="lazy"
+                                    />
+                                </a>
+                                <div class="w-2/4 space-y-2">
+                                    <div>
+                                        <p class="text-lg font-normal text-ahy-blue line-clamp-2">
+                                            <span x-html="item.product_name"></span>
+                                        </p>
+                                        <!-- <p class="text-sm"><span x-html="item.product_sku"></span></p> -->
+                                    </div>
+                                    <template x-for="option in item.options">
+                                        <div class="pt-2">
+                                            <p class="font-semibold" x-text="option.label + ':'"></p>
+                                            <p class="text-secondary" x-html="option.value"></p>
+                                        </div>
+                                    </template>
+                                    <!-- <p>qty: <span x-html="item.qty"></span></p> -->
+                                    
+                                    <!-- <div class="pt-4">
+                                        <a :href="item.configure_url"
+                                           x-show="item.product_type !== 'grouped'"
+                                           class="inline-flex p-2 mr-2 btn btn-primary">
+                                            <?= $heroicons->pencilHtml('', 20, 20); ?>
+                                        </a>
+                                        <button class="inline-flex p-2 btn btn-primary"
+                                                @click="deleteItemFromCart(item.item_id)"
+                                        >
+                                            <?= $heroicons->trashHtml('', 20, 20); ?>
+                                        </button>
+                                    </div> -->
+                                </div>
+                                <div class="w-1/4">
+                                    <template x-if="item.product_price_value !== getTotalProductPrice(item.product_price_value, item.qty)">
+                                        <div class="flex items-end flex-col">
+                                            <p class="text-lg font-bold text-ahy-blue"><span x-html="hyva.formatPrice(getTotalProductPrice(item.product_price_value, item.qty))"></span></p>
+                                            <p class="text-sm text-ahy-body-text-color flex gap-1">Each <span x-html="hyva.formatPrice(item.product_price_value)"></span></p>
+                                        </div>
+                                    </template>
+                                    <template x-if="item.product_price_value == getTotalProductPrice(item.product_price_value, item.qty)">
+                                        <div class="flex items-end flex-col">
+                                            <p class="text-lg font-bold text-ahy-blue flex gap-1"><span x-html="hyva.formatPrice(item.product_price_value)"></span></p>
+                                        </div>
+                                    </template>
+                                    <template x-if="parseFloat(item.product_price_value) > 0">
+                                        <div class="flex items-end flex-col mt-2">
+                                            <div class="flex items-center border-2 border-ahy-blue rounded-full overflow-hidden w-fit">
+                                                <button
+                                                    type="button"
+                                                    class="w-6 h-6 rounded-full ml-1 flex items-center justify-center text-ahy-blue font-bold text-lg hover:bg-ahy-blue hover:text-white transition-colors duration-150"
+                                                    @click.prevent="item.qty <= 1 ? deleteItemFromCart(item.item_id) : updateItemQty(item.item_id, item.qty - 1)"
+                                                >−</button>
+                                                <span class="px-3 py-1 text-sm font-bold text-ahy-blue" x-text="item.qty"></span>
+                                                <button
+                                                    type="button"
+                                                    class="w-6 h-6 rounded-full mr-1 flex items-center justify-center text-ahy-blue font-bold text-lg hover:bg-ahy-blue hover:text-white transition-colors duration-150"
+                                                    @click.prevent="updateItemQty(item.item_id, item.qty + 1)"
+                                                >+</button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <?= $block->getChildHtml('cart-drawer.totals.before'); ?>
+
+                    <div class="relative grid gap-6 p-4 bg-white sm:gap-8 sm:px-6">
+                        <!-- <div class="w-full p-3 -m-3 space-x-4 transition duration-150 ease-in-out rounded-lg
+                            hover:bg-gray-100">
+                            <p><?= $escaper->escapeHtml(__('Subtotal')) ?>: <span x-html="cart.subtotal"></span></p>
+                        </div> -->
+                        <div class="w-full p-3 flex flex-col md:flex-row gap-4 justify-between transition duration-150 ease-in-out rounded-lg ">
+                            <!-- <a @click.prevent.stop="$dispatch('toggle-authentication',
+                                {url: '<?= $escaper->escapeUrl($block->getUrl('checkout')) ?>'});"
+                               href="<?= $escaper->escapeUrl($block->getUrl('checkout')) ?>"
+                               class="inline-flex btn btn-primary">
+                                <?= $escaper->escapeHtml(__('Checkout')) ?>
+                            </a>
+                            <span><?= $escaper->escapeHtml(__('or')) ?></span> -->
+
+                            <a href="javascript:void()" class="w-full md:w-1/2" @click="open=false">
+                                <button class="border-3 border-ahy-blue rounded-full font-bold text-sm w-full h-12 hover:shadow-[#0d2f47_0px_0px_0px_1px_inset]">
+                                    <?= $escaper->escapeHtml(__('Keep Shopping')) ?>
+                                </button>
+                            </a>
+
+                            <a href="<?= $escaper->escapeUrl($block->getUrl('checkout/cart')) ?>" class="w-full md:w-1/2">
+                                <button class="ahy-custom-btn bg-ahy-red text-white font-bold text-sm hover:bg-ahy-red-light w-full h-12"><?= $escaper->escapeHtml(__('View Cart')) ?></button>
+                            </a>
+                        </div>
+                        <a href="<?= $escaper->escapeUrl($block->getUrl('checkout')) ?>" class="w-full px-4 pt-6">
+                            <button class="btn bg-ahy-red hover:bg-ahy-red-light w-full relative ahy-custom-btn">
+                                <img src="/media/icons/lock.svg" alt="lock icon" class="w-4 h-4">
+                                <span class="w-full font-bold py-2 text-center"><?= $escaper->escapeHtml(__('Continue to Checkout')) ?></span>
+                            </button>
+                        </a>
+
+                        <div
+                            x-show="hasExtraActions"
+                            x-transition
+                            class="flex flex-row gap-4 items-center py-6"
+                        >
+                            <div class="w-[47%]">
+                                <hr class="border border-ahy-blue">
+                            </div>
+
+                            <div class="text-center font-semibold">
+                                OR
+                            </div>
+
+                            <div class="w-[47%]">
+                                <hr class="border border-ahy-blue">
+                            </div>
+                        </div>
+
+                        <!-- <div x-html="getSectionDataExtraActions()"></div> -->
+                        <?= $block->getChildHtml('extra_actions') ?>
+                        <!-- <div class="ahy-show-minicart-paypal-button">
+                            <?//= $block->getChildHtml('paypal.show') ?>
+                        </div> -->
+                    </div>
+
+                    <div class="bg-ahy-bg px-4 md:px-8 h-auto">
+                        <?php
+                            echo $this->getLayout()
+                            ->createBlock('Magento\Cms\Block\Block')
+                            ->setBlockId('customer-also-view-klevu-products')
+                            ->toHtml();
+                        ?>
+                    </div>
+                    <?= $block->getChildHtml('cart-drawer.bottom'); ?>
+                </div>
+            </div>
+            <?= $block->getChildHtml('loading') ?>
+        </div>
+    </template>
+</section>

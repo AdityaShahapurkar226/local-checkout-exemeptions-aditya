@@ -1,0 +1,146 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$isPartner = $block->isSeller();
+$getAllCustomAttributes = $block->getAttributeDetails();
+$wholeData = $block->prepareFileColumnRow('simple', []);
+?>
+<?php if ($isPartner == 1): ?>
+    <style>
+        th.wk-check-first-td, td.wk-check-first-td {
+            width: 2%;
+            text-align: center;
+        }
+    </style>
+    <!-- Start : Export Proucts in file -->
+    <form method="post"
+        action="<?= $block->escapeHtml($block->getUrl('mpmassupload/product/export')); ?>"
+        id="wk_massupload_product_export_form"
+        class="wk-massupload-container"
+        enctype="multipart/form-data"
+        data-mage-init='{"validation":{}}'>
+        <fieldset class="fieldset">
+            <?= $block->getBlockHtml('formkey') ?>
+            <?= $block->getBlockHtml('seller.formkey')?>
+            <legend class="legend">
+                <span><?= $block->escapeHtml(__("Export Products (csv file format)")); ?></span>
+                <button class="button wk-mp-btn" type="submit">
+                    <span><span><?= $block->escapeHtml(__("Export")); ?></span></span>
+                </button>
+            </legend>
+            <div class="field required">
+                <label for="attribute_set" class="label">
+                    <span><?= $block->escapeHtml(__("Select Product Type")); ?></span>
+                </label>
+                <div class="control">
+                    <select data-validate="{'validate-select':true}"
+                        title="<?= $block->escapeHtml(__("Attribute Set")); ?>"
+                        class="required-entry"
+                        id="product_type"
+                        name="product_type"
+                        aria-required="true">
+                                            <option value=''>
+                                                <?= $block->escapeHtml(__('Please select')) ?>
+                                            </option>
+                                            <option value='simple'>
+                                                <?= $block->escapeHtml(__('Export Simple Products')) ?>
+                                            </option>
+                                            <option value='configurable'>
+                                                <?= $block->escapeHtml(__('Export Configurable Products')) ?>
+                                            </option>
+                                            <option value='virtual'>
+                                                <?= $block->escapeHtml(__('Export Virtual Products')) ?>
+                                            </option>
+                                            <option value='downloadable'>
+                                                <?= $block->escapeHtml(__('Export Downloadable Products')) ?>
+                                            </option>
+                    </select>
+                </div>
+            </div>
+            <?php
+            if (!empty($getAllCustomAttributes)) { ?>
+                <div class="field">
+                    <label for="attribute_set" class="label">
+                        <span><?= $block->escapeHtml(__("Select Custom Attributes to export in file")); ?></span>
+                    </label>
+                    <div class="control">
+                        <table cellspacing="0" class="border wk-mp-list-table wk-mp-list-container-table">
+                            <thead>
+                                <tr class="wk-content">
+                                    <th class="wk-check-first-td">
+                                        <span>
+                                            <input type="checkbox"
+                                                name="dataflow_profile_select_all"
+                                                value="all" id="dataflow-profile-select-all"/>
+                                        </span>
+                                    </th>
+                                    <th class="wk-first-td">
+                                        <span class="label name">
+                                            <?= $block->escapeHtml(__('Attribute Code'))?>
+                                        </span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $i = 0;
+                                $totalAttr = count($getAllCustomAttributes);
+                                foreach ($getAllCustomAttributes as $id => $code) {
+                                    $code = trim($code);
+                                    if (!in_array($code, $wholeData)) {
+                                        $i = $i+1; ?>
+                                        <tr class="wk-row-view <?= $class = ($i == $totalAttr)? 'wk_last_tr':''?>">
+                                            <td class="wk-check-first-td">
+                                                <span>
+                                                    <input type="checkbox"
+                                                    name="custom_attributes[]"
+                                                    value="<?= $block->escapeHtml($code)?>"
+                                                    class="mpcheckbox"/>
+                                                </span>
+                                            </td>
+                                            <td class="wk-first-td">
+                                                <input type="hidden"
+                                                    class="hidden_id"
+                                                    value="<?= $block->escapeHtml($code); ?>" />
+                                                <span class="label">
+                                                    <?= $block->escapeHtml($code); ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    }
+                                } ?>
+                      </table>
+                    </div>
+                </div>
+            <?php } ?>
+        </fieldset>
+    </form>
+    <div class="buttons-set">
+        <p class="back-link">
+            <a href="javascript:;" onclick="javascript: window.history.back();" class="left">
+                &laquo; <?= $block->escapeHtml(__('Back')) ?>
+            </a>
+        </p>
+    </div>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "dataflowprofile": {}
+            }
+        }
+    </script>
+    <!-- End : Export Products -->
+<?php else: ?>
+    <h2 class="wk-mp-error-msg">
+        <?= $block->escapeHtml(__("To Become Seller Please Contact to Admin.")); ?>
+    </h2>
+<?php endif; ?>

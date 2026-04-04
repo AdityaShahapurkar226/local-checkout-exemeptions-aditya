@@ -1,0 +1,13 @@
+{
+    "marketplace_userdata": {
+        "column": {
+            "flxPoint_seller_id": true,
+            "seller_active": true
+        }
+    },
+    "marketplace_product": {
+        "column": {
+            "product_upc": true
+        }
+    }
+}

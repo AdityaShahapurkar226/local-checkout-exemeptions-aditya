@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMultiShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="carriers">
+            <group id="mpmultishipping" translate="label" type="text" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Webkul Marketplace Multi Shipping</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Enabled for Checkout</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Select yes to activate multiple shipping</comment>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" >
+                    <label>Title</label>
+                </field>
+                <field id="method_title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" >
+                    <label>Method Title</label>
+                </field>
+                <field id="shipping_mode" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" >
+                    <label>Show Price</label>
+                    <source_model>Webkul\MpMultiShipping\Model\Config\Source\Model</source_model>
+                </field>
+                <field id="showmethod" translate="label" type="select" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Show Method if Not Applicable</label>
+                    <frontend_class>shipping-skip-hide</frontend_class>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

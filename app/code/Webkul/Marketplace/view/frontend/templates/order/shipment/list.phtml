@@ -1,0 +1,93 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$viewModel = $block->getViewModel();
+$helper = $viewModel->getHelper();
+$isPartner = $helper->isSeller();
+$orderId = $block->getRequest()->getParam('order_id');
+if ($isPartner == 1) { ?>
+    <div class="wk-mp-design">
+        <fieldset class="fieldset info wk-mp-fieldset">
+            <legend class="legend"><span><?= /* @noEscape */ __('Shipment List') ?></span></legend>
+            <div class="order-details-items ordered">
+                <div class="table-wrapper order-items">
+                    <table class="data table table-order-items" summary="<?= /* @noEscape */ __('Shipment List') ?>">
+                        <thead>
+                            <tr>
+                                <th class="col price"><?= /* @noEscape */ __('Shipment #') ?></th>
+                                <?php if ($helper->getSellerProfileDisplayFlag()) { ?>
+                                <th class="col price"><?= /* @noEscape */ __('Ship-to Name') ?></th>
+                                <?php } ?>
+                                <th class="col price"><?= /* @noEscape */ __('Ship Date') ?></th>
+                                <th class="col price"><?= /* @noEscape */ __('Total Quantity') ?></th>
+                                <th class="col price"><?= /* @noEscape */ __('Action') ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $i = 0;
+                            $order = $block->getOrder();
+                            foreach ($block->getCollection() as $shipment) {
+                                $i++;
+                                $shipmentId = $shipment['entity_id'];
+                                ?>
+                                <tr class="border">
+                                    <td class="col price" data-th="<?= /* @noEscape */ __('Shipment #') ?>">
+                                        <?= $escaper->escapeHtml($shipment['increment_id']);?>
+                                    </td>
+                                    <?php if ($helper->getSellerProfileDisplayFlag()) { ?>
+                                        <td class="col price" data-th="<?= /* @noEscape */ __('Ship-to Name') ?>">
+                                            <?= $escaper->escapeHtml($order->getCustomerName());?>
+                                        </td>
+                                    <?php } ?>
+                                    <td class="col price" data-th="<?= /* @noEscape */ __('Ship Date') ?>">
+                                        <?= /* @noEscape */ $block->formatDate($shipment->getCreatedAt());?>
+                                    </td>
+                                    <td class="col price" data-th="<?= /* @noEscape */ __('Total Quantity') ?>">
+                                        <?= /* @noEscape */ $shipment->getTotalQty()?>
+                                    </td>
+                                    <td class="col price" data-th="<?= /* @noEscape */ __('Action') ?>">
+                                        <a href="<?= $escaper->escapeUrl($block
+                                        ->getUrl(
+                                            'marketplace/order_shipment/view',
+                                            [
+                                                'order_id' => $orderId,
+                                                'shipment_id' => $shipmentId,
+                                                '_secure' => $block->getRequest()->isSecure()
+                                            ]
+                                        )); ?>">
+                                            <?= /* @noEscape */ __('View'); ?>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <?php
+                            }?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <?php if ($block->getPagerHtml()): ?>
+                <div class="order-products-toolbar toolbar bottom"><?= $block->getPagerHtml(); ?></div>
+            <?php endif ?>
+        </fieldset>
+    </div>
+    <div class="buttons-set">
+        <p class="back-link">
+            <a href="javascript:;" onclick="javascript: window.history.back();" 
+            class="left">&laquo; <?= /* @noEscape */ __('Back') ?></a>
+        </p>
+    </div>
+    <?php
+} else { ?>
+    <h2 class="wk-mp-error_msg">
+        <?= /* @noEscape */ __("To Become Seller Please Contact to Admin."); ?>
+    </h2>
+    <?php
+} ?>

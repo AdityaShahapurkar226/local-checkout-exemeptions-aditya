@@ -1,0 +1,20 @@
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+.admin__page-nav.wk-config-tab-class._collapsed._show ._collapsible strong:before {
+    content: "";
+    background: url(../images/configtab/logo.png) no-repeat scroll 0 0 transparent;
+    width: 100%;
+    height: 26px;
+    display: inline-block;
+    vertical-align: bottom;
+}
+.admin__page-nav.wk-config-tab-class._collapsed._show ._collapsible strong {
+    font-size: 0;
+}

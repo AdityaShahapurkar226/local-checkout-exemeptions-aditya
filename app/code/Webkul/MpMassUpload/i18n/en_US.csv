@@ -1,0 +1,203 @@
+"Mass Upload Dataflow Profile","Mass Upload Dataflow Profile"
+"Dataflow Profile Information","Dataflow Profile Information"
+"Profile Name","Profile Name"
+"Attribute Set","Attribute Set"
+"Mass Upload","Mass Upload"
+"Mass Product Export","Mass Product Export"
+"Select Seller","Select Seller"
+"Select Product Type","Select Product Type"
+"Please select","Please select"
+"Export Simple Products","Export Simple Products"
+"Export Configurable Products","Export Configurable Products"
+"Export Virtual Products","Export Virtual Products"
+"Export Downloadable Products","Export Downloadable Products"
+"Manage Mass Product Export","Manage Mass Product Export"
+"Run Profile","Run Profile"
+"Select Profile","Select Profile"
+"Manage Mass Upload","Manage Mass Upload"
+"Profile Information","Profile Information"
+Downloadable,Downloadable
+"Dataflow Profile","Dataflow Profile"
+"Upload Csv/XML/XLS","Upload Csv/XML/XLS"
+"Upload Images Zip","Upload Images Zip"
+Upload,Upload
+Reset,Reset
+"Requested dataflow profile doesn't exist","Requested dataflow profile doesn't exist"
+"Something went wrong while editing the dataflow profile.","Something went wrong while editing the dataflow profile."
+"Edit Dataflow Profile with id %1","Edit Dataflow Profile with id %1"
+"New Dataflow Profile","New Dataflow Profile"
+"Edit Dataflow Profile","Edit Dataflow Profile"
+"A total of %1 record(s) have been deleted.","A total of %1 record(s) have been deleted."
+"Profile was successfully saved.","Profile was successfully saved."
+"Dataflow profile does not exist.","Dataflow profile does not exist."
+"Profile was successfully created.","Profile was successfully created."
+"Manage Mass Products Export","Manage Mass Products Export"
+"There is no product with product type: %1 to export.","There is no product with product type: %1 to export."
+"Operation Failed.","Operation Failed."
+"Total %1 Product(s) Imported.","Total %1 Product(s) Imported."
+"Finished Execution.","Finished Execution."
+"Product data not exists.","Product data not exists."
+"Invalid Profile.","Invalid Profile."
+msg,msg
+"Your file was uploaded and unpacked.","Your file was uploaded and unpacked."
+"Marketplace Mass Upload Dataflow Profile","Marketplace Mass Upload Dataflow Profile"
+"Profile was successfully deleted.","Profile was successfully deleted."
+"You are not authorized to delete this profile.","You are not authorized to delete this profile."
+"Requested profile doesn't exist","Requested profile doesn't exist"
+"You are not authorized to update this profile.","You are not authorized to update this profile."
+"Requested profile doesn't exist.","Requested profile doesn't exist."
+"Profile "" %1 "" was successfully deleted.","Profile "" %1 "" was successfully deleted."
+"You are not authorized to delete profile "" %1 "".","You are not authorized to delete profile "" %1 ""."
+"Requested profile "" %1 "" doesn't exist","Requested profile "" %1 "" doesn't exist"
+"Please fill the Required Fields","Please fill the Required Fields"
+"Product type should be selected.","Product type should be selected."
+"Marketplace MassUpload Product Export","Marketplace MassUpload Product Export"
+"Marketplace Mass Upload","Marketplace Mass Upload"
+"Select Dataflow Profile","Select Dataflow Profile"
+"No matching Profile Found","No matching Profile Found"
+"Skipped row %1. product data can not be empty.","Skipped row %1. product data can not be empty."
+"Skipped row %1. product name can not be empty.","Skipped row %1. product name can not be empty."
+"Skipped row %1. product description can not be empty.","Skipped row %1. product description can not be empty."
+"Skipped row %1. product weight can not be empty.","Skipped row %1. product weight can not be empty."
+"Skipped row %1. product sku can not be empty.","Skipped row %1. product sku can not be empty."
+"Product data for row %1 does not exist","Product data for row %1 does not exist"
+"Skipped row %1. Product is already assigned to other seller.","Skipped row %1. Product is already assigned to other seller."
+"You are not allowed to add more than %1 Product(s)","You are not allowed to add more than %1 Product(s)"
+"YOUR GROUP PACK IS EXPIRED...","YOUR GROUP PACK IS EXPIRED..."
+"Skipped row %1. %2","Skipped row %1. %2"
+"Skipped row %1. error in importing product.","Skipped row %1. error in importing product."
+"Skipped row %1. sku can not be empty.","Skipped row %1. sku can not be empty."
+"Skipped row %1. sku %2 already exist.","Skipped row %1. sku %2 already exist."
+"Skipped row %1. Some of super attributes are not valid.","Skipped row %1. Some of super attributes are not valid."
+"Skipped row %1. Super attribute value is not valid.","Skipped row %1. Super attribute value is not valid."
+"Unable to remove attribute mapped data record with id %1","Unable to remove attribute mapped data record with id %1"
+"Unable to remove temp profile data record with id %1","Unable to remove temp profile data record with id %1"
+"Edit to Add Mapping","Edit to Add Mapping"
+"View Customer","View Customer"
+Admin,Admin
+"In Database","In Database"
+"Choose an attribute","Choose an attribute"
+"In File","In File"
+Remove,Remove
+"Field Mapping","Field Mapping"
+"Add Field Mapping","Add Field Mapping"
+"Remove ","Remove "
+"Export Products","Export Products"
+"Please Select Seller","Please Select Seller"
+"Please Select Product Type.","Please Select Product Type."
+Completed,Completed
+"Deleting Profile","Deleting Profile"
+"No Product Imported","No Product Imported"
+"Starting Execution...","Starting Execution..."
+"Please don't close or refresh the window while importing products.","Please don't close or refresh the window while importing products."
+"Total %1 Product(s) to import.","Total %1 Product(s) to import."
+Importing,Importing
+"No Product to import.","No Product to import."
+"Finsihed Execution.","Finsihed Execution."
+"Please Select Profile.","Please Select Profile."
+"Sample Simple Type Csv File","Sample Simple Type Csv File"
+"Sample Downloadable Type Csv File","Sample Downloadable Type Csv File"
+"Sample Configurable Type Csv File","Sample Configurable Type Csv File"
+"Sample Virtual Type Csv File","Sample Virtual Type Csv File"
+"Sample Simple Type XML File","Sample Simple Type XML File"
+"Sample Downloadable Type XML File","Sample Downloadable Type XML File"
+"Sample Configurable Type XML File","Sample Configurable Type XML File"
+"Sample Virtual Type XML File","Sample Virtual Type XML File"
+"Sample Simple Type XLS File","Sample Simple Type XLS File"
+"Sample Downloadable Type XLS File","Sample Downloadable Type XLS File"
+"Sample Configurable Type XLS File","Sample Configurable Type XLS File"
+"Sample Virtual Type XLS File","Sample Virtual Type XLS File"
+"Upload Link Files Zip","Upload Link Files Zip"
+"Is Links have samples","Is Links have samples"
+"Is Samples Available","Is Samples Available"
+"Upload Link Sample Files Zip","Upload Link Sample Files Zip"
+"Upload Sample Files Zip","Upload Sample Files Zip"
+"Add New Profile","Add New Profile"
+"Save Profile","Save Profile"
+"Select Attribute Set","Select Attribute Set"
+"Manage Profile Information","Manage Profile Information"
+"Delete Products","Delete Products"
+"Delete Profiles","Delete Profiles"
+"Attribute Set Name","Attribute Set Name"
+Date,Date
+"Add Mapping","Add Mapping"
+Action,Action
+Edit,Edit
+Delete,Delete
+"We couldn't find any records.","We couldn't find any records."
+Back,Back
+"To Become Seller Please Contact to Admin.","To Become Seller Please Contact to Admin."
+"Export Products (csv file format)","Export Products (csv file format)"
+Export,Export
+"Select Custom Attributes to export in file","Select Custom Attributes to export in file"
+"Attribute Code","Attribute Code"
+"Mass Upload Product","Mass Upload Product"
+"MassUpload Product Export","MassUpload Product Export"
+Menu,Menu
+"Mass Upload Product Export","Mass Upload Product Export"
+"Upload Profile","Upload Profile"
+"Is Downloadable","Is Downloadable"
+"Upload CSV/XML/XLS File","Upload CSV/XML/XLS File"
+CSV/XML/XLS,CSV/XML/XLS
+"Images Zip","Images Zip"
+"Configurable Super Attributes","Configurable Super Attributes"
+"Configurable Super Attribute Options","Configurable Super Attribute Options"
+"Attribute Info","Attribute Info"
+"Select Attribute","Select Attribute"
+Options,Options
+"No attribute is selected.","No attribute is selected."
+"CSV column name for custom attribute","CSV column name for custom attribute"
+"Multiselect attribute value example","Multiselect attribute value example"
+"Multiselect attribute options for custom attribute","Multiselect attribute options for custom attribute"
+"Tier price attribute value example","Tier price attribute value example"
+"Tier Price options for custom attribute","Tier Price options for custom attribute"
+"Customer Groups","Customer Groups"
+"All Groups","All Groups"
+all,all
+Websites,Websites
+"All Websites","All Websites"
+" Are you sure you want to edit selected dataflow profile? "," Are you sure you want to edit selected dataflow profile? "
+" No Checkbox is checked "," No Checkbox is checked "
+" Are you sure you want to delete selected dataflow profile(s)? "," Are you sure you want to delete selected dataflow profile(s)? "
+" Are you sure you want to delete selected dataflow profile? "," Are you sure you want to delete selected dataflow profile? "
+"Add New Massupload Dataflow Profile","Add New Massupload Dataflow Profile"
+"Are you sure you wan't to delete selected dataflow profile record?","Are you sure you wan't to delete selected dataflow profile record?"
+ID,ID
+Seller,Seller
+Created,Created
+"Mass Upload Edit Dataflow Profile","Mass Upload Edit Dataflow Profile"
+Mass Upload Manager,Mass Upload Manager
+Mass Upload Product,Mass Upload Product
+Run Mass Upload Profile,Run Mass Upload Profile
+No file chosen,No file chosen
+Choose file,Choose file
+"Upload Link Files zip","Upload Link Files zip"
+"Upload Link Sample Files zip","Upload Link Sample Files zip"
+"Upload Sample Files zip","Upload Sample Files zip"
+GROUP NAME,GROUP NAME
+GROUP CODE,GROUP CODE
+WEBSITE NAME,WEBSITE NAME
+WEBSITE CODE,WEBSITE CODE
+"Remove","Remove"
+If yes then the csv file will be validated for Custom Attributes else not,If yes then the csv file will be validated for Custom Attributes else not
+Validate Custom Attribute,Validate Custom Attribute
+Mass Upload Custom Attribute Settings,Mass Upload Custom Attribute Settings
+"Skipped row %1. Product's Custom Attribute '%2' value can not be empty.","Skipped row %1. Product's Custom Attribute '%2' value can not be empty."
+'Required "%1" Attribute column is missing in sheet','Required "%1" Attribute column is missing in sheet'
+"No profile exists with id %1.","No profile exists with id %1."
+"Mass Uploaded Profile having id  %1 have been deleted.","Mass Uploaded Profile having id  %1 have been deleted."
+"Are you sure you wan't to delete selected uploaded profile record?","Are you sure you wan't to delete selected uploaded profile record?"
+"Mass Uploaded Profiles List","Mass Uploaded Profiles List"
+"Mass Upload Profile Listing","Mass Upload Profile Listing"
+"Mass Uploaded Profile(s) List","Mass Uploaded Profile(s) List"
+"Select Profile(s) to be deleted","Select Profile(s) to be deleted"
+"Profile List","Profile List"
+"Mass Uploaded Profile List","Mass Uploaded Profile List"
+"Select Custom Attributes to be exported","Select Custom Attributes to be exported"
+"No Attribute Enabled","No Attribute Enabled"
+"Import Products for multiple seller(s)","Import Products for multiple seller(s)"
+manufacturer,manufacturer
+color,color
+size,size
+format,format
+Default,Default

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!-- File: app/code/Ahy/EstateApiIntegration/etc/di.xml -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ahy\EstateApiIntegration\Api\RestrictedProductCheckerInterface" type="Ahy\EstateApiIntegration\Model\RestrictedProductChecker" />
+    <preference for="Ahy\EstateApiIntegration\Api\ProductZipValidatorInterface" type="Ahy\EstateApiIntegration\Model\ProductZipValidator" />
+    <type name="Ahy\EstateApiIntegration\ViewModel\CustomerInfo">
+        <arguments>
+            <argument name="scopeConfig" xsi:type="object">Magento\Framework\App\Config\ScopeConfigInterface</argument>
+        </arguments>
+    </type>
+    <type name="Ahy\EstateApiIntegration\Model\ProductZipValidator">
+        <arguments>
+            <argument name="estateApiService" xsi:type="object">Ahy\EstateApiIntegration\Service\EstateApiService</argument>
+        </arguments>
+    </type>
+    <type name="Ahy\EstateApiIntegration\ViewModel\CustomerInfo">
+        <arguments>
+            <argument name="httpContext" xsi:type="object">Magento\Framework\App\Http\Context</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Customer\CustomerData\Customer">
+        <plugin name="ahy_add_zip_to_customer_data" type="Ahy\EstateApiIntegration\Plugin\AddZipToCustomerData" />
+    </type>
+    <type name="Ahy\EstateApiIntegration\Logger\Logger">
+        <arguments>
+            <!-- REQUIRED: logger name -->
+            <argument name="name" xsi:type="string">estateintegration</argument>
+
+            <!-- REQUIRED: handlers array -->
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="object">
+                    Ahy\EstateApiIntegration\Logger\Handler
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Ahy\EstateApiIntegration\Api\OrchidRestrictionManagementInterface" type="Ahy\EstateApiIntegration\Model\OrchidRestrictionManagement" />
+    <type name="Magento\Quote\Model\QuoteManagement">
+        <plugin name="ahy_quote_orchid_plugin"
+            type="Ahy\EstateApiIntegration\Plugin\QuoteManagementOrchidPlugin" />
+    </type>
+    <type name="Magento\Sales\Model\Order">
+        <plugin name="ahy_order_hold_before_save"
+            type="Ahy\EstateApiIntegration\Plugin\OrderHoldBeforeSavePlugin" />
+    </type>
+
+      <preference for="Ahy\EstateApiIntegration\Api\FflInterface"
+                type="Ahy\EstateApiIntegration\Model\Ffl" />
+
+       <preference for="Ahy\EstateApiIntegration\Api\RestrictionValidatorInterface"
+                type="Ahy\EstateApiIntegration\Model\RestrictionValidator" />
+
+    <preference for="Ahy\EstateApiIntegration\Api\Data\RestrictionResponseInterface"
+                type="Ahy\EstateApiIntegration\Model\RestrictionResponse" />
+    <preference for="Ahy\EstateApiIntegration\Api\CityInterface"
+                type="Ahy\EstateApiIntegration\Model\City" />
+</config>

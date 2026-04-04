@@ -1,0 +1,65 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMultiShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$items = $block->getItems();
+$productWiseShippingArray = [];
+$itemQuantityArray = [];
+$viewModel =  $block->getViewModel();
+?>
+<?php if ($viewModel->enabledProductWiseShipping()): ?>
+    <?php
+    foreach ($items as $item) {
+        $labelAvailable = $viewModel->checkLabelAvailableOnItem($item);
+        $order = $item->getOrder();
+        if ($item->getShippingPrice() && !(int)$item->getQtyShipped() && $labelAvailable) {
+            array_push($productWiseShippingArray, 1);
+        } else {
+            array_push($productWiseShippingArray, 0);
+        }
+        $itemQuantityArray
+            [$item->getId()] = [
+                    "qty" => (int)$item->getQtyOrdered(),
+                    "customs_value" => $item->getPrice(),
+                    "price" => $item->getPrice(),
+                    "name" => $item->getName(),
+                    "weight" => $item->getWeight(),
+                    "product_id" => $item->getProductId(),
+                    "order_item_id" => $item->getId(),
+                    "item_shipping_method" => $viewModel->getShippingMethodFromSubMethod(
+                        $item->getShippingMethod()
+                    )
+
+                ];
+    }
+        $productWiseShipping = $viewModel->getJsonSerializer()->serialize($productWiseShippingArray);
+        $itemQuantity = $viewModel->getJsonSerializer()->serialize($itemQuantityArray);
+        $data = [
+            "productWiseShippingArray" => $productWiseShipping
+        ];
+        ?>
+    <div id="popup-modal" style = "display:none">
+        <?= /* @noEscape */ $block->getChildHtml('packages_generation_form') ?>
+    </div>
+    <script>
+        window.productWiseShippingArray = [];
+        window.itemQuantityArray = [];
+        window.getMultiShipDataLink;
+        window.productWiseShippingArray = <?= /* @noEscape */ $productWiseShipping ?>;
+        window.itemQuantityArray = <?= /* @noEscape */ $itemQuantity ?>;
+        window.getMultiShipDataLink = "<?= /* @noEscape */ $block->getUrl('multiship/labels/getdata'); ?>";
+    </script>
+    <script type="text/x-magento-init">
+        {
+            "body": {
+                "Webkul_MpMultiShipping/js/perproductshipping": <?= /* @noEscape */ $productWiseShipping ?>
+            }
+        }
+    </script>
+<?php endif; ?>

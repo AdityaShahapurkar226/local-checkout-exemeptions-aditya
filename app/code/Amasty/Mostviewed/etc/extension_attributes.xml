@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
+    <extension_attributes for="Amasty\Mostviewed\Api\Data\PackInterface">
+        <attribute code="stores" type="int[]" />
+        <attribute code="conditional_discounts" type="Amasty\Mostviewed\Api\Data\ConditionalDiscountInterface[]" />
+    </extension_attributes>
+</config>

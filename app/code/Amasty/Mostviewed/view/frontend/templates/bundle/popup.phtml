@@ -1,0 +1,47 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */
+    /**
+     * @var \Amasty\Mostviewed\Block\Product\Popup $block
+     * @var \Magento\Framework\Escaper $escaper
+     */
+?>
+<div class="amrelated-popup-container" data-amrelated-js="bundle-popup">
+    <div class="amrelated-bundle-popup">
+        <span title="<?= $escaper->escapeHtml(__('Close')) ?>" class="close" data-amrelated-js="close-popup"></span>
+        <div class="amrelated-products-wrapper" data-amrelated-js="products-wrapper">
+            <div class="amrelated-notice">
+                <?php foreach ($block->getHeaders() as $header): ?>
+                    <p><?= $escaper->escapeHtml($header); ?></p>
+                <?php endforeach; ?>
+            </div>
+            <?php foreach ($block->getProducts() as $productId => $item): ?>
+                <div class="amrelated-product-container" id="amrelated-product-container-<?= /* @noEscape */ $productId;?>">
+                    <div class="amrelated-product-message">
+                        <?= /* @noEscape */ $item['message'] ?>
+                    </div>
+                    <div class="amrelated-product-content">
+                        <?= /* @noEscape */ $item['html'] ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="amrelated-popup-tocart-wrapper">
+            <button class="action primary" type="button"
+                    data-amrelated-js="add-to-cart-popup"
+                    title="<?= $escaper->escapeHtml(__('Add to Cart')) ?>">
+                <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
+            </button>
+        </div>
+        <script type="text/x-magento-init">
+            {
+                "[data-amrelated-js='add-to-cart-popup']": {
+                    "Amasty_Mostviewed/js/ampackcart_popup": <?= /* @noEscape */ $block->getJsonConfig();?>
+                }
+            }
+        </script>
+    </div>
+</div>

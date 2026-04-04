@@ -1,0 +1,143 @@
+<?php
+$nonceCode = \BitRail\PaymentGateway\Gateway\Http\Client\ClientMock::getNonceCode();
+$vendorJsUrl = $block->getViewFileUrl('BitRail_PaymentGateway::js/view/payment/bitrail_vendor.js');
+?>
+
+<script>
+  const nonceCode = '<?php echo $nonceCode; ?>';
+  const vendorJsUrl = '<?php echo $vendorJsUrl; ?>';
+
+  const bitrailOptionId = 'payment-method-option-bitrail';
+  document.addEventListener('livewire:load', function () {
+    Livewire.hook('message.processed', (message) => {
+      const titleLiElement = document.getElementById(bitrailOptionId);
+      if (titleLiElement) {
+        setupClient(titleLiElement);
+      }
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const titleLiElement = document.getElementById(bitrailOptionId);
+    if (titleLiElement) {
+      setupClient(titleLiElement);
+    }
+  });
+
+  async function setupClient(titleLiElement) {
+    const titleLabelElement = titleLiElement.querySelector('label');
+    const titleHmtl = titleLabelElement?.querySelector('div');
+    if (titleHmtl && isPlainInnerText(titleHmtl)) {
+      showLoadingSpinner();
+      const { data: config } = await fetchConfig(nonceCode);
+      updateTitleContent(titleHmtl, config.paymentMethodTitle, config.logo.small);
+      updatePaymentContentTitle(config.paymentMethodTitle);
+      titleLiElement.style.display = 'block';
+      window.checkoutConfig = {
+        ...window.checkoutConfig ?? {},
+        payment: {
+          ...window.checkoutConfig?.payment ?? {},
+          bitrail_gateway: {
+            ...window.checkoutConfig?.payment?.bitrail_gateway ?? {},
+            ...config,
+            nonceCode: nonceCode,
+          }
+        }
+      }
+    }
+    hideLoadingSpinner();
+
+  }
+
+
+  async function loadVendorJsScript() {
+    await loadScript(vendorJsUrl)
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  function updateTitleContent(titleHmtl, appName, logoUrl) {
+    const titleContent = `
+        <div id="bitrail-title-div">
+            <span class="left">${appName}</span>
+            <img class="right" width="80" src="${logoUrl}" alt="" />
+        </div>`;
+
+    titleHmtl.style.width = '100%';
+    titleHmtl.innerHTML = titleContent;
+  }
+
+  function updatePaymentContentTitle(clientAppName) {
+    const paymentContentTitle = document.getElementById('bitrail-payment-content-title');
+
+    if (paymentContentTitle) {
+      paymentContentTitle.innerHTML = clientAppName;
+      document.getElementById('bitrail-payment-content').style.display = 'block';
+    }
+  }
+
+
+  async function fetchQuoteDetail(nonceCode) {
+    const url = new URL(`${location.origin}/bitrail/checkout/getquotedetail`);
+    url.searchParams.append("nonceCode", nonceCode);
+
+    const response = await fetchData(url);
+    return response;
+  }
+
+  async function registerPayment(orderId, verificationToken) {
+    const url = new URL(`${location.origin}/bitrail/checkout/registerpayment`);
+    url.searchParams.append("orderId", orderId);
+    url.searchParams.append("verificationToken", verificationToken);
+
+    const response = await fetchData(url);
+    return response;
+  }
+
+  async function fetchConfig(nonceCode) {
+    const url = new URL(`${location.origin}/bitrail/checkout/getconfig`);
+    url.searchParams.append("nonceCode", nonceCode);
+
+    const response = await fetchData(url);
+    return response;
+  }
+
+  function isPlainInnerText(element) {
+    const content = element.innerHTML.trim();
+    return !/<[^>]*>/.test(content);
+  }
+
+  function showLoadingSpinner() {
+    document.getElementById('spinner-wrapper').style.display = 'flex';
+  }
+
+  function hideLoadingSpinner(titleLiElememt, paymentContent) {
+    document.getElementById('spinner-wrapper').style.display = 'none';
+  }
+
+  async function fetchData(url, method = "GET") {
+    const response = await fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Error processing request");
+    }
+
+    return response.json();
+  }
+
+  function loadScript(url) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = url;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error(`Script load error for ${url}`));
+      document.body.appendChild(script);
+    });
+  }
+</script>

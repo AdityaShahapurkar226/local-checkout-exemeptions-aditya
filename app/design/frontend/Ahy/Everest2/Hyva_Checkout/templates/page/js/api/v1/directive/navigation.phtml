@@ -1,0 +1,348 @@
+<?php
+
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+/** @var \Ahy\EstateApiIntegration\ViewModel\CartProducts $cartViewModel */
+$cartViewModel = $viewModels->require(\Ahy\EstateApiIntegration\ViewModel\CartProducts::class);
+$productIds = $cartViewModel->getCartProductIds();
+
+// Get ZIP code from customer shipping address
+$addressList = $viewModels->require(
+    \Hyva\Checkout\ViewModel\Checkout\AddressView\AddressList\AddressListShipping::class
+);
+$addressListItems = $addressList->getAddressListItems();
+
+$zipcode = null;
+foreach ($addressListItems as $item) {
+    if ($item->getPostcode()) {
+        $zipcode = $item->getPostcode();
+        break;
+    }
+}
+?>
+<script>
+    (() => {
+        const BTN_PREVIOUS = 'previous',
+            BTN_NEXT = 'next',
+            BTN_PLACE_ORDER = 'place-order'
+
+        window.initCheckoutNavigation = function() {
+            return {
+                disabled: {
+                    [BTN_PREVIOUS]: false,
+                    [BTN_NEXT]: false,
+                    [BTN_PLACE_ORDER]: false
+                },
+                isCheckingRestrictions: false,
+
+                onClick(event) {
+                    const button = this.getButton(event);
+                    const stepData = JSON.parse(button && button.dataset && button.dataset.step || '{}')
+
+                    if (stepData.place) {
+                        hyvaCheckout.order.place();
+                    } else {
+                        hyvaCheckout.navigation.stepTo(stepData.route, stepData.validate)
+                    }
+                },
+
+                buttonAttributes(name) {
+                    return {
+                        ['x-on:checkout:navigate:disable-button.window'](event) {
+                            if (event.detail.name === name) {
+                                this.disabled[event.detail.name] = true;
+                            }
+                        },
+                        ['x-on:checkout:navigate:enable-button.window'](event) {
+                            if (event.detail.name === name) {
+                                this.disabled[event.detail.name] = false;
+                            }
+                        },
+                        ['x-bind:disabled']() {
+                            return this.disabled[name]
+                        },
+                        ['x-bind:class']() {
+                            return {
+                                'disabled': this.disabled[name]
+                            }
+                        },
+                        ['x-on:click']: 'onClick'
+                    }
+                },
+
+                buttonPrevious(route) {
+
+                    return this.buttonStepTo(BTN_PREVIOUS, route, false)
+                },
+
+                async buttonNext(route) {
+
+                    this.isCheckingRestrictions = true;
+
+                    const productIds = <?= json_encode($productIds) ?>;
+
+                    let zip = '';
+
+                    const selectedRadio = document.querySelector('input[type="radio"][name^="address_shipping"]:checked');
+
+                    if (selectedRadio?.dataset.zip) {
+                        zip = selectedRadio.dataset.zip;
+                    } else if (selectedRadio?.value && selectedRadio.value.length === 5) {
+                        zip = selectedRadio.value;
+                    }
+
+                    if (!zip) {
+                        const inputZip = document.querySelector('#postcode');
+                        if (inputZip?.value && inputZip.value.length === 5) {
+                            zip = inputZip.value;
+                        }
+                    }
+
+                    if (!zip) {
+                        zip = <?= json_encode($zipcode) ?>;
+                    }
+
+                    /* ---------- Estate API restriction check ---------- */
+
+                    for (const productId of productIds) {
+
+                        const result = await Alpine.store('estateApi').checkProductRestriction(productId, zip);
+
+                        if (result !== 1) {
+
+                            if (result === 2 || result === 3) {
+                                Alpine.store('estateApi').hasRestricted = true;
+                                Alpine.store('estateApi').showNotification(
+                                    'One or more products are restricted in your area.',
+                                    'error'
+                                );
+                            } else if (result === 5) {
+                                Alpine.store('estateApi').hasRestricted = false;
+                                Alpine.store('estateApi').showNotification(
+                                    'This zip is invalid. Please try another zip code.',
+                                    'warning'
+                                );
+                            }
+
+                            this.isCheckingRestrictions = false;
+
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
+
+                            return;
+                        }
+                    }
+
+                    /* ---------- State Age API check ---------- */
+
+                for (const productId of productIds) {
+                    const stateAgeStore = Alpine.store('stateAgeApi');
+                    if (!stateAgeStore) {
+                        console.warn('stateAgeApi store not initialized');
+                        continue;
+                    }
+
+                    let resolvedState = '';
+                    let resolvedCity = '';
+
+                if (stateAgeStore.isLoggedIn) {
+
+                    const selectedRadio = document.querySelector('input[type="radio"][name^="address_shipping"]:checked');
+
+                    resolvedState = selectedRadio?.dataset.regionCode || '';
+
+                    // Parse city from card text — format: "CITY, STATE, ZIP"
+                    if (selectedRadio) {
+                        const card = selectedRadio.closest('div');
+                        const labelText = card?.querySelector('label span')?.innerText || '';
+                        const lines = labelText.split('\n').map(l => l.trim()).filter(Boolean);
+                        const locationLine = lines.find(line => /,.*,\s*\d{5}/.test(line));
+                        if (locationLine) {
+                            resolvedCity = locationLine.split(',')[0].trim();
+                        }
+                    }
+
+                    console.log('[stateAgeApi] Logged-in selected address:', { resolvedState, resolvedCity });
+
+                    // Fallback
+                    if (!resolvedState) {
+                        resolvedState = stateAgeStore.customerState || '';
+                        resolvedCity  = stateAgeStore.customerCity  || '';
+                        console.log('[stateAgeApi] Fallback to Alpine store:', { resolvedState, resolvedCity });
+                    }
+                } else {
+
+                    // Guest: read from checkout form fields
+                        const regionSelect = document.querySelector('#region')
+                            || document.querySelector('select[name="region"]')
+                            || document.querySelector('#region_id')
+                            || document.querySelector('select[name="region_id"]');
+
+                        const stateNameToCode = {
+                            'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA',
+                            'Colorado':'CO','Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA',
+                            'Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA',
+                            'Kansas':'KS','Kentucky':'KY','Louisiana':'LA','Maine':'ME','Maryland':'MD',
+                            'Massachusetts':'MA','Michigan':'MI','Minnesota':'MN','Mississippi':'MS',
+                            'Missouri':'MO','Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH',
+                            'New Jersey':'NJ','New Mexico':'NM','New York':'NY','North Carolina':'NC',
+                            'North Dakota':'ND','Ohio':'OH','Oklahoma':'OK','Oregon':'OR','Pennsylvania':'PA',
+                            'Rhode Island':'RI','South Carolina':'SC','South Dakota':'SD','Tennessee':'TN',
+                            'Texas':'TX','Utah':'UT','Vermont':'VT','Virginia':'VA','Washington':'WA',
+                            'West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY','District of Columbia':'DC'
+                        };
+
+                        const selectedOption = regionSelect?.options[regionSelect?.selectedIndex];
+                        const stateName = selectedOption?.text?.trim() || '';
+                        resolvedState = stateNameToCode[stateName] || '';
+
+                        resolvedCity = document.querySelector('#city')?.value
+                            || document.querySelector('input[name="city"]')?.value
+                            || '';
+
+                        console.log('[stateAgeApi] Guest state name:', stateName, '→ code:', resolvedState);
+                        console.log('[stateAgeApi] Guest user — form state/city:', { resolvedState, resolvedCity });
+                    }
+
+                    console.log('[stateAgeApi] Final resolved state/city for productId', productId, ':', { resolvedState, resolvedCity });
+
+                    let result;
+
+                    if (resolvedState) {
+                        // We have state — call API directly, skip modal
+                        result = await stateAgeStore.callApi(productId, 0, resolvedState, resolvedCity);
+                    } else {
+                        // No state found — fall back to check() which handles modal
+                        console.warn('[stateAgeApi] No state resolved, falling back to check()');
+                        result = await stateAgeStore.check(productId);
+                    }
+
+                    console.log('[stateAgeApi] Result for productId', productId, ':', result);
+
+                    if (result !== 1) {
+                        this.isCheckingRestrictions = false;
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        return;
+                    }
+                }
+
+                    this.isCheckingRestrictions = false;
+                    hyvaCheckout.navigation.stepTo(route, true);
+                },
+
+                buttonStepTo(namespace, route, validate = true) {
+
+                    return Object.assign(this.buttonAttributes(namespace), {
+                        ['x-bind:data-step']() {
+                            return JSON.stringify({
+                                route,
+                                validate
+                            })
+                        },
+                    })
+                    hyvaCheckout.navigation.stepTo(route, true);
+                },
+                buttonPlaceOrder() {
+                    return Object.assign(this.buttonAttributes(BTN_PLACE_ORDER), {
+                        ['x-bind:data-step']() {
+                            return JSON.stringify({
+                                place: true
+                            })
+                        },
+                    })
+                },
+
+                getButton(event) {
+                    return event && event.target && event.target.dataset && event.target.dataset.step ?
+                        event.target :
+                        event.target.closest('[data-step]');
+                }
+
+            }
+        }
+
+        <?php /* Register additional navigation features after the navigation API is fully initialized. */ ?>
+        window.addEventListener('checkout:init:navigation', () => {
+            hyvaCheckout.navigation.disableButtonPrevious = function() {
+                window.dispatchEvent(new CustomEvent('checkout:navigate:disable-button', {
+                    detail: {
+                        name: BTN_PREVIOUS
+                    }
+                }))
+            }
+            hyvaCheckout.navigation.enableButtonPrevious = function() {
+                window.dispatchEvent(new CustomEvent('checkout:navigate:enable-button', {
+                    detail: {
+                        name: BTN_PREVIOUS
+                    }
+                }))
+            }
+            hyvaCheckout.navigation.disableButtonNext = function() {
+                window.dispatchEvent(new CustomEvent('checkout:navigate:disable-button', {
+                    detail: {
+                        name: BTN_NEXT
+                    }
+                }))
+            }
+            hyvaCheckout.navigation.enableButtonNext = function() {
+                window.dispatchEvent(new CustomEvent('checkout:navigate:enable-button', {
+                    detail: {
+                        name: BTN_NEXT
+                    }
+                }))
+            }
+            hyvaCheckout.navigation.disableButtonPlaceOrder = function() {
+                window.dispatchEvent(new CustomEvent('checkout:navigate:disable-button', {
+                    detail: {
+                        name: BTN_PLACE_ORDER
+                    }
+                }))
+            }
+            hyvaCheckout.navigation.enableButtonPlaceOrder = function() {
+                window.dispatchEvent(new CustomEvent('checkout:navigate:enable-button', {
+                    detail: {
+                        name: BTN_PLACE_ORDER
+                    }
+                }))
+            }
+
+            hyvaCheckout.navigation.disableButtonPrimary = function() {
+                hyvaCheckout.navigation.disableButtonNext()
+                hyvaCheckout.navigation.disableButtonPlaceOrder()
+            }
+            hyvaCheckout.navigation.enableButtonPrimary = function() {
+                hyvaCheckout.navigation.enableButtonNext()
+                hyvaCheckout.navigation.enableButtonPlaceOrder()
+            }
+
+            window.addEventListener('checkout:step:loaded', (event) => {
+                <?php /* When a step is loaded by a page refresh (in other words: preceding) */ ?>
+                if (!event.detail.subsequent) {
+                    if (hyvaCheckout.validation.hasBlocking()) {
+                        hyvaCheckout.navigation.disableButtonPrimary()
+                    }
+                }
+
+                <?php /* Listen for subsequent component updates to check if we can enable/disable the primary button again. */ ?>
+                Magewire.hook('message.processed', (message, component) => {
+                    <?php /* Execute after the current thread yields control back to the browser to make sure the buttons are handled by AlpineJS. */ ?>
+                    setTimeout(() => {
+                        if (hyvaCheckout.validation.hasBlocking()) {
+                            hyvaCheckout.navigation.disableButtonPrimary()
+                        } else {
+                            hyvaCheckout.navigation.enableButtonPrimary()
+                        }
+                    }, 0)
+                })
+            })
+        })
+    })()
+</script>

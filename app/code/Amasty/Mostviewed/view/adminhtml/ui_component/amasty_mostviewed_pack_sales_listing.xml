@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">amasty_mostviewed_pack_sales_listing.amasty_mostviewed_pack_sales_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>pack_sales_columns</spinner>
+        <deps>
+            <dep>amasty_mostviewed_pack_sales_listing.amasty_mostviewed_pack_sales_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="amasty_mostviewed_pack_sales_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>Amasty_Mostviewed::pack_sales</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="amasty_mostviewed_pack_sales_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <exportButton name="export_button"/>
+        <filterSearch name="fulltext"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="pack_sales_columns">
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>id</indexField>
+                <visible>false</visible>
+            </settings>
+        </selectionsColumn>
+        <column name="id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">ID</label>
+                <visible>false</visible>
+            </settings>
+        </column>
+        <column name="increment_id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Order ID</label>
+            </settings>
+        </column>
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Purchase Date</label>
+                <sorting>desc</sorting>
+            </settings>
+        </column>
+        <column name="base_subtotal" class="Magento\Sales\Ui\Component\Listing\Column\Price" component="Amasty_Mostviewed/js/grid/columns/sales/subtotal">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Bundle Price (Base)</label>
+            </settings>
+        </column>
+        <column name="base_grand_total" class="Magento\Sales\Ui\Component\Listing\Column\Price">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Grand Total (Base)</label>
+            </settings>
+        </column>
+        <column name="grand_total" class="Magento\Sales\Ui\Component\Listing\Column\PurchasedPrice">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Grand Total (Purchased)</label>
+            </settings>
+        </column>
+        <column name="status" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <filter>select</filter>
+                <options class="Magento\Sales\Ui\Component\Listing\Column\Status\Options"/>
+                <dataType>select</dataType>
+                <label translate="true">Status</label>
+            </settings>
+        </column>
+        <column name="pack_name" class="Amasty\Mostviewed\Ui\Component\Listing\Columns\PackName">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Bundle Pack</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+            </settings>
+        </column>
+        <column name="product_names">
+            <settings>
+                <filter>false</filter>
+                <sortable>false</sortable>
+                <label translate="true">Bundle Items</label>
+            </settings>
+        </column>
+    </columns>
+</listing>

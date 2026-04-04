@@ -1,0 +1,22 @@
+<?php
+use Magento\Framework\Escaper;
+/** @var \Ewave\ExtendedBundleProduct\Block\Product\Bundle\Configurable $block */
+/** @var \Ewave\ExtendedBundleProduct\Helper\Product $_helper */
+/** @var Escaper $escaper */
+$_product = $block->getProduct();
+$_bundleOption = $block->getOption();
+$_attributes = $block->decorateArray($block->getAllowAttributes());
+$_helper = $this->helper('Ewave\ExtendedBundleProduct\Helper\Product');
+?>
+<?php if ($_product->isSaleable() && count($_attributes)): ?>
+    <div class="configurable-bundle-product configurable-bundle-product-<?= (int)$_product->getId() ?>" x-data="configurableBundleProduct" x-init='() => {
+                init(`<?= $_product->getId() ?>`, <?= $escaper->escapeHtml($block->getJsonConfig()) ?>)
+            }'>
+        <div id="product-price-ahy-<?= (int)$_product->getId() ?>"></div>
+        <div id="swatch-html-<?= (int)$_product->getId() ?>"></div>
+    </div>
+<?php endif;?>
+
+<script>
+
+</script>

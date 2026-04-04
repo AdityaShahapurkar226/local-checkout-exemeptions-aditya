@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ahy\GooglePay\Api\ClearNonceInterface"
+                type="Ahy\GooglePay\Model\ClearNonce" />
+
+     <!-- FrontendLogger binding -->
+    <preference for="Ahy\GooglePay\Api\FrontendLoggerInterface"
+                type="Ahy\GooglePay\Model\FrontendLogger" />
+                
+     <!-- Bind our custom logger -->
+    <type name="Ahy\GooglePay\Logger\GooglePayLogger">
+        <arguments>
+            <argument name="name" xsi:type="string">google_pay</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Ahy\GooglePay\Logger\Handler\GooglePay</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="PayPal\Braintree\Model\Paypal\Helper\OrderPlace">
+        <plugin name="ahy_googlepay_orderplace_logger"
+                type="Ahy\GooglePay\Plugin\Paypal\Helper\OrderPlacePlugin"
+                sortOrder="10" />
+    </type>
+
+</config>

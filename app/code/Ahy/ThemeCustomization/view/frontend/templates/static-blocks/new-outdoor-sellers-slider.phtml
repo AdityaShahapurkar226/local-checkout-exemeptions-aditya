@@ -1,0 +1,157 @@
+<section class="swiper-heading">
+	<div style="font-size: 36px; font-style:bold; color:#0D2F47; font-weight: 650; line-height: 120%;">
+		<p>NEW OUTDOOR SELLERS</p>
+	</div>
+</section>
+
+<section class="bg-[#f2ebdd] py-12 " x-data="handleBrandSlider" x-init="init(); $nextTick(() => initializeSwiper())" style="padding-top:1rem;">
+    <div class="swiper px-4 flex flex-col sm:flex-row flex-nowrap justify-center gap-1 ">
+		<div class="swiper-wrapper" style="gap:0.2rem;">
+			<template x-for="(item, index) in brandItems" :key="index">
+				<div class="swiper-container bg-white p-8 flex flex-col items-center text-center border border-ahy-bg swiper-slide" style="width: 287px; height: 370px; display:flex; justify-content:space-around;">
+					<a :href="item.link" class="w-28 h-28 object-contain mb-6" style="height:10rem; width: 16rem; display: flex; justify-content: center;">
+						<picture>
+							<source type="image/webp">
+							<img :src="item.src" alt="Brand Logo" class="w-28 h-28 object-contain mb-6" loading="lazy" style="margin-bottom: 0px; height:200px; width:300px;">
+						</picture>
+					</a>
+					<a :href="item.link" class="mt-auto inline-block border-3 border-[#001935] text-[#001935] rounded-full px-4 py-1 font-semibold hover:bg-[#001935] hover:text-white transition" style="font-size:13px; border-color: #0D2F47; font-weight: 700; margin-top: 30px; width: 7.5rem; padding:0.5rem;">
+						Shop Now
+					</a>
+				</div>
+			</template>
+		</div>
+		<div class="swiper-scrollbar"></div>
+	</div>
+</section>
+
+<section>
+    <style>
+        .swiper-scrollbar-drag {
+            background-color: #064f84;
+        }
+
+        .swiper-scrollbar.swiper-scrollbar-horizontal {
+            height: 10px;
+            background-color: #ccc;
+            left: 0;
+            right: 0;
+            width: 100%;
+        }
+        .swiper-wrapper {
+            padding-bottom: 50px;
+        }
+
+		.brand-slider-block{
+			display: none;
+			visibility: hidden;
+		}
+    </style>
+</section>
+
+<script>
+    function handleBrandSlider() {
+        return {
+            brandItems: [],
+            init() {
+                this.handleSliderElements();
+            },
+            handleSliderElements() {
+                const brandSlider = document.querySelector('.brand-slider-block');
+                if (!brandSlider) return;
+
+                const figures = brandSlider.querySelectorAll('figure');
+
+                this.brandItems = Array.from(figures).map(figure => {
+                    const link = figure.querySelector('a')?.getAttribute('href') || '#';
+                    const img = figure.querySelector('img')?.getAttribute('src') || '';
+                    return { src: img, link: link };
+                });
+
+                console.log("Brand items:", this.brandItems);
+            }
+        }
+    }
+</script>
+
+<script defer="">
+	function initializeSwiper() {
+		const swiper = new Swiper(".swiper", {
+			// Optional parameters
+			direction: "horizontal",
+			loop: false,
+			// If we need pagination
+			pagination: {
+				el: ".swiper-pagination",
+			},
+			allowTouchMove: true,
+			noSwiping: false,
+			mousewheel: {
+				forceToAxis: true,
+			},
+			// Navigation arrows
+			navigation: {
+				nextEl: ".swiper-button-next",
+				prevEl: ".swiper-button-prev",
+			},
+
+			// And if we need scrollbar
+			scrollbar: {
+				el: ".swiper-scrollbar",
+				hide: false,
+				enabled: true,
+				draggable: true,
+			},
+			freeMode: true,
+			slidesPerView: 4, // Set the number of slides to show in the view
+			grabCursor: true,
+			// Responsive breakpoints
+			breakpoints: {
+				// when window width is >= 320px
+				0: {
+					slidesPerView: 1,
+				},
+				// when window width is >= 640px
+				480: {
+					slidesPerView: 2,
+				},
+				// when window width is >= 1024
+				1024: {
+					slidesPerView: 3,
+				},
+				// when window width is >= 1280
+				1280: {
+					slidesPerView: 4,
+				},
+			},
+		});
+	}
+
+	function checkAndInitialize() {
+		const elementsExist = document.querySelectorAll(".kuRECS-itemWrap.kuRECSItem.border.border-ahy-bg.swiper-slide").length > 0;
+		if (elementsExist) {
+			initializeSwiper();
+		}
+		const elementsExistCount = document.querySelectorAll(".kuRECS-itemWrap.kuRECSItem.border.border-ahy-bg.swiper-slide").length > 4;
+		if (elementsExistCount) {
+			setTimeout(() => {
+				clearInterval(interval);
+			}, 5000); // 5000 milliseconds = 5 seconds
+		}
+	}
+	// Check every second
+	const interval = setInterval(checkAndInitialize, 1000);
+</script>
+
+<script>
+	document.querySelectorAll('.brand-slider-block').forEach(el => {
+	if (el.parentElement) {
+		el.parentElement.style.display = 'none';
+	}
+	});
+</script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer=""></script>

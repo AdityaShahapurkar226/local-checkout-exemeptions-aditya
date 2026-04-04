@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.payment.methods">
+
+            <!-- Payment method block -->
+            <block 
+                name="checkout.payment.method.braintree-googlepay"
+                as="braintree_googlepay"
+                template="Ahy_GooglePay::checkout/payment/method/googlepay.phtml"
+            >
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        \Ahy\GooglePay\Magewire\Checkout\Payment\Method\GooglePay
+                    </argument>
+                </arguments>
+            </block>
+
+            <!-- Evaluation hook for Hyva -->
+            <block
+                name="googlepay.checkout.payment.method.evaluator"
+                template="Hyva_Checkout::magewire/component.phtml">
+                <arguments>
+                    <argument name="component" xsi:type="string">
+                        \Ahy\GooglePay\Magewire\Checkout\Payment\Method\GooglePay
+                    </argument>
+                </arguments>
+            </block>
+
+        </referenceBlock>
+    </body>
+</page>

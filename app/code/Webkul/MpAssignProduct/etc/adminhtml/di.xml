@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul Software Private Limited
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+<preference for="Magento\Catalog\Controller\Adminhtml\Product\MassDelete" type="Webkul\MpAssignProduct\Plugin\Catalog\MassDelete"/>
+<preference for="Magento\SalesRule\Model\Coupon\Usage\Processor" type="Webkul\MpAssignProduct\Model\Coupon\Processor"/>
+   <!-- Plugin to hide assign products in admin -->
+  <type name="Magento\Catalog\Model\ResourceModel\Product\Collection">
+    <plugin name="Webkul_MpAssignProduct::arroundProductCollection" type="Webkul\MpAssignProduct\Plugin\Catalog\Model\ResourceModel\Product\Collection" sortOrder="1"/>
+  </type>
+</config>

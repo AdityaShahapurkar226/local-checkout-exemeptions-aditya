@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Amasty_Mostviewed::css/pack.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\Backend\Block\Template" template="Amasty_Mostviewed::pack/recommendation.phtml">
+                <arguments>
+                    <argument name="recommendation_view_model" xsi:type="object">Amasty\Mostviewed\ViewModel\Pack\Analytic\RecommendationSimple</argument>
+                </arguments>
+            </block>
+            <uiComponent name="amasty_mostviewed_pack_form"/>
+        </referenceContainer>
+    </body>
+</page>

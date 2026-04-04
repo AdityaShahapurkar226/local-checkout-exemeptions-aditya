@@ -1,0 +1,131 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Framework\Data\Helper\PostHelper;
+use Magento\Sales\Helper\Reorder;
+use Magento\Sales\Block\Order\Recent;
+
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundHelper
+
+/** @var Recent $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+?>
+<div class="block block-dashboard-orders mt-4">
+    <?php
+    $orders = $block->getOrders();
+    $count  = count($orders);
+    ?>
+    <div class="block-title order my-4 mt-12 flex justify-between items-center border-b border-ahy-yellow-card pb-4 ">
+        <span class="text-2xl block font-extrabold text-ahy-blue"><?= $escaper->escapeHtml(__('Recent Orders')) ?></span>
+        <?php if ($count > 0): ?>
+            <a class="action view inline-flex items-center text-ahy-blue-light hover:text-ahy-blue"
+               href="<?= $escaper->escapeUrl($block->getUrl('sales/order/history')) ?>">
+                <span><?= $escaper->escapeHtml(__('View All')) ?></span>
+                <?= $heroicons->arrowRightHtml('ml-2', 16, 16); ?>
+            </a>
+        <?php endif; ?>
+    </div>
+    <div class="block-content">
+        <?= $block->getChildHtml() ?>
+        <?php if ($count > 0): ?>
+            <div class="grid grid-cols-4 lg:grid-cols-6" id="my-orders-table">
+                <div class="text-sm text-ahy-blue py-4 px-2 lg:px-8">
+                    <?= $escaper->escapeHtml(__('Order #')) ?>
+                </div>
+                <div class="text-sm text-ahy-blue py-4 text-end sm:text-start px-2 lg:pl-6">
+                    <?= $escaper->escapeHtml(__('Date')) ?>
+                </div>
+                <div class="text-sm hidden lg:block text-ahy-blue py-4 px-2">
+                    <?= $escaper->escapeHtml(__('Ship To')) ?>
+                </div>
+                <div class="text-sm hidden lg:block text-ahy-blue py-4 px-2">
+                    <?= $escaper->escapeHtml(__('Order Total')) ?>
+                </div>
+                <div class="text-sm text-ahy-blue py-4 px-2">
+                    <?= $escaper->escapeHtml(__('Status')) ?>
+                </div>
+                <div class="text-sm text-ahy-blue text-center">
+                    <?php 
+                    /**
+                     ** Removed the view and reorder title elements to match the design
+                     */
+                    ?>
+                <!-- <?//= $escaper->escapeHtml(__('View')) ?>
+                    <?php //if ($this->helper(Reorder::class)->isAllow()): ?>
+                        / <?//= $escaper->escapeHtml(__('Reorder')) ?>
+                    <?php //endif; ?> -->
+                </div>
+            </div>
+            <div class="grid grid-cols-4 lg:grid-cols-6 bg-ahy-yellow-card card ">
+                <?php $i = 0; ?>
+                <?php foreach ($orders as $order): ?>
+                    <?php $i++; ?>
+                    <div class="py-2 lg:px-4 flex items-center font-bold text-sm lg:text-lg text-ahy-blue">
+                        <?= $escaper->escapeHtml($order->getRealOrderId()) ?>
+                    </div>
+                    <div class="py-2 px-1 lg:px-4 text-sm lg:text-lg justify-end sm:justify-start flex items-center text-ahy-blue ">
+                        <?= $escaper->escapeHtml(
+                            $block->formatDate($order->getCreatedAt())
+                        ) ?>
+                    </div>
+                    <div class="py-2 lg:px-4 hidden lg:flex items-center capitalize">
+                        <?= $order->getBillingAddress() && $order->getBillingAddress()->getCompany() ?
+                            $escaper->escapeHtml($order->getBillingAddress()->getCompany()) :
+                            $escaper->escapeHtml($order->getCustomerFirstname()) 
+                        ?>
+                    </div>
+                    <div class="py-2 lg:px-4 hidden lg:flex items-center text-ahy-blue ">
+                        <?= /* @noEscape */ $order->formatPrice($order->getGrandTotal()) ?>
+                    </div>
+                    <div class="py-2 px-1 lg:px-4 text-sm lg:text-lg flex items-center text-ahy-blue ">
+                        <?= $escaper->escapeHtml(
+                            $order->getStatusLabel()
+                        ) ?>
+                    </div>
+                    <div class="py-2 lg:px-4 text-sm lg:text-lg flex items-center justify-evenly">
+                        <a href="<?= $escaper->escapeUrl($block->getViewUrl($order)) ?>"
+                           class="inline-block text-sm text-ahy-blue"
+                           title="<?= $escaper->escapeHtmlAttr(__('View Order')) ?>">
+                            <span class="underline underline-offset-6 text-ahy-blue capitalize">details</span> 
+                        </a>
+                        <?php if ($this->helper(Reorder::class)->canReorder($order->getEntityId())): ?>
+                            <?php $formData = json_decode(
+                                $this->helper(PostHelper::class)->getPostData(
+                                    $block->getReorderUrl($order)
+                                ),
+                                true
+                            ) ?>
+                            <span class="text-ahy-blue hidden md:inline-flex "> | </span>
+                            <form action="<?= $escaper->escapeUrl($formData['action']) ?>"
+                                  method="post" class="hidden md:inline-flex items-center">
+                                <?= $block->getBlockHtml('formkey'); ?>
+                                <input type="hidden" name="data"
+                                       value='<?= /* @noEscape */ json_encode($formData['data']) ?>'
+                                />
+                                <button title="<?= $escaper->escapeHtmlAttr(__('Reorder')) ?>"
+                                        type="submit"
+                                        class="inline-block text-sm text-ahy-blue">
+                                    <span class="underline underline-offset-6 text-ahy-blue capitalize">Reorder</span>
+                                </button>
+                            </form>
+                        <?php endif ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <div class="message info empty"><span><?= $escaper->escapeHtml(__('You have placed no orders.')) ?></span>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>

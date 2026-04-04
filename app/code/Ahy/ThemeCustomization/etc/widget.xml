@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget id="Ahy_ThemeCustomization_MoreItemsToExploreProductCard" class="Ahy\ThemeCustomization\Block\Widget\MoreItemsToExploreProductCard" >
+        <label>More items to explore</label>
+        <description>Displays a custom product card.</description>
+        <parameters>
+            <parameter name="template" xsi:type="select" required="true" visible="true">
+                <label translate="true">More items to explore</label>
+                <options>
+                    <option name="Ahy_ThemeCustomization::more_items_to_explore_product_card.phtml" value="Ahy_ThemeCustomization::more_items_to_explore_product_card.phtml" selected="true">
+                        <label translate="true">Custom Product Card</label>
+                    </option>
+                </options>
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>

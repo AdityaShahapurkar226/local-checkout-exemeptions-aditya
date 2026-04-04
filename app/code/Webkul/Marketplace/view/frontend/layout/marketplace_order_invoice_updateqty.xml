@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <block class="Webkul\Marketplace\Block\Order\Invoice\Create\Items" name="marketplace_order_new_invoice_items" template="Webkul_Marketplace::order/invoice/new/items.phtml">
+            <block class="Magento\Theme\Block\Html\Pager" name="marketplace_order_item_pager"/>
+        </block>
+        <referenceBlock name="marketplace_order_new_invoice_items">
+            <arguments>
+                <argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

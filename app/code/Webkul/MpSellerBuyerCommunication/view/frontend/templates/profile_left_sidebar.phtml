@@ -1,0 +1,246 @@
+
+<?php
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+$partner=[];
+$blockObj = $block->getLayout()->createBlock(\Webkul\MpSellerBuyerCommunication\Block\Seller\History::class);
+
+$helper= $blockObj->getMpHelperSellerView();
+$partner=$block->getProfileDetail();
+$sellerId=$partner['seller_id'];
+$shoptitle = $partner->getShopTitle();
+if (!$shoptitle) {
+    $shoptitle = $partner->getShopUrl();
+}
+$seller_product_count = $helper->getSellerProCount($sellerId);
+
+$_helper = $blockObj->getHelperSellerView();
+$respnseRate = $_helper->getResponseRateOfSeller($sellerId);
+
+$avgResponse = $_helper->getResponseTimeOfSeller($sellerId);
+
+$logo=$partner->getLogoPic()!=''?$partner->getLogoPic():"noimage.png";
+$logo=$block->getUrl('pub/media/', ['_secure' => $blockObj->isSecureData()]).'avatar/'.$logo;
+
+$locsearch=$partner['company_locality'];
+$countryflag=$block->getViewFileUrl('Webkul_Marketplace::images/country/countryflags/')."/".strtoupper(
+    $partner['country_pic']==""?"xx":$partner['country_pic']
+).".png";
+$countryName = '';
+$captchenable = $helper->getCaptchaEnable();
+?>
+<div class="wk-mp-design">
+    <div class="wk-mp-design-inner">
+        <div class="wk-logo-block">
+            <a href="<?= $escaper->escapeHtml($helper->getRewriteUrl(
+                'marketplace/seller/profile/shop/'.$partner['shop_url']
+            ));?>" >
+                <img class="bannerpicrs" src="<?= $escaper->escapeHtml($logo);?>" />
+            </a>
+        </div>
+        <div class="wk-mp-profile_container">
+            <div id="info" class="block-content">
+                <div class="wk-seller">    
+                    <div class="section">
+                        <div class="storename">
+                            <a class="store-name" href="<?= $escaper->escapeHtml($helper->getRewriteUrl(
+                                'marketplace/seller/profile/shop/'.$partner['shop_url']
+                            ));?>">
+                                <?= $escaper->escapeHtml($shoptitle); ?>
+                            </a>
+                        </div>
+                        <div class="wefrom">
+                            <span class="wk-storeloc-icon wk-icon"></span>
+                            <a class="cont-name" title="<?=  $escaper->escapeHtml(__('Search'))?>" 
+                            href="<?=  $escaper->escapeHtml($helper->getRewriteUrl(
+                                'marketplace/seller/location/shop/'.$partner['shop_url']
+                            )."?loc=".$locsearch)?>" target="_blank">
+                                <span><?= $escaper->escapeHtml($locsearch.$countryName); ?></span>
+                                <img class="piccountry" title="<?= $escaper->escapeHtml(__('View Map')) ?>" 
+                                src="<?= $escaper->escapeHtml($countryflag);  ?>" />
+                            </a>
+                        </div>
+                    </div>                    
+                    <div class="section" style="background-color: rgb(232, 232, 232);">
+                        <?= $escaper->escapeHtml(__('Profile')) ?>
+                    </div>
+                    <div class="section">
+                        <a class="store-name" href="<?= $escaper->escapeHtml($helper->getRewriteUrl(
+                            'marketplace/seller/feedback/shop/'.$partner['shop_url']
+                        ))?>">
+                            <?= $escaper->escapeHtml(__('Reviews')) ?>
+                        </a>
+                    </div>                
+                    <div class="section ask-que"> 
+                        <a class="askque"><?= $escaper->escapeHtml(__('Contact Sellers')) ?></a>
+                        
+                        <div class="ask-que">
+                            <div id="wk-mp-ask-data" style="display:none">
+                                <?php
+                                if ($block->Session->isLoggedIn()) {
+                                    $buyer_name = $block->Session->getCustomer()->getName();
+                                    $buyer_email = $block->Session->getCustomer()->getEmail();
+                                    $readonly = "readonly='readonly'";
+                                } else {
+                                    $buyer_email = '';
+                                    $buyer_name = '';
+                                    $readonly = '';
+                                }
+                                ?>
+                                <form id="ask-form" method="post" action="#" class="fieldset" 
+                                data-mage-init='{"validation":{}}' enctype="multipart/form-data">
+                                    <div class="form-list field required">
+                                        <label class="label"><?= $escaper->escapeHtml(__('Support Type')) ?> :</label>
+                                        <select name="support_type" class="validate-select required-entry">
+                                            <?php foreach ($_helper->getSupportTypes() as $key => $value) { ?>
+                                                <option value=<?= $escaper->escapeHtml($key); ?>>
+                                                    <?= $escaper->escapeHtml($value); ?>
+                                                </option>
+                                            <?php }  ?>
+                                        </select>
+                                        <label class="label"><?= $escaper->escapeHtml(__('Your Name')) ?> :</label>
+                                        <input type="text" name="name" class="queryemail wk-contact_input_fields 
+                                        validate-no-html-tags required-entry" value="
+                                        <?= $escaper->escapeHtml($buyer_name)?>" <?= $escaper->escapeHtml($readonly)?>/>
+                                        <label class="label"><?= $escaper->escapeHtml(__('Your Email')) ?> :</label>
+                                        <input type="email" name="email" class="queryemail required-entry 
+                                        validate-email validate-no-html-tags wk-contact_input_fields" 
+                                        value="<?= $escaper->escapeHtml($buyer_email)?>" 
+                                        <?= $escaper->escapeHtml($readonly)?>/>
+                                        <label class="label"><?= $escaper->escapeHtml(__('Subject')) ?> :</label>
+                                        <input type="text" name="subject" class="wk-contact_input_fields 
+                                        validate-no-html-tags required-entry"/>
+                                        <label class="label"><?= $escaper->escapeHtml(__('Your Query')) ?> :</label>
+                                        <textarea  name="ask" id="queryquestion" class="queryquestion 
+                                        wk-contact_input_fields required-entry" style="width:100%;"></textarea>
+                                        <input type="hidden" name="seller-id" 
+                                        value="<?= $escaper->escapeHtml($sellerId);?>"/>
+                                        <?php
+                                        if ($captchenable) {?>
+                                            <div>
+                                                <span>
+                                                    <label for="wk-mp-captcha">
+                                                        <span id="wk-mp-captchalable1">
+                                                            <?= $escaper->escapeHtml(rand(1, 20))?></span>
+                                                             + <span id="wk-mp-captchalable2">
+                                                                <?= $escaper->escapeHtml(rand(1, 20))?>
+                                                            </span> =</label>
+                                                </span>
+                                                <input type="text" class="required-entry wk-contact_input_fields" 
+                                                name="wk-mp-captcha" id="wk-mp-captcha" />
+                                            </div>
+                                            <?php
+                                        }?>
+                                        <label class="file" class="">
+                                            <?= $escaper->escapeHtml(__('Add Image/File')) ?> :
+                                        </label>
+                                        <div class="input-box">
+                                            <input type="file" name="img_attachment[]" class="wk_imagevalidate"/>
+                                            <br>
+                                            <div id="otherimages"></div>
+                                            <a href="#" class="product_images">
+                                                <?= $escaper->escapeHtml(__("Add More image")); ?>
+                                            </a><br />
+                                            
+                                        </div>
+                                    </div>
+                                </form>        
+                            </div>
+                        </div> 
+                        <span class="seller-response-rate">
+                            <?= $escaper->escapeHtml($respnseRate .__('% response rate,')) ?>
+                            <?= $escaper->escapeHtml($avgResponse. __('-mins response time')) ?>
+                        </span>
+                    </div>
+                    
+                    <?php
+                    if ($helper->getSellerPolicyApproval()) {?>
+                        <div class="section">
+                            <a class="store-name" href="<?= $escaper->escapeHtml($helper->getRewriteUrl(
+                                'marketplace/seller/profile/shop/'.$partner['shop_url']
+                            ).'#return-policy');?>">
+                                <?= $escaper->escapeHtml(__('Return Policy')) ?>
+                            </a>
+                        </div>
+                        <div class="section">
+                            <a class="store-name" href="<?= $escaper->escapeHtml($helper->getRewriteUrl(
+                                'marketplace/seller/profile/shop/'.$partner['shop_url']
+                            ).'#shipping-policy');?>">
+                                <?= $escaper->escapeHtml(__('Shipping Policy')) ?>
+                            </a>
+                        </div>
+                        <?php
+                    }?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wk-mp-design-inner wk-mp-design-inner_last" style="margin-top:10px;">
+        <div class="wk-mp-profile_container storename">
+            <div class="store-name">
+                <?= $escaper->escapeHtml(__("Seller's Collection")) ?>
+            </div>            
+            <a href="<?= $escaper->escapeHtml($helper->getRewriteUrl(
+                'marketplace/seller/collection/shop/'.$partner['shop_url']
+            )); ?>">
+                <div class="store-name"><?= $escaper->escapeHtml(__('%1 Products', $seller_product_count)) ?></div>
+                <button class="button" title="<?= $escaper->escapeHtml(__("View Seller's Collection")) ?>">
+                    <span>
+                        <span>
+                            <?= $escaper->escapeHtml(__('View All')); ?>
+                        </span>
+                    </span>
+                </button>
+            </a>
+            <div style="margin-top:5px;">
+                <iframe width="100%" height="200" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" 
+                src="//maps.google.com/maps?q=<?= $escaper->escapeHtml($locsearch);?>&amp;output=embed"></iframe>
+                <br />
+                <small>
+                    <a href="//maps.google.com/maps?q=<?= $escaper->escapeHtml($locsearch);?>">
+                            <?= $escaper->escapeHtml(__('View Location on Map')) ?>
+                    </a>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="attachment-template" type="text/x-magento-template">
+    <div id='childDiv<%- fields.index %>'>
+        <input type='file' name='img_attachment[]' class='wk_imagevalidate'/>
+        <a href='#' class='remove_attch'><?= $escaper->escapeHtml(__('Remove')); ?></a>
+    </div>
+</script>
+
+<?php
+    $releventFormData = [
+        'targetAjaxUrl' => $block->getUrl(
+            "mpsellerbuyercommunication/seller/sendmail",
+            ["_secure" => $blockObj->isSecureData()]
+        ),
+        'captchenable'  => $captchenable,
+        'varificationMsg' => __(' enable to varifiy captcha'),
+        'formValidator' => '#ask-form',
+        'attachmentTemplate' => '#attachment-template',
+        'wysiwygUrl' => $blockObj->getWysiwygUrl(),
+        'saveAjaxFileUrl' => $block->getUrl("mpsellerbuyercommunication/seller/saveFiles")
+    ];
+
+    $serializedData = $block->getJson()->jsonEncode($releventFormData);
+    ?>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "wkSellerProfilePage": <?= $escaper->escapeJsQuote($serializedData); ?>
+        }
+    }
+</script>

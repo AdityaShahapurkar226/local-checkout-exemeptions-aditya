@@ -1,0 +1,259 @@
+<?php declare(strict_types=1);
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) Amasty (https://www.amasty.com)
+ * @package Free Gift Hyva Compatibility
+ */
+
+/** @var \Amasty\Promo\Block\Items $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Hyva\Theme\Model\ViewModelRegistry $viewModels */
+
+use Amasty\PromoHyvaCompatibility\ViewModel\GraphQlQueries;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+/** @var GraphQlQueries $viewModelQueries */
+$viewModelQueries = $viewModels->require(GraphQlQueries::class);
+// phpcs:disable Generic.Files.LineLength.TooLong
+?>
+
+<div class="ampromo-carousel-product"
+     x-data="initFreeGiftComponents()"
+     x-spread="eventListeners"
+     x-bind="eventListeners"
+     @private-content-loaded.window="receiveCustomerData($event.detail.data)">
+
+    <?= /** @noEscape  */ $block->fetchView($block->getTemplateFile('Hyva_Theme::ui/loading.phtml')) ?>
+
+    <div
+        class="flex"
+        :class="{'justify-center': giftsCounter}"
+    >
+        <h2 x-text="titleMessage" class="text-2xl"></h2>
+        <template x-if="giftsCounter">
+            <div class="text-2xl ml-2">
+                (<span x-text="modelGiftCounter" class="font-bold"></span>
+                <?= $escaper->escapeHtml(__("Left")) ?>)
+            </div>
+        </template>
+    </div>
+
+    <div
+        x-transition:enter="ease-in-out duration-500"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="ease-in-out duration-500"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0" class="absolute top-0 right-0 flex p-2 mt-2">
+        <button @click="$dispatch('close-free-gift-modal')" aria-label="Close panel"
+                class="p-2 text-gray-300 transition duration-150 ease-in-out hover:text-black">
+            <?= $heroicons->xHtml(); ?>
+        </button>
+    </div>
+
+    <template x-if="availableGiftsQty && products.length">
+        <section class="<?=
+        $escaper->escapeHtmlAttr($block->getData('maybe_purged_tailwind_section_classes'))
+            ?: 'my-6 text-gray-700 body-font';
+        ?>" @resize.window.debounce="calcPageSize(); $nextTick( function() { calcActive() })">
+            <div class="relative w-full overflow-x-hidden">
+                <div class="relative flex flex-nowrap w-full overflow-auto js_slides snap"
+                     @scroll.debounce="calcActive()"
+                     id="js_slides">
+                    <template x-for="(item, index) in products">
+                        <div :for="item.sku"
+                             @click.stop="selectSku(item.sku)"
+                             class="flex-none w-full p-1 js_slide md:w-1/2 lg:w-1/3 xl:w-1/4 min-w-am-promo-product">
+                            <div class="product-item border p-3" :class="{
+                                        'box-border rounded-sm shadow-sm': true,
+                                        'border-blue-700 border-4': selectedProducts.includes(item.sku),
+                                        'border-gray-200 border-4': !selectedProducts.includes(item.sku)
+                                        }">
+                                <div class="flex row mt-1 mb-4 items-start">
+                                    <template x-if="selectionMethod">
+                                        <div class="ampromo-product-select" data-role="ampromo-product-select">
+                                            <input type="checkbox" x-model="selectedProducts"
+                                                   :value="item.sku"
+                                                   :disabled="limitChoice(item.sku)"
+                                                   @change.stop="changeQty()" />
+                                        </div>
+                                    </template>
+                                    <h4 class="ml-2 text-primary font-semibold text-lg text-center -mt-1">
+                                        <a :href="'<?= $escaper->escapeJs($escaper->escapeUrl($block->getBaseUrl())) ?>' +
+                                                    item.url_key + (item.url_suffix || '')" x-text="item.name"></a>
+                                    </h4>
+                                </div>
+                                <img :src="item.small_image.url"
+                                     width="160" height="160"
+                                     class="ampromo-item-image mx-auto"
+                                     alt="Sprite Yoga Companion Kit">
+                                <div class="ampromo-options my-3">
+                                    <fieldset class="fieldset contents" tabindex="0">
+                                        <template x-if="item.__typename === 'ConfigurableProduct'">
+                                            <?= /** @noEscape */ $block->fetchView(
+                                                $block->getTemplateFile(
+                                                    'Amasty_PromoHyvaCompatibility::configurable/option.phtml'
+                                                )
+                                            ) ?>
+                                        </template>
+
+                                        <template x-if="item.__typename === 'BundleProduct'">
+                                            <?= /** @noEscape */ $block->fetchView(
+                                                $block->getTemplateFile(
+                                                    'Amasty_PromoHyvaCompatibility::bundle/options.phtml'
+                                                )
+                                            ) ?>
+                                        </template>
+
+                                        <?php if ($viewModelQueries->isGiftCardAvailable()): ?>
+                                        <template x-if="item.__typename === 'GiftCardProduct'">
+                                            <?= /** @noEscape */ $block->fetchView(
+                                                $block->getTemplateFile(
+                                                    'Amasty_PromoHyvaCompatibility::giftcard/options.phtml'
+                                                )
+                                            ) ?>
+                                        </template>
+                                        <?php endif; ?>
+
+                                        <template x-if="item.options">
+                                            <?= /** @noEscape */ $block->fetchView(
+                                                $block->getTemplateFile(
+                                                    'Amasty_PromoHyvaCompatibility::custom/options.phtml'
+                                                )
+                                            ) ?>
+                                        </template>
+                                    </fieldset>
+                                </div>
+                                <div class="product-info-price text-center mb-2 price-box price-final_price">
+                                    <div class="price-container">
+                                        <div class="price-base-price"
+                                             :class="{'hidden': !isShowPrice}"
+                                             data-role="priceBox">
+                                                    <span class="price-container price-base-price">
+                                                        <span class="price-wrapper">
+                                                            <span class="price-wrapper title-font font-regular text-xl line-through text-gray-900"
+                                                                  x-text="hyva.formatPrice(item.price_range.minimum_price.final_price.value)"></span>
+                                                        </span>
+                                                    </span>
+                                        </div>
+                                        <div class="price-new-price"
+                                             data-role="priceBox">
+                                                    <span class="price-container price-new-price">
+                                                        <span class="price-wrapper title-font font-medium text-2xl text-gray-900">
+                                                            <span class="price"
+                                                                  x-text="hyva.formatPrice(item.price_range.maximum_price.final_price.value)"></span>
+                                                        </span>
+                                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <template x-if="selectionMethod">
+                                    <div class="flex items-center justify-center">
+                                        <input class="qty form-input px-2 py-2 w-20 text-center w-4/12 mt-2.5 block"
+                                               :class="{'opacity-75': !selectedProducts.includes(item.sku)}"
+                                               type="number"
+                                               min="0"
+                                               :max="item.max_qty"
+                                               x-model="productModels[index].quantity"
+                                               @change="changeQty()"
+                                               @keyup="setClearQty($event, index)"
+                                               title="<?= $escaper->escapeHtmlAttr(__('QTY Select')) ?>"/>
+                                        <template x-if="giftsCounter">
+                                                <div class="ampromo-item-qty-left mt-2.5 ml-2">
+                                                    <span x-text="item.max_qty - productModels[index].quantity"></span> <?= $escaper->escapeHtml(__('left')) ?>
+                                                </div>
+                                        </template>
+                                    </div>
+                                </template>
+                                <template x-if="!selectionMethod">
+                                    <div class="ampromo-item-buttons" data-role="ampromo-item-buttons">
+                                        <button x-on:click="addToCart(item.sku)"
+                                                class="w-auto btn btn-primary justify-center text-sm px-2 mx-auto disabled:opacity-75"
+                                                x-bind:disabled="!item.showAddToCartButton"
+                                                :aria-label="addMessage"
+                                                :title="addMessage"
+                                                type="button"
+                                        >
+                                            <?= $heroicons->shoppingCartHtml('border-current inline'); ?>
+                                            <span class="ml-2 inline md:ml-0 md:hidden lg:ml-2 lg:inline"
+                                                  x-text="addMessage">
+                                                    </span>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+
+                    <div :class="{
+                            'js_dummy_slide w-full md:w-1/2 lg:w-1/3 xl:w-1/4 flex flex-shrink-0 py-1' : pageFillers > 0
+                        }"></div>
+                    <div :class="{
+                            'js_dummy_slide w-full md:w-1/2 lg:w-1/3 xl:w-1/4 flex flex-shrink-0 py-1' : pageFillers > 1
+                        }"></div>
+                    <div :class="{
+                            'js_dummy_slide w-full md:w-1/2 lg:w-1/3 xl:w-1/4 flex flex-shrink-0 py-1' : pageFillers > 2
+                        }"></div>
+                </div>
+            </div>
+            <div style="min-height: 65px">
+                <template x-if="itemCount > pageSize">
+                    <div class="flex items-center justify-center py-4">
+                        <button
+                            aria-label="<?= $escaper->escapeHtml(__('Previous')) ?>"
+                            tabindex="-1"
+                            class="mr-4 text-black rounded-full outline-none focus:outline-none flex-none"
+                            :class="{ 'opacity-25 pointer-events-none' : active === 0 }"
+                            @click="scrollPrevious">
+                            <?= $heroicons->chevronLeftHtml("w-5 h-5", 25, 25) ?>
+                        </button>
+                        <div class="flex flex-wrap w-full md:w-auto justify-center">
+                            <template x-for="(item, index)  in products">
+                                            <span class="flex-shrink-0 block w-3 h-3 m-1 bg-black bg-opacity-25 rounded-full shadow cursor-pointer"
+                                                  :class="{
+                                                    'bg-opacity-100': active === index,
+                                                    'hidden': (pageSize !== 1 && !!(index % pageSize))
+                                                   }"
+                                                  @click="scrollTo(index)">
+                                            </span>
+                            </template>
+                        </div>
+                        <button
+                            aria-label="<?= $escaper->escapeHtml(__('Next')) ?>"
+                            tabindex="-1"
+                            class="ml-4 text-black rounded-full outline-none focus:outline-none flex-none"
+                            :class="{ 'opacity-25 pointer-events-none' : active >= itemCount-pageSize }"
+                            @click="scrollNext">
+                            <?= $heroicons->chevronRightHtml("w-5 h-5", 25, 25) ?>
+                        </button>
+                    </div>
+                </template>
+            </div>
+            <template x-if="selectionMethod">
+                <div class="ampromo-item-buttons" data-role="ampromo-item-buttons">
+                    <button x-on:click="addAllToCart"
+                        class="w-auto btn btn-primary justify-center text-sm px-2 mx-auto disabled:opacity-75"
+                        type="button"
+                        :aria-label="addMessage"
+                        :title="addMessage"
+                        x-bind:disabled="!selectedProducts.length || !showMassAddToCartButton"
+                    >
+                        <?= $heroicons->shoppingCartHtml('border-current inline'); ?>
+                        <span class="ml-2 inline md:ml-0 md:hidden lg:ml-2 lg:inline"
+                              x-text="addMessage">
+                            </span>
+                    </button>
+                </div>
+            </template>
+        </section>
+    </template>
+</div>
+
+<?= /** @noEscape */ $block->fetchView(
+    $block->getTemplateFile(
+        'Amasty_PromoHyvaCompatibility::js/popup_js.phtml'
+    )
+)
+?>

@@ -1,0 +1,15 @@
+<?php /** @var Klevu\FrontendJs\Block\Template $block */ ?>
+<!-- custom version of the klevuLandingTemplateSortBy template -->
+
+<script type="template/klevu" id="ahyKlevuLandingTemplateSortBy">
+        <div class="kuDropdown kuDropSortBy !mx-0  text-ahy-blue" role="listbox">
+        <div class="kuDropdownLabel  text-ahy-blue">
+            <span><%=helper.translate("Sort by: ")%></span><strong><span class="capitalize"><%=helper.translate(helper.getSortBy(dataLocal))%></span></strong>
+        </div>
+        <div class="kuDropdownOptions !w-full text-ahy-blue">
+            <div class="kuDropOption kuSort" data-value="RELEVANCE" role="option"><%=helper.translate("Relevance")%></div>
+            <div class="kuDropOption kuSort" data-value="PRICE_ASC" role="option"><%=helper.translate("Price: Low to high")%></div>
+            <div class="kuDropOption kuSort" data-value="PRICE_DESC" role="option"><%=helper.translate("Price: High to low")%></div>
+        </div>
+    </div>
+</script>

@@ -1,0 +1,40 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+
+<?php
+function getOrdinalSuffix($number) {
+    if (in_array(($number % 100), array(11, 12, 13))) {
+        return 'th';
+    }
+
+    switch ($number % 10) {
+        case 1:
+            return 'st';
+        case 2:
+            return 'nd';
+        case 3:
+            return 'rd';
+        default:
+            return 'th';
+    }
+}
+?>
+
+<div class="order-date text-ahy-blue">
+    <?php
+    $createdAt = new DateTime($block->getOrder()->getCreatedAt());
+    ?>
+    <?= $block->escapeHtml(
+        __(
+            '<span class="label">Order Date:</span> %1 %2 %3',
+            '<span>' . $createdAt->format('F') . '</span>',
+            '<span>' . $createdAt->format('j') . getOrdinalSuffix($createdAt->format('j')) . '</span>',
+            '<span>' . $createdAt->format('Y') . '</span>'
+        ),
+        ['span']
+    )?>
+</div>

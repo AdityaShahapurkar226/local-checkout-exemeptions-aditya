@@ -1,0 +1,573 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php $order = $block->getOrder() ?>
+<?php $items = $block->getItems(); ?>
+<?php $itemsQtyToInvoice = $block->getInvoiceItemsQty(); ?>
+<?php
+$paymentCode = '';
+$colSpan = 7;
+if ($order->getPayment()) {
+    $colSpan = 8;
+    $paymentCode = $order->getPayment()->getMethod();
+}
+$orderId = $order->getId();
+$viewModel = $block->getViewModel();
+$orderHelper = $viewModel->getOrderHelper();
+$tracking = $orderHelper->getOrderinfo($orderId);
+?>
+<section class="wk-mp-order-invoice-items-info">
+    <div class="order-details-items ordered">
+        <div class="order-title">
+            <strong><?= $escaper->escapeHtml(__('Items Ordered')) ?></strong>
+        </div>
+        <div class="table-wrapper order-items">
+            <table class="data table table-order-items" id="my-orders-table" 
+            summary="<?= $escaper->escapeHtml(__('Items Ordered')) ?>">
+                <caption class="table-caption"><?= $escaper->escapeHtml(__('Items Ordered')) ?></caption>
+                <thead>
+                    <tr>
+                        <th class="col name"><?= $escaper->escapeHtml(__('Product Name')) ?></th>
+                        <th class="col price"><?= $escaper->escapeHtml(__('Price')) ?></th>
+                        <th class="col qty"><?= $escaper->escapeHtml(__('Qty')) ?></th>
+                        <th class="col qty"><?= $escaper->escapeHtml(__('Qty to Invoice')) ?></th>
+                        <th class="col price"><?= $escaper->escapeHtml(__('Subtotal')) ?></th>
+                        <?php
+                        if ($paymentCode == 'mpcashondelivery') {?>
+                            <th class="col price"><?= $escaper->escapeHtml(__('COD Charges')) ?></th>
+                            <?php
+                        } ?>
+                        <th class="col price"><?= $escaper->escapeHtml(__('Tax Amount')) ?></th>
+                        <th class="col price"><?= $escaper->escapeHtml(__('Discount Amount')) ?></th>
+                        <th class="col price"><?= $escaper->escapeHtml(__('Row Total')) ?></th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">&nbsp;</td>
+                        <td>
+                            <button id="wk_mp_invoice_qty_update" 
+                                title="<?= $escaper->escapeHtml(__('Update Qty'))?>" 
+                                type="button" 
+                                class="wk-mp-invoice-qty-update-button disabled"
+                                disabled="">
+                                <span><?= $escaper->escapeHtml(__('Update Qty'))?></span>
+                            </button>
+                            <?php
+                            /** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+                            $scriptString = '
+                                var BASE_URL = \'' . /* @noEscape */ $block->getUrl('*') . '\';
+                                var FORM_KEY = \'' . /* @noEscape */ $orderHelper->getFormKey() . '\';
+                            ';
+
+                            echo /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false);
+                            ?>
+                            <?php
+                            $updateQtyUrl = $block->getUrl(
+                                'marketplace/order_invoice/updateQty',
+                                [
+                                    'id' => $orderId,
+                                    '_secure' => $block->getRequest()->isSecure()
+                                ]
+                            );
+                            ?>                            
+
+                            <?php
+                            $scriptString = <<<script
+
+                            require([
+                                "jquery",
+                                "prototype"
+                            ], function(jQuery){
+                                //<![CDATA[
+                                    function updateQtyToInvoiceFunction () {
+                                        submitAndReloadArea(
+                                            $('invoice_item_container'),
+                                            '$updateQtyUrl'
+                                        );
+                                    }
+                                    var elementArr = document.querySelectorAll("*[id='wk_mp_invoice_qty_update']");
+                                    if(elementArr.length !== 'undefined'){
+                                        elementArr.forEach(function(element) {
+                                            if (element) {
+                                                element.onclick = function (e) {
+                                                    var targetElement = element;
+                                                    if (e && e.target) {
+                                                        targetElement = e.target;
+                                                    }
+                                                    updateQtyToInvoiceFunction.apply(targetElement);
+                                                };
+                                            }
+                                        });
+                                    }
+                                //]]>                            
+                            });
+                            script;
+                            ?>
+                            <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
+                        </td>
+                        <td colspan="4">&nbsp;</td>
+                    </tr>
+                </tfoot>
+                <?php
+                $i = 0;
+                $count = count($items);
+                foreach ($items as $item) {
+                    if ($item->getParentItem()) {
+                        continue;
+                    } elseif (!isset($itemsQtyToInvoice[$item->getItemId()])) {
+                        continue;
+                    }
+                    $i++;
+                    $invoicedQty = $itemsQtyToInvoice[$item->getItemId()];
+                    $orderedQty = $item->getQtyOrdered();
+                    $codchargesPerItem = 0;
+                    $rowTotal = $item->getMageproPrice() * $invoicedQty;
+                    $currencyRate = $item->getCurrencyRate();
+                    $totalTaxPerItem = ($item->getTotalTax() / $orderedQty) * $invoicedQty;
+                    $couponAmount = ($item->getAppliedCouponAmount() / $orderedQty) * $invoicedQty;
+                    $result = [];
+                    if ($options = $item->getProductOptions()) {
+                        $result = $block->getItemOptionData($options, $result);
+                    }
+                    // for bundle product
+                    $bundleitems = $block->getMergedItems($item);
+                    $count = count($bundleitems);
+                    $_index = 0;
+                    $_prevOptionId = '';
+                    ?>
+                    <tbody>
+                        <?php if ($item->getProductType()!='bundle') { ?>
+                            <tr class="border" id="order-item-row-<?= $escaper->escapeHtml($item->getId()) ?>">
+                                <td class="col name" data-th="<?= $escaper->escapeHtml(__('Product Name')); ?>">
+                                    <strong class="product name product-item-name">
+                                        <?= $escaper->escapeHtml($item->getName()) ?></strong>
+                                    <?php if ($_options = $result): ?>
+                                        <dl class="item-options">
+                                        <?php foreach ($_options as $_option): ?>
+                                            <dt><?= $escaper->escapeHtml($_option['label']) ?></dt>
+                                            <?php if (!$block->getPrintStatus()): ?>
+                                                <?php $_formatedOptionValue = $block->getFormatedOptionValue($_option)?>
+                                                <dd>
+                                                    <?php if (isset($_formatedOptionValue['full_view'])): ?>
+                                                        <?= /* @noEscape */ $_formatedOptionValue['full_view'] ?>
+                                                    <?php else: ?>
+                                                        <?= /* @noEscape */ $_formatedOptionValue['value'] ?>
+                                                    <?php endif; ?>
+                                                </dd>
+                                            <?php else: ?>
+                                                <dd>
+                                                    <?= /* @noEscape */ nl2br($escaper
+                                                    ->escapeHtml((isset($_option['print_value'])
+                                                     ? $_option['print_value'] : $_option['value']))) ?>
+                                                </dd>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                        </dl>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="col price" data-th="<?= $escaper->escapeHtml(__('Price')); ?>">
+                                    <span class="price-excluding-tax"
+                                     data-label="<?= $escaper->escapeHtml(__('Excl. Tax')); ?>">
+                                        <span class="cart-price">
+                                            <?= /* @noEscape */ $order->formatPrice($item->getPrice()); ?>
+                                        </span>
+                                    </span>
+                                </td>
+                                <td class="col qty" data-th="<?= $escaper->escapeHtml(__('Qty')); ?>">
+                                    <ul class="items-qty">
+                                        <?php if ($item->getQtyOrdered() > 0): ?>
+                                            <li class="item">
+                                                <span class="title"><?= $escaper->escapeHtml(__('Ordered')); ?></span>
+                                                <span class="content">
+                                                    <?= $escaper->escapeHtml($item->getQtyOrdered()*1) ?></span>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if ($item->getQtyInvoiced() > 0): ?>
+                                            <li class="item">
+                                                <span class="title"><?= $escaper->escapeHtml(__('Invoiced')); ?></span>
+                                                <span class="content">
+                                                    <?= $escaper->escapeHtml($item->getQtyInvoiced()*1) ?></span>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if ($item->getQtyShipped() > 0): ?>
+                                            <li class="item">
+                                                <span class="title"><?= $escaper->escapeHtml(__('Shipped')); ?></span>
+                                                <span class="content">
+                                                    <?= $escaper->escapeHtml($item->getQtyShipped()*1) ?></span>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if ($item->getQtyCanceled() > 0): ?>
+                                            <li class="item">
+                                                <span class="title"><?= $escaper->escapeHtml(__('Canceled')); ?></span>
+                                                <span class="content">
+                                                    <?= $escaper->escapeHtml($item->getQtyCanceled()*1) ?></span>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if ($item->getQtyRefunded() > 0): ?>
+                                            <li class="item">
+                                                <span class="title"><?= $escaper->escapeHtml(__('Refunded')); ?></span>
+                                                <span class="content">
+                                                    <?= $escaper->escapeHtml($item->getQtyRefunded()*1) ?></span>
+                                            </li>
+                                        <?php endif; ?>
+                                    </ul>
+                                </td>
+                                <td class="col qty" data-th="<?= $escaper->escapeHtml(__('Qty to Invoice')) ?>">
+                                    <input type="text" class="qty-input" name="invoice[items][<?= $escaper
+                                    ->escapeHtml($item->getItemId())?>]" value="<?= $escaper
+                                    ->escapeHtml($invoicedQty*1)?>"/>
+                                </td>
+                                <td class="col price" data-th="<?= $escaper->escapeHtml(__('Subtotal')); ?>">
+                                    <?= /* @noEscape */ $order->formatBasePrice($rowTotal);?></td>
+                                <?php
+                                if ($paymentCode == 'mpcashondelivery') {
+                                    $codchargesPerItem = ($item->getCodCharges() / $orderedQty) * $invoicedQty;
+                                    ?>
+                                    <td class="col price" data-th="<?= $escaper->escapeHtml(__('COD Charges')) ?>">
+                                        <?= /* @noEscape */ $order->formatPrice($codchargesPerItem);?>
+                                    </td>
+                                    <?php
+                                } ?>
+                                <td class="col price" data-th="<?= $escaper->escapeHtml(__('Tax Total')); ?>">
+                                    <?= /* @noEscape */ $order->formatBasePrice($totalTaxPerItem);?></td>
+                                <td class="col price" data-th="<?= $escaper->escapeHtml(__('Discount Total')); ?>">
+                                    <?= /* @noEscape */ $order->formatBasePrice($couponAmount);?></td>
+                                <td class="col subtotal" data-th="<?= $escaper->escapeHtml(__('Row Total')); ?>">
+                                    <?= /* @noEscape */ $order
+                                    ->formatBasePrice($rowTotal+$totalTaxPerItem+$codchargesPerItem-$couponAmount);?>
+                                    </td>
+                            </tr>
+                        <?php } else { ?>
+                            <?php foreach ($bundleitems as $_bundleitem): ?>
+                                <?php
+                                if (!isset($itemsQtyToInvoice[$_bundleitem->getItemId()])) {
+                                    continue;
+                                }
+                                $invoicedQty = $itemsQtyToInvoice[$_bundleitem->getItemId()];
+                                $orderedQty = $_bundleitem->getQtyOrdered();
+                                $rowTotal = $_bundleitem->getBasePrice()*$invoicedQty;
+                                $currencyRate = $_bundleitem->getCurrencyRate();
+                                $totalTaxPerItem = ($_bundleitem->getTotalTax() / $orderedQty) * $invoicedQty;
+                                $couponAmount = ($_bundleitem->getAppliedCouponAmount() / $orderedQty) * $invoicedQty;
+                                ?>
+                                <?php $attributes_option = $block->getSelectionAttribute($_bundleitem); ?>
+                                <?php if ($_bundleitem->getParentItem()): ?>
+                                    <?php $attributes = $attributes_option ?>
+                                    <?php if ($_prevOptionId != $attributes['option_id']): ?>
+                                    <tr class="options-label">
+                                        <td class="col label" colspan="9"
+                                         data-th="<?= $escaper->escapeHtml(__('Product Name')); ?>">
+                                            <?= $escaper->escapeHtml($attributes['option_label']) ?>
+                                        </td>
+                                    </tr>
+                                        <?php $_prevOptionId = $attributes['option_id'] ?>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                <tr<?= (++$_index==$count)?' class="border bundle"':' class="bundle"' ?>
+                                     id="order-item-row-<?= $escaper->escapeHtml($_bundleitem->getId()) ?>">
+                                    <?php
+                                    if (!$_bundleitem->getParentItem()) {?>
+                                        <td><h3 class="product-name">
+                                            <?= $escaper->escapeHtml($_bundleitem->getName()) ?></h3></td>
+                                        <td class="col price" data-rwd-label="<?= $escaper->escapeHtml(__('Price')) ?>">
+                                        <?= /* @noEscape */ $order->formatPrice($item->getPrice());?></td>
+                                        <td class="col qty item_status"
+                                         data-rwd-label="<?= $escaper->escapeHtml(__('Status')) ?>">
+                                            <ul class="items-qty">
+                                                <?php if ($_bundleitem->getQtyOrdered() > 0): ?>
+                                                    <li class="item">
+                                                        <span class="title">
+                                                            <?= $escaper->escapeHtml(__('Ordered')); ?></span>
+                                                        <span class="content">
+                                                            <?= $escaper->escapeHtml($_bundleitem->getQtyOrdered()*1)?>
+                                                        </span>
+                                                    </li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </td>
+                                        <td class="lin-hide">&nbsp;</td>
+                                        <td class="lin-hide">&nbsp;</td>
+                                        <td class="lin-hide">&nbsp;</td>
+                                        <td class="lin-hide">&nbsp;</td>
+                                        <td class="lin-hide">&nbsp;</td>
+                                        <td class="lin-hide">&nbsp;</td>
+                                        <?php
+                                    } else { ?>
+                                        <td class="col value"
+                                         data-th="<?= $escaper->escapeHtml(__('Product Name')); ?>">
+                                            <?= $block->getValueHtml($_bundleitem)?>
+                                            <?php $addInfoBlock = $block->getOrderItemAdditionalInfoBlock(); ?>
+                                            <?php if ($addInfoBlock): ?>
+                                                <?= $addInfoBlock->setItem($_bundleitem)->toHtml() ?>
+                                            <?php endif;?>
+                                        </td>
+                                        <td class="col price" data-rwd-label="<?= $escaper->escapeHtml(__('Price')) ?>">
+                                        <?= /* @noEscape */ $order->formatPrice($_bundleitem->getPrice());?></td>
+                                        <td class="col qty item_status"
+                                         data-rwd-label="<?= $escaper->escapeHtml(__('Status')) ?>">
+                                            <ul class="items-qty">
+                                                <?php if ($_bundleitem->getQtyOrdered() > 0): ?>
+                                                    <li class="item">
+                                                        <span class="title">
+                                                            <?= $escaper->escapeHtml(__('Ordered')); ?></span>
+                                                        <span class="content">
+                                                            <?= $escaper->escapeHtml($_bundleitem
+                                                            ->getQtyOrdered()*1) ?></span>
+                                                    </li>
+                                                <?php endif; ?>
+                                                <?php if ($_bundleitem->getQtyInvoiced() > 0): ?>
+                                                    <li class="item">
+                                                        <span class="title">
+                                                            <?= $escaper->escapeHtml(__('Invoiced')); ?></span>
+                                                        <span class="content">
+                                                            <?= $escaper->escapeHtml($_bundleitem
+                                                            ->getQtyInvoiced()*1) ?></span>
+                                                    </li>
+                                                <?php endif; ?>
+                                                <?php if ($_bundleitem->getQtyShipped() > 0
+                                                 && !$block->isShipmentSeparately()): ?>
+                                                    <li class="item">
+                                                        <span class="title">
+                                                            <?= $escaper->escapeHtml(__('Shipped')); ?></span>
+                                                        <span class="content">
+                                                            <?= $escaper->escapeHtml($_bundleitem->getQtyShipped()*1) ?>
+                                                        </span>
+                                                    </li>
+                                                <?php endif; ?>
+                                                <?php if ($_bundleitem->getQtyCanceled() > 0): ?>
+                                                    <li class="item">
+                                                        <span class="title">
+                                                            <?= $escaper->escapeHtml(__('Canceled')); ?>
+                                                        </span>
+                                                        <span class="content">
+                                                            <?= $escaper->escapeHtml($_bundleitem->getQtyCanceled()*1)?>
+                                                        </span>
+                                                    </li>
+                                                <?php endif; ?>
+                                                <?php if ($_bundleitem->getQtyRefunded() > 0): ?>
+                                                    <li class="item">
+                                                        <span class="title">
+                                                            <?= $escaper->escapeHtml(__('Refunded')); ?>
+                                                        </span>
+                                                        <span class="content">
+                                                            <?= $escaper->escapeHtml($_bundleitem->getQtyRefunded()*1)?>
+                                                        </span>
+                                                    </li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </td>
+                                        <td class="col qty" data-th="<?= $escaper->escapeHtml(__('Qty to Invoice')) ?>">
+                                            <input type="text" 
+                                            class="qty-input" 
+                                            name="invoice[items][<?= /* @noEscape */ $_bundleitem
+                                            ->getItemId()?>]" 
+                                            value="<?= $escaper->escapeHtml($invoicedQty*1)?>"/>
+                                        </td>
+                                        <td class="col price" data-th="<?= $escaper->escapeHtml(__('Subtotal')); ?>">
+                                            <?= /* @noEscape */ $order->formatBasePrice($rowTotal);?></td>
+                                        <?php
+                                        if ($paymentCode == 'mpcashondelivery') {
+                                            $codchargesPerItem = ($item->getCodCharges() / $orderedQty) * $invoicedQty;
+                                            ?>
+                                            <td class="col price"
+                                             data-th="<?= $escaper->escapeHtml(__('COD Charges')) ?>">
+                                                <?= /* @noEscape */ $order->formatPrice($codchargesPerItem);?>
+                                            </td>
+                                            <?php
+                                        } ?>
+                                        <td class="col price" data-th="<?= $escaper->escapeHtml(__('Tax Total')); ?>">
+                                            <?= /* @noEscape */ $order->formatBasePrice($totalTaxPerItem);?></td>
+                                        <td class="col price"
+                                         data-th="<?= $escaper->escapeHtml(__('Discount Total')); ?>">
+                                            <?= /* @noEscape */ $order->formatBasePrice($couponAmount);?></td>
+                                        <td class="col subtotal" 
+                                        data-th="<?= $escaper->escapeHtml(__('Row Total')); ?>">
+                                            <?= /* @noEscape */ $order
+                                            ->formatBasePrice($rowTotal+$totalTaxPerItem+
+                                            $codchargesPerItem-$couponAmount);?>
+                                            </td>
+                                        <?php
+                                    }?>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php }?>
+                    </tbody>
+                    <?php
+                } ?>
+                <tfoot>
+                    <?php if ($block->isPagerDisplayed()): ?>
+                        <tr>
+                            <td colspan="<?= /* @noEscape */ $colSpan ?>"
+                             data-block="order-items-pager-bottom" 
+                             class="order-pager-wrapper order-pager-wrapper-bottom">
+                                <?= $block->getPagerHtml() ?>
+                            </td>
+                        </tr>
+                    <?php endif ?>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</section>
+<section class="wk-mp-order-invoice-comment">
+    <div class="wk-mp-order-info-box">
+        <div class="entry-edit-head"><h4><?= $escaper->escapeHtml(__('Invoice Comments')) ?></h4></div>
+        <fieldset id="history_form">
+        <label class="normal" for="invoice_comment_text">
+            <?= $escaper->escapeHtml(__('Invoice Comments')) ?></label><br>
+        <textarea id="invoice_comment_text" name="invoice[comment_text]" 
+        rows="3" cols="5" style="width: 100%; margin-left: 0px; margin-right: 0px;">
+            <?= $block->escapeHtml($block->getInvoice()->getCommentText())?>
+        </textarea>
+        </fieldset>
+    </div>
+</section>
+<?php
+    $invoice = $block->getInvoice();
+    $subtotal = $invoice->getBaseSubTotal();
+    $totalCouponAmount = $invoice->getBaseDiscountAmount();
+    $totalShippingAmount = $invoice->getBaseShippingAmount();
+    $totalTaxAmount = $invoice->getBaseTaxAmount();
+    $grandTotal = $invoice->getBaseGrandTotal();
+?>
+<section class="wk-mp-order-invoice-total">
+    <div class="wk-mp-order-info-box">
+        <div class="box">
+            <div class="box-right entry-edit">
+                <div class="entry-edit-head"><h4><?= $escaper->escapeHtml(__('Invoice Totals')) ?></h4></div>
+                <div class="order-totals">
+                    <table cellspacing="0" width="100%" class="data-table">
+                        <tfoot>
+                            <tr>
+                                <td class="a-right wk-refundtotal-td1">
+                                    <?= $escaper->escapeHtml(__('Subtotal')) ?>
+                                </td>
+                                <td class="a-right wk-refundtotal-td2">
+                                    <span class="price">
+                                        <?= /* @noEscape */ $order->formatBasePrice($subtotal); ?></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="a-right wk-refundtotal-td1">
+                                    <?= $escaper->escapeHtml(__('Discount')) ?>
+                                </td>
+                                <td class="a-right wk-refundtotal-td2">
+                                    <span class="price">
+                                        <?= /* @noEscape */ $order->formatBasePrice($totalCouponAmount); ?>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="a-right wk-refundtotal-td1">
+                                    <?= $escaper->escapeHtml(__('Total Tax')) ?>
+                                </td>
+                                <td class="a-right wk-refundtotal-td2">
+                                    <span class="price">
+                                        <?= /* @noEscape */ $order->formatBasePrice($totalTaxAmount); ?></span>
+                                </td>
+                            </tr>
+                            <tr class="wk-grandtotal-divider">
+                                <td class="a-left">
+                                    <strong><?= $escaper->escapeHtml(__('Grand Total')) ?></strong>
+                                </td>
+                                <td class="a-right">
+                                    <strong><span class="price"><?= /* @noEscape */
+                                     $order->formatBasePrice($grandTotal); ?></span></strong>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <input type="hidden" name="id" value="<?= $escaper->escapeHtml($orderId) ?>">
+                <input type="hidden" name="invoice[capture_case]" value="offline"/>
+                <!-- for buyer mail -->
+                <div class="order-totals-bottom" style="text-align:right;">
+                    <div class="divider"></div>
+                    <p>
+                        <label class="normal" for="wk-mp-notify-customer">
+                            <?= $escaper->escapeHtml(__('Append Comments')) ?></label>
+                        <input id="wk-mp-notify-customer" name="invoice[comment_customer_notify]"
+                         value="1" type="checkbox"/>
+                    </p>
+                    <p>
+                        <label class="normal" for="wk-mp-send-email">
+                            <?= $escaper->escapeHtml(__('Email Copy of Invoice')) ?></label>
+                        <input id="wk-mp-send-email" name="invoice[send_email]" value="1" type="checkbox">
+                    </p>
+                </div>
+
+                <?= $block->getChildHtml('marketplace_invoice_submit_before') ?>
+                <div class="buttons-set wk-order-invoice-button">
+                    <button class="button" type="submit" id="wk_mp_submit_invoice_offline">
+                        <span>
+                            <span>
+                                <?= $escaper->escapeHtml(__('Submit Invoice')) ?>
+                            </span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<?php
+$enableSubmitButton = 1;
+$scriptString = <<<script
+
+require(['jquery'], function(jQuery){
+
+//<![CDATA[
+    if (jQuery('#wk-mp-send-email').length) {
+        jQuery('#wk-mp-send-email').on('change', invoiceSendEmail);
+        invoiceSendEmail();
+    }
+    function invoiceSendEmail() {
+        if (jQuery('#wk-mp-send-email').prop('checked') == true) {
+            jQuery('#wk-mp-notify-customer').prop('disabled', false);
+        } else {
+            jQuery('#wk-mp-notify-customer').prop('checked', false);
+            jQuery('#wk-mp-notify-customer').prop('disabled', true);
+        }
+    }
+
+    jQuery('.qty-input').on('keyup', updateInvoiceBtnStatus);
+    jQuery('.qty-input').each(function (i, elem) {
+        elem.baseValue = elem.value;
+    });
+
+    function updateInvoiceBtnStatus() {
+        var hasChanges = false;
+        jQuery('.qty-input').each(function (i, elem) {
+            if (elem.baseValue != elem.value) {
+                hasChanges = true;
+            }
+        }.bind(this));
+        if (hasChanges) {
+            jQuery('#wk_mp_submit_invoice_offline').addClass('disabled').prop('disabled', true);
+            jQuery('#wk_mp_invoice_qty_update').removeClass('disabled').prop('disabled', false);
+        } else {
+            jQuery('#wk_mp_submit_invoice_offline').removeClass('disabled').prop('disabled', false);
+            jQuery('#wk_mp_invoice_qty_update').addClass('disabled').prop('disabled', true);
+        }
+    }
+    
+    jQuery('#wk_mp_invoice_qty_update').addClass('disabled').prop('disabled', true);
+
+    window.invoiceSendEmail = invoiceSendEmail;
+    window.updateInvoiceBtnStatus = updateInvoiceBtnStatus;
+//]]>
+
+});
+script;
+?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>

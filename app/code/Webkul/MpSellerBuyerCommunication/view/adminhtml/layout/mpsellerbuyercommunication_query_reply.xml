@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+        	<uiComponent name="reply_form"/>
+            <!-- <block class="Webkul\MpSellerBuyerCommunication\Block\Adminhtml\Query\Reply\BackButton" name="back_button" />
+            <block class="Webkul\MpSellerBuyerCommunication\Block\Adminhtml\Query\Reply\SaveButton" name="save_button" /> -->
+                <!-- <block class="Webkul\MpSellerBuyerCommunication\Block\Adminhtml\Reply" name="admin_reply_form" 
+                    template="Webkul_MpSellerBuyerCommunication::reply.phtml" /> -->
+        </referenceContainer>
+    </body>
+</page>

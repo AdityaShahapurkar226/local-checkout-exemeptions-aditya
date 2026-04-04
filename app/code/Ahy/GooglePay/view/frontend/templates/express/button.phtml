@@ -1,0 +1,121 @@
+<?php
+
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use PayPal\Braintree\Block\GooglePay\Shortcut\Button;
+use Ahy\GooglePay\ViewModel\GooglePay\RestrictVisibility;
+
+/** @var Escaper $escaper */
+/** @var Button $block */
+/** @var RestrictVisibility $viewModel */
+
+/** @var ViewModelRegistry $viewModels */
+
+try {
+    $id = sprintf('%s%s', $block->getContainerId(), random_int(PHP_INT_MIN, PHP_INT_MAX));
+} catch (Exception $e) {
+    /**
+     * Exception only thrown if an appropriate source of randomness cannot be found.
+     *
+     * @link https://www.php.net/manual/en/function.random-int.php
+     */
+    $id = 0;
+}
+
+
+$viewModel = $block->getData('viewModel');
+$shouldShowGooglePayButton = $viewModel->shouldShowButton();
+
+?>
+<?php if ($shouldShowGooglePayButton): ?>
+    <div id="<?= $escaper->escapeHtmlAttr($id); ?>"
+        x-data="initBraintreeGooglePayExpress(
+            '<?= $escaper->escapeHtmlAttr($block->getMerchantId()); ?>',
+            '<?= $escaper->escapeHtmlAttr($block->getClientToken()); ?>'
+        )"
+        @private-content-loaded.window="receiveCustomerData($event.detail.data)"
+        x-init="$nextTick(() => { init() })"
+        data-environment="<?= $escaper->escapeHtmlAttr($block->getEnvironment()); ?>"
+        data-success="<?= $escaper->escapeUrl($block->getActionSuccess()); ?>"
+        data-currency="<?= $escaper->escapeHtmlAttr($block->getCurrencyCode()); ?>"
+        data-amount="<?= $escaper->escapeHtmlAttr($block->getAmount()); ?>"
+        data-card-types="<?= $escaper->escapeHtmlAttr(implode(',', $block->getAvailableCardTypes())); ?>"
+        data-color="<?= $escaper->escapeHtmlAttr($block->getBtnColor()); ?>"
+        class="!w-full googlepay-minicart-logo <?= $escaper->escapeHtmlAttr($block->getExtraClassname()); ?>"></div>
+<?php endif; ?>
+
+<style>
+    button.braintree-googlepay-button {
+        height: 3.5rem;
+        padding: 1.1rem;
+    }
+
+    #cart-drawer .googlepay-minicart-logo {
+        margin: 0;
+        padding-left: .80rem;
+        padding-right: .80rem;
+        margin-bottom: 0.7rem;
+
+    }
+
+    #cart-drawer button.braintree-googlepay-button {
+        height: 3.4rem;
+    }
+
+    .googlepay-minicart-logo {
+        width: 100% !important;
+        height: 2.5rem !important;
+        border-radius: 0.375rem !important;
+    }
+
+    .express-checkout-payment-methods-wrapper .braintree-googlepay-button {
+        border-radius: 10px !important;
+
+    }
+
+    body.checkout-ahy.hyva_checkout-index-index.page-layout-checkout .braintree-googlepay-button {
+        border-radius: 5px !important;
+        padding: 11px;
+        height: 40px;
+        margin-top: 4px;
+        border: 2.5px solid #FEF9EB;
+    }
+
+    @media (max-width: 768px) {
+        body.checkout-ahy.hyva_checkout-index-index.page-layout-checkout .braintree-googlepay-button {
+            border-radius: 5px !important;
+            padding: 11px;
+            height: 45px;
+            margin-top: 0px;
+            border: none;
+        }
+    }
+
+
+    body.checkout-ahy.hyva_checkout-index-index.page-layout-checkout :has(.braintree-applepay-minicart.minicart:empty),
+    body.checkout-ahy.hyva_checkout-index-index.page-layout-checkout :not(:has(.braintree-applepay-minicart.minicart)) {
+        .braintree-googlepay-button {
+            height: 50px;
+            margin-top: 6px;
+            padding: 12px;
+        }
+    }
+     @media (max-width: 768px) {
+        body.checkout-ahy.hyva_checkout-index-index.page-layout-checkout .braintree-googlepay-button {
+            border-radius: 5px !important;
+            padding: 11px;
+            height: 45px;
+            margin-top: 0px;
+            border: none;
+        }
+    }
+</style>

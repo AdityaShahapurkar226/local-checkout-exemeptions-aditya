@@ -1,0 +1,139 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+    $mpAssignBlock = $block->getLayout()->createBlock(\Webkul\MpAssignProduct\Block\Link::class);
+    $assignProduct = $block->getDetails();
+    $sellerId = $assignProduct->getSellerId();
+    $ownerId = $assignProduct->getOwnerId();
+    $product = $block->getProduct($assignProduct->getProductId());
+    $newAssignedProduct = $block->getProduct($assignProduct->getAssignProductId());
+    $stockItem = $newAssignedProduct->getExtensionAttributes()->getStockItem();
+    $qty = $stockItem->getQty();
+    $productId = $product->getId();
+    $productUrl = $block->getUrl("catalog/product/edit")."id/";
+    $sellerDetails = $block->getSellerDetails($sellerId);
+    $ownerDetails = $block->getSellerDetails($ownerId, $productId);
+    $avialableStatus = [0 => __("Disapproved"), 1 => __("Approved")];
+    $customerUrl = $block->getUrl("customer/index/edit")."id/";
+    $currencyCode = $block->getBaseCurrencyCode();
+    $type = $product->getTypeId();
+?>
+
+<table class="wk-ap-table">
+    <input type="hidden" name="id" value="<?= /* @noEscape */ $assignProduct->getId(); ?>">
+    <tr>
+        <td><?= /* @noEscape */ __("Product Name"); ?></td>
+        <td>
+          <a href="<?= /* @noEscape */ $productUrl.$productId; ?>" target="_blank">
+            <?= /* @noEscape */ $product->getName(); ?>
+          </a>
+        </td>
+    </tr>
+    <tr>
+        <td><?= /* @noEscape */ __("Product Owner"); ?></td>
+        <td>
+            <?php if ($ownerDetails['seller_id'] > 0): ?>
+                <a href="<?= /* @noEscape */ $customerUrl.$ownerDetails['seller_id']; ?>" target="_blank">
+                    <?= /* @noEscape */ $ownerDetails['shop_title']; ?>
+                </a>
+            <?php else: ?>
+                <?= /* @noEscape */ $ownerDetails['shop_title']; ?>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <tr>
+        <td><?= /* @noEscape */ __("Assigned By"); ?></td>
+        <td>
+            <?php if ($sellerDetails['seller_id'] > 0): ?>
+                <a href="<?= /* @noEscape */ $customerUrl.$sellerDetails['seller_id']; ?>" target="_blank">
+                    <?= /* @noEscape */ $sellerDetails['shop_title']; ?>
+                </a>
+            <?php else: ?>
+                <?= /* @noEscape */ $sellerDetails['shop_title']; ?>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php if ($type == "configurable"): ?>
+         <?php
+            $assignId = $assignProduct->getId();
+            $priceHelper = $mpAssignBlock->getHelperObject('pricingHelper');
+            $associatedProducts = $block->getHelper()->getAssignedAssociatedProducts($assignId);
+            ?>
+        <tr>
+            <td><?= /* @noEscape */ __("Associated Products"); ?></td>
+            <td>
+                <table class="wk-associate-table">
+                    <thead>
+                        <tr>
+                            <th><?= /* @noEscape */ __("Product Name"); ?></th>
+                            <th><?= /* @noEscape */ __("Quantity"); ?></th>
+                            <th><?= /* @noEscape */ __("Price"); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($associatedProducts as $associate): ?>
+                            <?php
+                                $associateAssignProduct = $block->getProduct($associate->getAssignProductId());
+                                $stockItem = $associateAssignProduct->getExtensionAttributes()->getStockItem();
+                                $name = $associate->getName();
+                                $qty = $stockItem->getQty();
+                                $price = $priceHelper->currency($associateAssignProduct->getPrice(), true, false);
+                            ?>
+                            <tr>
+                                <td>
+                                  <a href="<?= /* @noEscape */ $productUrl.$associate->getProductId(); ?>"
+                                    target="_blank">
+                                    <?= /* @noEscape */ $name; ?>
+                                  </a>
+                                </td>
+                                <td><?= /* @noEscape */ $qty; ?></td>
+                                <td><?= /* @noEscape */ $price; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    <?php else: ?>
+        <tr>
+            <td><?= /* @noEscape */ __("Quantity"); ?></td>
+            <td><?= /* @noEscape */ $qty; ?></td>
+        </tr>
+        <tr>
+            <td><?= /* @noEscape */ __("Price"); ?> (<?= /* @noEscape */ $currencyCode; ?>)</td>
+            <td><?= /* @noEscape */ number_format($newAssignedProduct->getPrice(), 2); ?></td>
+        </tr>
+    <?php endif; ?>
+    <tr>
+        <td><?= /* @noEscape */ __("Status"); ?></td>
+        <td>
+            <select name="product_status">
+                <?php foreach ($avialableStatus as $key => $status): ?>
+                    <?php if ($key == $assignProduct->getStatus()): ?>
+                        <option value="<?= /* @noEscape */ $key; ?>" selected><?= /* @noEscape */ $status; ?></option>
+                    <?php else: ?>
+                        <option value="<?= /* @noEscape */ $key; ?>"><?= /* @noEscape */ $status; ?></option>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </select>
+        </td>
+    </tr>
+</table>
+<script>
+    require([
+        "jquery"
+    ], function ($){
+        $('#save').on('click',function(){
+            $(this).attr('disabled', 'true');
+        });
+    });
+</script>

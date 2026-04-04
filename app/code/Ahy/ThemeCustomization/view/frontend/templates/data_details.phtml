@@ -1,0 +1,11 @@
+<?php
+
+/** @var array $dataConfig */
+$dataConfig = $block->getData('data_config');
+?>
+<h1>System Data Configuration</h1>
+<?php if (!empty($dataConfig)): ?>
+    <p>Data is available (check logs for details).</p>
+<?php else: ?>
+    <p>No data found.</p>
+<?php endif; ?>

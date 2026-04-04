@@ -1,0 +1,22 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */
+/** @var Amasty\Mostviewed\Block\Widget\PackList $block */
+$collection = $block->getCollection();
+?>
+
+<?php if ($collection && $collection->getSize()): ?>
+    <div class="amrelated-bundle-page">
+        <?php foreach ($collection as $parentProduct): ?>
+            <?= /* @noEscape */ $block->renderBundle($parentProduct) ?>
+        <?php endforeach;?>
+    </div>
+    <?php if ($block->getPagerHtml()): ?>
+        <div class="amrelated-bundle-toolbar toolbar bottom"><?= /* @noEscape */ $block->getPagerHtml() ?></div>
+    <?php endif ?>
+<?php else:?>
+    <?= $block->escapeHtml(__('There are no bundle packs yet.'));?>
+<?php endif; ?>

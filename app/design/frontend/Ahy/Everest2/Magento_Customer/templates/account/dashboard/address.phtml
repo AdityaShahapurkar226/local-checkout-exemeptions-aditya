@@ -1,0 +1,78 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Customer\Block\Account\Dashboard\Address;
+use Magento\Framework\Escaper;
+
+/** @var Address $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+?>
+<div class="block block-dashboard-addresses">
+    <div class="block-title mb-6 mt-12 flex justify-between items-center bg-ahy-bg border-b border-ahy-yellow-card pb-4">
+        <span class="text-2xl block font-extrabold text-ahy-blue"><?= $escaper->escapeHtml(__('Address Book')) ?></span>
+        <a class="action edit inline-flex items-center text-ahy-blue-light hover:text-ahy-blue"
+            href="<?= $escaper->escapeUrl($block->getAddressBookUrl()) ?>">
+            <span><?= $escaper->escapeHtml(
+                __('Manage Addresses')
+            ) ?></span>
+            <?= $heroicons->arrowRightHtml('ml-2', 16, 16); ?>
+        </a>
+    </div>
+    <div class="block-content">
+        <div class="flex flex-wrap justify-between -m-4">
+            <div class="lg:w-1/2 w-full p-4 hidden">
+                <div class="flex p-8 sm:flex-row flex-col h-full bg-ahy-yellow-card card">
+                    <div class="grow">
+                        <h2 class="text-gray-900 text-lg title-font  font-extrabold text-ahy-blue mb-3">
+                            <span><?= $escaper->escapeHtml(__('Default Billing Address')) ?></span>
+                        </h2>
+                        <address>
+                            <?= $block->getPrimaryBillingAddressHtml() ?>
+                        </address>
+                        <a
+                            class="mt-3 w-full inline-flex items-center md:text-sm
+                                text-ahy-blue-light hover:text-ahy-blue"
+                            href="<?= $escaper->escapeUrl($block->getPrimaryBillingAddressEditUrl()) ?>"
+                            data-ui-id="default-billing-edit-link"><span><?= $escaper->escapeHtml(
+                                __('Edit Address')
+                            ) ?></span>
+                            <?= $heroicons->arrowRightHtml('ml-2', 16, 16); ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full p-4">
+                <div class="flex p-8 sm:flex-row flex-col h-full bg-ahy-yellow-card card">
+                    <div class="grow">
+                        <h2 class="text-gray-900 text-lg title-font  font-extrabold text-ahy-blue mb-3">
+                            <span><?= $escaper->escapeHtml(__('Default Shipping Address')) ?></span>
+                        </h2>
+                        <address>
+                            <?= $block->getPrimaryShippingAddressHtml() ?>
+                        </address>
+                        <a
+                            class="mt-3 w-full inline-flex items-center md:text-sm
+                                text-ahy-blue-light hover:text-ahy-blue"
+                            href="<?= $escaper->escapeUrl($block->getPrimaryShippingAddressEditUrl()) ?>"
+                            data-ui-id="default-billing-edit-link"><span><?= $escaper->escapeHtml(
+                                __('Edit Address')
+                            ) ?></span>
+                            <?= $heroicons->arrowRightHtml('ml-2', 16, 16); ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

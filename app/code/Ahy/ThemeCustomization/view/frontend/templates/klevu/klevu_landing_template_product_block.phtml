@@ -1,0 +1,235 @@
+<?php
+
+/** @var Klevu\FrontendJs\Block\Template $block */ ?>
+<!-- custom version of the klevuLandingTemplateProductBlock template -->
+<script type="template/klevu" id="ahyKlevuLandingTemplateProductBlock" defer>
+    <%
+        var updatedProductName = dataLocal.name;
+        if(klevu.search.modules.kmcInputs.base.getSkuOnPageEnableValue()) {
+            if(klevu.dom.helpers.cleanUpSku(dataLocal.sku)) {
+                updatedProductName += klevu.dom.helpers.cleanUpSku(dataLocal.sku);
+            }
+        }
+
+        var additionalDataToReturn = dataLocal.hasOwnProperty('additionalDataToReturn') && dataLocal.additionalDataToReturn.trim() !== "" ? JSON.parse(dataLocal.additionalDataToReturn) : null;
+        var addToWishlistProductId = dataLocal.itemGroupId ? dataLocal.itemGroupId : dataLocal.id;
+    %>
+    <li ku-product-block class="klevuProduct md:h-[513px] !static w-1/2 xl:w-4/12 !p-0" data-id="<%=dataLocal.id%>" >
+
+        <div class="relative">
+            <div class="absolute left-6 top-7 flex flex-col items-start justify-center gap-1 p-0 h-full">
+                <%if(additionalDataToReturn && additionalDataToReturn.stock_qty.stockQty <= 10){%>
+                    <span class="rounded border-2 border-ahy-stock-green bg-white px-2 py-1 text-xs font-semibold capitalize text-ahy-stock-green z-10" >
+                        <%=additionalDataToReturn.stock_qty.stockQty%> left
+                    </span>
+                <%}%>
+            </div>
+        </div>
+        <div class="kuProdWrap !static bg-white border border-ahy-bg !flex md:!block items-center">
+            <header ku-block data-block-id="ku_landing_result_item_header">
+                <%=helper.render('landingProductBadge', scope, data, dataLocal) %>
+            </header>
+            <% var desc = [dataLocal.summaryAttribute,dataLocal.packageText,dataLocal.summaryDescription].filter(function(el) { return el; }); desc = desc.join(" "); %>
+            <main ku-block data-block-id="ku_landing_result_item_info" class="w-full">
+                <div class="kuProdTop">
+                    <% 
+                        var productImage = dataLocal.image;
+                        var webpImage = productImage.replace(/\.(jpg|png|jpeg)$/i, '.webp');
+                    %>
+                    <div class="klevuImgWrap">
+                        <a data-id="<%=dataLocal.id%>" href="<%=dataLocal.url%>" class="klevuProductClick kuTrackRecentView">
+
+                        <picture>
+                            <img
+                                src="<%= webpImage %>"
+                                origin="<%= productImage %>"
+                                alt="<%= updatedProductName %>"
+                                data-original-src="<%= productImage %>"
+                                onerror="
+                                    if (this.src.endsWith('.webp')) {
+                                        this.onerror = null;
+                                        this.src = this.getAttribute('data-original-src');
+                                    } else {
+                                        klevu.dom.helpers.cleanUpProductImage(this);
+                                    }
+                                "
+                                class="kuProdImg"
+                                loading="lazy"
+                            />
+                        </picture>
+
+                            <%=helper.render('landingImageRollover', scope, data, dataLocal) %>
+                        </a>
+                    </div>
+
+                    <!-- <div class="kuQuickView">
+                        <button data-id="<%=dataLocal.id%>" class="kuBtn kuBtnLight kuQuickViewBtn" role="button" tabindex="0" area-label="">Quick view</button>
+                    </div>-->
+                    <div class="flex md:hidden justify-center h-[18px]">
+                        <div class="capitalize text-xs !text-ahy-blue">
+                            <%if ((dataLocal.hasOwnProperty('color') && dataLocal.color !== '') && additionalDataToReturn && additionalDataToReturn.swatches.color){%>
+                                <span><%=additionalDataToReturn.swatches.color.options.length%> colors</span>
+                            <%}%>
+                        </div>
+                    </div>
+                </div>
+                <button x-data="initWishlist()" @click.prevent="addToWishlist(<%=addToWishlistProductId%>)" aria-label="Add to Wish List" type="button"
+                    class="rounded-full hidden md:inline-flex ring-1 ring-gray-300 absolute top-2.5 right-2.5 w-9 h-9 shadow-xl bg-white p-0 border-0 shrink-0 items-center justify-center text-gray-500 hover:text-red-600 ml-2">
+                    <svg id="Layer_1" class="w-5 h-5" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.91 20">
+                        <defs>
+                            <style>.wishList{fill:#0d2f47;}</style>
+                        </defs>
+                        <path class="wishList" d="M14.41,1.5v16L9.27,12.71a1.62,1.62,0,0,0-2.19,0L1.5,17.58V1.5H14.41M14.76,0H1.15A1.16,1.16,0,0,0,0,1.15v18.1a.74.74,0,0,0,1.24.56l6.83-6a.12.12,0,0,1,.18,0l6.38,5.9a.74.74,0,0,0,.52.21.76.76,0,0,0,.76-.77v-18A1.15,1.15,0,0,0,14.76,0Z"/>
+                    </svg>
+                </button>
+            </main>
+            <footer ku-block="" data-block-id="ku_landing_result_item_footer" class="!static w-[150%] md:w-auto">
+                <div class="kuProdBottom !h-full !pt-2">
+                    <div class="flex justify-between h-[18px]">
+                        <div class=""><%=helper.render('klevuLandingProductRating',scope,data,dataLocal) %>
+                            <% if(dataLocal.ratingCount){ %>
+                                | <%=dataLocal.ratingCount%>
+                            <% } %>
+                        </div>
+                        <div class="capitalize text-xs !text-ahy-blue hidden md:block">
+                            <%if ((dataLocal.hasOwnProperty('color') && dataLocal.color !== '') && additionalDataToReturn && additionalDataToReturn.swatches.color){%>
+                                <span><%=additionalDataToReturn.swatches.color.options.length%> colors</span>
+                            <%}%>
+                        </div>
+                    </div>
+                    <div class="kuName kuClippedOne mt-2">
+                        <a data-id="<%=dataLocal.id%>" href="<%=dataLocal.url%>" class="klevuProductClick kuTrackRecentView line-clamp-2 !text-lg !font-extrabold !h-[3.4rem] !text-ahy-blue !leading-normal" title="<%= updatedProductName %>">
+                            <%= updatedProductName %>
+                        </a>
+                    </div>
+                    <div class="capitalize !text-xs text-ahy-rating-text !font-medium line-clamp-1 h-4">
+                        <%if (additionalDataToReturn && additionalDataToReturn.seller_data.shopTitle){%>
+                            <span class="capitalize">sold by
+                                <%=additionalDataToReturn.seller_data.shopTitle%>
+                            </span>
+                        <%} else {%>
+                            <span class="capitalize opacity-0">sold by
+                            
+                            </span>
+                        <% } %>
+                    </div>
+                    <% if(dataLocal.inStock && dataLocal.inStock != "yes") { %>
+                        <div class="min-h-[5.5rem] font-bold text-ahy-red !overflow-visible">
+                            <!-- //<%=helper.render('landingProductStock', scope, data, item) %> -->
+                            product out of stock
+                        </div>
+                    <% } else { %>
+                        <%  window.klevu_showPrices = true;  %>
+                        <% if(klevu.search.modules.kmcInputs.base.getShowPrices()) { %>
+                            <div class="kuPrice min-h-[5.5rem] flex flex-col !overflow-visible">
+                                <%
+                                    var kuTotalVariants = klevu.dom.helpers.cleanUpPriceValue(dataLocal.totalVariants);
+                                    var kuStartPrice = klevu.dom.helpers.cleanUpPriceValue(dataLocal.startPrice,dataLocal.currency);
+                                    var kuSalePrice = klevu.dom.helpers.cleanUpPriceValue(dataLocal.salePrice,dataLocal.currency);
+                                    var kuPrice = klevu.dom.helpers.cleanUpPriceValue(dataLocal.price,dataLocal.currency);
+                                    var contextLabel = kuStartPrice !==  kuSalePrice ? (kuTotalVariants > 1 ? 'Deal From' : 'Deal') : 'From';
+                                %>
+                                <% if(!Number.isNaN(kuTotalVariants) && !Number.isNaN(kuStartPrice) && (kuPrice > kuSalePrice)) { %>
+                                    <% if(kuStartPrice !==  kuSalePrice) { %>
+                                        <div class="capitalize text-ahy-red !font-bold !text-sm"><%=contextLabel%></div>
+                                        <div class="flex items-baseline">
+                                            <span class="kuStartPrice kuSpecialPrice !text-ahy-blue !text-2xl !font-extrabold" x-html="hyva.formatPrice(<%=dataLocal.startPrice%>)">
+                                                <%=helper.processCurrency(dataLocal.currency,parseFloat(dataLocal.kuStartPrice))%>
+                                            </span>
+                                        </div>
+                                    <% } else { %>
+                                        <div class="capitalize text-ahy-red !font-bold !text-sm">deal</div>
+                                        <div class="flex items-baseline">
+                                            <span class="kuSalePrice kuSpecialPrice !text-ahy-blue !text-2xl !font-extrabold" x-html="hyva.formatPrice(<%=dataLocal.salePrice%>)">
+                                                <%=helper.processCurrency(dataLocal.currency,parseFloat(dataLocal.salePrice))%>
+                                            </span>
+                                            <span class="kuOrigPrice !text-sm !text-ahy-rating-text" x-html="hyva.formatPrice(<%=dataLocal.price%>)">
+                                                <%= helper.processCurrency(dataLocal.currency,parseFloat(dataLocal.price)) %>
+                                            </span>
+                                        </div>
+                                    <% } %>
+                                <% } else if(!Number.isNaN(kuTotalVariants) && !Number.isNaN(kuStartPrice) ){ %>
+                                    <div class="kuSalePrice kuStartPrice flex !text-2xl">
+                                        <div class="capitalize text-ahy-red !font-bold !text-sm">from</div>
+                                        <span class="!text-ahy-blue !font-extrabold" x-html="hyva.formatPrice(<%=dataLocal.startPrice%>)">
+                                            <%=helper.processCurrency(dataLocal.currency,parseFloat(dataLocal.startPrice))%>
+                                        </span>
+                                    </div>
+                                <% } else if(!Number.isNaN(kuSalePrice) && !Number.isNaN(kuPrice) && (kuPrice > kuSalePrice)){ %>
+                                    <% if(kuStartPrice !==  kuSalePrice) { %>
+                                        <div class="capitalize text-ahy-red !font-bold !text-sm"><%=contextLabel%></div>
+                                        <div class="flex items-baseline">
+                                            <span class="kuStartPrice kuSpecialPrice !text-ahy-blue !text-2xl !font-extrabold" x-html="hyva.formatPrice(<%=dataLocal.startPrice%>)">
+                                                <%=helper.processCurrency(dataLocal.currency,parseFloat(dataLocal.kuStartPrice))%>
+                                            </span>
+                                        </div>
+                                    <% } else { %>
+                                        <div class="capitalize text-ahy-red !font-bold !text-sm">deal</div>
+                                        <div class="flex items-baseline">
+                                            <span class="kuSalePrice kuSpecialPrice !text-ahy-blue !text-2xl !font-extrabold" x-html="hyva.formatPrice(<%=dataLocal.salePrice%>)">
+                                                <%=helper.processCurrency(dataLocal.currency,parseFloat(dataLocal.salePrice))%>
+                                            </span>
+                                            <span class="kuOrigPrice !text-sm !text-ahy-rating-text" x-html="hyva.formatPrice(<%=dataLocal.price%>)">
+                                                <%= helper.processCurrency(dataLocal.currency,parseFloat(dataLocal.price)) %>
+                                            </span>
+                                        </div>
+                                    <% } %>
+                                <% } else if(!Number.isNaN(kuSalePrice)) { %>
+                                    <span class="kuSalePrice kuSpecialPrice !text-ahy-blue !text-2xl !font-extrabold" x-html="hyva.formatPrice(<%=dataLocal.salePrice%>)">
+                                        <%= helper.processCurrency(dataLocal.currency,parseFloat(dataLocal.salePrice)) %>
+                                    </span>
+                                <% } else if(!Number.isNaN(kuPrice)) { %>
+                                    <span class="kuSalePrice" x-html="hyva.formatPrice(<%=dataLocal.price%>)">
+                                        <%= helper.processCurrency(dataLocal.currency,parseFloat(dataLocal.price)) %>
+                                    </span>
+                                <% } %>
+                                <%=helper.render('searchResultProductVATLabel', scope, data, dataLocal) %>
+                            </div>
+                        <% } else { %>
+                            <div class="kuPrice min-h-[5.5rem] !overflow-visible">
+                                <span>
+                                    Price not loaded
+                                </span>
+                            </div>
+                        <% } %>
+                    <% } %>
+                </div>
+
+                <div class="kuProdAdditional !static !visible !inset-0 !w-full !border-0 !bg-transparent">
+                    <div class="!static kuProdAdditionalData flex flex-col md:grid md:grid-cols-2 md:items-center md:h-[55px]">
+                        <div class="capitalize !text-ahy-blue !font-semibold !text-sm"><%= additionalDataToReturn.shipping_charge %></div>
+                        <% if(desc && desc.length) { %>
+                            <div class="kuDesc kuClippedTwo"> <%=desc%> </div>
+                        <% } %>
+                        <%=helper.render('landingProductSwatch',scope,data,dataLocal) %>
+                        <% 
+                            window.klevu_addToCartEnabled = true;
+                            var isAddToCartEnabled = klevu.search.modules.kmcInputs.base.getAddToCartEnableValue(); 
+                        %>
+                        <div class="flex gap-2 md:gap-0 items-center">
+                            <% if(isAddToCartEnabled) { %>
+                                <%=helper.render('landingPageProductAddToCart',scope,data,dataLocal) %>
+                            <% } %>
+                            <div class="wishlist-btn">
+                                <button x-data="initWishlist()" @click.prevent="addToWishlist(<%=addToWishlistProductId%>)" aria-label="Add to Wish List" type="button"
+                                    class="rounded-full w-9 h-9 md:hidden ring-1 ring-gray-300 bg-white p-0 border-0 inline-flex shrink-0 items-center justify-center text-gray-500 hover:text-red-600">
+                                    <svg id="Layer_1" class="w-5 h-5" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.91 20"
+                                        x-on:mouseover="function(evt){ evt.target.querySelector('.wishList').setAttribute('fill', '#ff0000') }"
+                                        x-on:mouseout="function(evt){ evt.target.querySelector('.wishList').setAttribute('fill', '#0d2f47') }"
+                                        x-on:focus="function(evt){ evt.target.querySelector('.wishList').setAttribute('fill', '#ff0000') }"
+                                        x-on:blur="function(evt){ evt.target.querySelector('.wishList').setAttribute('fill', '#0d2f47') }"
+                                    >
+                                        <defs>
+                                            <style>.wishList{fill:#0d2f47;}</style>
+                                        </defs>
+                                        <path class="wishList" d="M14.41,1.5v16L9.27,12.71a1.62,1.62,0,0,0-2.19,0L1.5,17.58V1.5H14.41M14.76,0H1.15A1.16,1.16,0,0,0,0,1.15v18.1a.74.74,0,0,0,1.24.56l6.83-6a.12.12,0,0,1,.18,0l6.38,5.9a.74.74,0,0,0,.52.21.76.76,0,0,0,.76-.77v-18A1.15,1.15,0,0,0,14.76,0Z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </li>
+</script>

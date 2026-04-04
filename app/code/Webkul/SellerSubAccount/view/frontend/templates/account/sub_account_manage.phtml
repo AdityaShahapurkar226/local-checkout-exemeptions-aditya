@@ -1,0 +1,40 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_SellerSubAccount
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+ $isPartner = $block->getLayout()->createBlock(
+     \Webkul\SellerSubAccount\Block\SubAccount::class
+ )->getMarketplaceHelperInstance()->isSeller();
+
+    ?>
+<?php if ($isPartner == 1): ?>
+    <div class="wk-ui-component-container">
+        <div class="page-main-actions">
+            <div class="page-actions-placeholder"></div>
+            <div class="page-actions" data-ui-id="page-actions-toolbar-content-header">
+                <div class="page-actions-inner" data-title='<?=$block->escapeHtmlAttr(__("Manage Sub Account")); ?>'>
+                    <div class="page-actions-buttons">
+                        <button id="add" title='<?=$block->escapeHtmlAttr(__("Add New Sub Account")); ?>'
+                        type="button" class="action- scalable primary" onclick="location.href =
+                        '<?=$block->escapeUrl($block->getUrl('sellersubaccount/account/new'));?>';"
+                        data-ui-id="add-button">
+                            <span><?=$block->escapeHtml(__("Add New Sub Account")); ?></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?=$block->getChildHtml(); ?>
+    </div>
+<?php else: ?>
+    <h2 class="wk-mp-error-msg">
+        <?=$block->escapeHtmlAttr(__("To Become Seller Please Contact to Admin.")); ?>
+    </h2>
+<?php endif; ?>

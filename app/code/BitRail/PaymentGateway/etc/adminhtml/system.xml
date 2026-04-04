@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="bitrail_gateway" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Pay with BitRail Digital Wallet</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                    <comment>Payment method title that the customer will see upon checkout</comment>
+                </field>
+                <field id="environment" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Environment</label>
+                    <source_model>BitRail\PaymentGateway\Model\Adminhtml\Source\PaymentEnvironment</source_model>
+                    <comment>Environment for BitRail API. You can find info about it at https://docs.bitrail.io/#intro</comment>
+                </field>
+                <field id="vault_handle_prod" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Seller Wallet handle</label>
+                    <comment>BitRail platform Wallet handle to receive money. Could be configured in BitRail in Wallet settings section.</comment>
+                </field>
+                <field id="vault_handle_sandbox" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Seller Wallet handle</label>
+                    <comment>BitRail platform Wallet handle to receive money. Could be configured in BitRail in Wallet settings section.</comment>
+                </field>
+                <field id="vault_handle_qa" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Seller Wallet handle</label>
+                    <comment>BitRail platform Wallet handle to receive money. Could be configured in BitRail in Wallet settings section.</comment>
+                </field>
+                <field id="order_description" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Description</label>
+                    <comment>Generic description of the order. Ex: Order with MyBestShop. Details of the specific order are available in order details section in the BitRail app.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,269 @@
+<?php
+
+declare(strict_types=1);
+
+use Ahy\PaymentIntegrations\ViewModel\Braintree as BraintreeViewModel;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HyvaCsp;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\AbstractBlock;
+
+/** @var ViewModelRegistry $viewModels */
+/** @var HyvaCsp $hyvaCsp */
+/** @var Escaper $escaper */
+/** @var AbstractBlock $block */
+
+/** @var BraintreeViewModel $braintreeViewModel */
+$braintreeViewModel = $viewModels->require(BraintreeViewModel::class);
+?>
+
+<div>
+    <script>
+        const braintreeVenmo = () => {
+            return {
+                braintreeVenmoId: "braintreeVenmo",
+                braintreeVenmoMethod: "braintree-venmo",
+                browserSupported: true,
+                instances: {},
+                venmoToken: false,
+
+                isBrowserSupported() {
+                    return this.browserSupported;
+                },
+
+                isBrowserNotSupported() {
+                    return !this.browserSupported;
+                },
+
+                hasVenmoToken() {
+                    return this.venmoToken;
+                },
+
+                hasNoVenmoToken() {
+                    if (!this.venmoToken) {
+                        // this.clearNonce();
+                        this.logFrontend('Venmo token missing when checked hasNoVenmoToken', 'warn');
+                    }
+                    return !this.venmoToken;
+                },
+
+                initialise() {
+                    this.logFrontend('Initializing Braintree Venmo component', 'info');
+                    const requiredJsFiles = [];
+
+                    if (!window.braintree?.client) {
+                        requiredJsFiles.push(this.createScriptLoadPromise('https://js.braintreegateway.com/web/3.111.0/js/client.min.js'));
+                    }
+
+                    if (!window.braintree?.venmo) {
+                        requiredJsFiles.push(this.createScriptLoadPromise('https://js.braintreegateway.com/web/3.111.0/js/venmo.min.js'));
+                    }
+
+                    Promise.all(requiredJsFiles)
+                        .then(this.initialiseVenmo.bind(this))
+                        .then(this.addEvents.bind(this))
+                        .catch(err => this.logFrontend('Error loading Braintree scripts: ' + err.message, 'error'));
+                },
+
+                async initialiseVenmo() {
+                    try {
+                        await this.logFrontend('Initializing Venmo client...', 'info');   // ADD
+
+                        if (!window.braintree.client) {
+                            await this.logFrontend('Braintree client not found', 'error'); // CHANGE (added await)
+                            return;
+                        }
+
+                        const instances = {};
+                        instances.clientInstance = await window.braintree.client.create({
+                            authorization: '<?= $escaper->escapeJs($braintreeViewModel->getClientToken()) ?>',
+                        });
+
+                        await this.logFrontend('Braintree client instance created', 'info'); // ADD
+
+                        instances.venmo = await window.braintree.venmo.create({
+                            client: instances.clientInstance,
+                            allowDesktop: true,
+                            allowNewBrowserTab: false
+                        });
+
+                        await this.logFrontend('Venmo instance created', 'info');  // ADD
+
+                        if (!instances.venmo.isBrowserSupported()) {
+                            this.isBrowserSupported = false;
+                            await this.logFrontend('Venmo not supported in this browser', 'warn'); // CHANGE (added await)
+                            return;
+                        }
+
+                        this.instances = instances;
+                        await this.logFrontend('Braintree Venmo successfully initialized', 'info'); // CHANGE (added await)
+                    } catch (err) {
+                        await this.logFrontend('Error initializing Venmo: ' + err.message, 'error'); // CHANGE (added await)
+                    }
+                },
+
+                addEvents() {
+                    window.addEventListener('checkout:init:after', event => {
+                        hyvaCheckout.validation.register(this.braintreeVenmoId, async function() {
+                            if (!this.venmoToken) {
+                                const msg = 'Please complete payment validation with Venmo first.';
+                                this.showError(msg);
+                                this.logFrontend(msg, 'warn');
+                            }
+                            return this.venmoToken;
+                        }.bind(this), document.getElementById(this.venmoToken));
+                    }, {
+                        once: true
+                    });
+
+                    hyvaCheckout.validation.register(this.braintreeVenmoId, async function() {
+                        if (!this.venmoToken) {
+                            const msg = 'Please complete payment validation with Venmo first.';
+                            this.showError(msg);
+                            this.logFrontend(msg, 'warn');
+                        }
+                        return this.venmoToken;
+                    }.bind(this), document.getElementById(this.venmoToken));
+
+                    window.Magewire.hook('message.processed', (message, component) => {
+                        if (component.id === 'checkout.billing-details.address-list') {
+                            this.venmoToken = false;
+                            this.logFrontend('Billing address updated, Venmo nonce cleared', 'info');
+                        }
+
+                        const method = message.updateQueue[0].method;
+
+                        if (method !== 'setToken' &&
+                            component.id === 'checkout.payment.method.braintree-venmo' &&
+                            !this.venmoToken) {
+                            this.initialiseVenmo();
+                            this.logFrontend('Venmo instance re-initialized after update', 'info');
+                        }
+                    }, {
+                        once: true
+                    });
+
+                    Magewire.on('payment_method_selected', (obj) => {
+                        if (!obj) return;
+
+                        const method = obj.method;
+                        if (method !== this.braintreeVenmoMethod.replace('-', '_')) {
+                            hyvaCheckout.validation.remove(this.braintreeVenmoId);
+                            this.logFrontend(`Payment method changed, removed validation for ${this.braintreeVenmoMethod}`, 'info');
+                        }
+                    });
+                },
+
+                async onClick() {
+                    try {
+                        await this.logFrontend('Venmo button clicked, generating nonce...', 'info'); // already added
+
+                        const fakeNonce = 'fake-venmo-account-nonce';
+
+                        // Send nonce to backend
+                        await Magewire.find('checkout.payment.method.' + this.braintreeVenmoMethod).setToken(fakeNonce);
+
+                        this.venmoToken = true;
+                        this.clearError();
+
+                        // LOG THE NONCE
+                        await this.logFrontend('Venmo nonce successfully set: ' + fakeNonce, 'info'); 
+                    } catch (err) {
+                        await this.logFrontend('Error setting Venmo token: ' + err.message, 'error');
+                    }
+                },
+
+                createScriptLoadPromise(url) {
+                    return new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = url;
+
+                        script.addEventListener('load', () => {
+                            this.logFrontend(`Script loaded: ${url}`, 'info');
+                            resolve();
+                        }, false);
+
+                        script.addEventListener('error', (event) => {
+                            this.logFrontend(`Script failed to load: ${url}`, 'error');
+                            reject(event);
+                        }, false);
+
+                        document.body.appendChild(script);
+                    })
+                },
+
+                hideLoader() {
+                    window.dispatchEvent(new Event('magewire:loader:done'));
+                },
+
+               async showError(message) {
+                    this.hideLoader();
+                    hyvaCheckout.payment.dispatchExceptionMessage(message, 'error');
+                    await this.logFrontend('Error shown to user: ' + message, 'error'); // CHANGE (added await)
+                },
+
+                clearError() {
+                    hyvaCheckout.payment.dispatchSuccessMessage('');
+                },
+
+                async clearNonce() {
+                    try {
+                        const response = await fetch('/rest/V1/venmo/clear-nonce', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+                        const data = await response.json();
+                        await this.logFrontend('Nonce cleared: ' + JSON.stringify(data), 'info'); // CHANGE (added await)
+                    } catch (error) {
+                        await this.logFrontend('Nonce could not be cleared: ' + error.message, 'error'); // CHANGE (added await)
+                    }
+                },
+
+                async logFrontend(message, level = 'info') {
+                    try {
+                        await fetch('/rest/V1/venmo/frontend/log', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({ message, level })
+                        });
+                    } catch (err) {
+                        console.error('Logging failed:', err);
+                    }
+                },
+            }
+        };
+
+        window.addEventListener('alpine:init', () => Alpine.data('braintreeVenmo', braintreeVenmo), {
+            once: true
+        })
+    </script>
+</div>
+<style>
+    .bg-venmo-blue {
+        width: 100%;
+        border-radius: 100vh;
+        display: flex;
+        justify-content: center;
+    }
+
+    .bg-venmo-blue img {
+        height: 1rem !important;
+    }
+
+    .bg-venmo-blue:hover {
+        background-color: #008CFF;
+        opacity: 0.8;
+    }
+
+    @media (min-width: 640px) {
+        .bg-venmo-blue {
+            /* padding: 1rem; */
+        }
+    }
+</style>

@@ -1,0 +1,264 @@
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMultiShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<li id="shipping" class="checkout-shipping-address" data-bind="fadeVisible: visible()">
+    <div class="step-title" data-bind="i18n: 'Shipping Address'" data-role="title"></div>
+    <div id="checkout-step-shipping"
+         class="step-content"
+         data-role="content">
+
+        <!-- ko if: (!quoteIsVirtual) -->
+            <!-- ko foreach: getRegion('customer-email') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        <!--/ko-->
+
+        <!-- ko foreach: getRegion('address-list') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+
+        <!-- ko foreach: getRegion('address-list-additional-addresses') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+
+        <!-- Address form pop up -->
+        <!-- ko if: (!isFormInline) -->
+        <button type="button"
+                data-bind="click: showFormPopUp, visible: !isNewAddressAdded()"
+                class="action action-show-popup">
+            <span data-bind="i18n: 'New Address'"></span></button>
+        <div id="opc-new-shipping-address" data-bind="visible: isFormPopUpVisible()">
+            <!-- ko template: 'Magento_Checkout/shipping-address/form' --><!-- /ko -->
+        </div>
+        <!-- /ko -->
+
+        <!-- ko foreach: getRegion('before-form') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+
+        <!-- Inline address form -->
+        <!-- ko if: (isFormInline) -->
+        <!-- ko template: 'Magento_Checkout/shipping-address/form' --><!-- /ko -->
+        <!-- /ko -->
+    </div>
+</li>
+
+
+<!--Shipping method template-->
+<li id="opc-shipping_method"
+    class="checkout-shipping-method"
+    data-bind="fadeVisible: visible(), blockLoader: isLoading"
+    role="presentation">
+    <div class="checkout-shipping-method">
+        <div class="step-title" data-bind="i18n: 'Shipping Methods'" data-role="title"></div>
+        <!-- ko foreach: getRegion('before-shipping-method-form') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!-- /ko -->
+        <div id="checkout-step-shipping_method"
+             class="step-content"
+             data-role="content"
+             role="tabpanel"
+             aria-hidden="false">
+            <!-- ko if: rates().length  -->
+            <form class="form methods-shipping" id="co-shipping-method-form" data-bind="submit: setShippingInformation" novalidate="novalidate">
+                <div id="checkout-shipping-method-load">
+                    <table class="table-checkout-shipping-method">
+                        <thead>
+                            <tr class="row">
+                                <th class="col col-method" data-bind="i18n: 'Select Method'"></th>
+                                <th class="col col-price" data-bind="i18n: 'Price'"></th>
+                                <th class="col col-method" data-bind="i18n: 'Method Title'"></th>
+                                <th class="col col-carrier" data-bind="i18n: 'Carrier Title'"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        <!--ko foreach: { data: rates(), as: 'method'}-->
+                        <tr class="row" data-bind="click: $parent.selectShippingMethod, click: $parent.totalSellerUpdate($data, $parent)">
+                            <!--ko if: method.sellerShipping -->
+                            <td class="col col-method">
+                                <!--input class="radio"
+                                       type="radio"
+                                       data-bind="attr: {
+                                                    checked: true,
+                                                    'value' : method.carrier_code + '_' + method.method_code,
+                                                    'id': 's_method_' + method.method_code,
+                                                    'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code
+                                                }" /-->
+                            </td>
+                            <td class="col col-price" style="width:14%" data-bind="text: $parent.getFormattedPrice($parent.totalSellerAmount())"></td>
+                            <td class="col col-method"
+                                        data-bind="text: method.carrier_title, attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}"></td>
+                            <td class="col col-carrier">
+                            <div>
+                                <table style="
+                                    margin-top: 50px;
+                                    margin-left: -200px;
+                                    margin-right: 250px;
+                                    background: #f5f5f5;
+                                ">
+                                    <thead>
+                                       <tr class="row">
+                                            <th class="col col-method" data-bind="i18n: 'Select Method'"></th>
+                                            <th class="col col-price" data-bind="i18n: 'Price'"></th>
+                                            <th class="col col-method" data-bind="i18n: 'Method Title'"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="seller-method-table">
+                                        <!--ko foreach: { data: method.sellerShipping, as: 'sellermethodData'}-->
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                <span class="seller-name" style="background-color:#f5f5f5; width:100%;font-weight: 600;padding:15px;margin-left: -100px;font-size: 1.8rem;" data-bind="text: 'Seller: '+ sellermethodData.seller_name"></span>
+                                                <span class="seller-products" data-bind="text: 'Products: '+ sellermethodData.products" style="display: block;
+                                                        margin-left: -70px;
+                                                        padding-top: 20px;"></span>
+                                            </td>
+                                        </tr>
+                                        <!--ko foreach: { data: methods, as: 'methoddata' } -->
+                                        <!--ko foreach: { data: Object.keys(methoddata), as: 'key' } -->
+                                        <tr>
+                                            <td style="padding-left: 10px;">
+                                                <!-- ko if: $parents[3].productWiseEnabled() -->
+                                                <input
+                                                    type="radio"
+                                                       data-bind="
+                                                                value: method.carrier_code + '_' + key,
+                                                                checked: $parent.isSelected,
+                                                                attr: {
+                                                                    'id': 's_method_' + method.carrier_code + '_' + key,
+                                                                    'aria-labelledby': 'label_method_' + method.carrier_code + '_' + key + ' ' + 'label_carrier_' + key + '_' + key,
+                                                                    name : sellermethodData.item_ids + '_'+ 'multishipping'
+                                                                },
+                                                                click: $parents[3].selectSellerShippingMethod.bind($data, $parents[3], $parents[2], $parents[1], methoddata[key].cost, methoddata[key].base_amount, key, methoddata[key].method)"
+                                                       class="radio"/>
+                                                <!-- /ko -->
+                                                <!-- ko ifnot: $parents[3].productWiseEnabled() -->
+                                                <input
+                                                type="radio"
+                                                   data-bind="
+                                                            value: method.carrier_code + '_' + key,
+                                                            checked: $parent.isSelected,
+                                                            attr: {
+                                                                'id': 's_method_' + method.carrier_code + '_' + key,
+                                                                'aria-labelledby': 'label_method_' + method.carrier_code + '_' + key + ' ' + 'label_carrier_' + key + '_' + key,
+                                                                name : sellermethodData.seller_id + '_'+ 'multishipping'
+                                                            },
+                                                            click: $parents[3].selectSellerShippingMethod.bind($data, $parents[3], $parents[2], $parents[1], methoddata[key].cost, methoddata[key].base_amount, key, methoddata[key].method)"
+                                                   class="radio"/>
+                                                <!-- /ko -->
+                                            </td>
+
+                                            <td class="col col-price" data-bind="text: $parents[3].getFormattedPrice(methoddata[key].cost)"></td>
+                                            <td class="col col-method" style="width:auto;" data-bind="text: methoddata[key].method"></td>
+                                        </tr>
+                                        <!-- /ko-->
+                                        <!-- /ko-->
+                                        <!--ko ifnot: Object.keys(sellermethodData.methods).length > 0  -->
+                                        <tr class="row row-error">
+                                            <td class="col col-error" colspan="4">
+                                                <div class="message error">
+                                                    <div class="no-quotes-block"><!-- ko i18n: 'Sorry, no quotes are available for this seller.'--><!-- /ko --></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!-- /ko-->
+                                        <!-- /ko-->
+                                    </tbody>
+                                </table>
+                                </div>
+                           </td>
+
+                        <!-- /ko-->
+                        <!--ko ifnot: method.sellerShipping -->
+                        <!--ko ifnot: (method.method_code == 'mpmultishipping') -->
+                            <td class="col col-method">
+                                <!-- ko ifnot: method.error_message -->
+                                <!-- ko if: $parent.rates().length == 1 -->
+                                <input class="radio"
+                                       type="radio"
+                                       data-bind="attr: {
+                                                    checked: $parent.rates().length == 1,
+                                                    'value' : method.carrier_code + '_' + method.method_code,
+                                                    'id': 's_method_' + method.method_code,
+                                                    'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code
+                                                 }" />
+                                <!-- /ko -->
+                                <!--ko ifnot: ($parent.rates().length == 1)-->
+                                <input type="radio"
+                                       data-bind="
+                                                value: method.carrier_code + '_' + method.method_code,
+                                                checked: $parent.isSelected,
+                                                attr: {
+                                                    'id': 's_method_' + method.carrier_code + '_' + method.method_code,
+                                                    'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code
+                                                },
+                                                click: $parent.selectShippingMethod"
+                                       class="radio"/>
+                                <!--/ko-->
+                                <!-- /ko -->
+                            </td>
+                            <td class="col col-price">
+                                <!-- ko foreach: $parent.getRegion('price') -->
+                                <!-- ko template: getTemplate() --><!-- /ko -->
+                                <!-- /ko -->
+                            </td>
+
+                            <td class="col col-method"
+                                    data-bind="text: method.method_title, attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}"></td>
+
+                            <td class="col col-carrier"
+                                    data-bind="text: method.carrier_title, attr: {'id': 'label_carrier_' + method.method_code + '_' + method.carrier_code}"></td>
+                            <!-- /ko -->
+                            <!-- /ko -->
+                        </tr>
+
+                        <!-- ko if:  method.error_message -->
+                        <tr class="row row-error">
+                            <td class="col col-error" colspan="4">
+                                <div class="message error">
+                                    <div data-bind="text: method.error_message"></div>
+                                </div>
+                                <span class="no-display">
+                                    <input type="radio" data-bind="attr: {'value' : method.method_code, 'id': 's_method_' + method.method_code}"/>
+                                </span>
+                            </td>
+                        </tr>
+                        <!-- /ko -->
+
+                        <!-- /ko -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="onepage-checkout-shipping-method-additional-load">
+                    <!-- ko foreach: getRegion('shippingAdditional') -->
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                    <!-- /ko -->
+                </div>
+                <!-- ko if: errorValidationMessage().length > 0 -->
+                <div class="message notice">
+                    <span><!-- ko text: errorValidationMessage()--><!-- /ko --></span>
+                </div>
+                <!-- /ko -->
+                <div class="actions-toolbar" id="shipping-method-buttons-container">
+                    <div class="primary">
+                        <button data-role="opc-continue" type="submit" class="button action continue primary">
+                            <span><!-- ko i18n: 'Next'--><!-- /ko --></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <!-- /ko -->
+            <!-- ko ifnot: rates().length > 0 --><div class="no-quotes-block"><!-- ko i18n: 'Sorry, no quotes are available for this order at this time'--><!-- /ko --></div><!-- /ko -->
+        </div>
+    </div>
+</li>

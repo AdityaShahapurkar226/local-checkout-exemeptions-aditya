@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!--
+            Add our custom code to the klevu.interactive call
+        -->
+        <referenceBlock name="klevu_frontendjs.js_init.additional.before">
+            <block class="Magento\Framework\View\Element\Template" name="ahy_themecustomization.klevu.js_init.additional.before" template="Ahy_ThemeCustomization::html/head/js_init/additional_before/search_results_page.phtml"/>
+        </referenceBlock>
+
+        <!--
+            Add our new SRLP template between klevu.interactive and the core theme files
+        -->
+        <referenceBlock name="head.additional">
+            <!-- search result landing template block -->
+            <block class="Klevu\FrontendJs\Block\Template" after="klevu_frontendjs.js_init" before="klevu_frontendjs.js_includes" name="ahy_themecustomization.klevu.search_results_page_template" template="Ahy_ThemeCustomization::klevu/klevu_landing_template.phtml">
+                <arguments>
+                    <!--
+                        We will use the existing condition from the Klevu_Search module to ensure
+                        that our changes to the frontend search options only take place when the
+                        relevant configuration is enabled
+                    -->
+                    <argument name="is_enabled_conditions_fqcn" xsi:type="array">
+                        <item name="klevu_search_themev2" xsi:type="string">Klevu\Search\Service\ThemeV2\IsEnabledCondition</item>
+                    </argument>
+                </arguments>
+            </block>
+
+            <!-- category landing page product Block template -->
+            <block class="Klevu\FrontendJs\Block\Template" after="klevu_frontendjs.js_init" before="klevu_frontendjs.js_includes" name="ahy_themecustomization.serac.result.template.product.block" template="Ahy_ThemeCustomization::klevu/klevu_landing_template_product_block.phtml">
+                <arguments>
+                    <!--
+                        We will use the existing condition from the Klevu_Categorynavigation module to ensure
+                        that our changes to the frontend search options only take place when the
+                        relevant configuration is enabled
+                    -->
+                    <argument name="is_enabled_conditions_fqcn" xsi:type="array">
+                        <item name="klevu_catnav_themev2" xsi:type="string">Klevu\Categorynavigation\Service\ThemeV2\IsEnabledCondition</item>
+                    </argument>
+                </arguments>
+            </block>
+
+            <!-- search result landing page product card Block template -->
+            <block class="Klevu\FrontendJs\Block\Template" after="klevu_frontendjs.js_init" before="klevu_frontendjs.js_includes" name="ahy_themecustomization.search.result.landing.template.product.card.block" template="Ahy_ThemeCustomization::klevu/landing_page_product_addToCart.phtml">
+                <arguments>
+                    <!--
+                        We will use the existing condition from the Klevu_Search module to ensure
+                        that our changes to the frontend search options only take place when the
+                        relevant configuration is enabled
+                    -->
+                    <argument name="is_enabled_conditions_fqcn" xsi:type="array">
+                        <item name="klevu_search_themev2" xsi:type="string">Klevu\Search\Service\ThemeV2\IsEnabledCondition</item>
+                    </argument>
+                </arguments>
+            </block>
+
+
+            <!-- category klevu Landing Template Results Block template -->
+            <block class="Klevu\FrontendJs\Block\Template" after="klevu_frontendjs.js_init" before="klevu_frontendjs.js_includes" name="ahy_themecustomization.landing.klevu.landing.template.results.block" template="Ahy_ThemeCustomization::klevu/klevu_landing_template_results.phtml">
+                <arguments>
+                    <!--
+                        We will use the existing condition from the Klevu_Categorynavigation module to ensure
+                        that our changes to the frontend search options only take place when the
+                        relevant configuration is enabled
+                    -->
+                    <argument name="is_enabled_conditions_fqcn" xsi:type="array">
+                        <item name="klevu_catnav_themev2" xsi:type="string">Klevu\Categorynavigation\Service\ThemeV2\IsEnabledCondition</item>
+                    </argument>
+                </arguments>
+            </block>
+            <!-- klevuLandingTemplateSortBy -->
+
+            <!-- category klevu Landing Template SortBy Block template -->
+            <block class="Klevu\FrontendJs\Block\Template" after="klevu_frontendjs.js_init" before="klevu_frontendjs.js_includes" name="ahy_themecustomization.landing.klevu.landing.template.sort.by.block" template="Ahy_ThemeCustomization::klevu/klevu_landing_template_sort_by.phtml">
+                <arguments>
+                    <!--
+                        We will use the existing condition from the Klevu_Categorynavigation module to ensure
+                        that our changes to the frontend search options only take place when the
+                        relevant configuration is enabled
+                    -->
+                    <argument name="is_enabled_conditions_fqcn" xsi:type="array">
+                        <item name="klevu_catnav_themev2" xsi:type="string">Klevu\Categorynavigation\Service\ThemeV2\IsEnabledCondition</item>
+                    </argument>
+                </arguments>
+            </block>
+
+            <!-- category kuFilterTagsTemplate Block template -->
+            <block class="Klevu\FrontendJs\Block\Template" after="klevu_frontendjs.js_init" before="klevu_frontendjs.js_includes" name="ahy_themecustomization.landing.ku.filter.tags.template.block" template="Ahy_ThemeCustomization::klevu/ku_filter_tags_template.phtml">
+                <arguments>
+                    <!--
+                        We will use the existing condition from the Klevu_Categorynavigation module to ensure
+                        that our changes to the frontend search options only take place when the
+                        relevant configuration is enabled
+                    -->
+                    <argument name="is_enabled_conditions_fqcn" xsi:type="array">
+                        <item name="klevu_catnav_themev2" xsi:type="string">Klevu\Categorynavigation\Service\ThemeV2\IsEnabledCondition</item>
+                    </argument>
+                </arguments>
+            </block>
+
+            <!-- category klevuLandingTemplateResultsHeadingTitle Block template -->
+            <block class="Klevu\FrontendJs\Block\Template" after="klevu_frontendjs.js_init" before="klevu_frontendjs.js_includes" name="ahy_themecustomization.landing.klevu.landing.template.results.heading.title.block" template="Ahy_ThemeCustomization::klevu/klevu_landing_template_results_heading_title.phtml">
+                <arguments>
+                    <!--
+                        We will use the existing condition from the Klevu_Categorynavigation module to ensure
+                        that our changes to the frontend search options only take place when the
+                        relevant configuration is enabled
+                    -->
+                    <argument name="is_enabled_conditions_fqcn" xsi:type="array">
+                        <item name="klevu_catnav_themev2" xsi:type="string">Klevu\Categorynavigation\Service\ThemeV2\IsEnabledCondition</item>
+                    </argument>
+                </arguments>
+            </block>
+
+            <!-- category filters Block template -->
+            <block class="Klevu\FrontendJs\Block\Template" after="klevu_frontendjs.js_init" before="klevu_frontendjs.js_includes" name="ahy_themecustomization.landing.filters" template="Ahy_ThemeCustomization::klevu/klevu_landing_template_filters.phtml">
+                <arguments>
+                    <!--
+                        We will use the existing condition from the Klevu_Categorynavigation module to ensure
+                        that our changes to the frontend search options only take place when the
+                        relevant configuration is enabled
+                    -->
+                    <argument name="is_enabled_conditions_fqcn" xsi:type="array">
+                        <item name="klevu_catnav_themev2" xsi:type="string">Klevu\Categorynavigation\Service\ThemeV2\IsEnabledCondition</item>
+                    </argument>
+                </arguments>
+            </block>
+
+            <!-- category pagination Block template -->
+            <block class="Klevu\FrontendJs\Block\Template" after="klevu_frontendjs.js_init" before="klevu_frontendjs.js_includes" name="ahy_themecustomization.landing.pagination" template="Ahy_ThemeCustomization::klevu/klevu_landing_template_pagination.phtml">
+                <arguments>
+                    <!--
+                        We will use the existing condition from the Klevu_Categorynavigation module to ensure
+                        that our changes to the frontend search options only take place when the
+                        relevant configuration is enabled
+                    -->
+                    <argument name="is_enabled_conditions_fqcn" xsi:type="array">
+                        <item name="klevu_catnav_themev2" xsi:type="string">Klevu\Categorynavigation\Service\ThemeV2\IsEnabledCondition</item>
+                    </argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

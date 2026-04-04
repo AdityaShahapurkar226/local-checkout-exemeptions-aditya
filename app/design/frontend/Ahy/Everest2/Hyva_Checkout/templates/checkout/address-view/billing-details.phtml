@@ -1,0 +1,45 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var AddressView $addressView */
+/** @var Escaper $escaper */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Hyva\Checkout\ViewModel\Checkout\AddressView;
+
+$addressView = $viewModels->require(AddressView\AddressViewBilling::class);
+?>
+<div>
+    <?= /* @noEscape */ $addressView->renderView() ?>
+
+    <?php if (! $addressView->isVirtual()): ?>
+        <div class="flex items-start mb-6 mt-2 py-4 "
+             wire:target="billingAsShipping"
+             wire:loading.class="opacity-25"
+        >
+            <label class="inline-flex items-center" for="billing-as-shipping">
+                <input id="billing-as-shipping"
+                       name="billing-as-shipping"
+                       type="checkbox"
+                       wire:model="billingAsShipping"
+                       wire:loading.attr="disabled"
+                />
+
+                <span class="ml-2 text-gray-700 font-bold hover:cursor-pointer">
+                    <?= $escaper->escapeHtml(__('Use this address for the billing')) ?>
+                </span>
+            </label>
+        </div>
+    <?php endif ?>
+</div>

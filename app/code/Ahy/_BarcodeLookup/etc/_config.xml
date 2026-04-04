@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/config.xsd">
+
+    <default>
+        <barcode_lookup>
+            <general>
+                <update_interval>30</update_interval>
+                <api_key>3sankds08d2w6cqqv6q0emsic73qe5</api_key>
+            </general>
+        </barcode_lookup>
+    </default>
+</config>

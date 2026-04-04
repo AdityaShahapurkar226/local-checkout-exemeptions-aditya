@@ -1,0 +1,319 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMultiShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$checkoutSession = $block->getViewModel()->getCheckoutSession();
+$jsonSerializer = $block->getViewModel()->getJsonSerializer();
+$priceHelper = $block->getViewModel()->getPriceHelper();
+$taxHelper = $block->getViewModel()->getTaxHelper();
+$helper = $block->getViewModel()->getHelper();
+$marketplaceCarriers = $block->getViewModel()->marketplaceCarriers();
+
+$multiShippingMode = $helper->getConfigData('shipping_mode');
+$multiShippingEnable = $helper->getConfigData('active');
+
+?>
+<form method="post" id="shipping_method_form" class="form multicheckout shipping" 
+action="<?= /* @noEscape */ $block->getPostActionUrl() ?>" >
+<?php
+foreach ($block->getAddresses() as $index => $_address):
+    $addressId = $_address->getId();
+    $customerAddressId = $_address->getCustomerAddressId();
+    ?>
+    <div class="block block-shipping">
+        <div class="block-title">
+            <strong>
+                <?= /* @noEscape */ __('Address %1 <span>of %2</span>', ($index+1), $block->getAddressCount()) ?>
+            </strong>
+        </div>
+        <div class="block-content">
+            <div class="box box-shipping-address">
+                <strong class="box-title">
+                    <span><?= /* @noEscape */ __('Shipping To') ?></span>
+                    <a href="<?= /* @noEscape */ $block->getAddressEditUrl($_address) ?>" class="action edit">
+                        <span><?= /* @noEscape */ __('Change') ?></span>
+                    </a>
+                </strong>
+                <div class="box-content">
+                    <address><?= /* @noEscape */ $_address->format('html') ?></address>
+                </div>
+            </div>
+            <div class="box box-shipping-method">
+                <strong class="box-title">
+                    <span><?= /* @noEscape */ __('Shipping Method') ?></span>
+                </strong>
+                <div class="box-content">
+                    <?php if (!($_shippingRateGroups = $block->getShippingRates($_address))): ?>
+                        <p><?= /* @noEscape */ __('Sorry, no quotes are available for this order right now.') ?></p>
+                    <?php else: ?>
+                    <dl class="items methods-shipping">
+                        <?php
+                        $_sole = count($_shippingRateGroups) == 1;
+                        foreach ($_shippingRateGroups as $code => $_rates):
+                            ?>
+                            <?php if ($code == "mpmultishipping") { ?>
+                                <dt class="item-title"><?= $block->escapeHtml($block->getCarrierName($code)) ?></dt>
+                                <dd class="item-content">
+                                    <fieldset class="fieldset">
+                                        <legend class="legend">
+                                            <span><?= $block->escapeHtml($block->getCarrierName($code)) ?></span>
+                                        </legend><br>
+                                        <?php $_sole = $_sole && count($_rates) == 1; foreach ($_rates as $_rate):
+                                            $rateCode = $_rate->getCode();
+                                            ?>
+                                            <?php //@codingStandardsIgnoreStart ?>
+                                            <input type="radio"
+                                            name="shipping_method[<?= (int) $_address->getId() ?>]"
+                                            value="<?= $block->escapeHtmlAttr($_rate->getCode()) ?>"
+                                            id="s_method_<?= (int) $_address->getId() ?>_<?= $block->escapeHtmlAttr($_rate->getCode()) ?>"
+                                            class="radio radio multiaddress hidden" checked="checked"/>
+                                            <?php //@codingStandardsIgnoreEnd ?>
+                                            <div class="field choice">
+                                            <?php if ($_rate->getErrorMessage()): ?>
+                                                <strong>
+                                                    <?= $block->escapeHtml($_rate->getErrorMessage()) ?>
+                                                </strong>
+                                            <?php else: ?>
+                                                <?php
+                                                $sellerAddressMethods = $checkoutSession->getSellerMethod();
+                                                $sellerAddressMethod = $sellerAddressMethods[$customerAddressId];
+                                                ?>
+                                            <div>
+                                            <table style="margin-top: 10px;background: #f5f5f5;">
+                                            <tbody class="seller-method-table">
+                                                <?php foreach ($sellerAddressMethod as $sellerMethod) { ?>
+                                            <tr>
+                                            <td></td>
+                                            <td>
+                                            <span style="font-weight: 600;font-size: 1.8rem;" class="seller-name">
+                                                    <?= __(
+                                                        "Seller : %1", /* @noEscape */
+                                                        $sellerMethod['seller_name']
+                                                    );?>
+                                            </span>
+                                            <br/>
+                                            <span class="seller-products">
+                                                    <?= __(
+                                                        "Products : %1",
+                                                        /* @noEscape */ $sellerMethod['products']
+                                                    ); ?>
+                                            </span>
+                                            </td>
+                                            </tr>
+                                                    <?php
+                                                    foreach ($sellerMethod['methods'] as $method => $data) {
+                                                        ?>
+                                            <tr>
+                                                <td style="padding-left: 10px;">
+                                                        <?php if ($multiShippingMode == "1") { ?>
+                                                    <?php //@codingStandardsIgnoreStart ?>
+                                                    <input type="radio" 
+                                                    data-customaddressid="<?= $block->escapeHtml($customerAddressId) ?>"
+                                                    data-addressid="<?= $block->escapeHtml($addressId) ?>" 
+                                                    data-sellerid="<?= /* @noEscape */ $sellerMethod['seller_id'] ?>" 
+                                                    data-cost="<?= /* @noEscape */ $data['cost'] ?>" 
+                                                    class="radio multiaddress-method"
+                                                    name="multi_address_shipping[<?=(int) $_address->getId()?>][<?= /* @noEscape */ $sellerMethod['seller_id'] ?>]"
+                                                    id="<?= /* noEscape */ "multi_address_".
+                                                    $block->escapeHtml($addressId)."_".
+                                                    $block->escapeHtml($sellerMethod['seller_id'])."_".
+                                                    $block->escapeHtml($method); ?>"
+                                                    value="<?= /* @noEscape */ $method ?>"/>
+                                                    <?php } elseif ($multiShippingMode == "2") { ?>
+                                                    <input type="radio" 
+                                                    data-customaddressid="<?= $block->escapeHtml($customerAddressId) ?>"
+                                                    data-addressid="<?= $block->escapeHtml($addressId) ?>" 
+                                                    data-sellerid="<?= /* @noEscape */ $sellerMethod['seller_id'] ?>" 
+                                                    data-itemid="<?= /* @noEscape */ $sellerMethod['item_ids'] ?>" 
+                                                    data-cost="<?= /* @noEscape */ $data['cost'] ?>" 
+                                                    class="radio multiaddress-method"
+                                                    name="multi_address_shipping[<?=(int) $_address->getId()?>][<?= /* @noEscape */ $sellerMethod['item_ids'] ?>]"
+                                                    id="<?= /* @noEscape */ "multi_address_".
+                                                    $block->escapeHtml($addressId)."_".
+                                                    $sellerMethod['seller_id']."_".
+                                                    $sellerMethod['item_ids']."_".$method; ?>"
+                                                    value="<?= /* @noEscape */ $method ?>"/>
+                                                    <?php } ?>
+                                                    <?php //@codingStandardsIgnoreEnd ?>
+                                                </td>
+                                                <td class="col col-method">
+                                                        <?php if ($multiShippingMode == "1") { ?>
+                                                    <label for="<?= /* @noEscape */ "multi_address_".
+                                                    $block->escapeHtml($addressId)."_".
+                                                    $sellerMethod['seller_id']."_".$method; ?>">
+                                                    <?php } elseif ($multiShippingMode == "2") { ?>
+                                                    <label for="<?= /* @noEscape */ "multi_address_".
+                                                    $block->escapeHtml($addressId)."_".
+                                                    $sellerMethod['seller_id']."_".
+                                                    $sellerMethod['item_ids']."_".$method; ?>">
+                                                    <?php } ?> 
+                                                        <?=  /* @noEscape */ $data['method'] ?>
+                                                    <span class="price">
+                                                        <?= /* @noEscape */ $priceHelper->currency($data['cost']) ?>
+                                                    </span>
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                            <?php } ?>
+                                            <?php } ?>
+                                            </tbody>
+                                            </table>
+                                            </div>
+                                            <?php endif ?>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </fieldset>
+                                </dd>
+                            <?php } elseif (!in_array($code, $marketplaceCarriers) || !$multiShippingEnable) { ?>
+                                <dt class="item-title"><?= $block->escapeHtml($block->getCarrierName($code)) ?></dt>
+                                <dd class="item-content">
+                                    <fieldset class="fieldset">
+                                        <legend class="legend">
+                                            <span><?= $block->escapeHtml($block->getCarrierName($code)) ?></span>
+                                        </legend><br>
+                                        <?php $_sole = $_sole && count($_rates) == 1; foreach ($_rates as $_rate):
+                                            $rateCode = $_rate->getCode();
+                                            ?>
+                                        <div class="field choice">
+                                            <?php if ($_rate->getErrorMessage()): ?>
+                                            <strong>
+                                                <?= $block->escapeHtml($_rate->getCarrierTitle()) ?> : 
+                                                <?= $block->escapeHtml($_rate->getErrorMessage()) ?>
+                                            </strong>
+                                        <?php else: ?>
+                                            <div class="control">
+                                                <?php if ($_sole): ?>
+                                                    <?php //@codingStandardsIgnoreStart ?>
+                                                    <input type="radio"
+                                                    name="shipping_method[<?= (int) $_address->getId() ?>]"
+                                                    value="<?= $block->escapeHtmlAttr($_rate->getCode()) ?>"
+                                                    id="s_method_<?= (int) $_address->getId() ?>_<?= $block->escapeHtmlAttr($_rate->getCode()) ?>"
+                                                    class="radio solo method" checked="checked"/>
+                                                    <?php //@codingStandardsIgnoreEnd ?>
+                                                <?php else: ?>
+                                                    <?php //@codingStandardsIgnoreStart ?>
+                                                    <input type="radio"
+                                                    name="shipping_method[<?= (int) $_address->getId() ?>]"
+                                                    value="<?= $block->escapeHtmlAttr($_rate->getCode()) ?>"
+                                                    id="s_method_<?= (int) $_address->getId() ?>_<?= $block->escapeHtmlAttr($_rate->getCode()) ?>"
+                                                    <?= ($_rate->getCode()===$block->getAddressShippingMethod($_address)) ? ' checked="checked"' : '' ?> class="radio" />
+                                                    <?php //@codingStandardsIgnoreEnd ?>
+                                                <?php endif; ?>
+                                            </div>
+                                            <label for="s_method_<?= /* @noEscape */ $addressId."_".$rateCode ?>">
+                                                <?= $block->escapeHtml($_rate->getMethodTitle()) ?>
+                                                <?php
+                                                $_excl = $block->getShippingPrice(
+                                                    $_address,
+                                                    $_rate->getPrice(),
+                                                    $taxHelper->displayShippingPriceIncludingTax()
+                                                );
+                                                ?>
+                                                <?php $_incl = $block->getShippingPrice(
+                                                    $_address,
+                                                    $_rate->getPrice(),
+                                                    true
+                                                ); ?>
+                                            <?php if ($taxHelper->displayShippingBothPrices() && $_incl != $_excl): ?>
+                                                <span class="price-including-tax" 
+                                                data-label="<?= /* @noEscape */ __('Incl. Tax') ?>">
+                                            <?php endif; ?>
+                                                <?= /* @noEscape */ $_incl ?>
+                                            <?php if ($taxHelper->displayShippingBothPrices() && $_incl != $_excl): ?>
+                                                </span>
+                                            <?php endif; ?>
+                                            <?php if ($taxHelper->displayShippingBothPrices() && $_incl != $_excl): ?>
+                                                <span class="price-excluding-tax" 
+                                                data-label="<?= /* @noEscape */ __('Excl. Tax') ?>">
+                                                    <?= /* @noEscape */ $_excl ?>
+                                                </span>
+                                            <?php endif; ?>
+                                            </label>
+                                        <?php endif ?>
+                                        </div>
+                                        <?php endforeach; ?>
+                                    </fieldset>
+                                </dd>
+                            <?php } ?>
+                        <?php endforeach; ?>
+                    </dl>
+                    <?php endif; ?>
+                    <?= /* @noEscape */ $block->getItemsBoxTextAfter($_address) ?>
+                </div>
+            </div>
+            <div class="box box-items">
+                <strong class="box-title">
+                    <span><?= /* @noEscape */ __('Items') ?></span>
+                    <a href="<?= /* @noEscape */ $block->getItemsEditUrl($_address) ?>" class="action edit">
+                        <span><?= /* @noEscape */ __('Edit Items') ?></span>
+                    </a>
+                </strong>
+                <div class="box-content">
+                    <div class="table-wrapper">
+                        <table class="items data table" id="shipping-table-<?= /* @noEscape */ $addressId ?>">
+                            <caption class="table-caption"><?= /* @noEscape */ __('Items') ?></caption>
+                            <thead>
+                            <tr>
+                                <th class="col item" scope="col"><?= /* @noEscape */ __('Product Name') ?></th>
+                                <th class="col qty" scope="col"><?= /* @noEscape */ __('Qty') ?></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($block->getAddressItems($_address) as $_item): ?>
+                                <tr>
+                                    <td class="col item" data-th="<?= $block->escapeHtml(__('Product Name')) ?>">
+                                        <?= $block->getItemHtml($_item->getQuoteItem()) ?>
+                                    </td>
+                                    <td class="col qty" data-th="<?= $block->escapeHtml(__('Qty')) ?>">
+                                        <?= /* @noEscape */ $_item->getQty() ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endforeach; ?>
+    <input type="hidden" name="multi_address_cost" value=""/>
+    <?= $block->getChildHtml('checkout_billing_items') ?>
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button class="action primary continue" type="submit">
+                <span><?= /* @noEscape */ __('Continue to Billing Information') ?></span>
+            </button>
+        </div>
+        <div class="secondary">
+            <a href="<?= /* @noEscape */ $block->getBackUrl() ?>" class="action back">
+                <span><?= /* @noEscape */ __('Back to Select Addresses') ?></span>
+            </a>
+        </div>
+    </div>
+</form>
+
+<?php
+$formData = [
+    "shippingMode" => $multiShippingMode
+];
+$serializedFormData = $jsonSerializer->serialize($formData);
+?>
+<script>
+window.shippingMode = <?= /* @noEscape */ $multiShippingMode; ?>
+</script>
+<script type="text/x-magento-init">
+{
+    "*": {
+        "wkmultiaddress": <?= /* @noEscape */ $serializedFormData; ?>
+    }
+}
+</script>

@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<preference for="Ahy\Ffl\Api\FflCentresRepositoryInterface" type="Ahy\Ffl\Model\FflCentresRepository"/>
+	<preference for="Ahy\Ffl\Api\Data\FflCentresInterface" type="Ahy\Ffl\Model\FflCentres"/>
+	<preference for="Ahy\Ffl\Api\Data\FflCentresSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+	<virtualType name="Ahy\Ffl\Model\ResourceModel\FflCentres\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">ahy_ffl_fflcentres</argument>
+			<argument name="resourceModel" xsi:type="string">Ahy\Ffl\Model\ResourceModel\FflCentres\Collection</argument>
+		</arguments>
+	</virtualType>
+	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+		<arguments>
+			<argument name="collections" xsi:type="array">
+				<item name="ahy_ffl_fflcentres_listing_data_source" xsi:type="string">Ahy\Ffl\Model\ResourceModel\FflCentres\Grid\Collection</item>
+			</argument>
+		</arguments>
+	</type>
+	<type name="Magento\Sales\Model\Order">
+		<plugin name="save_custom_attribute" type="Ahy\Ffl\Plugin\Order\SaveCustomAttribute" sortOrder="10" disabled="false" />
+	</type>
+	<type name="Magento\Quote\Api\CartRepositoryInterface">
+		<plugin name="Ahy_Ffl::save_custom_attributes" type="Ahy\Ffl\Plugin\QuoteSave"/>
+	</type>
+</config>

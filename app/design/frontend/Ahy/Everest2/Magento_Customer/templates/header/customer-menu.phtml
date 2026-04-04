@@ -1,0 +1,129 @@
+<?php
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\ViewModel\CustomerRegistration;
+use Magento\Customer\Block\Account\Customer;
+use Magento\Customer\Model\Account\Redirect;
+use Magento\Framework\Escaper;
+use Ahy\ThemeCustomization\Helper\Session;
+
+/** @var Customer $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var Session $_helper */
+$_helper = $this->helper('Ahy\ThemeCustomization\Helper\Session');
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+/** @var CustomerRegistration $customerRegistration */
+$customerRegistration = $viewModels->require(CustomerRegistration::class);
+?>
+
+<div x-data="{ 
+        open: false, 
+        loggedIn: false, 
+        firstName: '' 
+    }"
+    x-init="
+        window.addEventListener('private-content-loaded', (event) => {
+            const sectionData = event.detail.data;
+            loggedIn = sectionData.customer && !!sectionData.customer.firstname;
+            firstName = loggedIn ? sectionData.customer.firstname : '';
+        }, { once: true });
+    "
+    class="relative hidden lg:inline-block ml-1 sm:ml-3 my-account-header">
+    <a
+        href="<?= $escaper->escapeHtmlAttr($escaper->escapeUrl($block->getUrl('customer/account'))) ?>"
+        id="customer-menu"
+        class="block hover:text-black flex items-center"
+        @click.prevent="open = true"
+        :aria-expanded="open ? 'true' : 'false'"
+        aria-label="<?= $escaper->escapeHtmlAttr(__('Sign In My Account')) ?>">
+        <div class="p-5 text-white rounded-full mr-2 bg-[url(/media/icons/yeti-account-icon.png)] bg-cover bg-center text-ahy-blue drop-shadow-xl"></div>
+        <div class="contact-us-header-content text-ahy-blue">
+
+            <p class="font-medium text-sm capitalize" id="logged-in-status-header" x-text="loggedIn ? firstName : 'Sign In'"></p>
+
+            <button class="font-extrabold xl:text-lg lg:text-md inline-flex w-full justify-center items-center">
+                My Account <span class="p-1 pr-2 pl-2 mt-0.5 ml-2 bg-[url('/media/icons/arrow-nav.svg')] transition duration-300 ease-in-out  bg-contain bg-no-repeat bg-center" :class="{ 'rotate-180': open }"></span>
+            </button>
+        </div>
+    </a>
+    <div class="backdrop top-32"
+        x-cloak x-show="open"
+        @click.outside="open = false"
+        x-transition:enter="ease-in-out duration-500"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="ease-in-out duration-500"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        aria-label="Close panel"></div>
+    <nav class="absolute right-0 z-20 w-40 mt-2 -mr-4 p-6 overflow-auto origin-top-right rounded-sm
+        shadow-lg sm:w-64 lg:mt-3 bg-ahy-bg"
+        @click.outside="open = false"
+        x-cloak x-show="open"
+        aria-labelledby="customer-menu">
+        <?php if ($block->customerLoggedIn()): ?>
+            <a class="block px-0.5 py-1 mt-2 font-bold text-ahy-blue"
+                href="<?= $escaper->escapeUrl($block->getUrl('customer/account')) ?>">
+                <?= $escaper->escapeHtml(__('My Account')); ?>
+            </a>
+            <a class="block px-0.5 py-1 mt-2 font-bold text-ahy-blue"
+                href="<?= $escaper->escapeUrl($block->getUrl('wishlist')) ?>">
+                <?= $escaper->escapeHtml(__('My Wish List')); ?>
+            </a>
+            <a class="block px-0.5 py-1 mt-2 font-bold text-ahy-blue"
+                href="<?= $escaper->escapeUrl($block->getUrl('sales/order/history')) ?>">
+                <?= $escaper->escapeHtml(__('My Orders')); ?>
+            </a>
+            <span>
+                <hr class="p-px bg-white mt-3">
+            </span>
+            <a class="block px-4 py-2 lg:px-5 lg:py-2 text-xs justify-center flex mt-3 mb-3 underline underline-offset-8 text-ahy-blue"
+                href="<?= $escaper->escapeUrl($block->getUrl('customer/account/logout')) ?>">
+                <?= $escaper->escapeHtml(__('Sign Out')); ?>
+            </a>
+        <?php else: ?>
+            <div class="flex justify-center">
+                <a class="block font-bold text-ahy-blue w-full"
+                    onclick="hyva.setCookie && hyva.setCookie(
+                '<?=
+                    /** @noEscape */
+                    Redirect::LOGIN_REDIRECT_URL ?>',
+                window.location.href,
+                1
+                )"
+                    href="<?= $escaper->escapeUrl($block->getUrl('customer/account/index')) ?>">
+                    <button class="rounded-full p-3 px-10 border-ahy-blue border-2 text-ahy-blue w-full hover:shadow-[#0d2f47_0px_0px_0px_1px_inset]">
+                        <?= $escaper->escapeHtml(__('Sign In')); ?>
+                    </button>
+                </a>
+            </div>
+            <?php if ($customerRegistration->isAllowed()): ?>
+                <a class="block px-4 py-2 lg:px-2 lg:py-4 text-xs justify-center flex mt-3 mb-3 underline underline-offset-8"
+                    href="<?= $escaper->escapeUrl($block->getUrl('customer/account/create')) ?>">
+                    <?= $escaper->escapeHtml(__('Create an Account')); ?>
+                </a>
+                <span>
+                    <hr class="p-px bg-white">
+                </span>
+                <a class="block px-0.5 py-1 mt-2 font-bold text-ahy-blue hover:underline underline-offset-4"
+                    href="<?= $escaper->escapeUrl($block->getUrl('customer/account')) ?>">
+                    <?= $escaper->escapeHtml(__('My Account')); ?>
+                </a>
+                <a class="block px-0.5 py-1 mt-2 font-bold text-ahy-blue hover:underline underline-offset-4"
+                    href="<?= $escaper->escapeUrl($block->getUrl('wishlist')) ?>">
+                    <?= $escaper->escapeHtml(__('My Wish List')); ?>
+                </a>
+                <a class="block px-0.5 py-1 mt-2 font-bold text-ahy-blue hover:underline underline-offset-4"
+                    href="<?= $escaper->escapeUrl($block->getUrl('sales/order/history')) ?>">
+                    <?= $escaper->escapeHtml(__('My Orders')); ?>
+                </a>
+            <?php endif; ?>
+        <?php endif; ?>
+    </nav>
+</div>

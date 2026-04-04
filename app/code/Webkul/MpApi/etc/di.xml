@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpApi
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Webkul\MpApi\Api\SellerManagementInterface"
+                type="Webkul\MpApi\Model\Seller\SellerManagement" />
+    <preference for="Webkul\MpApi\Api\AdminManagementInterface"
+                type="Webkul\MpApi\Model\Admin\AdminManagement" />
+
+    <preference for="Webkul\MpApi\Api\Data\ResponseInterface"
+                type="Webkul\MpApi\Model\Response" />
+    <preference for="Webkul\MpApi\Api\Data\CreditMemoInterface"
+                type="Webkul\MpApi\Model\CreditMemo" />
+    <preference for="Webkul\MpApi\Api\Data\CreditMemoItemInterface"
+                type="Webkul\MpApi\Model\CreditMemoItem" />
+    <preference for="Webkul\MpApi\Api\SaleslistRepositoryInterface" type="Webkul\MpApi\Model\SaleslistRepository"/>
+    <preference for="Webkul\MpApi\Api\SellerRepositoryInterface" type="Webkul\MpApi\Model\SellerRepository"/>
+    <preference for="Webkul\MpApi\Api\OrdersRepositoryInterface" type="Webkul\MpApi\Model\OrdersRepository"/>
+    <preference for="Webkul\MpApi\Api\FeedbackRepositoryInterface" type="Webkul\MpApi\Model\FeedbackRepository"/>
+    <preference for="Webkul\Marketplace\Api\Data\SaleslistInterface" type="Webkul\Marketplace\Model\Saleslist"/>
+    <preference for="Webkul\Marketplace\Api\Data\FeedbackcountInterface" type="Webkul\Marketplace\Model\Feedbackcount"/>
+    <preference for="Webkul\MpApi\Api\Data\FeedbackInterface" type="Webkul\MpApi\Model\Feedback"/>
+    <preference for="Webkul\Marketplace\Api\Data\OrdersInterface" type="Webkul\Marketplace\Model\Orders"/>
+    <preference for="Webkul\Marketplace\Api\Data\SellerInterface" type="Webkul\Marketplace\Model\Seller"/>
+    <preference for="Webkul\Marketplace\Api\Data\ProductInterface" type="Webkul\Marketplace\Model\Product"/>
+
+    <!-- Preference of plugin to allow seller to access their customer's order -->
+    <preference for="Magento\Sales\Model\ResourceModel\Order\Plugin\Authorization" type="Webkul\MpApi\Model\ResourceModel\Order\Plugin\Authorization"/>
+</config>

@@ -1,0 +1,66 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceBaseShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$productType = $block->getRequest()->getParam('type');
+$product_id = $block->getRequest()->getParam('id');
+$product_coll = $block->getProduct($product_id);
+$viewModel=$block->getLayout()->createBlock(\Webkul\MarketplaceBaseShipping\Block\Dimension::class);
+$dimensionsUnit = $viewModel->getDimensionsUnit();
+?>
+<div id="dimensionSection">
+    <div class="field">
+        <label class="label"><?= /* @noEscape */ __('Height').' ('./* @noEscape */__($dimensionsUnit).')' ?></label>
+        <div class="control">
+            <input type="text" class="widthinput input-text validate-zero-or-greater"
+            name="product[ts_dimensions_height]"
+            value="<?= /* @noEscape */ $product_coll['ts_dimensions_height'];?>"/>
+        </div>
+    </div>
+    <div class="field">
+        <label class="label"><?= /* @noEscape */ __('Width').' ('./* @noEscape */__($dimensionsUnit).')' ?></label>
+        <div class="control">
+            <input type="text" class="widthinput input-text validate-zero-or-greater"
+            name="product[ts_dimensions_width]"
+            value="<?= /* @noEscape */ $product_coll['ts_dimensions_width'];?>"/>
+        </div>
+    </div>
+    <div class="field">
+        <label class="label"><?= /* @noEscape */ __('Length').' ('./* @noEscape */__($dimensionsUnit).')' ?></label>
+        <div class="control">
+            <input type="text" class="widthinput input-text validate-zero-or-greater"
+            name="product[ts_dimensions_length]"
+            value="<?= /* @noEscape */ $product_coll['ts_dimensions_length'];?>"/>
+        </div>
+    </div>
+</div>
+
+<script>
+    require([
+        "jquery"
+    ], function($) {
+        var productType = "<?= /* @noEscape */ $productType; ?>"
+
+        if (productType != 'downloadable' && productType != 'virtual') {
+            $("#dimensionSection").css("display", "block");
+        } else {
+            $("#dimensionSection").css("display", "none");
+        }
+
+        $("#is-downloaodable").click(function () {
+            if ($(this).prop("checked") == true) {
+                $("#dimensionSection").css("display", "none");
+            } else if($(this).prop("checked") == false) {
+                $("#dimensionSection").css("display", "block");
+            }
+        })
+    });
+</script>

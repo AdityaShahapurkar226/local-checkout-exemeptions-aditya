@@ -1,0 +1,824 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\StoreConfig;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\ViewModel\HeroiconsSolid;
+use Magento\Catalog\Block\Product\View\Gallery;
+use Magento\Catalog\Helper\Image;
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var Gallery $block */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var StoreConfig $storeConfig */
+$storeConfig = $viewModels->require(StoreConfig::class);
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+/** @var HeroiconsSolid $heroiconsSolid */
+$heroiconsSolid = $viewModels->require(HeroiconsSolid::class);
+
+$images = $block->getGalleryImages()->getItems();
+$ahyHelper = $this->helper('Ahy\ThemeCustomization\Helper\Data');
+$_product = $block->getProduct();
+$galleryImages = $_product->getMediaGalleryImages();
+if ($galleryImages) {
+    foreach ($galleryImages as $image) {
+        $ahyHelper->getImageResizeService($image);
+    }
+}
+$mainImage = current(array_filter($images, [$block, 'isMainImage']));
+
+if (!empty($images) && empty($mainImage)) {
+    $mainImage = reset($images);
+}
+
+/** @var Image $helper */
+$helper = $block->getData('imageHelper');
+$mainImageData = $mainImage ?
+    $mainImage->getData('medium_image_url') :
+    $helper->getDefaultPlaceholderUrl('image');
+
+$smallWidth = 70; //$block->getImageAttribute('product_page_image_small', 'width', 80);
+$smallHeight = 70; //$block->getImageAttribute('product_page_image_small', 'height', 80);
+$mediumWidth = $block->getImageAttribute('product_page_image_medium', 'width', 700);
+$mediumHeight = $block->getImageAttribute('product_page_image_medium', 'height', 700);
+
+// Admin Config
+$galleryOptionShowRelated = $storeConfig->getStoreConfig('catalog/product_video/show_related') ?? false;
+$galleryOptionVideoLoop = $storeConfig->getStoreConfig('catalog/product_video/video_auto_restart') ?? false;
+
+// view.xml Config
+$galleryOptionVideoAutoplay = (bool) $block->getVar('gallery/autoplay', 'Magento_Catalog');
+$galleryOptionNavVertical = (string) $block->getVar('gallery/navdir', 'Magento_Catalog') === 'vertical';
+$galleryOptionShowNavArrows = (bool) $block->getVar('gallery/navarrows', 'Magento_Catalog');
+$galleryOptionShowNavOverflow = (bool) $block->getVar('gallery/navoverflow', 'Magento_Catalog');
+$galleryOptionAppendOnReceive = (string) $block->getVar('gallery_switch_strategy', 'Magento_ConfigurableProduct') === 'append';
+
+$productName = $block->getProduct()->getName();
+
+?>
+<div class="order-1 w-full md:w-3/5 md:h-auto md:pl-2 md:pr-6">
+    <div id="gallery"
+        x-data="initGallery()"
+        x-bind="eventListeners"
+        class="w-full py-6 md:pt-0 md:h-auto md:row-start-1 md:row-span-2 md:col-start-1"
+    >
+        <div
+            class="relative grid gap-y-6 grid-cols-1 grid-rows-[auto_var(--thumbs-size)] [--thumbs-gap:theme('spacing.2')] lg:[--thumbs-gap:theme('spacing.2')]
+                <?= $galleryOptionNavVertical ? "lg:gap-y-0 lg:gap-x-6 lg:grid-cols-[var(--thumbs-size)_1fr] lg:grid-rows-1" : "" ?>"
+            style="--thumbs-size: <?= $smallWidth ?>px;"
+            :class="{
+                'w-full h-full fixed top-0 left-0 bg-white z-50 flex': fullscreen,
+                'relative': !fullscreen
+            }"
+            :role="fullscreen ? 'dialog' : false"
+            :aria-modal="fullscreen"
+            :aria-label="fullscreen ? '<?= $escaper->escapeJs(__('Gallery modal fullscreen')) ?>' : false"
+        >
+            <div class="self-center w-full shadow-[12px_12px_30px_0px_rgba(0,0,0,0.06)] <?= $galleryOptionNavVertical ? "lg:col-start-2" : "" ?>"
+                @touchstart="handleTouchStart"
+                @touchmove="handleTouchMove"
+                :class="{
+                    'relative':!fullscreen,
+                    'absolute md:top-[5%] w-screen right-0': fullscreen
+                }"
+                x-transition:enter="ease-out duration-500"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+            >
+                <div 
+                    class="absolute bottom-0 md:bottom-[3%] z-10 hidden items-center justify-center right-1/2 left-1/2"
+                    :class="{'hidden':!fullscreen, 'flex':fullscreen}"
+                >
+                    <!-- Zoom In Button -->
+                    <button
+                        @click="zoomLevel = Math.max(zoomLevel - 10, 30); clearTimeout(opacityTimeout); opacityTimeout = setTimeout(() => {opacity = 0.25}, 3000)"
+                        :disabled="zoomLevel === 30"
+                        :class="{'opacity-40 hover:opacity-100': opacity === 0.25}"
+                        class="z-10 relative bottom-6 left-1/3 transform -translate-x-1/2 bg-white text-ahy-blue shadow-[1px_1px_6px_0px_rgba(0,0,0,0.15)] border border-[#ECECEB] p-2 disabled:cursor-not-allowed disabled:text-gray-500 disabled:opacity-25 cursor-pointer rounded-full focus:outline-none"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                            <path
+                                fill-rule="evenodd"
+                                d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Zm4.5 0a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 0 1.5h-6a.75.75 0 0 1-.75-.75Z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                    </button>
+
+                    <!-- Zoom Level Display -->
+                    <div 
+                        class="z-10 relative bottom-6  bg-white text-ahy-blue shadow-[1px_1px_6px_0px_rgba(0,0,0,0.15)] border border-[#ECECEB] px-3 py-2 rounded-full"
+                        :class="{'opacity-40 hover:opacity-100': opacity === 0.25}"
+                    >
+                        <span x-text="zoomLevel + '%'"></span>
+                    </div>
+
+                    <!-- Zoom Out Button -->
+                    <button
+                        @click="zoomLevel = Math.min(zoomLevel + 10, 150); clearTimeout(opacityTimeout); opacityTimeout = setTimeout(() => {opacity = 0.25}, 3000)"
+                        :disabled="zoomLevel === 150"
+                        :class="{'opacity-40 hover:opacity-100': opacity === 0.25}"
+                        class="z-10 relative bottom-6 right-1/3 transform translate-x-1/2 bg-white text-ahy-blue shadow-[1px_1px_6px_0px_rgba(0,0,0,0.15)] border border-[#ECECEB] p-2 disabled:cursor-not-allowed disabled:text-gray-500 disabled:opacity-25 cursor-pointer rounded-full focus:outline-none"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                            <path
+                                fill-rule="evenodd"
+                                d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Zm8.25-3.75a.75.75 0 0 1 .75.75v2.25h2.25a.75.75 0 0 1 0 1.5h-2.25v2.25a.75.75 0 0 1-1.5 0v-2.25H7.5a.75.75 0 0 1 0-1.5h2.25V7.5a.75.75 0 0 1 .75-.75Z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- fullscreen icon -->
+                <div 
+                    class="absolute bottom-[5%] right-[3%] h-10 z-10 w-10 bg-white shadow-[1px_1px_6px_0px_rgba(0,0,0,0.15)] border border-[#ECECEB] cursor-pointer p-2.5 items-center justify-center rounded-full"
+                    :class="{'hidden':fullscreen, 'flex':!fullscreen}"
+                    @click="fullscreen = true"
+                >
+                    <!-- <svg height="32px" id="Layer_1" stroke-width="1" stroke="currentColor" class="w-6 h-6" style="enable-background:new 0 0 24 24;" version="1.1" viewBox="0 0 24 24" width="24px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <path d="M28,2h-6c-1.104,0-2,0.896-2,2s0.896,2,2,2h1.2l-4.6,4.601C18.28,10.921,18,11.344,18,12c0,1.094,0.859,2,2,2  c0.641,0,1.049-0.248,1.4-0.6L26,8.8V10c0,1.104,0.896,2,2,2s2-0.896,2-2V4C30,2.896,29.104,2,28,2z M12,18  c-0.641,0-1.049,0.248-1.4,0.6L6,23.2V22c0-1.104-0.896-2-2-2s-2,0.896-2,2v6c0,1.104,0.896,2,2,2h6c1.104,0,2-0.896,2-2  s-0.896-2-2-2H8.8l4.6-4.601C13.72,21.079,14,20.656,14,20C14,18.906,13.141,18,12,18z"/>
+                    </svg> -->
+
+                    <svg height="32px" viewBox="0 0 20 20" width="32px" class="w-6 h-6" title="large image icon" stroke-width="1" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.666504 19.3334V13.5001H1.83317V17.3411L6.03317 13.1411L6.85882 13.9667L2.65882 18.1667H6.49984V19.3334H0.666504ZM13.9665 6.85906L13.1409 6.03341L17.3409 1.83341H13.4998V0.666748H19.3332V6.50008H18.1665V2.65906L13.9665 6.85906Z" fill="#464B5A"/>
+                    </svg>
+
+                </div>
+                <!-- previous icon -->
+                <div 
+                    class="absolute top-1/2 left-[3%] h-10 z-10 w-10 bg-white shadow-[1px_1px_6px_0px_rgba(0,0,0,0.15)] border border-[#ECECEB] p-2 cursor-pointer items-center justify-center rounded-full"
+                    :class="{'hidden': fullscreen || itemCount === 1 || active === 0, 'flex':!fullscreen}"
+                    @click="previousItem()"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" title="previous image" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                    </svg>
+                </div>
+                <!-- next icon -->
+                <div 
+                    class="absolute top-1/2 right-[3%] h-10 z-10 w-10 bg-white shadow-[1px_1px_6px_0px_rgba(0,0,0,0.15)] border border-[#ECECEB] p-2 cursor-pointer items-center justify-center rounded-full"
+                    :class="{'hidden': fullscreen || itemCount === 1 || (active + 1) === itemCount, 'flex':!fullscreen}"
+                    @click="nextItem()"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" title="next image" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                    </svg>
+                </div>
+                <!-- Main image -->
+                <div class="relative" aria-live="polite" aria-atomic="true">
+                    <?php
+                    /**
+                     * The first image is a placeholder that determines the
+                     * aspect ratio for the gallery. It will be hidden as
+                     * soon as JS is loaded, but will keep reserving the
+                     * necessary space in the layout for the other (absolute positioned)
+                     * images. Hence, `invisible` instead of `x-show` or `hidden`
+                     */
+                    ?>
+                    <img
+                        alt="<?= $mainImage ? $escaper->escapeHtmlAttr($mainImage->getData('label')) : '' ?>"
+                        title="<?= $mainImage ? $escaper->escapeHtmlAttr($mainImage->getData('label')) : '' ?>"
+                        class="object-contain object-center w-full h-auto max-h-screen-75"
+                        :class="'invisible'"
+                        src="<?= /* @noEscape */ $mainImageData ?>"
+                        width="<?= /* @noEscape */ $mediumWidth ?>"
+                        height="<?= /* @noEscape */ $mediumHeight ?>"
+                        itemprop="image"
+                    />
+                    <template x-for="(image, index) in images" :key="index">
+                        <img
+                            :alt="image.caption || '<?= $escaper->escapeJs($productName) ?>'"
+                            :title="image.caption || '<?= $escaper->escapeJs($productName) ?>'"
+                            class="absolute inset-0 object-contain object-center w-full m-auto max-h-screen-75"
+                            width="<?= /* @noEscape */ $mediumWidth ?>"
+                            height="<?= /* @noEscape */ $mediumHeight ?>"
+                            :loading="active !== index ? 'lazy' : 'eager'"
+                            :style="{
+                                transform: active === index && fullscreen ? 'scale(' + zoomLevel/100 + ')' : '',
+                                display: active === index ? 'block' : 'none'
+                            }"
+                            :src="fullscreen ? image.full : image.img"
+                            x-transition:enter.opacity.duration.500ms
+                            x-transition:leave.opacity.duration.0ms
+                            x-show="active === index"
+                        />
+                    </template>
+                    <div class="absolute h-full w-full inset-0 bg-white z-[-1]"></div>
+                    <button
+                        type="button"
+                        class="absolute inset-0 w-full outline-offset-2 "
+                        aria-label="<?= $escaper->escapeHtml(__('Click to view image in fullscreen')) ?>"
+                        x-ref="galleryFullscreenBtn"
+                        x-show="!fullscreen && images[active].type !== 'video'"
+                        x-cloak
+                        @click="openFullscreen($root)"
+                        @keydown.enter="openFullscreen($root)"
+                    ></button>
+                    <button
+                        type="button"
+                        class="group absolute inset-0 w-full outline-offset-2 grid place-items-center"
+                        aria-label="<?= $escaper->escapeHtml(__('Click to play video')) ?>"
+                        x-show="images[active].type === 'video' && !activeVideoType"
+                        x-cloak
+                        @click="activateVideo()"
+                        @keydown.enter="activateVideo()"
+                    >
+                        <?= $heroiconsSolid->playHtml(
+                            'stroke-white/75 fill-black/20 transition ease-in group-hover:scale-110 md:w-24 md:h-24',
+                            44,
+                            44,
+                            ['aria-hidden' => 'true']
+                        ); ?>
+                    </button>
+                    <div
+                        class="absolute inset-0 w-full h-full bg-white nonmobile"
+                        x-transition:enter.opacity.duration.500ms
+                        x-transition:leave.opacity.duration.0ms
+                        x-show="images[active].type === 'video' && activeVideoType === 'youtube'"
+                        x-cloak
+                    >
+                        <div id="youtube-player" class="w-full h-full"></div>
+                    </div>
+                    <div
+                        class="absolute inset-0 w-full h-full bg-white"
+                        x-transition:enter.opacity.duration.500ms
+                        x-transition:leave.opacity.duration.0ms
+                        x-show="images[active].type === 'video' && activeVideoType === 'vimeo'"
+                        x-cloak
+                    >
+                        <div id="vimeo-player" class="w-full h-full"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div @resize.window.debounce="calcResize();">
+                <div
+                    id="thumbs"
+                    class="flex items-center <?= $galleryOptionNavVertical ? "lg:col-start-1" : "" ?>"
+                    :class="{ 
+                        '<?= $galleryOptionNavVertical ? "mx-6 lg:mx-[var(--thumbs-gap)] lg:my-6" : "mx-6" ?> justify-center lg:flex-row fixed bottom-[5%] left-0 right-0': fullscreen,
+                        'lg:absolute lg:inset-y-0 lg:flex-col': !fullscreen
+                    }"
+                >
+                    <?php if ($galleryOptionShowNavArrows): ?>
+                        <button
+                            type="button"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Previous')) ?>"
+                            tabindex="-1"
+                            class="text-black p-2 outline-none focus:outline-none flex-none pt-0"
+                            :class="{ 
+                                'opacity-25 pointer-events-none hidden' : isSliderStart, 
+                                'hidden' : !isSlider 
+                            }"
+                            aria-hidden="true"
+                            @click="scrollPrevious"
+                        >
+                            <!-- upside arrow -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="hidden" :class="{'hidden': fullscreen, 'hidden lg:block': !fullscreen}" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 15 7-7 7 7"></path></svg>
+                            <!-- left side arrow -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="" :class="{'lg:hidden': !fullscreen, 'lg:block': fullscreen}" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"></path></svg>
+                            <!-- <?= $heroicons->chevronUpHtml($galleryOptionNavVertical ? 'hidden lg:block' : 'hidden') ?>
+                            <?= $heroicons->chevronLeftHtml($galleryOptionNavVertical ? 'block lg:hidden' : 'block') ?> -->
+                        </button>
+                    <?php endif; ?>
+                    <div class="js_thumbs_slides thumbs-wrapper group outline-none relative overflow-hidden overscroll-contain js_slides snap flex"
+                        x-ref="jsThumbSlides"
+                        @scroll.debounce="calcScrollStartEnd(); calcActive($event)"
+                        <?php if ($galleryOptionShowNavOverflow): ?>
+                            :class="{ 
+                                'lg:flex-row': fullscreen,
+                                'lg:flex-col': !fullscreen
+                            }"
+                        <?php endif; ?>
+                    >
+                        <template x-for="(image, index) in images" :key="index">
+                            <div 
+                                class="js_thumbs_slide flex shrink-0 mb-1.5 mr-[var(--thumbs-gap)] items-start last:mr-0 <?= $galleryOptionNavVertical ? "lg:mb-[var(--thumbs-gap)] lg:last:mb-0" : "" ?>"
+                                :class="{
+                                    'lg:mr-0': !fullscreen
+                                }"
+                            >
+                                <button
+                                    type="button"
+                                    @click.prevent="setActive(index);"
+                                    class="relative block rounded-md border-2 transition duration-300 ease-in-out border-gray-300 hover:border-ahy-blue focus:border-ahy-blue-light"
+                                    :class="{
+                                        'border-ahy-blue group-focus:border-gray-500': active === index,
+                                        'border-gray-300': active !== index
+                                    }"
+                                >
+                                    <span class="sr-only">
+                                        <?= $escaper->escapeHtml('View larger image') ?>
+                                    </span>
+                                    <span
+                                        class="absolute inset-0 grid place-items-center"
+                                        x-show="image.type === 'video'"
+                                    >
+                                        <?= $heroicons->videoCameraHtml('stroke-white/75 fill-black/20', 44, 44, ['aria-hidden' => 'true']); ?>
+                                    </span>
+                                    <img
+                                        :src="image.thumb"
+                                        :alt="hyva.str('%1 thumbnail', image.caption) || '<?= $escaper->escapeJs(__("%1 thumbnail", $productName)) ?>'"
+                                        :title="hyva.str('%1 thumbnail', image.caption) || '<?= $escaper->escapeJs(__("%1 thumbnail", $productName)) ?>'"
+                                        width="<?= /* @noEscape */ $smallWidth ?>"
+                                        height="<?= /* @noEscape */ $smallHeight ?>"
+                                        class="rounded-md"
+                                    />
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                    <?php if ($galleryOptionShowNavArrows): ?>
+                        <button
+                            type="button"
+                            x-show="images.length > 1"
+                            x-cloak
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Next')) ?>"
+                            tabindex="-1"
+                            class="text-black p-2 outline-none focus:outline-none flex-none pb-0"
+                            :class="{ 
+                                'opacity-25 pointer-events-none hidden' : isSliderEnd, 
+                                'hidden' : !isSlider,
+                            }"
+                            aria-hidden="true"
+                            @click="scrollNext"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="hidden" :class="{'hidden': fullscreen, 'hidden lg:block': !fullscreen}" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"></path></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="" :class="{'lg:hidden': !fullscreen, 'lg:block': fullscreen}" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"></path></svg>
+                            <!-- <?= $heroicons->chevronDownHtml($galleryOptionNavVertical ? 'hidden lg:block' : 'hidden') ?>
+                            <?= $heroicons->chevronRightHtml($galleryOptionNavVertical ? 'block lg:hidden' : 'block') ?> -->
+                        </button>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="absolute top-0 right-0 pt-4 pr-4">
+                <button @click="closeFullScreen($root)"
+                        type="button"
+                        class="hidden text-gray-500 p-3 hover:text-gray-600 focus:text-gray-600
+                            transition ease-in-out duration-150"
+                        :class="{ 'hidden': !fullscreen, 'block': fullscreen }"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Close fullscreen')) ?>"
+                >
+                    <?= $heroicons->xHtml('', 24, 24, ['aria-hidden' => 'true']) ?>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div 
+        x-on:resize.window="isDesktop = (window.innerWidth >= 768) ? true : false" 
+        id="meet-marcus" 
+        class="w-full" 
+        x-data="{
+            isDesktop: (window.innerWidth >= 768) ? true : false,
+            open: false
+        }"
+    >
+        <template x-if="isDesktop">
+            <div class="">
+                <?php 
+                    $productInfoDetailsBlock = $this->getLayout()->getBlock('product.info.details');
+                    echo  $productInfoDetailsBlock ? $productInfoDetailsBlock->toHtml() : ''; 
+                ?>
+            </div>
+        </template>
+    </div>
+</div>
+
+<script>
+    function initGallery () {
+        let touchXDown, touchYDown;
+
+        return {
+            "active": 0,
+            "videoData": {},
+            "activeVideoType": false,
+            "autoplayVideo": <?= /* @noEscape */ $galleryOptionVideoAutoplay ? 'true' : 'false' ?>,
+            "loopVideo": <?= /* @noEscape */ $galleryOptionVideoLoop ? 'true' : 'false' ?>,
+            "relatedVideos": <?= /* @noEscape */ $galleryOptionShowRelated ? 'true' : 'false' ?>,
+            "vimeoPlayer": null,
+            "zoomLevel": 100,
+            "opacity": 0,
+            "opacityTimeout": null,
+            "fullscreen": false,
+            "isSlider": false,
+            "initialImages": <?= /* @noEscape */ $block->getGalleryImagesJson() ?>,
+            "images": <?= /* @noEscape */ $block->getGalleryImagesJson() ?>,
+            "appendOnReceiveImages": <?= $galleryOptionAppendOnReceive ? 'true' : 'false' ?>,
+            "activeSlide": 0,
+            "isSliderStart": true,
+            "isSliderEnd": true,
+            "itemCount": 0,
+            "pageSize": 4,
+            "pageFillers": 0,
+            "focusTrapListener": null,
+            init() {
+                this.itemCount = this.images.length;
+                this.initActive();
+                this.$nextTick(() => {
+                    this.zoomLevel = 100;
+                    this.opacity = 0;
+                    this.calcIsSlider();
+                });
+
+                this.$watch('fullscreen', open => {
+                    this.scrollLock(open);
+                    this.$nextTick(() => {
+                        this.calcIsSlider();
+                        this.calcPageSize();
+                        this.calcScrollStartEnd();
+                    });
+                });
+
+                this.$watch('isSlider', isSlider => {
+                    this.$nextTick(() => {
+                        if (!isSlider) return;
+                        this.calcPageSize();
+                        this.calcScrollStartEnd();
+                    });
+                });
+            },
+            receiveImages(images) {
+                if (this.appendOnReceiveImages) {
+                    const initialUrls = this.initialImages.map(image => image.full);
+                    var newImages = images.filter(image => !initialUrls.includes(image.full));
+                    if (newImages.length === 0){
+                        newImages = images.filter(image => initialUrls.includes(image.full));
+                    }
+                    this.images = [].concat(newImages, this.initialImages);
+                    this.zoomLevel = 100;
+                    this.opacity = 0;
+                    this.active = newImages.length ? 0 : this.initialImages.length;
+                    this.setActive(this.active);
+                } else {
+                    this.images = images;
+                    this.zoomLevel = 100;
+                    this.opacity = 0;
+                    this.setActiveAndScrollTo(0);
+                }
+                this.zoomLevel = 100;
+                this.opacity = 0;
+                this.$nextTick(() => {
+                    this.calcIsSlider();
+                    this.scrollTo(this.active);
+                });
+
+                this.itemCount = this.images.length;
+            },
+            resetGallery() {
+                this.images = this.initialImages;
+                this.itemCount = this.images.length;
+                this.initActive();
+                this.calcIsSlider();
+                this.zoomLevel = 100;
+                this.opacity = 0;
+                this.$nextTick(() => {
+                    this.scrollTo(this.active);
+                })
+            },
+            initActive() {
+                let active = this.images.findIndex(function(image) {
+                    return image.isMain === true
+                });
+                if (active === -1) {
+                    active = 0;
+                }
+                this.setActive(active);
+            },
+            setActive(index) {
+                this.zoomLevel = 100;
+                this.opacity = 0;
+                if (index < 0) return;
+                if (index === this.itemCount) return;
+                this.active = index;
+                this.activeVideoType = false;
+                if (window.youtubePlayer) {
+                    window.youtubePlayer.stopVideo();
+                }
+                if (this.vimeoPlayer) {
+                    this.vimeoPlayer.contentWindow.postMessage(JSON.stringify({"method": "pause"}), "*");
+                }
+                if (this.images[index].type === 'video' && this.autoplayVideo) {
+                    this.activateVideo();
+                }
+            },
+            activateVideo() {
+                const videoData = this.getVideoData();
+
+                if (!videoData) { return }
+
+                this.activeVideoType = videoData.type;
+
+                if (videoData.type === "youtube") {
+                    if (!window.youtubePlayer) {
+                        this.initYoutubeAPI(videoData);
+                    } else {
+                        window.youtubePlayer.loadVideoById(videoData.id);
+                    }
+
+                } else if (videoData.type === "vimeo") {
+                    this.initVimeoVideo(videoData);
+                }
+            },
+            getVideoData() {
+                const videoUrl = this.images[this.active] && this.images[this.active].videoUrl;
+
+                if (!videoUrl) { return }
+
+                let id,
+                    type,
+                    youtubeRegex,
+                    vimeoRegex,
+                    useYoutubeNoCookie = false;
+
+                if (videoUrl.match(/youtube\.com|youtu\.be|youtube-nocookie.com/)) {
+                    id = videoUrl.replace(/^\/(embed\/|v\/)?/, '').replace(/\/.*/, '');
+                    type = 'youtube';
+
+                    youtubeRegex = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
+                    id = videoUrl.match(youtubeRegex)[1];
+
+                    if (videoUrl.match(/youtube-nocookie.com/)) {
+                        useYoutubeNoCookie = true;
+                    }
+                } else if (videoUrl.match(/vimeo\.com/)) {
+                    type = 'vimeo';
+                    vimeoRegex = new RegExp(['https?:\\/\\/(?:www\\.|player\\.)?vimeo.com\\/(?:channels\\/(?:\\w+\\/)',
+                        '?|groups\\/([^\\/]*)\\/videos\\/|album\\/(\\d+)\\/video\\/|video\\/|)(\\d+)(?:$|\\/|\\?)'
+                    ].join(''));
+                    id = videoUrl.match(vimeoRegex)[3];
+                }
+
+                return id ? {
+                    id: id, type: type, useYoutubeNoCookie: useYoutubeNoCookie
+                } : false;
+            },
+            initYoutubeAPI(videoData) {
+                if (document.getElementById('loadYoutubeAPI')) {
+                    return;
+                }
+                const params = {
+                    "autoplay": true
+                };
+                const loadYoutubeAPI = document.createElement('script');
+                loadYoutubeAPI.src = 'https://www.youtube.com/iframe_api';
+                loadYoutubeAPI.id = 'loadYoutubeAPI';
+                const firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(loadYoutubeAPI, firstScriptTag);
+
+                const host = (videoData.useYoutubeNoCookie) ?
+                    'https://www.youtube-nocookie.com' :
+                    'https://www.youtube.com';
+
+                if (!this.relatedVideos) {
+                    params.rel = 0;
+                }
+                const fireYoutubeAPI = document.createElement('script');
+                fireYoutubeAPI.innerHTML = `function onYouTubeIframeAPIReady() {
+                    window.youtubePlayer = new YT.Player('youtube-player', {
+                        host: '${host}',
+                        videoId: '${videoData.id}',
+                        playerVars: ${JSON.stringify(params)},
+                    });
+                }`;
+                firstScriptTag.parentNode.insertBefore(fireYoutubeAPI, firstScriptTag);
+            },
+            initVimeoVideo(videoData) {
+                let additionalParams = '&autoplay=1';
+                let src = '';
+
+                const timestamp = new Date().getTime();
+                const vimeoContainer = document.getElementById("vimeo-player");
+                const videoId = videoData.id;
+
+                if (!vimeoContainer || !videoId) return;
+
+
+                if (this.loopVideo) {
+                    additionalParams += '&loop=1';
+                }
+                src = 'https://player.vimeo.com/video/' +
+                    videoId + '?api=1&player_id=vimeo' +
+                    videoId +
+                    timestamp +
+                    additionalParams;
+                vimeoContainer.innerHTML =
+                    `<iframe id="${'vimeo' + videoId + timestamp}"
+                        src="${src}"
+                        width="640" height="360"
+                        webkitallowfullscreen
+                        mozallowfullscreen
+                        allowfullscreen
+                        referrerPolicy="origin"
+                        allow="autoplay"
+                        class="object-center w-full h-full object-fit"
+                    />`;
+
+                this.vimeoPlayer = vimeoContainer.childNodes[0];
+            },
+            getSlider() {
+                return this.$refs.jsThumbSlides;
+            },
+            getSliderSize() {
+                let sliderGap = 0;
+                let sliderSize = 0;
+                let slideElSize = 0;
+
+                const slider = this.getSlider();
+                const slideEl = slider && slider.querySelector('.js_thumbs_slide');
+                if (slideEl) {
+                    const slideElMr = parseInt(window.getComputedStyle(slideEl).marginRight);
+                    const slideElMb = parseInt(window.getComputedStyle(slideEl).marginBottom);
+
+                    sliderGap = slideElMr > slideElMb ? slideElMr : slideElMb;
+                    sliderSize = slider.offsetHeight > slider.offsetWidth ? slider.offsetHeight : slider.offsetWidth;
+                    slideElSize = slideEl.offsetHeight > slideEl.offsetWidth ? slideEl.offsetHeight : slideEl.offsetWidth;
+                };
+
+                return { sliderGap, sliderSize, slideElSize }
+            },
+            calcPageSize() {
+                const slider = this.getSlider();
+                if (!slider) return;
+
+                const { sliderGap, sliderSize, slideElSize } = this.getSliderSize();
+                this.itemCount = slider.querySelectorAll('.js_thumbs_slide').length;
+                this.pageSize = Math.round(sliderSize / (slideElSize + sliderGap));
+                this.pageFillers = (this.pageSize * Math.ceil(this.itemCount / this.pageSize)) - this.itemCount;
+            },
+            calcIsSlider() {
+                const slider = this.getSlider();
+                if (!slider) return;
+
+                const { sliderGap, sliderSize, slideElSize } = this.getSliderSize();
+                const itemCountTotalSize = (this.itemCount * (slideElSize + sliderGap)) - sliderGap;
+                const totalSizeDiff = sliderSize - itemCountTotalSize;
+
+                // If value is a float, add -1 for the offset
+                const pixelOffset = Number.isInteger(window.devicePixelRatio) ? 0 : -1;
+                this.isSlider = totalSizeDiff < pixelOffset;
+            },
+            calcScrollStartEnd() {
+                const slider = this.getSlider();
+                if (slider) {
+                    const sliderWidth = slider.scrollWidth;
+                    const sliderHeight = slider.scrollHeight;
+
+                    this.isSliderStart = sliderHeight > sliderWidth
+                        ? slider.scrollTop === 0
+                        : slider.scrollLeft === 0;
+
+                    this.isSliderEnd = sliderHeight > sliderWidth
+                        ? Math.ceil(slider.scrollTop + slider.offsetHeight) >= sliderHeight
+                        : Math.ceil(slider.scrollLeft + slider.offsetWidth) >= sliderWidth;
+                }
+            },
+            calcActive() {
+                const slider = this.getSlider();
+                if (slider) {
+                    const sliderWidth = slider.scrollWidth;
+                    const sliderHeight = slider.scrollHeight;
+                    const sliderItems = this.itemCount + this.pageFillers;
+                    const calculatedActiveSlide = sliderHeight > sliderWidth
+                        ? slider.scrollTop / (slider.scrollHeight / sliderItems)
+                        : slider.scrollLeft / (slider.scrollWidth / sliderItems);
+                    this.activeSlide = Math.round(calculatedActiveSlide / this.pageSize) * this.pageSize;
+                }
+            },
+            calcResize() {
+                this.calcActive();
+                this.calcPageSize();
+                this.calcIsSlider();
+                this.calcScrollStartEnd();
+            },
+            scrollPrevious() {
+                if (this.isSliderStart) return;
+                this.scrollTo(this.activeSlide - this.pageSize);
+            },
+            scrollNext() {
+                if (this.isSliderEnd) return;
+                this.scrollTo(this.activeSlide + this.pageSize);
+            },
+            scrollTo(idx) {
+                const slider = this.getSlider();
+                if (slider) {
+                    const slideWidth = slider.scrollWidth / (this.itemCount + this.pageFillers);
+                    const slideHeight = slider.scrollHeight / (this.itemCount + this.pageFillers);
+
+                    if (slideHeight > slideWidth) {
+                        slider.scrollTop = Math.floor(slideHeight) * idx;
+                    } else {
+                        slider.scrollLeft = Math.floor(slideWidth) * idx;
+                    }
+
+                    this.activeSlide = idx;
+                }
+            },
+            setActiveAndScrollTo(index) {
+                this.setActive(index)
+                if (this.isSlider) {
+                    this.scrollTo(index);
+                }
+            },
+            eventListeners: {
+                ['@keydown.window.escape']() {
+                    if (!this.fullscreen) return;
+                    this.zoomLevel = 100;
+                    this.opacity = 0;
+                    this.closeFullScreen(this.$root)
+                },
+                ['@update-gallery.window'](event) {
+                    this.zoomLevel = 100;
+                    this.opacity = 0;
+                    this.receiveImages(event.detail);
+                },
+                ['@reset-gallery.window'](event) {
+                    this.zoomLevel = 100;
+                    this.opacity = 0;
+                    this.resetGallery();
+                },
+                ['@keyup.arrow-right.window']() {
+                    if (!this.fullscreen) return;
+                    this.nextItem();
+                },
+                ['@keyup.arrow-left.window']() {
+                    if (!this.fullscreen) return;
+                    this.previousItem();
+                },
+            },
+            scrollLock(use = true) {
+                document.body.style.overflow = use ? "hidden" : "";
+            },
+            openFullscreen(node) {
+                this.fullscreen = true;
+                hyva.trapFocus(node);
+            },
+            closeFullScreen(node, setFocusTo = this.$refs.galleryFullscreenBtn) {
+                this.fullscreen = false;
+                hyva.releaseFocus(node);
+                this.$nextTick(() => {
+                    setFocusTo.focus();
+                });
+            },
+            handleTouchStart(event) {
+                if (this.images.length <= 1) {
+                    return;
+                }
+
+                const firstTouch = event.touches[0];
+
+                touchXDown = firstTouch.clientX;
+                touchYDown = firstTouch.clientY;
+            },
+            handleTouchMove(event) {
+                if (this.images.length <= 1 || !touchXDown || !touchYDown) {
+                    return;
+                }
+
+                const xDiff = touchXDown - event.touches[0].clientX;
+                const yDiff = touchYDown - event.touches[0].clientY;
+
+                if (Math.abs(xDiff) > Math.abs(yDiff)) {
+                    const newIndex = xDiff > 0 ?  this.getNextIndex() : this.getPreviousIndex();
+                    this.setActiveAndScrollTo(newIndex)
+                }
+                touchXDown = touchYDown = null;
+            },
+            getPreviousIndex() {
+                return this.active > 0 ? this.active - 1 : this.itemCount - 1;
+            },
+            getNextIndex() {
+                return this.active + 1 === this.itemCount ? 0 : this.active + 1;
+            },
+            previousItem() {
+                if (this.active === 0) {
+                    this.setActiveAndScrollTo(this.itemCount - 1);
+                    return;
+                } else {
+                    this.setActiveAndScrollTo(this.active - 1);
+                }
+            },
+            nextItem() {
+                if ((this.active + 1) === this.itemCount){
+                    this.setActiveAndScrollTo(0);
+                    return;
+                } else {
+                    this.setActiveAndScrollTo(this.active + 1);
+                }
+            },
+        }
+    }
+</script>

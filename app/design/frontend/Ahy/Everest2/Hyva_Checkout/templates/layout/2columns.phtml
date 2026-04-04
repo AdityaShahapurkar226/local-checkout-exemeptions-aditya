@@ -1,0 +1,29 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var Template $block */
+
+use Magento\Framework\View\Element\Template;
+?>
+<div class="flex flex-col lg:space-x-6 gap-y-4 lg:flex-row ">
+    <div class="column column-main w-full lg:w-2/3 space-y-6 bg-ahy-yellow-card card">
+        <?= $block->getChildHtml('column.main') ?>
+        <?= $block->getChildHtml('hyva.checkout.navigation') ?>
+    </div>
+
+    <div class="column column-right w-full lg:w-1/3 space-y-6">
+        <?= $block->getChildHtml('column.right') ?>
+    </div>
+    <style>
+        .step-shipping fieldset .field.field-reserved, form .field.field-reserved{
+            margin-bottom: 1.75rem;
+        }
+    </style>
+</div>

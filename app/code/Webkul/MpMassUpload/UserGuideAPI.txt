@@ -1,0 +1,562 @@
+a). Mass Upload Dataflow Profile
+
+1. Get Attribute Set : /V1/mpuploadapi/getattributeset
+Method: POST
+Request: Need Authentication
+Response:
+{
+    "items": [
+        {
+            "attribute_set_id": 15,
+            "attribute_set_name": "Bag",
+            "sort_order": 0,
+            "entity_type_id": 4
+        },
+        {
+            "attribute_set_id": 10,
+            "attribute_set_name": "Bottom",
+            "sort_order": 0,
+            "entity_type_id": 4
+        },
+        {
+            "attribute_set_id": 4,
+            "attribute_set_name": "Default",
+            "sort_order": 1,
+            "entity_type_id": 4
+        },
+        {
+            "attribute_set_id": 11,
+            "attribute_set_name": "Gear",
+            "sort_order": 0,
+            "entity_type_id": 4
+        }
+    ],
+    "search_criteria": {
+        "filter_groups": [
+            {
+                "filters": [
+                    {
+                        "field": "attribute_set_id",
+                        "value": [
+                            "15",
+                            "10",
+                            "4",
+                            "11"
+                        ],
+                        "condition_type": "in"
+                    }
+                ]
+            }
+        ]
+    },
+    "total_count": 4
+}
+
+2. Get Attribute Profile List : /V1/mpuploadapi/attributeprofilelist
+Method: POST
+Request: 
+searchCriteria[pageSize]:10
+searchCriteria[currentPage]:1
+Response:
+{
+    "items": [
+        {
+            "entity_id": "3",
+            "seller_id": "3",
+            "profile_name": "testing",
+            "attribute_set_id": "4",
+            "created_date": "2022-03-31 14:41:22"
+        },
+        {
+            "entity_id": "4",
+            "seller_id": "0",
+            "profile_name": "Test M Seller",
+            "attribute_set_id": "4",
+            "created_date": "2022-04-11 07:41:36"
+        },
+        {
+            "entity_id": "5",
+            "seller_id": "2044",
+            "profile_name": "Test M Seller",
+            "attribute_set_id": "4",
+            "created_date": "2022-04-11 07:58:08"
+        }
+    ],
+    "search_criteria": {
+        "filter_groups": [],
+        "page_size": 10,
+        "current_page": 1
+    },
+    "total_count": 3
+}
+
+5. Attribute Set Profile Name : rest/V1/mpuploadapi/mapattributeset
+Method: POST
+Request:
+{
+    "attributeSetData": {
+        "profile_name": Webkul Test,
+        "attribute_set": 4,
+        "edit_id": 10 <optional>
+    }
+}
+Response:
+{
+    "profile_name": "Webkul Test",
+    "attribute_set": 4,
+    "edit_id": null,
+    "error_status": null,
+    "message": null,
+    "id": 5,
+    "mage_attribute": null,
+    "file_attribute": null
+}
+
+4. get Attribute List by attributeSetId : /V1/mpuploadapi/attributeslist
+Method: POST
+Request:
+{
+    "attributeSetData": {
+        "attribute_set": 4
+    }
+}
+Response:
+[
+    [
+        "status",
+        "name",
+        "sku",
+        "sku_type",
+        "price",
+        "price_type",
+        "tax_class_id",
+        "weight",
+        "weight_type",
+        "visibility",
+        "category_ids",
+        "small_image",
+        "thumbnail",
+        "media_gallery",
+        "gallery",
+        "url_key",
+        "meta_title",
+        "meta_keyword",
+        "meta_description",
+        "special_price",
+        "special_from_date",
+        "special_to_date",
+    ]
+]
+
+5. save Profile map attribute with attribute Profile : /V1/mpuploadapi/mapattributes
+Method: POST
+Request:
+{
+    "attributeMapData": {
+        "id": <attributeProfileId>,
+        "attribute_set": 4,
+        "mage_attribute" : json | ["","ar_2d_file","ar_type","ts_dimensions_height"]
+        "file_attribute" : json | ["","ar_2d_file2","ar_type2","ts_dimensions_height2"]
+    }
+}
+Response:
+{
+    "profile_name": null,
+    "attribute_set": 10,
+    "edit_id": 14,
+    "error_status": 0,
+    "message": "Profile was successfully saved",
+    "id": 14,
+    "mage_attribute": "[\"\",\"ar_2d_file\",\"ar_type\",\"ts_dimensions_height\"]",
+    "file_attribute": "[\"\",\"ar_2d_file2\",\"ar_type2\",\"ts_dimensions_height2\"]"
+}
+
+6. Get Attribute Profile Data : /V1/mpuploadapi/getmappedAttribute
+Method: POST
+Request:
+{
+    "mappedData": {
+        "id": <attributeProfileId>,
+    }
+}
+Response:
+
+[
+    {
+        "error": false,
+        "attributeProfile": {
+            "entity_id": "1",
+            "seller_id": "2",
+            "profile_name": "test",
+            "attribute_set_id": "4",
+            "created_date": "2022-05-13 04:44:07"
+        },
+        "mapAttributes": [
+            {
+                "entity_id": "1",
+                "profile_id": "1",
+                "file_attribute": "sku",
+                "mage_attribute": "sku"
+            },
+            {
+                "entity_id": "2",
+                "profile_id": "1",
+                "file_attribute": "ar_type",
+                "mage_attribute": "ar_type"
+            },
+            {
+                "entity_id": "3",
+                "profile_id": "1",
+                "file_attribute": "name",
+                "mage_attribute": "name"
+            }
+        ]
+    }
+]
+
+7. Deleted Mapped Attribute : /V1/mpuploadapi/deleteattributeprofile
+Method: POST
+Request: profileIds:[1,2]
+Response:
+[
+    {
+        "error": false,
+        "message": "A total of 1 record(s) have been deleted."
+    }
+]
+
+b). Marketplace Mass Upload
+
+1. Get Sample File : /V1/mpuploadapi/getsamplefiles
+
+No Need customer Token
+Response:
+[
+    {
+        "csv": {
+            "simple": {
+                "label": "Sample Simple Type Csv File",
+                "path": "http://192.168.15.174/mage5/m235_4/pub/media/marketplace/massupload/samples/simple.csv"
+            },
+            "downloadable": {
+                "label": "Sample Downloadable Type Csv File",
+                "path": "http://192.168.15.174/mage5/m235_4/pub/media/marketplace/massupload/samples/downloadable.csv"
+            },
+            "config": {
+                "label": "Sample Configurable Type Csv File",
+                "path": "http://192.168.15.174/mage5/m235_4/pub/media/marketplace/massupload/samples/config.csv"
+            },
+            "virtual": {
+                "label": "Sample Virtual Type Csv File",
+                "path": "http://192.168.15.174/mage5/m235_4/pub/media/marketplace/massupload/samples/virtual.csv"
+            }
+        },
+        "xml": {
+            "simple": {
+                "label": "Sample Simple Type Xml File",
+                "path": "http://192.168.15.174/mage5/m235_4/pub/media/marketplace/massupload/samples/simple.xml"
+            },
+            "downloadable": {
+                "label": "Sample Downloadable Type Xml File",
+                "path": "http://192.168.15.174/mage5/m235_4/pub/media/marketplace/massupload/samples/downloadable.xml"
+            },
+            "config": {
+                "label": "Sample Configurable Type Xml File",
+                "path": "http://192.168.15.174/mage5/m235_4/pub/media/marketplace/massupload/samples/config.xml"
+            },
+            "virtual": {
+                "label": "Sample Virtual Type Xml File",
+                "path": "http://192.168.15.174/mage5/m235_4/pub/media/marketplace/massupload/samples/virtual.xml"
+            }
+        },
+        "xls": {
+            "simple": {
+                "label": "Sample Simple Type Xls File",
+                "path": "http://192.168.15.174/mage5/m235_4/pub/media/marketplace/massupload/samples/simple.xls"
+            },
+            "downloadable": {
+                "label": "Sample Downloadable Type Xls File",
+                "path": "http://192.168.15.174/mage5/m235_4/pub/media/marketplace/massupload/samples/downloadable.xls"
+            },
+            "config": {
+                "label": "Sample Configurable Type Xls File",
+                "path": "http://192.168.15.174/mage5/m235_4/pub/media/marketplace/massupload/samples/config.xls"
+            },
+            "virtual": {
+                "label": "Sample Virtual Type Xls File",
+                "path": "http://192.168.15.174/mage5/m235_4/pub/media/marketplace/massupload/samples/virtual.xls"
+            }
+        }
+    }
+]
+
+2. Get Attribute Set : /V1/mpuploadapi/getattributeset
+Method: POST
+Request: Need Authentication
+Response:
+{
+    "items": [
+        {
+            "attribute_set_id": 15,
+            "attribute_set_name": "Bag",
+            "sort_order": 0,
+            "entity_type_id": 4
+        },
+        {
+            "attribute_set_id": 10,
+            "attribute_set_name": "Bottom",
+            "sort_order": 0,
+            "entity_type_id": 4
+        },
+        {
+            "attribute_set_id": 4,
+            "attribute_set_name": "Default",
+            "sort_order": 1,
+            "entity_type_id": 4
+        },
+        {
+            "attribute_set_id": 11,
+            "attribute_set_name": "Gear",
+            "sort_order": 0,
+            "entity_type_id": 4
+        }
+    ],
+    "search_criteria": {
+        "filter_groups": [
+            {
+                "filters": [
+                    {
+                        "field": "attribute_set_id",
+                        "value": [
+                            "15",
+                            "10",
+                            "4",
+                            "11"
+                        ],
+                        "condition_type": "in"
+                    }
+                ]
+            }
+        ]
+    },
+    "total_count": 4
+}
+
+3. Get Attribute Profile List : /V1/mpuploadapi/attributeprofilelist
+Method: POST
+Request: 
+searchCriteria[pageSize]:10
+searchCriteria[currentPage]:1
+Response:
+{
+    "items": [
+        {
+            "entity_id": "3",
+            "seller_id": "3",
+            "profile_name": "testing",
+            "attribute_set_id": "4",
+            "created_date": "2022-03-31 14:41:22"
+        },
+        {
+            "entity_id": "4",
+            "seller_id": "0",
+            "profile_name": "Test M Seller",
+            "attribute_set_id": "4",
+            "created_date": "2022-04-11 07:41:36"
+        },
+        {
+            "entity_id": "5",
+            "seller_id": "2044",
+            "profile_name": "Test M Seller",
+            "attribute_set_id": "4",
+            "created_date": "2022-04-11 07:58:08"
+        }
+    ],
+    "search_criteria": {
+        "filter_groups": [],
+        "page_size": 10,
+        "current_page": 1
+    },
+    "total_count": 3
+}
+
+4. Get Super Attribute : rest/V1/mpuploadapi/getsuperattributes
+Method: POST
+Request: Need Authentication
+Response:
+[
+    {
+        "sucess": true,
+        "attributeInfo": "manufacturer, color, size, format"
+    }
+]
+
+4. Get Super Attribute Option :/V1/mpuploadapi/getsuperattributeoption
+Method: POST
+Request: attributeCode:format
+Response:
+[
+    {
+        "success": true,
+        "options": {
+            "102": "Download",
+            "103": "DVD"
+        }
+    }
+]
+
+5. get Profiler List according to seller : /V1/mpuploadapi/getprofilerlist
+Method: POST
+Request:
+searchCriteria[pageSize]:10
+searchCriteria[currentPage]:6
+Response:
+{
+    "items": [
+        {
+            "id": "112",
+            "profile_name": "1653626963_simplecsv"
+        },
+        {
+            "id": "113",
+            "profile_name": "1653627053_simplecsv"
+        },
+        {
+            "id": "114",
+            "profile_name": "1653627071_simplecsv"
+        }
+    ],
+    "search_criteria": {
+        "filter_groups": [],
+        "page_size": 3,
+        "current_page": 10
+    },
+    "total_count": 18
+}
+
+6. Upload Csv File common api resource : /V1/mpuploadapi/uploader
+Method: POST
+Request: 
+{
+    "fileData": {
+        "file": sample.csv,
+        "path": marketplace/massupload
+    }
+}
+Response: 
+{
+    "file": "sample.csv",
+    "path": "/home/users/sushil.kumar/www/html/mage244/m244_1/pub/media/marketplace/massupload/tmp"
+}
+
+7. Upload Csv File common api resource : /V1/mpuploadapi/uploader
+Method: POST
+Request: 
+{
+    "fileData": {
+        "file": images.zip,
+        "path": marketplace/massupload
+    }
+}
+Response: 
+{
+    "file": "images.zip",
+    "path": "/home/users/sushil.kumar/www/html/mage244/m244_1/pub/media/marketplace/massupload/tmp"
+}
+
+8. Save Profile api resource : /V1/mpuploadapi/saveprofile
+Method: POST
+Request:
+{
+    "profileData": {
+        "massupload_csv": {"path":"/home/users/sushil.kumar/www/html/mage244/m244_1/pub/media/marketplace/massupload/tmp","name":"simple.csv"},
+        "attribute_set": 4
+        "massupload_image" : {"path":"/home/users/sushil.kumar/www/html/mage244/m244_1/pub/media/marketplace/massupload/tmp","name":"image.zip"} <optional>,
+        "attribute_profile_id" : <optional>,
+        "downloadable" : <optional>,
+        "link_files" : <optional>,
+        "is_link_samples": <optional>,
+        "link_sample_files": <optional>,
+        "is_samples" : <optional>,
+        "sample_files" : <optional>
+    }
+}
+Response:
+{
+    "attribute_set": "4",
+    "massupload_csv": "{\"path\":\"/home/users/sushil.kumar/www/html/mage5/m235_4/pub/media/marketplace/massupload/tmp\",\"name\":\"simple.csv\"}",
+    "attribute_profile_id": null,
+    "massupload_image": "{\"path\":\"/home/users/sushil.kumar/www/html/mage5/m235_4/pub/media/marketplace/massupload/tmp\",\"name\":\"zzz.zip\"}",
+    "downloadable": null,
+    "link_files": null,
+    "is_link_samples": null,
+    "link_sample_files": null,
+    "is_samples": null,
+    "sample_files": null
+}
+
+9. Run Profile api resource : /V1/mpuploadapi/runprofile
+Method: POST
+Request:
+{
+	"profileData": 
+		{ 
+			"id": 1
+		}
+}
+Response:
+{
+    "id": 1,
+    "error_msg": "[]",
+    "status": "Complete",
+    "profiler_name": "1653457385_simplecsv"
+}
+
+c). Mass Uploaded Profiles List
+
+1. get Profiler List according to seller : /V1/mpuploadapi/getprofilerlist
+Method: POST
+Request:
+searchCriteria[pageSize]:10
+searchCriteria[currentPage]:6
+Response:
+{
+    "items": [
+        {
+            "id": "112",
+            "profile_name": "1653626963_simplecsv"
+        },
+        {
+            "id": "113",
+            "profile_name": "1653627053_simplecsv"
+        },
+        {
+            "id": "114",
+            "profile_name": "1653627071_simplecsv"
+        }
+    ],
+    "search_criteria": {
+        "filter_groups": [],
+        "page_size": 3,
+        "current_page": 10
+    },
+    "total_count": 18
+}
+
+2. delete Profiler Data = rest/V1/mpuploadapi/deleteprofiler
+Method: POST
+Request: profilerIds:[1,2]
+Response:
+[
+    {
+        "error": false,
+        "message": "A total of 1 record(s) have been deleted."
+    }
+]
+
+d). Marketplace MassUpload Product Export
+
+12. Export Product Data = rest/V1/mpuploadapi/productexport
+Method: POST
+Request: productType:simple|configurable|virtual|downloadable
+Response: : File Download

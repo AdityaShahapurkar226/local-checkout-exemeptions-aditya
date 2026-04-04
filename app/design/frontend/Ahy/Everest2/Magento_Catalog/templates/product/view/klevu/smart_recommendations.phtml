@@ -1,0 +1,55 @@
+<?php
+    $apiKey = 'klevu-167851305377116098';
+    $templateId = 'k-3edbe444-f535-48be-9e8b-d05518ab94ef';
+    $apiEndPoint = 'https://config-cdn.ksearchnet.com/recommendations/';
+
+?>
+<div 
+    class="" 
+    x-data="fetchSmartRecommendationProduct()"
+>  
+    <div class="klevu-recs" id="<?= $templateId; ?>" klevu-data-id = "<?= $templateId; ?>" x-html="templateHtml"></div>
+    <style x-html="templateStyle"></style>
+</div>
+<script>
+    function fetchSmartRecommendationProduct(){
+        return {
+            templateHtml: '',
+            templateStyle: '',
+            templateScript: '',
+            apiKey: '<?= $apiKey; ?>',
+            templateId: '<?= $templateId; ?>',
+            apiEndpoint: '<?= $apiEndPoint; ?>',
+            init(){
+                this.klevuTemplateApiCall();
+            },
+            klevuTemplateApiCall(){
+
+                const url = `${this.apiEndpoint}${this.apiKey}/settings/${this.templateId}`;
+
+                fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    this.templateHtml = data.templates.base;
+                    this.templateStyle = data.styles.base;
+                    this.templateScript = data.scripts.recsObject;
+                    this.addKlevuRecommendationScriptInHead();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            },
+            addKlevuRecommendationScriptInHead(){
+                const klevuRecommendationScript = document.createElement('script');
+                klevuRecommendationScript.type = 'text/javascript';
+                klevuRecommendationScript.id = 'Klevu-recommendation-script';
+                klevuRecommendationScript.innerHTML = this.templateScript;
+
+                const klevuExistingScript = document.getElementById('ahyKlevuQuickAutoSuggestions');
+                if(klevuExistingScript){
+                    klevuExistingScript.parentNode.insertBefore(klevuRecommendationScript, klevuExistingScript.nextSibling);
+                }
+            },
+        }
+    }
+</script>

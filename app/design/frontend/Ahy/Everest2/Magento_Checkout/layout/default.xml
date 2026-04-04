@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Ahy_GooglePay::css/google-pay.css" defer="defer"/>
+        <css src="Ahy_ApplePay::css/apple-pay.css" defer="defer"/>
+        <!-- <css src="css/custom.css" defer="defer"/> -->
+    </head>
+    <body>
+        <referenceBlock name="extra_actions">
+            <block
+                class="PayPal\Braintree\Block\GooglePay\Shortcut\Button"
+                name="googlepay.minicart.button"
+                template="Ahy_GooglePay::express/button.phtml"
+            >
+                <arguments>
+                    <argument name="button_id" xsi:type="string">googlepay-minicart</argument>
+                    <argument name="alias" xsi:type="string">minicart</argument>
+                    <argument name="viewModel" xsi:type="object">Ahy\GooglePay\ViewModel\RestrictVisibility</argument>
+                </arguments>
+            </block>
+
+            <block 
+                class="PayPal\Braintree\Block\ApplePay\Shortcut\Button"
+                name="applepay.minicart.button"
+                template="Ahy_ApplePay::express/button.phtml"
+                before="googlepay.minicart.button"
+            >
+                <arguments>
+                    <argument name="button_id" xsi:type="string">apple-minicart</argument>
+                    <argument name="alias" xsi:type="string">minicart</argument>
+                    <argument name="viewModel" xsi:type="object">Ahy\ApplePay\ViewModel\RestrictVisibility</argument>
+                </arguments>
+            </block>
+
+        </referenceBlock>
+        <referenceContainer name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template"
+                name="googlepay.cart.express.js"
+                template="Ahy_GooglePay::express/express-js.phtml"/>
+
+            <block name="braintree.apple.express.js"
+                   template="Ahy_ApplePay::express/express-js.phtml"
+                   ifconfig="payment/braintree_applepay/active"/>
+        </referenceContainer>
+    </body>
+</page>

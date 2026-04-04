@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="ewave" translate="label" sortOrder="100">
+            <label>Ewave Extensions</label>
+        </tab>
+        <section id="extended_bundle_product" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Configurable Products in Bundles</label>
+            <tab>ewave</tab>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="count_bundle_items_separately" translate="label" type="select"
+                       sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Count Bundle Items Separately</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="show_bundle_images" translate="label" type="select"
+                       sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Bundle Option's Images on PDP</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If set to 'Yes', option's images will appear on PDP</comment>
+                </field>
+            </group>
+            <resource>Ewave_ExtendedBundleProduct::ewave_config</resource>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMultiShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.root">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="shipping-step" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+                                                <item name="step-config" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="shipping-rates-validation" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="mpmultishipping-rates-validation" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Webkul_MpMultiShipping/js/view/shipping-rates-validation</item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                                <item name="shippingAddress" xsi:type="array">
+                                                    <item name="config" xsi:type="array">
+                                                        <item name="component" xsi:type="string">Webkul_MpMultiShipping/js/view/onestep-shipping</item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block class="Webkul\MpMultiShipping\Block\ManageMultiShipping"  name="checkoutConfig" template="Webkul_MpMultiShipping::checkout/checkoutConfig.phtml" cacheable="false"/>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,356 @@
+<?php /** @var Klevu\FrontendJs\Block\Template $block */?>
+
+<!-- custom version of the landingPageProductAddToCart template -->
+
+<script>
+    async function fetchSwatches(productId) {
+        const swatchHtml = `
+                <div role="status" class="md:flex">
+                    <div class="relative w-full md:order-2">
+                        <div
+                            class="border-grey-300 hover:border-ahy-blue focus:border-ahy-blue border-ahy-blue relative mb-6 block h-[400px] w-full animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-white dark:bg-gray-700 md:h-[290px] md:w-[290px] md:shadow-[0px_20px_54px_0px_rgb(13_47_71_/_15%)]">
+                        </div>
+                    </div>
+                    <div class="order-1">
+                        <div class="flex items-center" style="min-height: 100px">
+                            <div class="relative flex w-full flex-nowrap overflow-auto md:flex-col md:px-4">
+                                <div class="mb-3 mr-2 flex shrink-0 md:mr-0">
+                                    <div
+                                        class="border-grey-300 hover:border-ahy-blue focus:border-ahy-blue border-ahy-blue block h-[59px] w-[59px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700">
+                                    </div>
+                                </div>
+                                <div class="mb-3 mr-2 flex shrink-0 md:mr-0">
+                                    <div
+                                        class="border-grey-300 hover:border-ahy-blue focus:border-ahy-blue border-ahy-blue block h-[59px] w-[59px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700">
+                                    </div>
+                                </div>
+                                <div class="mb-3 mr-2 flex shrink-0 md:mr-0">
+                                    <div
+                                        class="border-grey-300 hover:border-ahy-blue focus:border-ahy-blue border-ahy-blue block h-[59px] w-[59px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700">
+                                    </div>
+                                </div>
+                                <div class="mb-3 mr-2 flex shrink-0 md:mr-0">
+                                    <div
+                                        class="border-grey-300 hover:border-ahy-blue focus:border-ahy-blue border-ahy-blue block h-[59px] w-[59px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="sr-only">Loading...</span>
+                </div>
+
+                <div>
+                    <span class="block h-[26px] w-[50px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                    <span class="block h-[40px] w-[100px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                </div>
+
+                <h2 class="title-font mb-4 block h-[35px] w-[180px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></h2>
+
+                <div class="border-container flex flex-col border-b border-t">
+                    <h2 class="title-font mb-4 mt-5 block h-[25px] w-[180px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></h2>
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center gap-2 py-2">
+                            <label
+                                class="ring-offset-3 relative h-10 w-10 animate-[ahy-pulse_3s_linear_infinite] cursor-pointer rounded-full bg-gray-300 shadow-sm ring-1 ring-offset-white dark:bg-gray-700 sm:ring-2 sm:hover:ring">
+                            </label>
+                            <div class="swatches-price-ahy flex flex-col items-center">
+                                <span class="block h-[26px] w-[40px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 py-2">
+                            <label
+                                class="ring-offset-3 relative h-10 w-10 animate-[ahy-pulse_3s_linear_infinite] cursor-pointer rounded-full bg-gray-300 shadow-sm ring-1 ring-offset-white dark:bg-gray-700 sm:ring-2 sm:hover:ring">
+                            </label>
+                            <div class="swatches-price-ahy flex flex-col items-center">
+                                <span class="block h-[26px] w-[40px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 py-2">
+                            <label
+                                class="ring-offset-3 relative h-10 w-10 animate-[ahy-pulse_3s_linear_infinite] cursor-pointer rounded-full bg-gray-300 shadow-sm ring-1 ring-offset-white dark:bg-gray-700 sm:ring-2 sm:hover:ring">
+                            </label>
+                            <div class="swatches-price-ahy flex flex-col items-center">
+                                <span class="block h-[26px] w-[40px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 py-2">
+                            <label
+                                class="ring-offset-3 relative h-10 w-10 animate-[ahy-pulse_3s_linear_infinite] cursor-pointer rounded-full bg-gray-300 shadow-sm ring-1 ring-offset-white dark:bg-gray-700 sm:ring-2 sm:hover:ring">
+                            </label>
+                            <div class="swatches-price-ahy flex flex-col items-center">
+                                <span class="block h-[26px] w-[40px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-container flex flex-col border-b border-t">
+                    <h2 class="title-font mb-4 mt-5 block h-[25px] w-[180px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></h2>
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center gap-2 py-2">
+                            <div class="swatches-price-ahy flex flex-col items-center">
+                                <span class="block h-[40px] w-[80px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 py-2">
+                            <div class="swatches-price-ahy flex flex-col items-center">
+                                <span class="block h-[40px] w-[80px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 py-2">
+                            <div class="swatches-price-ahy flex flex-col items-center">
+                                <span class="block h-[40px] w-[80px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            `;
+        const swatchHtmlEl = document.getElementById('swatch_html');
+        swatchHtmlEl.innerHTML = swatchHtml;
+        try {
+            const response = await fetch(`${BASE_URL}ahy_themecustomization/index/GetProductSwatchesDetails?product_id=` + productId + `&v=${Date.now()}`);
+            const data = await response.json();
+
+            if (data.success === true) {
+                const oldScriptElem = document.getElementById('swatchesScriptContentDynamic');
+                if (oldScriptElem) {
+                    oldScriptElem.parentNode.removeChild(oldScriptElem);
+                }
+
+                const scriptElem = document.createElement('script');
+                scriptElem.type = 'text/javascript';
+                scriptElem.id = 'swatchesScriptContentDynamic';
+                scriptElem.innerHTML = data.swatch_script;
+                document.body.appendChild(scriptElem);
+
+                const scriptPriceElem = document.createElement('script');
+                scriptPriceElem.type = 'text/javascript';
+                scriptPriceElem.id = 'swatchesPriceScript';
+                scriptPriceElem.innerHTML = data.product_price_script;
+                document.body.appendChild(scriptPriceElem);
+
+                const scriptSwatchGalleryElem = document.createElement('script');
+                scriptSwatchGalleryElem.type = 'text/javascript';
+                scriptSwatchGalleryElem.id = 'swatchesGalleryScript';
+                scriptSwatchGalleryElem.innerHTML = data.product_swatch_gallery_script;
+                document.body.appendChild(scriptSwatchGalleryElem);
+
+                swatchHtmlEl.innerHTML = data.swatch_html;
+
+                const productPriceSwatch = document.getElementById('product-price-ahy');
+                productPriceSwatch.innerHTML = data.product_price_html;
+
+                const productSwatchGalleryHtml = document.getElementById('product-swatch-gallery-html');
+                productSwatchGalleryHtml.innerHTML = data.product_swatch_gallery_html;
+                // remove gallery image class
+                const element = document.getElementById('product-swatch-gallery-html');
+                const innerHtml = element.innerHTML;
+                const modifiedHtml = innerHtml.replace(/<div[^>]*\bclass\s*=\s*(['"])(?:(?!\1)[^>])*\border-1\s+w-full\s+md:w-5\/12\s+lg:w-1\/2\s+(?:(?!\1)[^>])*\1[^>]*>/gi, '<div>');
+                // remove meet marcus section from the response
+                element.innerHTML = modifiedHtml;
+                const meetMarcusElement = document.getElementById('meet-marcus');
+                if (meetMarcusElement) {
+                    meetMarcusElement.parentNode.removeChild(meetMarcusElement);
+                }
+
+                const kuAddToCartButtonEl = document.querySelector('.kuAddtocart.quickview-sidecart');
+                kuAddToCartButtonEl.style.display = 'block';
+
+            } else {
+                swatchHtmlEl.innerHTML = data.message;
+
+                const scriptSwatchGalleryElem = document.createElement('script');
+                scriptSwatchGalleryElem.type = 'text/javascript';
+                scriptSwatchGalleryElem.id = 'swatchesGalleryScript';
+                scriptSwatchGalleryElem.innerHTML = data.product_swatch_gallery_script;
+                document.body.appendChild(scriptSwatchGalleryElem);
+
+                const productSwatchGalleryHtml = document.getElementById('product-swatch-gallery-html');
+                productSwatchGalleryHtml.innerHTML = data.product_swatch_gallery_html;
+                // remove gallery image class
+                const element = document.getElementById('product-swatch-gallery-html');
+                const innerHtml = element.innerHTML;
+                const modifiedHtml = innerHtml.replace(/<div[^>]*\bclass\s*=\s*(['"])(?:(?!\1)[^>])*\border-1\s+w-full\s+md:w-5\/12\s+lg:w-1\/2\s+(?:(?!\1)[^>])*\1[^>]*>/gi, '<div>');
+                // remove meet marcus section from the response
+                element.innerHTML = modifiedHtml;
+                const meetMarcusElement = document.getElementById('meet-marcus');
+                if (meetMarcusElement) {
+                    meetMarcusElement.parentNode.removeChild(meetMarcusElement);
+                }
+
+            }
+
+        } catch (error) {
+            console.error('Error fetching swatches:', error);
+        }
+    }
+</script>
+<script type="template/klevu" id="ahyLandingPageProductAddToCart">
+    <%
+        var kuTotalVariants = klevu.dom.helpers.cleanUpPriceValue(dataLocal.totalVariants);
+        var updatedProductName = dataLocal.name;
+        if(klevu.search.modules.kmcInputs.base.getSkuOnPageEnableValue()) {
+            if(klevu.dom.helpers.cleanUpSku(dataLocal.sku)) {
+                updatedProductName += klevu.dom.helpers.cleanUpSku(dataLocal.sku);
+            }
+        }
+        if (dataLocal.hasOwnProperty('additionalDataToReturn') && dataLocal.additionalDataToReturn.trim() !== "") {
+            var parseAdditionalDataToReturn = JSON.parse(dataLocal.additionalDataToReturn);
+            var productType = parseAdditionalDataToReturn.product_types.productType;
+            var productStatus = parseAdditionalDataToReturn.product_status.productStatus;
+            var productQty = parseAdditionalDataToReturn.stock_qty.stockQty;
+            var sellerName = parseAdditionalDataToReturn.seller_data.shopTitle
+        } else {
+            // Handle the case when additionalDataToReturn is not available
+            // console.error("additionalDataToReturn is not available");
+            var productType = null;
+            var productStatus = null;
+            var productQty = null;
+            var sellerName = null;
+        }
+    %>
+
+    <% if(dataLocal.inStock != "no" ) { %>
+        <% 
+            function getAddToCartButtonCaption() {
+                var kmcData = klevu.getObjectPath(klevu.search, "modules.kmcInputs.kmcData.klevu_uc_userOptions.addToCartButton", "Add");
+
+                return typeof klevu_uc_userOptions !== "undefined" &&
+                    typeof klevu_uc_userOptions.addToCartButton !== "undefined" ?
+                    klevu_uc_userOptions.addToCartButton :
+                    kmcData;
+            }
+            var addToCartCaption = getAddToCartButtonCaption();
+        %>
+        <% if(addToCartCaption && addToCartCaption.indexOf("<img") !== -1) { %>
+            <div class="kuAddtocart !m-0" data-id="<%=dataLocal.id%>">
+                <a target="_self" href="javascript:void(0)" class="kuBtn  kuLandingAddToCartBtn" role="button" tabindex="0" area-label="Add"><%= addToCartCaption %></a>
+            </div>
+        <% } else { %>
+            <% if(!Number.isNaN(kuTotalVariants) || (productType !== 'simple' && productType !== null) ) { %>
+                <div class="kuAddtocart !m-0" x-data="{ open: false }" x-bind:id="'<%=dataLocal.id%>'" x-ref="optionsConfigurableSidebarQuickviewComponent">
+                    <button class="capitalize kuBtnDark !flex justify-center items-center w-full !rounded-full !bg-transparent !text-ahy-blue hover:shadow-[#0d2f47_0px_0px_0px_1px_inset] !text-sm !py-1.5 !px-2.5 font-bold !border-2 !border-ahy-blue kuLandingAddToCartBtn" role="button" tabindex="0" area-label="Option" x-on:click.prevent="open = true" >options</button>
+                    <template x-if="open">
+                        <div class="fixed inset-0 overflow-hidden z-[500]" x-ref="slideOutModal" x-on:click.self="open=false">
+                            <div class="absolute inset-0 overflow-hidden">
+                                <div class="absolute inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true" x-on:click="open=false"></div>
+                                <section class="absolute inset-y-0 right-0 pl-10 max-w-full flex" aria-labelledby="slide-over-title">
+                                    <div class="relative w-screen max-w-md">
+                                        <div class="h-full flex flex-col p-6 bg-white shadow-xl overflow-y-scroll">
+                                            <div class="px-4 sm:px-6">
+                                                <div class="flex items-start justify-between">
+                                                    <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">
+                                                        <%=dataLocal.name%>
+                                                    </h2>
+                                                    <div class="ml-3 h-7 flex items-center">
+                                                        <button class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500" x-on:click="open=false">
+                                                            <span class="sr-only">Close panel</span>
+                                                            <!-- Heroicon name: x -->
+                                                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-6 relative px-4 sm:px-6">
+                                                <%if (sellerName){%>
+                                                    <span class="capitalize">Sold and Shipped by 
+                                                        <%= sellerName %>
+                                                    </span>
+                                                <%} else {%>
+                                                    <span class="capitalize opacity-0">
+                                                    </span>
+                                                <% } %>
+                                                <div class="py-2 mt-1"><%=helper.render('klevuLandingProductRating',scope,data,dataLocal) %>
+                                                    <% if(dataLocal.ratingCount){ %>
+                                                        | <%=dataLocal.ratingCount%>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                            <div id="product-swatch-gallery-html" class="py-4"></div>
+                                            <div class="kuPriceAhy" id="product-price-ahy"></div>
+                                            <div class="quickviewsidecart-parent-node" @close-quickview.window="open = false">
+                                                <div class="kuAddtocart quickview-sidecart !m-0 z-30 bg-white absolute right-0 left-0 bottom-0 p-8" data-id="" style="display:none;">
+                                                    <button disabled data-id=""  onClick=""  title="Please choose your options" class="btn bg-ahy-red hover:bg-ahy-red-light rounded-full focus:ring-transparent w-full" id="product-addtocart-button">
+                                                        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 ml-4 md:ml-0 lg:ml-2 hover:text-black" viewBox="0 0 30.61 25.71">
+                                                            <defs>
+                                                                <style>
+                                                                    .stroke-2{stroke-width: 2!important;} .cls-1,.cls-2{fill:none !important;stroke:#0d2f47;}.cls-1{stroke-linecap:round;stroke-linejoin:round;} .cls-2{stroke-miterlimit:10;}
+                                                                </style>
+                                                            </defs>
+                                                            <polyline class="cls-1 stroke-2" points="0.75 0.75 5.51 0.75 10.82 15.88 25.24 15.88 29.86 3.3 10.84 3.3"></polyline>
+                                                            <circle class="cls-2 stroke-2" cx="11.98" cy="22.46" r="2.5"></circle>
+                                                            <circle class="cls-2 stroke-2" cx="24.48" cy="22.46" r="2.5"></circle>
+                                                        </svg>
+                                                        <span class="w-full font-bold py-3 md:py-0 relative md:left-0">Please Select Options</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <?php // Swatch Content Start ?>
+
+                                            <div id="swatch_html" class='mb-16' x-init="fetchSwatches(<%=dataLocal.itemGroupId%>)">Loading Swatch Content...</div>
+
+                                            <?php // Swatch Content Ends ?>
+
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            <% } else { %>
+                <% if((productType === 'simple' && (productStatus !== null || productStatus !== 0) && productQty > 0) || dataLocal.inStock == 'yes' ) { %>
+                    <div class="kuAddtocart !m-0" data-id="<%=dataLocal.id%>">
+                        <a id="kuAddToCartBtn-<%=dataLocal.id%>" target="_self" data-product-id="<%= dataLocal.id %>" 
+  data-upc="<%= dataLocal.upc %>"  href="javascript:void(0)" class="capitalize kuBtnDark !flex justify-center items-center w-full !rounded-full !bg-transparent !text-ahy-blue hover:shadow-[#0d2f47_0px_0px_0px_1px_inset] !text-sm !py-1.5 !px-2.5 font-bold !border-2 !border-ahy-blue kuLandingAddToCartBtn" role="button" tabindex="0" aria-label="<%= addToCartCaption %>">
+                            <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 lg:ml-2 hover:text-black" viewBox="0 0 30.61 25.71">
+                                <defs>
+                                    <style>
+                                        .stroke-2{stroke-width: 2.5!important;} .cls-1,.cls-2{fill:none !important;stroke:#0d2f47;}.cls-1{stroke-linecap:round;stroke-linejoin:round;}.cls-2{stroke-miterlimit:10;}
+                                    </style>
+                                </defs>
+                                <polyline class="cls-1 stroke-2" points="0.75 0.75 5.51 0.75 10.82 15.88 25.24 15.88 29.86 3.3 10.84 3.3"></polyline>
+                                <circle class="cls-2 stroke-2" cx="11.98" cy="22.46" r="2.5"></circle><circle class="cls-2 stroke-2" cx="24.48" cy="22.46" r="2.5"></circle>
+                            </svg>
+                            <span class="!text-sm px-2 font-bold">
+                                <%=helper.translate(addToCartCaption) %>
+                            </span>
+                        </a>
+                    </div>
+                <% } else { %>
+                    <div class="kuAddtocart !m-0">
+                        <a href="<%=dataLocal.url%>" class="capitalize kuBtnDark !flex justify-center items-center w-full !rounded-full !bg-transparent !text-ahy-blue hover:shadow-[#0d2f47_0px_0px_0px_1px_inset] !text-sm !py-1.5 !px-2.5 font-bold !border-2 !border-ahy-blue">
+                            <span class="!text-sm px-2 font-bold">
+                                <%=helper.translate('Details') %>
+                            </span>
+                        </a>
+                    </div>
+                <% }  %>
+            <% }  %>
+        <% } %>
+    <% } else { %>
+        <div class="kuAddtocart !m-0">
+            <a href="<%=dataLocal.url%>" class="capitalize kuBtnDark !flex justify-center items-center w-full !rounded-full !bg-transparent !text-ahy-blue hover:shadow-[#0d2f47_0px_0px_0px_1px_inset] !text-sm !py-1.5 !px-2.5 font-bold !border-2 !border-ahy-blue">
+                <span class="!text-sm px-2 font-bold">
+                    <%=helper.translate('Details') %>
+                </span>
+            </a>
+        </div>
+    <% } %>
+
+
+</script>
+<style>
+    @keyframes ahy-pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: .5;
+        }
+    }
+</style>

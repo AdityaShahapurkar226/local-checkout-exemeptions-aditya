@@ -1,0 +1,587 @@
+type Query {
+    marketplaceLangingPage: MarketplaceLangingPage @resolver(class: "Webkul\\MpApi\\Model\\Resolver\\LandingPage") @doc(description: "This Will Return Query of the marketpalce landing page")
+
+    sellersList(
+        filter: SellerFilters @doc(description: "Identifies which seller attributes to search for and return.")
+        ): SellersList @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\SellerList") @doc(description: "Return query of marketplace sellers list")
+
+    getSellerProduct (
+        id: Int @doc(description: "Seller unique ID")
+        ): SellerProduct @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\Guest\\SellerProduct") @doc(description: "Returns seller products for guest")
+
+    getSellerReview (
+        id: Int @doc(description: "Seller unique ID")
+        ): SellerReview @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\SellerReviews") @doc(description: "Returns particular seller's review")
+
+    getSellerReviewDetails (
+        id: Int @doc(description: "Review unique ID")
+        ): SellerReviewDetails @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\SellerReviewDetails") @doc(description: "Returns review details by review id.")
+
+    sellerSelf: SellerSelf @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\Seller\\SelfAction") @doc(description: "Returns seller details, need authentication")
+
+    sellerSelfProduct: SellerSelfProduct @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\Seller\\SelfProduct") @doc(description: "Returns seller products, need authentication")
+
+    sellerOrderList(
+        filter: SellerOrderFilters @doc(description: "Identifies which seller attributes to search for and return.")
+        ): SellerOrderList @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\Seller\\OrderList") @doc(description: "Return query of marketplace sellers list")
+
+    sellerOrderSales: SellerOrderSales @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\Seller\\OrderSales") @doc(description: "Returns seller self order sales details, need authentication")
+
+    sellerGetShipmentDetails(
+        orderId: Int @doc(description: "Seller's Order Id"),
+        shipmentId: Int @doc(description: "Seller's Shipment Id")
+        ): SellerGetShipmentDetails @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\Seller\\GetShipmentDetails") @doc(description: "Return shipment details, need authentication")
+
+    sellerGetInvoiceDetails (
+        orderId: Int @doc(description: "Seller's Order Id"),
+        invoiceId: Int @doc(description: "Seller's Invoice Id")
+        ): SellerGetInvoiceDetails @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\Seller\\GetInvoiceDetails") @doc(description: "Return Order Invoice Details, need authentication")
+
+    sellerGetCreditmemoDetails(
+        orderId: Int @doc(description: "Seller's Order Id"),
+        creditmemoId: Int @doc(description: "Seller's Creditmemo Id")
+        ): SellerGetCreditmemoDetails @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\Seller\\GetCreditmemoDetails") @doc(description: "Return creditmemo details, need authentication")
+}
+
+type Mutation {
+    sellerCreateShipment (
+        orderId: Int @doc(description: "Seller's Order Id"),
+        trackingId: String @doc(description: "Tracking Number for Shipment"),
+        carrier: String @doc(description: "Carrier of Shipment")
+        ): SellerCreateShipment @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\Seller\\CreateShipment") @doc(description: "for creating shipment, need authentication")
+    
+    sellerCreateInvoice (
+        orderId: Int @doc(description: "Seller's Order Id")
+    ): SellerCreateInvoice @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\Seller\\CreateInvoice") @doc(description: "Creates Order Invoice, need authentication")
+
+    sellerCancelOrder (
+        orderId: Int @doc(description: "Seller's Order Id")
+        ): SellerCancelOrder @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\Seller\\CancelOrder") @doc(description: "For canceling order, need authentication")
+
+    sellerCreateCreditmemo(
+        orderId: Int @doc(description: "Seller's Order Id"),
+        invoiceId: Int @doc(description: "Seller's Invoice Id"),
+        creditmemo: CreditmemoParams @doc(description: "Creditmemo Parameters")
+        ): SellerCreateCreditmemo @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\Seller\\CreateCreditmemo") @doc(description: "For creating creditmemo, need authentication")
+
+    sellerMailToAdmin(
+        query: String @doc(description: "Seller Query for Admin"),
+        subject: String @doc(description: "Seller Subject for Query")
+        ): SellerMailToAdmin @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\Seller\\MailToAdmin") @doc(description: "Send Email to Admin on seller's query, need authentication")
+
+    sellerMailToSeller(
+        subject: String @doc(description: "Customer Subject for Query"),
+        query: String @doc(description: "Customer Query for Seller"),
+        productId: Int @doc(description: "Product Id (optional)"),
+        customerEmail: String @doc(description: "Customer Email"),
+        customerName: String @doc(description: "Customer Name"),
+        ): SellerMailToSeller @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\Seller\\MailToSeller") @doc(description: "Send Email to Seller on customer's query, need authentication")
+
+    sellerBecomePartner(
+        shopUrl: String @doc(description: "Shop Url of the Seller"),
+        isSeller: Int @doc(description: "It should be 1")
+        ): SellerBecomePartner @resolver(class:"Webkul\\MpApi\\Model\\Resolver\\Seller\\BecomePartner") @doc(description: "Request to become Seller, need authentication")
+}
+type MarketplaceLangingPage @doc(description: "Marketplace landing page data") {
+    banner: [Banners] @doc(description: "Banner details")
+    labels: [Label] @doc(description: "Label for Landing Page")
+    aboutImage: String @doc(description: "About Marketplace")
+    icons: [Icons] @doc(description: "Icons of landing page")
+    sellers: [Sellers] @doc(description: "Top 3 seller collection")
+    bannerImage: String @doc(description: "Banner Image")
+}
+
+input SellerFilters @doc(description: "Filters to fetch Seller") {
+    entity_id: FilterTypeInput @doc(description: "Seller Id")
+    is_seller: FilterTypeInput @doc(description: "Is Seller or not")
+    seller_id: FilterTypeInput @doc(description: "Seller Id")
+    payment_source: FilterTypeInput @doc(description: "Payment Source")
+    twitter_id: FilterTypeInput @doc(description: "Twitter Id")
+    facebook_id: FilterTypeInput @doc(description: "Facebook Id")
+    gplus_id: FilterTypeInput @doc(description: "Google Plus Id")
+    youtube_id: FilterTypeInput @doc(description: "Youtube Id")
+    vimeo_id: FilterTypeInput @doc(description: "Vimeo Id")
+    instagram_id: FilterTypeInput @doc(description: "Instagram Id")
+    pinterest_id: FilterTypeInput @doc(description: "Pinterest Id")
+    moleskine_id: FilterTypeInput @doc(description: "Moleskine Id")
+    shop_url: FilterTypeInput @doc(description: "Shop Url")
+    shop_title: FilterTypeInput @doc(description: "Shop Title")
+    company_locality: FilterTypeInput @doc(description: "Company Locality")
+    contact_number: FilterTypeInput @doc(description: "Contact Number")
+    created_at: FilterTypeInput @doc(description: "Seller Created At")
+    updated_at: FilterTypeInput @doc(description: "Seller Updated At")
+    allowed_categories: FilterTypeInput @doc(description: "Allowed Categories")
+}
+
+input SellerOrderFilters @doc(description: "") {
+    entity_id: FilterTypeInput @doc(description: "")
+    mageproduct_id: FilterTypeInput @doc(description: "")
+    order_id: FilterTypeInput @doc(description: "")
+    order_item_id: FilterTypeInput @doc(description: "")
+    parent_item_id: FilterTypeInput @doc(description: "")
+    magerealorder_id: FilterTypeInput @doc(description: "")
+    magequantity: FilterTypeInput @doc(description: "")
+    seller_id: FilterTypeInput @doc(description: "")
+    trans_id: FilterTypeInput @doc(description: "")
+    cpprostatus: FilterTypeInput @doc(description: "")
+    paid_status: FilterTypeInput @doc(description: "")
+    magebuyer_id: FilterTypeInput @doc(description: "")
+    magepro_name: FilterTypeInput @doc(description: "")
+    magepro_price: FilterTypeInput @doc(description: "")
+    total_amount: FilterTypeInput @doc(description: "")
+    total_tax: FilterTypeInput @doc(description: "")
+    total_commission: FilterTypeInput @doc(description: "")
+    actual_seller_amount: FilterTypeInput @doc(description: "")
+    created_at: FilterTypeInput @doc(description: "")
+    updated_at: FilterTypeInput @doc(description: "")
+    is_shipping: FilterTypeInput @doc(description: "")
+    is_coupon: FilterTypeInput @doc(description: "")
+    is_paid: FilterTypeInput @doc(description: "")
+    commission_rate: FilterTypeInput @doc(description: "")
+    currency_rate: FilterTypeInput @doc(description: "")
+    applied_coupon_amount: FilterTypeInput @doc(description: "")
+    is_withdrawal_requested: FilterTypeInput @doc(description: "")
+}
+
+type Icons @doc(description: "Icons List") {
+    image: String @doc(description: "Icon Image Url")
+    label: String @doc(description: "Icon Image Label")
+}
+
+type Banners @doc(description: "Banner Data") {
+    label: String @doc(description: "Banner Button Label")
+    content: String @doc(description: "Banner Content")
+}
+type Label @doc(description: "Label for Landing page") {
+    label: String @doc(description: "Landing page Label")
+}
+
+type Sellers @doc(description: "Top 3 Sellers with details") {
+    products: [SellerProducts] @doc(description: "Top 3 seller products")
+    shopTitle: String @doc(description: "Seller Shop Title")
+    profileurl: String @doc(description: "Seller Profile Url")
+    sellerIcon: String @doc(description: "Seller Icon Url")
+    sellerProductCount: String @doc(description: "Seller Product Count")
+}
+
+type SellerProducts @doc(description: "Top 3 seller products") {
+    id: Int @doc(description: "Product Id")
+    name: String @doc(description: "Product Name")
+    type: String @doc(description: "Product Type")
+    thumbnail: String @doc(description: "Product Thumbnail")
+}
+
+type SellersList @doc(description: "") {
+    total_count: Int @doc(description: "")
+    items: [Items] @doc(description: "")
+}
+
+type SellerProduct @doc(description: "") {
+    total_count: Int @doc(description: "")
+    items: [ProductItems] @doc(description: "")
+}
+
+type SellerOrderList @doc(description: "") {
+    total_count: Int @doc(description: "")
+    items: [OrderItems] @doc(description: "")
+}
+
+type OrderItems @doc(description: "") {
+    entity_id: String @doc(description: "")
+    mageproduct_id: String @doc(description: "")
+    order_id: String @doc(description: "")
+    order_item_id: String @doc(description: "")
+    parent_item_id: String @doc(description: "")
+    magerealorder_id: String @doc(description: "")
+    magequantity: String @doc(description: "")
+    seller_id: String @doc(description: "")
+    trans_id: String @doc(description: "")
+    cpprostatus: String @doc(description: "")
+    paid_status: String @doc(description: "")
+    magebuyer_id: String @doc(description: "")
+    magepro_name: String @doc(description: "")
+    magepro_price: String @doc(description: "")
+    total_amount: String @doc(description: "")
+    total_tax: String @doc(description: "")
+    total_commission: String @doc(description: "")
+    actual_seller_amount: String @doc(description: "")
+    created_at: String @doc(description: "")
+    updated_at: String @doc(description: "")
+    is_shipping: String @doc(description: "")
+    is_coupon: String @doc(description: "")
+    is_paid: String @doc(description: "")
+    commission_rate: String @doc(description: "")
+    currency_rate: String @doc(description: "")
+    applied_coupon_amount: String @doc(description: "")
+    is_withdrawal_requested: String @doc(description: "")
+}
+
+type Items @doc(description: "") {
+    entity_id: String @doc(description: "")
+    is_seller: String @doc(description: "")
+    seller_id: String @doc(description: "")
+    payment_source: String @doc(description: "")
+    twitter_id: String @doc(description: "")
+    facebook_id: String @doc(description: "")
+    gplus_id: String @doc(description: "")
+    youtube_id: String @doc(description: "")
+    vimeo_id: String @doc(description: "")
+    instagram_id: String @doc(description: "")
+    pinterest_id: String @doc(description: "")
+    moleskine_id: String @doc(description: "")
+    tw_active: String @doc(description: "")
+    fb_active: String @doc(description: "")
+    gplus_active: String @doc(description: "")
+    youtube_active: String @doc(description: "")
+    vimeo_active: String @doc(description: "")
+    instagram_active: String @doc(description: "")
+    pinterest_active: String @doc(description: "")
+    moleskine_active: String @doc(description: "")
+    others_info: String @doc(description: "")
+    banner_pic: String @doc(description: "")
+    shop_url: String @doc(description: "")
+    shop_title: String @doc(description: "")
+    logo_pic: String @doc(description: "")
+    company_locality: String @doc(description: "")
+    country_pic: String @doc(description: "")
+    company_description: String @doc(description: "")
+    meta_keyword: String @doc(description: "")
+    meta_description: String @doc(description: "")
+    background_width: String @doc(description: "")
+    store_id: String @doc(description: "")
+    contact_number: String @doc(description: "")
+    return_policy: String @doc(description: "")
+    shipping_policy: String @doc(description: "")
+    created_at: String @doc(description: "")
+    updated_at: String @doc(description: "")
+    admin_notification: String @doc(description: "")
+    privacy_policy: String @doc(description: "")
+    allowed_categories: String @doc(description: "")
+}
+
+type SellerReview @doc(description: "") {
+    total_count: Int @doc(description: "")
+    items: [ReviewItems] @doc(description: "")
+}
+
+type ReviewItems @doc(description: "") {
+    entity_id: String @doc(description: "")
+    seller_id: String @doc(description: "")
+    buyer_id: String @doc(description: "")
+    buyer_email: String @doc(description: "")
+    status: String @doc(description: "")
+    feed_price: String @doc(description: "")
+    feed_value: String @doc(description: "")
+    feed_quality: String @doc(description: "")
+    feed_nickname: String @doc(description: "")
+    feed_summary: String @doc(description: "")
+    feed_review: String @doc(description: "")
+    created_at: String @doc(description: "")
+    updated_at: String @doc(description: "")
+    seller_pending_notification: String @doc(description: "")
+    admin_notification: String @doc(description: "")
+}
+
+type SellerReviewDetails @doc(description: "") {
+    total_count: Int @doc(description: "")
+    items: [ReviewItems] @doc(description: "")
+}
+
+type SellerSelf @doc(description: "") {
+    entity_id: String @doc(description: "")
+    is_seller: String @doc(description: "")
+    seller_id: String @doc(description: "")
+    payment_source: String @doc(description: "")
+    twitter_id: String @doc(description: "")
+    facebook_id: String @doc(description: "")
+    gplus_id: String @doc(description: "")
+    youtube_id: String @doc(description: "")
+    vimeo_id: String @doc(description: "")
+    instagram_id: String @doc(description: "")
+    pinterest_id: String @doc(description: "")
+    moleskine_id: String @doc(description: "")
+    tw_active: String @doc(description: "")
+    fb_active: String @doc(description: "")
+    gplus_active: String @doc(description: "")
+    youtube_active: String @doc(description: "")
+    vimeo_active: String @doc(description: "")
+    instagram_active: String @doc(description: "")
+    pinterest_active: String @doc(description: "")
+    moleskine_active: String @doc(description: "")
+    others_info: String @doc(description: "")
+    banner_pic: String @doc(description: "")
+    shop_url: String @doc(description: "")
+    shop_title: String @doc(description: "")
+    logo_pic: String @doc(description: "")
+    company_locality: String @doc(description: "")
+    country_pic: String @doc(description: "")
+    company_description: String @doc(description: "")
+    meta_keyword: String @doc(description: "")
+    meta_description: String @doc(description: "")
+    background_width: String @doc(description: "")
+    store_id: String @doc(description: "")
+    contact_number: String @doc(description: "")
+    return_policy: String @doc(description: "")
+    shipping_policy: String @doc(description: "")
+    created_at: String @doc(description: "")
+    updated_at: String @doc(description: "")
+    admin_notification: String @doc(description: "")
+    privacy_policy: String @doc(description: "")
+    allowed_categories: String @doc(description: "")
+    status: String @doc(description: "")
+}
+
+type SellerSelfProduct @doc(description: "") {
+    total_count: Int @doc(description: "")
+    items: [ProductItems] @doc(description: "")
+}
+
+type ProductItems @doc(description: "") {
+    name: String @doc(description: "")
+    sku: String @doc(description: "")
+    type: String @doc(description: "")
+    mageproduct_id: String @doc(description: "")
+}
+
+type SellerOrderSales @doc(description: "") {
+    total_count: Int @doc(description: "")
+    items: [SalesItems] @doc(description: "")
+}
+
+type SalesItems @doc(description: "") {
+    entity_id: String @doc(description: "")
+    order_id: String @doc(description: "")
+    product_ids: String @doc(description: "")
+    seller_id: String @doc(description: "")
+    shipment_id: String @doc(description: "")
+    invoice_id: String @doc(description: "")
+    creditmemo_id: String @doc(description: "")
+    is_canceled: String @doc(description: "")
+    shipping_charges: String @doc(description: "")
+    carrier_name: String @doc(description: "")
+    tracking_number: String @doc(description: "")
+    created_at: String @doc(description: "")
+    updated_at: String @doc(description: "")
+    tax_to_seller: String @doc(description: "")
+    total_tax: String @doc(description: "")
+    coupon_amount: String @doc(description: "")
+    refunded_coupon_amount: String @doc(description: "")
+    refunded_shipping_charges: String @doc(description: "")
+    seller_pending_notification: String @doc(description: "")
+    order_status: String @doc(description: "")
+}
+
+type SellerCreateInvoice @doc(description: "") {
+    invoice_id: String @doc(description: "")
+    message: String @doc(description: "")
+}
+
+type SellerGetInvoiceDetails @doc(description: "") {
+    mainHeading: String @doc(description: "")
+    sendmailAction: String @doc(description: "")
+    sendmailWarning: String @doc(description: "")
+    subHeading: String @doc(description: "")
+    orderData: OrderData @doc(description: "")
+    buyerData: BuyerData @doc(description: "")
+    shippingAddressData: ShippingAddressData @doc(description: "")
+    shippingMethodData: ShippingMethodData @doc(description: "")
+    billingAddressData: BillingAddressData @doc(description: "")
+    paymentMethodData: PaymentMethodData @doc(description: "")
+    items: [ItemData] @doc(description: "")
+    subtotal: SubTotalData @doc(description: "")
+    shipping: ShippingData @doc(description: "")
+    tax: TaxData @doc(description: "")
+    totalOrderedAmount: TotalOrderedAmount @doc(description: "")
+    totalVendorAmount: TotalVendorAmount @doc(description: "")
+    totalAdminComission: TotalAdminComission @doc(description: "")
+}
+
+type OrderData @doc(description: "") {
+    title: String @doc(description: "")
+    label: String @doc(description: "")
+    statusLabel: String @doc(description: "")
+    statusValue: String @doc(description: "")
+    dateLabel: String @doc(description: "")
+    dateValue: String @doc(description: "")
+}
+
+type BuyerData @doc(description: "") {
+    title: String @doc(description: "")
+    nameLabel: String @doc(description: "")
+    nameValue: String @doc(description: "")
+    emailLabel: String @doc(description: "")
+    emailValue: String @doc(description: "")
+}
+
+type ShippingAddressData @doc(description: "") {
+    title: String @doc(description: "")
+    address: [AddressShippingData] @doc(description: "")
+}
+
+type AddressShippingData @doc(description: "") {
+    name: String @doc(description: "")
+    street: String @doc(description: "")
+    state: String @doc(description: "")
+    country: String @doc(description: "")
+    telephone: String @doc(description: "")
+}
+
+type ShippingMethodData @doc(description: "") {
+    title: String @doc(description: "")
+    method: String @doc(description: "")
+}
+
+type BillingAddressData @doc(description: "") {
+    title: String @doc(description: "")
+    address: [AddressBillingData] @doc(description: "")
+}
+
+type AddressBillingData @doc(description: "") {
+    name: String @doc(description: "")
+    street: String @doc(description: "")
+    state: String @doc(description: "")
+    country: String @doc(description: "")
+    telephone: String @doc(description: "")
+}
+
+type PaymentMethodData @doc(description: "") {
+    title: String @doc(description: "")
+    method: String @doc(description: "")
+}
+
+type ItemData @doc(description: "") {
+    productName: String @doc(description: "")
+    price: String @doc(description: "")
+    qty: QuantityData @doc(description: "")
+    subTotal: String @doc(description: "")
+    adminComission: String @doc(description: "")
+    vendorTotal: String @doc(description: "")
+}
+
+type QuantityData @doc(description: "") {
+    Ordered: Int @doc(description: "")
+    Invoiced: Int @doc(description: "")
+    Shipped: Int @doc(description: "")
+    Canceled: Int @doc(description: "")
+    Refunded: Int @doc(description: "")
+}
+
+type SubTotalData @doc(description: "") {
+    title: String @doc(description: "")
+    value: String @doc(description: "")
+}
+
+type ShippingData @doc(description: "") {
+    title: String @doc(description: "")
+    value: String @doc(description: "")
+}
+
+type TaxData @doc(description: "") {
+    title: String @doc(description: "")
+    value: String @doc(description: "")
+}
+
+type TotalOrderedAmount @doc(description: "") {
+    title: String @doc(description: "")
+    value: String @doc(description: "")
+}
+
+type TotalVendorAmount @doc(description: "") {
+    title: String @doc(description: "")
+    value: String @doc(description: "")
+}
+
+type TotalAdminComission @doc(description: "") {
+    title: String @doc(description: "")
+    value: String @doc(description: "")
+}
+
+type SellerCancelOrder @doc(description: "") {
+    message: String @doc(description: "")
+}
+
+type SellerCreateCreditmemo @doc(description: "") {
+    id: Int @doc(description: "")
+    message: String @doc(description: "")
+}
+
+input CreditmemoParams @doc(description: "") {
+    items: [CreditmemoItems] @doc(description: "")
+    shipping_amount: Int @doc(description: "")
+    adjustment_positive: Int @doc(description: "")
+    adjustment_negative: Int @doc(description: "")
+    do_offline: Boolean @doc(description: "")
+    comment_text: String @doc(description: "")
+    comment_customer_notify: Int @doc(description: "")
+    is_visible_on_front: Boolean @doc(description: "")
+    send_email: Boolean @doc(description: "")
+}
+
+input CreditmemoItems @doc(description: "") {
+    itemId: Int @doc(description: "")
+    qty: Int @doc(description: "")
+    back_to_stock: Boolean @doc(description: "")
+}
+
+type SellerGetCreditmemoDetails @doc(description: "") {
+    mainHeading: String @doc(description: "")
+    sendmailAction: String @doc(description: "")
+    sendmailWarning: String @doc(description: "")
+    subHeading: String @doc(description: "")
+    orderData: OrderData @doc(description: "")
+    buyerData: BuyerData @doc(description: "")
+    shippingAddressData: ShippingAddressData @doc(description: "")
+    shippingMethodData: ShippingMethodData @doc(description: "")
+    billingAddressData: BillingAddressData @doc(description: "")
+    paymentMethodData: PaymentMethodData @doc(description: "")
+    items: [ItemData] @doc(description: "")
+    subtotal: SubTotalData @doc(description: "")
+    shipping: ShippingData @doc(description: "")
+    tax: TaxData @doc(description: "")
+    totalOrderedAmount: TotalOrderedAmount @doc(description: "")
+    totalVendorAmount: TotalVendorAmount @doc(description: "")
+    totalAdminComission: TotalAdminComission @doc(description: "")
+}
+
+type SellerMailToAdmin @doc(description: "") {
+    message: String @doc(description: "")
+}
+
+type SellerMailToSeller @doc(description: "") {
+    message: String @doc(description: "")
+}
+
+type SellerBecomePartner @doc(description: "") {
+    message: String @doc(description: "")   
+}
+
+type SellerCreateShipment @doc(description: "") {
+    message: String @doc(description: "")   
+}
+
+type SellerGetShipmentDetails @doc(description: "") {
+    mainHeading: String @doc(description: "")
+    sendmailAction: String @doc(description: "")
+    sendmailWarning: String @doc(description: "")
+    subHeading: String @doc(description: "")
+    orderData: OrderData @doc(description: "")
+    buyerData: BuyerData @doc(description: "")
+    shippingAddressData: ShippingAddressData @doc(description: "")
+    shippingMethodData: ShippingMethodData @doc(description: "")
+    billingAddressData: BillingAddressData @doc(description: "")
+    paymentMethodData: PaymentMethodData @doc(description: "")
+    shippingCarriers : [ShippingCarriers] @doc(description: "")
+    items: [ShippingItemData] @doc(description: "")
+}
+
+type ShippingItemData @doc(description: "") {
+    productName: String @doc(description: "")
+    sku: String @doc(description: "")
+    qty: Int @doc(description: "")
+}
+
+type ShippingCarriers @doc(description: "") {
+    carrier: String @doc(description: "")
+    title: String @doc(description: "")
+    number: Int @doc(description: "")
+}

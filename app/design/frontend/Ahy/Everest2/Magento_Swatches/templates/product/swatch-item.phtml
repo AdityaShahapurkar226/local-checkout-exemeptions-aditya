@@ -1,0 +1,129 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Magento\Swatches\ViewModel\Product\Renderer\Configurable as ConfigurableViewModel;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var ConfigurableViewModel $configurableViewModel */
+$configurableViewModel = $viewModels->require(ConfigurableViewModel::class);
+
+$productId = $block->getProductId();
+$attributeId = $block->getAttributeId();
+
+
+if (!$productId || !$attributeId) {
+    return '';
+}
+?>
+
+<div class="flex flex-col items-center py-2 gap-2">
+    <!-- in stock -->
+    <template x-if="optionIsEnabled(<?= (int) $attributeId ?>, item.id) && optionIsActive(<?= (int) $attributeId ?>, item.id)">
+        <label
+            :for="'attribute-option-<?= (int) $productId ?>-'+item.id"
+            class="swatch-option relative shadow-sm cursor-pointer select-none bg-container-lighter product-option-value-label transition duration-150 ease-out hover:ease-in"
+            :class="{
+                'border-container-lighter ring-2 sm:ring ring-offset-4 ring-offset-white ring-ahy-blue' 
+                    : (selectedValues[<?= (int)$attributeId ?>] === item.id),
+
+                'ring-1 sm:ring-2 sm:hover:ring ring-ahy-swatch-border hover:ring-ahy-blue ring-offset-3 hover:ring-offset-4 ring-offset-white' 
+                    : (selectedValues[<?= (int)$attributeId ?>] !== item.id),
+                
+                'w-10 h-10 rounded-full'
+                    : !isTextSwatch(<?= (int) $attributeId ?>, item.id),
+
+                'border-container-lighter ring-2 sm:ring'
+                    : focusedLabel === item.id,
+
+                'rounded-sm'
+                    :isTextSwatch(<?= (int) $attributeId ?>, item.id)
+            }"
+            :style="getSwatchBackgroundStyle('<?= (int) $attributeId ?>',item.id)"
+            <?php if ($configurableViewModel->getShowSwatchTooltip()): ?>
+                @mouseenter.self="activeTooltipItem = {
+                    attribute: '<?= (int) $attributeId ?>',
+                    item: item.id
+                }; tooltipPositionElement = $event.target;"
+                @mouseleave.self="activeTooltipItem = false"
+            <?php endif; ?>
+        >
+            <input
+                :id="'attribute-option-<?= (int) $productId ?>-'+item.id"
+                :value="item.id"
+                name="super_attribute[<?= (int) $attributeId ?>]"
+                type="radio"
+                class="inline-block absolute p-0 border-0 focus:border-0 focus:ring-0 product-option-value-input"
+                style="z-index:-1"
+                x-on:focus="focusLabel(item.id)"
+                x-on:blur="blurLabel()"
+                x-on:change="changeOption(<?= (int) $attributeId ?>, $event.target.value)"
+                x-model="selectedValues[<?= (int) $attributeId ?>]"
+                :required="getAllowedAttributeOptions(<?= (int) $attributeId ?>).filter(
+                                                                    attributeOption => selectedValues[attributeOption]
+                                                                ).length === 0"
+            >
+            <div x-html="getSwatchText(<?= (int) $attributeId ?>, item.id)"
+                 class="whitespace-nowrap text-ahy-blue font-semibold"
+                 :class="{ 'sr-only' : !isTextSwatch(<?= (int) $attributeId ?>, item.id) }"
+            ></div>
+        </label>
+    </template>
+
+    <!-- out of stock -->
+    <template x-if="optionIsEnabled(<?= (int) $attributeId ?>, item.id) && !optionIsActive(<?= (int) $attributeId ?>, item.id)">
+        <div
+            class="relative shadow-sm select-none swatch-option cursor-not-allowed transition duration-150 ease-out hover:ease-in"
+            :class="{
+                        'ring-1 sm:ring-2 sm:hover:ring ring-ahy-swatch-border ring-offset-3'
+                            : (selectedValues[<?= (int)$attributeId ?>] !== item.id),
+
+                        'ring-offset-white' 
+                            : (selectedValues[<?= (int)$attributeId ?>] !== item.id) && !isTextSwatch(<?= (int) $attributeId ?>, item.id),
+
+                        'w-10 h-10 rounded-full' : !isTextSwatch(<?= (int) $attributeId ?>, item.id),
+
+                        'rounded-sm overflow-hidden font-semibold text-ahy-blue bg-ahy-swatch-border ring-offset-ahy-swatch-border'
+                            : isTextSwatch(<?= (int) $attributeId ?>, item.id)
+                    }"
+            :style="getSwatchBackgroundStyle('<?= (int) $attributeId ?>',item.id)"
+            disabled
+        >
+            <div x-html="getSwatchText(<?= (int) $attributeId ?>, item.id)"
+                 class="whitespace-nowrap"
+                 :class="{ 'sr-only' : !isTextSwatch(<?= (int) $attributeId ?>, item.id) }"
+                 disabled
+            ></div>
+            <svg class="absolute inset-0 w-full h-full text-ahy-blue" 
+            :class="{
+                        'rotate-[160deg]' :isTextSwatch(<?= (int) $attributeId ?>, item.id)
+                    }">
+                <line x1="0" y1="100%" x2="100%" y2="0" class="stroke-ahy-blue stroke-1"></line>
+            </svg>
+        </div>
+    </template>
+
+    <!-- price below the swatches -->
+    <template x-if="optionIsEnabled(<?= (int) $attributeId ?>, item.id)">
+        <div class="swatches-price-ahy" x-html="getSimpleProductPrice(<?= (int) $attributeId ?>, item.id, selectedValues)" 
+            :class="{
+                    'hidden' : isTextSwatch(<?= (int) $attributeId ?>, item.id),
+                    'flex flex-col items-center' : !isTextSwatch(<?= (int) $attributeId ?>, item.id) 
+                }" 
+        >
+        </div>
+        </div>
+    </template>

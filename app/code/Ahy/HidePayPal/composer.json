@@ -1,0 +1,16 @@
+{
+    "name": "ahy/module-hidepaypal",
+    "description": "Hide the paypal payment method based on the restricted product",
+    "type": "magento2-module",
+    "license": "GPL-3.0",
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ahy\\HidePayPal\\": ""
+        }
+    }
+}

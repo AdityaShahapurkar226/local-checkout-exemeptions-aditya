@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Customattribute
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <update handle="marketplace_styles"/>
+    <body>
+    
+        <referenceBlock name="marketplace_order_creditmemo_totals">
+            <block class="Webkul\Customattribute\Block\Order\Creditmemo\Totals" name="marketplace_order_ftp_total">
+            <action method="setBeforeCondition">
+                    <argument name="condition" xsi:type="string">tax</argument>
+            </action>
+            </block>
+        </referenceBlock>
+    
+    </body>
+</page>

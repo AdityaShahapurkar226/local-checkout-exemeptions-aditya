@@ -1,0 +1,84 @@
+<?php
+    declare(strict_types=1);
+
+    use Magento\Framework\Escaper;
+    use Magento\Theme\Block\Html\Title;
+    use Magento\Customer\Model\Account\Redirect;
+
+    /** @var Escaper $escaper */
+    /** @var Title $block */
+
+    $cssClass = 'text-3xl md:text-6xl';
+    $titleHtml = '';
+    if (trim((string)$block->getPageHeading())) {
+        $titleHtml = '<span class="base" data-ui-id="page-title-wrapper" '
+            . $block->getAddBaseAttribute()
+            . '>'
+            . $escaper->escapeHtml($block->getPageHeading())
+            . '</span>';
+    }
+    $isCreateAnAccountPage = $block->getPageHeading() == 'CREATE AN ACCOUNT' ? 'flex-col' : '';
+    $isCartPage = $block->getPageHeading() == 'Cart' ? 'items-baseline pb-0' : ' pb-4 md:pb-8 ';
+    $isPDP = $block->getCssClass() == 'product' ? '  px-8 ' . $block->getCssClass() : ' pt-8 md:pt-12 ';
+    $isPLP = ($block->getCssClass() !== null && strpos($block->getCssClass(), 'catalog_category_view_ahy') !== false);
+    $plpClass = $isPLP ? " text-center bg-cover bg-center sm:w-[720px] lg:w-[980px] xl:w-[1240px] 2xl:w-[1490px] h-[200px] md:h-[270px] xl:h-[370px]" : '';
+    $plpHeadingClass = $isPLP ? " catalog_category_view_ahy_heading w-1/2 md:w-3/5 lg:w-1/2 " : '';
+?>
+
+<?php if ($titleHtml): ?>
+    <div class="container flex mt-0 <?= $isPDP ?> <?= $block->getCssClass() ?> <?= $isCreateAnAccountPage ?> <?= $isCartPage ?> <?= $plpClass ?>" >
+        <h1 class="text-ahy-blue page-title !font-extrabold title-font uppercase <?= /** @noEscape */ $cssClass ?> <?= $plpHeadingClass ?>"
+            <?php if ($block->getId()): ?> id="<?= $escaper->escapeHtmlAttr($block->getId()) ?>" <?php endif; ?>>
+            <?= /* @noEscape */ $titleHtml ?>
+        </h1>
+        <div class="<?= $block->getPageHeading() == 'Cart' ? 'flex justify-between w-full ' : '' ?>" >
+            <?= $block->getChildHtml() ?>
+            <?php if($block->getPageHeading() == 'Cart'): ?>
+                <script>
+                    "use strict";
+                    function initComponentLoggedIn() {
+                        return {
+                            cart: false,
+                            customer: false,
+                            receiveCustomerData(data) {
+                                if (data.cart) {
+                                    this.cart = data.cart;
+                                }
+                                if (data.customer.firstname) {
+                                    this.customer = data.customer;
+                                }
+                            }
+                        }
+                    }
+                    </script>
+                    <div x-data="initComponentLoggedIn()"
+                        @private-content-loaded.window="receiveCustomerData($event.detail.data)"
+                        style="display:block" x-bind:style="!customer ? 'display:block' : 'display:none'"
+                    >
+                        <template x-if="!customer">
+                            <div class="text-ahy-blue p-2 font-normal text-xs hidden md:flex items-center">
+                                <span class="">
+                                    <a onclick="hyva.setCookie && hyva.setCookie(
+                                            '<?= /** @noEscape */ Redirect::LOGIN_REDIRECT_URL ?>',
+                                            window.location.href,
+                                            1
+                                        )"
+                                        href="<?= $escaper->escapeUrl($block->getUrl('customer/account/index')) ?>" 
+                                        class="font-bold hover:underline underline-offset-4">Sign In</a> to apply credit, speed up checkout
+                                </span>
+                            </div>
+                        </template>
+                    </div>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>
+<?php if($isPLP): ?>
+    <style>
+        @media screen and (max-width:392px) {
+            .catalog_category_view_ahy_heading{
+                width: 70% !important;
+            }
+        }
+    </style>
+<?php endif; ?>

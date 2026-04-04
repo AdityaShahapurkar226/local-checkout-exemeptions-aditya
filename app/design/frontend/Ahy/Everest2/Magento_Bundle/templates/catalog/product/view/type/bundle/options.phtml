@@ -1,0 +1,411 @@
+<?php
+
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductPage;
+use Hyva\Theme\ViewModel\ProductPrice;
+use Magento\Bundle\Block\Catalog\Product\View\Type\Bundle;
+use Magento\Bundle\Pricing\Price\FinalPrice;
+use Magento\Catalog\Pricing\Price\BasePrice;
+use Magento\Catalog\Pricing\Price\RegularPrice;
+use Magento\Framework\Escaper;
+
+/** @var Bundle $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+$product = $block->getProduct();
+$stripSelection = $product->getConfigureMode() ? true : false;
+$options = $block->decorateArray($block->getOptions($stripSelection));
+
+/** @var ProductPage $productViewModel */
+$productViewModel = $viewModels->require(ProductPage::class);
+
+/** @var ProductPrice $productPriceViewModel */
+$productPriceViewModel = $viewModels->require(ProductPrice::class);
+
+$displayTax = $productPriceViewModel->displayPriceIncludingTax();
+
+$regularPrice = $productPriceViewModel->getPriceValue(RegularPrice::PRICE_CODE, $product);
+$finalPrice = $productPriceViewModel->getPriceValue(FinalPrice::PRICE_CODE, $product);
+
+if ($productPriceViewModel->displayPriceInclAndExclTax()) {
+    $basePrice = $productPriceViewModel->getPriceValueExclTax(FinalPrice::PRICE_CODE, $product);
+}
+?>
+<?php if ($product->isSaleable()): ?>
+    <div class="card flex w-full">
+        <?php if (count($options)): ?>
+            <script>
+                function initBundleOptions() {
+                    return {
+                        optionConfig: <?= /* @noEscape */ $block->getJsonConfig() ?>,
+                        regularPriceKey: '<?= /* @noEscape */ $displayTax ? 'oldPrice' : 'baseOldPrice' ?>',
+                        finalPriceKey: '<?= /* @noEscape */ $displayTax ? 'finalPrice' : 'basePrice' ?>',
+                        <?php if ($productPriceViewModel->displayPriceInclAndExclTax()): ?>
+                        basePriceKey: 'basePrice',
+                        <?php endif; ?>
+                        productFinalPrice: false,
+                        activeSelectOptions: {},
+                        selectedOptions: [],
+                        selectedConfigurableOptions: [],
+                        productType: 'simple',
+                        selectedProductCount: 0,
+                        getMultiOptionQty(option, optionSelection) {
+                            if (option.isMulti) {
+                                return optionSelection.qty;
+                            }
+                            return false;
+                        },
+                        setProductType(productType){
+                            this.productType = productType;
+                        },
+                        calculateTotalPrice(isConfigurable = false) {
+                            let selectedProductsPerOption = [];
+
+                            for (const [optionId, option] of Object.entries(this.optionConfig.options)) {
+                                const optionElement = document.querySelector(`[data-option-id="${optionId}"]`);
+                                const qtyElement = document.getElementById('bundle-option-' + optionId + '-qty-input');
+
+                                let selectedOption = selectedProductsPerOption[optionId] || [];
+                                
+                                if (optionElement) {
+                                    
+                                    if (optionElement.checked || optionElement.selected) {
+                                        const optionSelection = option.selections[optionElement.dataset.selectionId];
+                                        selectedOption.push({
+                                            data: optionSelection,
+                                            qty: this.getMultiOptionQty(option, optionSelection) ||
+                                                (qtyElement && qtyElement.value) || 1
+                                        });
+                                    }
+                                } else {
+                                    for (const [selectionId, selection] of Object.entries(option.selections)) {
+                                        const selectionElement = document.querySelector(
+                                            `[data-option-id="${optionId}-${selectionId}"]`
+                                        );
+                                        if (
+                                            selectionElement &&
+                                            (
+                                                selectionElement.checked || selectionElement.selected
+                                            )
+                                        ) {
+
+                                            const configurableIndex = this.selectedConfigurableOptions.findIndex(option => option.optionId === optionId && option.selectionId === selectionId);
+
+                                            if (configurableIndex >= 0) {
+                                                const updatedSelection = {
+                                                    ...selection,
+                                                    name: this.selectedConfigurableOptions[configurableIndex].productName,
+                                                    prices: {
+                                                        ...selection.prices,
+                                                        oldPrice: {
+                                                            ...selection.prices.oldPrice,
+                                                        amount: this.selectedConfigurableOptions[configurableIndex].productOptionPrices.oldPrice.amount.toString()
+                                                        },
+                                                        basePrice: {
+                                                            ...selection.prices.basePrice,
+                                                            amount: this.selectedConfigurableOptions[configurableIndex].productOptionPrices.basePrice.amount.toString()
+                                                        },
+                                                        finalPrice: {
+                                                            ...selection.prices.finalPrice,
+                                                            amount: this.selectedConfigurableOptions[configurableIndex].productOptionPrices.finalPrice.amount.toString()
+                                                        }
+                                                    }
+                                                };
+                                                selectedOption.push({
+                                                    data: updatedSelection,
+                                                    qty: this.getMultiOptionQty(option, updatedSelection) ||
+                                                    (qtyElement && qtyElement.value) || 1
+                                                });
+                                                
+                                            } else {
+                                                if( this.productType === 'simple'){
+                                                    if (!selectionElement.classList.contains('configurable')) {
+                                                        selectedOption.push({
+                                                            data: selection,
+                                                            qty: this.getMultiOptionQty(option, selection) ||
+                                                                (qtyElement && qtyElement.value) || 1
+                                                        });
+                                                    }
+                                                } else if(this.productType === 'configurable'){
+                                                    if (!selectionElement.classList.contains('configurable')) {
+                                                        selectedOption.push({
+                                                            data: selection,
+                                                            qty: this.getMultiOptionQty(option, selection) ||
+                                                                (qtyElement && qtyElement.value) || 1
+                                                        });
+                                                    } 
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                selectedProductsPerOption[optionId] = Object.assign(
+                                    [],
+                                    selectedProductsPerOption[optionId],
+                                    selectedOption
+                                );
+                                
+                                
+                            }
+                            const gatherLowestPriceForOptionProduct = (accPrice, product) => {
+                                <?php /* Gather the lowest (normal price | tier price) for the option product/ */ ?>
+                                const lowestPrice = product.data.tierPrice.reduce((finalValue, tierPrice) => {
+                                    if (product.qty >= tierPrice.price_qty) {
+                                        return (tierPrice.prices[this.finalPriceKey].amount < finalValue[this.finalPriceKey].amount)
+                                            ? tierPrice.prices
+                                            : finalValue;
+                                    }
+                                    return finalValue;
+                                }, product.data.prices);
+
+                                // add the lowest price for qty
+                                return {
+                                    oldPrice: accPrice.oldPrice + (lowestPrice.oldPrice.amount * product.qty),
+                                    finalPrice: accPrice.finalPrice + (lowestPrice[this.finalPriceKey].amount * product.qty),
+                                    <?php if ($productPriceViewModel->displayPriceInclAndExclTax()): ?>
+                                    basePrice: accPrice.basePrice + (lowestPrice.basePrice.amount * product.qty),
+                                    <?php endif; ?>
+                                };
+                            }
+
+                        this.productFinalPrice = Object.values(selectedProductsPerOption)
+                            .reduce(
+                                (totalPrice, option) => {
+                                    <?php /* Sum all old, final and base prices for all simple products */ ?>
+                                    const totalOptionPrice = Object.values(option).reduce(gatherLowestPriceForOptionProduct, {
+                                        oldPrice: 0,
+                                        finalPrice: 0,
+                                        basePrice: 0,
+                                    }); 
+                                    return {
+                                        oldPrice: totalPrice.oldPrice + totalOptionPrice.oldPrice,
+                                        finalPrice: totalPrice.finalPrice + totalOptionPrice.finalPrice,
+                                        <?php if ($productPriceViewModel->displayPriceInclAndExclTax()): ?>
+                                        basePrice: totalPrice.basePrice + totalOptionPrice.basePrice,
+                                        <?php endif; ?>
+                                    }
+
+                                }, {
+                                    oldPrice: 0,
+                                    finalPrice: 0,
+                                    <?php if ($productPriceViewModel->displayPriceInclAndExclTax()): ?>
+                                    basePrice: 0,
+                                    <?php endif; ?>
+                                }
+                            );
+                            this.selectedOptions = Object.keys(selectedProductsPerOption).map((optionId) => {
+                                return {
+                                    label: this.optionConfig.options[optionId].title,
+                                    products: Object.values(selectedProductsPerOption[optionId]).map(product => {
+                                        return {
+                                            qty: product.qty,
+                                            name: product.data.name
+                                        }
+                                    })
+                                }
+                            });
+
+                            var productCountTmp = 0;
+                            this.selectedOptions.forEach((item) => {
+                                productCountTmp += item.products.length;
+                            });
+                            this.selectedProductCount = productCountTmp;
+
+                            this.updateAddToCartBtnText();
+
+                            this.dispatchFinalPrice();
+                            this.dispatchOptionSelection();
+
+                            this.setConfigurableAddToCartFormData();
+                        },
+                        updateAddToCartBtnText(){
+                            const addToCartBtnEl = document.querySelector('#product-addtocart-button span.add-to-cart-text');
+                            const addToCartBtnParentEl = document.querySelector('#product-addtocart-button');
+                            if(this.selectedProductCount > 0){
+                                addToCartBtnParentEl.disabled = false;
+                                if(addToCartBtnEl){
+                                    if(this.selectedProductCount === 1){
+                                        addToCartBtnEl.innerHTML = `Add ${this.selectedProductCount} Item to Cart`;
+                                    } else {
+                                        addToCartBtnEl.innerHTML = `Add ${this.selectedProductCount} Items to Cart`;
+                                    }
+                                }
+                            } else{
+                                if(addToCartBtnEl){
+                                    addToCartBtnEl.innerHTML = `Please Select Options`;
+                                    addToCartBtnParentEl.disabled = true;
+                                }
+                            }
+                        },
+                        dispatchFinalPrice() {
+                            window.dispatchEvent(new CustomEvent("update-bundle-option-prices", {detail: this.productFinalPrice}));
+                        },
+                        dispatchOptionSelection() {
+                            window.dispatchEvent(new CustomEvent("update-bundle-option-selection", {detail: this.selectedOptions}));
+                        },
+                        setConfigurableAddToCartFormData() {
+                            const addToCartFormEl = document.getElementById('product_addtocart_form');
+                            // loop through the array of selected configurable options
+                            this.selectedConfigurableOptions.forEach(option => {
+                                // remove any existing input elements with the same identifiers
+                                let bundleOptionInput = document.getElementById(`bundle_option_${option.optionId}_${option.configurableProductId}`);
+                                let selectionOptionInput = document.getElementById(`selection_configurable_option_${option.selectionId}`);
+                                let sizeInput = document.getElementById(`bundle_super_attribute_${option.selectionId}_144`);
+                                let colorInput = document.getElementById(`bundle_super_attribute_${option.selectionId}_93`);
+
+                                if (bundleOptionInput) bundleOptionInput.remove();
+                                if (selectionOptionInput) selectionOptionInput.remove();
+                                if (sizeInput) sizeInput.remove();
+                                if (colorInput) colorInput.remove();
+
+                                //Remove unnecessary and redundant input elements
+                                const elementValueToRemove = document.querySelector(`input[name="bundle_option[${option.optionId}][${option.selectionId}]"]`);
+                                if (elementValueToRemove) {
+                                    elementValueToRemove.value = '';
+                                }
+
+                                // create hidden input element for bundle_option[optionId][configurableProductId]
+                                bundleOptionInput = document.createElement('input');
+                                bundleOptionInput.type = 'hidden';
+                                bundleOptionInput.id = `bundle_option_${option.optionId}_${option.configurableProductId}`;
+                                bundleOptionInput.name = `bundle_option[${option.optionId}][${option.configurableProductId}]`;
+                                bundleOptionInput.value = option.selectionId;
+
+                                // create hidden input element for selection_configurable_option[selectionId]
+                                selectionOptionInput = document.createElement('input');
+                                selectionOptionInput.type = 'hidden';
+                                selectionOptionInput.id = `selection_configurable_option_${option.selectionId}`;
+                                selectionOptionInput.name = `selection_configurable_option[${option.selectionId}]`;
+                                selectionOptionInput.value = option.simpleProductIndex;
+
+                                // create hidden input element for bundle_super_attribute[selectionId][144]
+                                sizeInput = document.createElement('input');
+                                sizeInput.type = 'hidden';
+                                sizeInput.id = `bundle_super_attribute_${option.selectionId}_144`;
+                                sizeInput.name = `bundle_super_attribute[${option.selectionId}][144]`;
+                                sizeInput.value = option.attributes.sizeAttrId;
+
+                                // create hidden input element for bundle_super_attribute[selectionId][93]
+                                colorInput = document.createElement('input');
+                                colorInput.type = 'hidden';
+                                colorInput.id = `bundle_super_attribute_${option.selectionId}_93`;
+                                colorInput.name = `bundle_super_attribute[${option.selectionId}][93]`;
+                                colorInput.value = option.attributes.colorAttrId;
+
+                                // append the input elements to the form or container element
+                                // replace "form" with the ID or class of the container element if needed
+                                addToCartFormEl.appendChild(bundleOptionInput);
+                                addToCartFormEl.appendChild(selectionOptionInput);
+                                addToCartFormEl.appendChild(sizeInput);
+                                addToCartFormEl.appendChild(colorInput);
+                            });
+
+                        },
+                        eventListeners: {
+                            ['@update-bundle-option-configurable-selection.window'](event) {
+                                
+                                const configurableIndex = this.selectedConfigurableOptions.findIndex(option => option.optionId === event.detail.optionId && option.selectionId === event.detail.selectionId);
+
+                                if (configurableIndex >= 0) {
+                                    this.selectedConfigurableOptions[configurableIndex] = event.detail;
+                                } else {
+                                    this.selectedConfigurableOptions.push(event.detail);
+                                }
+
+                                this.calculateTotalPrice(true);
+                            }
+                        },
+                        getQtyValue(optionId) {
+                            const selectionConfig = this.getSelectionOptionConfig(optionId);
+
+                            return selectionConfig ? selectionConfig.qty : "0";
+                        },
+                        getSelectionOptionConfig(optionId) {
+                            const activeSelectOption = this.activeSelectOptions[optionId];
+                            let activeSelectOptionValue = null;
+
+                            if (!activeSelectOption) {
+                                return false;
+                            }
+
+                            if (typeof activeSelectOption == 'object' && activeSelectOption.length) {
+                                activeSelectOptionValue = activeSelectOption[0];
+                            } else {
+                                activeSelectOptionValue = activeSelectOption;
+                            }
+
+                            return this.optionConfig
+                                .options[optionId]
+                                .selections[activeSelectOptionValue];
+                        },
+                        getQtyDisabled(optionId) {
+                            const selectionConfig = this.getSelectionOptionConfig(optionId);
+
+                            if (!selectionConfig) {
+                                return true;
+                            }
+
+                            return !selectionConfig || selectionConfig.customQty === "0";
+                        },
+                        setQtyValue(optionId, value) {
+                            const selectionConfig = this.getSelectionOptionConfig(optionId);
+                            if (selectionConfig) {
+                                selectionConfig.qty = value;
+                            }
+                        },
+                    }
+                }
+            </script>
+            <div x-data="initBundleOptions()"
+                 x-init="
+                    calculateTotalPrice();
+                    $nextTick(() => {
+                        dispatchFinalPrice();
+                        dispatchOptionSelection();
+                        $dispatch('set-selected-options', {});
+                    })"
+                 class="w-full">
+
+                <fieldset class="fieldset fieldset-bundle-options min-w-48 mb-8" form="product_addtocart_form">
+                    <legend id="customizeTitle" class="legend">
+                        <h3 class="text-gray-900 text-2xl title-font font-base text-center md:text-left w-full">
+                            <?= $escaper->escapeHtml(__('Customize %1', $product->getName())) ?>
+                        </h3>
+                    </legend>
+                    <?= $block->getChildHtml('product_info_bundle_options_top') ?>
+                    <?php foreach ($options as $option): ?>
+                        <?php
+                        if (!$option->getSelections()) {
+                            continue;
+                        } ?>
+                        <div class="my-2 pt-4 pb-2 w-full border-t border-container">
+                            <label class="label text-lg font-semibold">
+                                <span><?= $escaper->escapeHtml($option->getTitle()) ?></span>
+                            </label>
+                            <div class="control mt-2">
+                                <div class="nested options-list">
+                                    <?= $block->getOptionHtml($option); ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                   
+                </fieldset>
+                <?= $block->getChildHtml('product_info_bundle_options_bottom') ?>
+            </div>
+        <?php else: ?>
+            <p class="empty"><?= $escaper->escapeHtml(__('No options of this product are available.')) ?></p>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>

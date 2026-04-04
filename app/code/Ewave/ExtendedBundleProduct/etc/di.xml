@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ewave\ExtendedBundleProduct\Api\SelectionRepositoryInterface" type="Ewave\ExtendedBundleProduct\Model\SelectionRepository"/>
+    <preference for="Ewave\ExtendedBundleProduct\Api\SelectionLowestPriceInterface" type="Ewave\ExtendedBundleProduct\Model\SelectionRepository"/>
+    <preference for="Magento\Bundle\Model\ResourceModel\Indexer\Stock" type="Ewave\ExtendedBundleProduct\Preferences\Magento\Bundle\Model\ResourceModel\Indexer\Stock"/>
+    <preference for="Magento\ConfigurableProduct\Pricing\Price\LowestPriceOptionsProviderInterface" type="Ewave\ExtendedBundleProduct\Preferences\Magento\ConfigurableProduct\Pricing\Price\LowestPriceOptionsProvider"/>
+    <preference for="Magento\Bundle\Block\DataProviders\OptionPriceRenderer" type="Ewave\ExtendedBundleProduct\Block\DataProviders\OptionPriceRenderer"/>
+    <preference for="Magento\Bundle\Model\Sales\Order\Pdf\Items\Invoice" type="Ewave\ExtendedBundleProduct\Preferences\Magento\Bundle\Model\Sales\Order\Pdf\Items\Invoice"/>
+
+    <type name="Ewave\ExtendedBundleProduct\Model\Product">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="non_composite_product_types" xsi:type="array">
+                    <item name="configurable" xsi:type="string">configurable</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Ewave\ExtendedBundleProduct\Model\ProductFactory" type="Magento\Catalog\Model\ProductFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Ewave\ExtendedBundleProduct\Model\Product</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="extendedBundleProductRepo" type="Magento\Catalog\Model\ProductRepository">
+        <arguments>
+            <argument name="productFactory" xsi:type="object">Ewave\ExtendedBundleProduct\Model\ProductFactory</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Bundle\Model\LinkManagement">
+        <arguments>
+            <argument name="productRepository" xsi:type="object">extendedBundleProductRepo</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Bundle\Model\ResourceModel\Selection\CollectionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Ewave\ExtendedBundleProduct\Model\ResourceModel\Selection\Collection</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Bundle\Model\ResourceModel\Indexer\Price">
+        <plugin name="Ewave_ExtendedBundleProduct::MagentoBundleModelResourceModelIndexerPrice"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\Bundle\Model\ResourceModel\Indexer\PricePlugin"
+                sortOrder="10" />
+    </type>
+
+    <!-- PREPARE "BUY REQUEST" OF BUNDLE PRODUCTS TO APPLY CONFIGURABLE PRODUCTS -->
+    <type name="Magento\ConfigurableProduct\Model\Product\Type\Configurable">
+        <plugin name="Ewave_ExtendedBundleProduct::MagentoConfigurableProductModelProductTypeConfigurable"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\ConfigurableProduct\Model\Product\Type\ConfigurablePlugin"
+                sortOrder="10" />
+    </type>
+
+    <!-- SEPARATE QUOTE ITEMS OF BUNDLE PRODUCT -->
+    <type name="Magento\Quote\Model\Quote">
+        <plugin name="Ewave_ExtendedBundleProduct::MagentoQuoteModelQuote"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\Quote\Model\QuotePlugin"
+                sortOrder="10" />
+    </type>
+
+    <!-- DISABLE "USE CONFIG" FOR MANAGE STOCK OF CONFIGURABLE PRODUCTS -->
+    <type name="Magento\CatalogInventory\Model\StockStateProvider">
+        <plugin name="Ewave_ExtendedBundleProduct::MagentoCatalogInventoryModelStockStateProvider"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\CatalogInventory\Model\StockStateProviderPlugin"
+                sortOrder="10" />
+    </type>
+    <type name="Magento\CatalogInventory\Observer\ProductQty">
+        <plugin name="Ewave_ExtendedBundleProduct::MagentoCatalogInventoryObserverProductQty"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\CatalogInventory\Observer\ProductQtyPlugin"
+                sortOrder="10" />
+    </type>
+
+    <!-- USE PRICE OF SIMPLE PRODUCT FOR CONFIGURABLE CART ITEM -->
+    <type name="Magento\Bundle\Model\Product\Price">
+        <plugin name="Ewave_ExtendedBundleProduct::MagentoBundleModelProductPrice"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\Bundle\Model\Product\PricePlugin"
+                sortOrder="10" />
+    </type>
+
+    <!-- ADD CONFIGURABLE ATTRIBUTES TO BUNDLE CART ITEM  -->
+    <type name="Magento\Bundle\Helper\Catalog\Product\Configuration">
+        <plugin name="Ewave_ExtendedBundleProduct::MagentoBundleHelperCatalogProductConfiguration"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\Bundle\Helper\Catalog\Product\ConfigurationPlugin"
+                sortOrder="10" />
+    </type>
+
+    <!-- ADD CONFIGURABLE PRODUCTS TO OPTION SELECTIONS  -->
+    <type name="Magento\Bundle\Model\ResourceModel\Option\Collection">
+        <plugin name="Ewave_ExtendedBundleProduct::MagentoBundleModelResourceModelOptionCollection"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\Bundle\Model\ResourceModel\Option\CollectionPlugin"
+                sortOrder="10" />
+    </type>
+
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="Ewave_ExtendedBundleProduct::MagentoCatalogModelProduct"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\Catalog\Model\ProductPlugin"
+                sortOrder="10" />
+    </type>
+
+    <type name="Magento\SalesRule\Model\Rule\Condition\Product">
+        <plugin name="apply_rule_on_configurable_children" type="Ewave\ExtendedBundleProduct\Preferences\Magento\ConfigurableProduct\Plugin\SalesRule\Model\Rule\Condition\Product" />
+    </type>
+
+    <type name="Ewave\ExtendedBundleProduct\Plugin\Magento\Rule\Model\Condition\AbstractConditionPlugin">
+        <arguments>
+            <argument name="conditions" xsi:type="array">
+                <item name="0" xsi:type="string">total_qty</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- ADD CONFIGURABLE OPTIONS INFO TO ORDER ITEMS  -->
+    <type name="Magento\Bundle\Block\Sales\Order\Items\Renderer">
+        <plugin name="Ewave_ExtendedBundleProduct::MagentoBundleBlockSalesOrderItemsRenderer"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\Bundle\Block\Sales\Order\Items\RendererPlugin"
+                sortOrder="10" />
+    </type>
+
+    <type name="Magento\CatalogInventory\Model\Quote\Item\QuantityValidator">
+        <arguments>
+            <argument name="optionInitializer" xsi:type="object">Ewave\ExtendedBundleProduct\Model\Quote\Item\QuantityValidator\Initializer\Option</argument>
+        </arguments>
+    </type>
+
+    <!-- Append Reservations when Order Is Placed  -->
+    <type name="Magento\Sales\Api\OrderManagementInterface">
+        <plugin name="Ewave_ExtendedBundleProduct::inventory_reservations_placement" type="Ewave\ExtendedBundleProduct\Plugin\Magento\Sales\OrderManagement\AppendReservationsAfterOrderPlacementPlugin"/>
+    </type>
+
+    <!-- CONSIDER CONFIGURABLE STOCK STATUS -->
+    <type name="Magento\CatalogInventory\Helper\Stock">
+        <plugin name="Ewave_ExtendedBundleProduct::MagentoCatalogInventoryHelperStock"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\CatalogInventory\Helper\Stock\AdaptAssignStatusToProductPlugin"
+                sortOrder="100" />
+    </type>
+
+    <type name="Magento\Bundle\Api\ProductLinkManagementInterface">
+        <plugin name="reindex_source_items_after_add_bundle_selection" type="Ewave\ExtendedBundleProduct\Plugin\Magento\Bundle\Model\LinkManagement\ReindexSourceItemsAfterAddBundleSelectionPlugin"/>
+        <plugin name="reindex_source_items_after_save_bundle_selection" type="Ewave\ExtendedBundleProduct\Plugin\Magento\Bundle\Model\LinkManagement\ReindexSourceItemsAfterSaveBundleSelectionPlugin"/>
+        <plugin name="reindex_source_items_after_remove_bundle_selection" type="Ewave\ExtendedBundleProduct\Plugin\Magento\Bundle\Model\LinkManagement\ReindexSourceItemsAfterRemoveBundleSelectionPlugin"/>
+    </type>
+</config>

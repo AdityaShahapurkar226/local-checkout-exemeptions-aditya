@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+ 
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\LoginAsCustomerAdminUi\Ui\Customer\Component\Button\DataProvider">
+     <plugin name="login_as_customer_button_data_provider_plugin" disabled="true"/>
+        <plugin name="Webkul_AdminLoginAsVendor::loginAsVender" type="Webkul\AdminLoginAsVendor\Plugin\LoginAsCustomer" sortOrder="5" />
+    </type>
+  <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="adminloginasvendor_attempt_grid_data_source" xsi:type="string">Webkul\AdminLoginAsVendor\Model\ResourceModel\Loginattempt\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Webkul\AdminLoginAsVendor\Model\ResourceModel\Loginattempt\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">adminloginasvendor_login_attempts</argument>
+            <argument name="eventPrefix" xsi:type="string">adminloginasvendor_attempt_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">attempt_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Webkul\AdminLoginAsVendor\Model\ResourceModel\Loginattempt</argument>
+        </arguments>
+    </virtualType>
+</config>

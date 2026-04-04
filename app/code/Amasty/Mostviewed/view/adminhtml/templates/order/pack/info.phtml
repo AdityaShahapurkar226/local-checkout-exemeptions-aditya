@@ -1,0 +1,37 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+<?php
+/** @var \Amasty\Mostviewed\Model\Pack\Order\OrderPack[] $orderPacks */
+$orderPacks = $block->getData('packs');
+/** @var \Amasty\Mostviewed\ViewModel\Pack\Order\PackInfo $packInfoViewModel */
+$packInfoViewModel = $block->getData('pack_info_view_model');
+?>
+
+<section class="amrelated-admin-section">
+    <div class="amrelated-inner">
+        <p class="amrelated-title">
+            <?= $escaper->escapeHtml(__('Bundle Packs Included')) ?>
+        </p>
+        <ul class="amrelated-content">
+            <?php foreach ($orderPacks as $orderPack): ?>
+                <li class="amrelated-item">
+                    <span class="amrelated-name">
+                        <?php if ($orderPack->getPack()): ?>
+                            <?= $escaper->escapeHtml(sprintf('<a href="%s">%s</a>', $packInfoViewModel->getPackUrl((int) $orderPack->getPack()->getPackId()), $orderPack->getPackName()), ['a']) ?>
+                        <?php else: ?>
+                            <?= $escaper->escapeHtml($orderPack->getPackName()) ?>
+                        <?php endif; ?>
+                    </span>
+                    <span class="amrelated-value">x<?= $escaper->escapeHtml($orderPack->getQty()) ?></span>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</section>

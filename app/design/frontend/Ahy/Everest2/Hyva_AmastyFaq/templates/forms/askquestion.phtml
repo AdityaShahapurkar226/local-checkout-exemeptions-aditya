@@ -1,0 +1,152 @@
+<?php
+/**
+ * @var \Amasty\Faq\Block\Forms\AskQuestion $block
+ */
+?>
+<div class="ask-question-form widget" x-data="initFaqForm()">
+    <?php if (!$block->isAllowUnregisteredCustomersAsk() && !$block->isCustomerLoginIn()): ?>
+        <div class="button-container">
+            <div class="button-info flex ahy-text-blue gap-1 flex-wrap">
+                <?= $block->escapeHtml(__("Don't be shy, blaze a trail and leave your mark in the Q&A territory by ")); ?> <a href="/customer/account/index/" class="!text-ahy-blue-light hover:underline underline-offset-6"> signing in.</a>
+            </div>
+        </div>
+    <?php else: ?>
+        <div class="button-container">
+            <div class="button-info">
+                <?= $block->escapeHtml(__('Did you find what you were looking for?')); ?>
+            </div>
+            <?php
+            $askQuestion = $block->escapeHtml(__('Ask a Question'));
+            ?>
+            <button type="button"
+                    title="<?= /** @noEscape */ $askQuestion; ?>"
+                    class="form-toggle-button action btn primary primary"
+                    @click="toggleForm($event)">
+                <?= /** @noEscape */ $askQuestion; ?>
+            </button>
+        </div>
+    <?php endif; ?>
+    <div class="ask-form-container amfaq-hidden" x-show="showFaqForm">
+        <form action="<?= $block->escapeUrl($block->getUrlAction()); ?>"
+              id="amfaq-ask-form-inline"
+              method="post">
+            <?= /** @noEscape */ $block->getBlockHtml('formkey'); ?>
+            <?php if ($additionalField = $block->getAdditionalField()): ?>
+                <input name="<?= $block->escapeHtml($additionalField['field']); ?>"
+                       type="hidden"
+                       value="<?= $block->escapeHtml($additionalField['value']); ?>" />
+            <?php endif; ?>
+            <fieldset class="fieldset">
+                <div class="field required">
+                    <label class="label" for="amfaq-title">
+                        <?= $block->escapeHtml(__('Your question:')); ?>
+                    </label>
+                    <div class="control">
+                        <textarea name="title"
+                                  id="amfaq-title"
+                                  title="<?= $block->escapeHtml(__('Question')); ?>"
+                                  class="required-entry input-text w-full"
+                                  required
+                                  cols="5"
+                                  rows="3"
+                                  placeholder="<?= $block->escapeHtml(__('Type your question here...'));?>"></textarea>
+                    </div>
+                </div>
+
+                <?php if ($block->isGDPREnabled()): ?>
+                    <div class="field required choice">
+                        <input type="checkbox"
+                               name="gdpr"
+                               id="amfaq-gdpr"
+                               title="<?= $block->escapeHtml(__('GDPR')); ?>"
+                               x-model="showNameField"
+                               required
+                               value="1">
+                        <label class="label" for="amfaq-gdpr">
+                            <?= /** @noEscape */ $block->getGDPRText(); ?>
+                        </label>
+                    </div>
+
+                    <div class="field amfaq-hidden" x-show="showNameField">
+                        <label class="label" for="amfaq-name">
+                            <?= $block->escapeHtml(__('Your name:')); ?>
+                        </label>
+                        <div class="control">
+                            <input name="name" id="amfaq-name"
+                                   class="input-text w-full"
+                                   title="<?= $block->escapeHtml(__('Name')); ?>"
+                                   type="text">
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <div class="field">
+                        <label class="label" for="amfaq-name">
+                            <?= $block->escapeHtml(__('Your name:')); ?>
+                        </label>
+                        <div class="control">
+                            <input name="name" id="amfaq-name" class="input-text  w-full"
+                                   title="<?= $block->escapeHtml(__('Name')); ?>"
+                                   type="text">
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($block->isNotifyUser()): ?>
+                <?php if ($block->isGDPREnabled()): ?>
+                <div class="field amfaq-hidden flex items-center" x-show="showNameField">
+                    <?php else: ?>
+                    <div class="field flex items-center">
+                        <?php endif; ?>
+                        <input type="checkbox"
+                               name="notification"
+                               id="amfaq-notification"
+                               title="<?= $block->escapeHtml(__('Notification')); ?>"
+                               x-model="showEmailField"
+                               value="1">
+                        <label class="label m-0 ml-3" for="amfaq-notification">
+                            <?= $block->escapeHtml(__('get notification on email when the answer is ready')); ?>
+                        </label>
+                        <?= /* @noEscape */ $block->getGdprCheckboxes() ?>
+                    </div>
+
+                    <div class="field amfaq-hidden email-field required" x-show="showEmailField">
+                        <label class="label required" for="amfaq-email">
+                            <?= $block->escapeHtml(__('Your e-mail:')); ?>
+                        </label>
+                        <div class="control">
+                            <input name="email" id="amfaq-email" class="required validate-email w-full"
+                                   title="<?= $block->escapeHtml(__('Email')); ?>"
+                                   type="text">
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <button type="submit" class="btn action submit primary mt-2.5">
+                        <?= $block->escapeHtml(__('Send the Question')); ?>
+                    </button>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+<script>
+    function initFaqForm() {
+        return {
+            showFaqForm: false,
+            allowRegistered: <?= $block->isAllowUnregisteredCustomersAsk() ? 'true' : 'false' ?>,
+            isLoggedIn: <?= $block->isCustomerLoginIn() ? 'true' : 'false' ?>,
+            showFormBtnText: "<?= __('Ask a Question') ?>",
+            hideFormBtnText: "<?= __('Hide form') ?>",
+            showNameField: false,
+            showEmailField: false,
+            toggleForm: function (e) {
+                this.showFaqForm = !this.showFaqForm
+                if (e.target.innerText === this.showFormBtnText) {
+                    e.target.innerText = this.hideFormBtnText
+                } else {
+                    e.target.innerText = this.showFormBtnText
+                }
+            }
+        }
+    }
+</script>

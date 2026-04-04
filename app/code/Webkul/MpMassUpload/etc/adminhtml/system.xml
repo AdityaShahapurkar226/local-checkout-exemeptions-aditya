@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="webkul" translate="label" sortOrder="10">
+            <label>Webkul</label>
+        </tab>
+        <section id="marketplace">
+            <group id="massupload_customAttribute" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Mass Upload Custom Attribute Settings</label>
+                <field id="validate_custom_attribute" translate="label comment" sortOrder="2" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Validate Custom Attribute</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If yes then the csv file will be validated for Custom Attributes else not</comment>
+                </field>
+            </group>
+            <group id="massupload_product_information" translate="label" type="text" sortOrder="700" showInDefault="1"
+                showInWebsite="1" showInStore="1">
+                <label>Mass Upload Product Information</label>
+                <field id="author" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1"
+                    showInStore="1">
+                    <label><![CDATA[<p>Author: <a target="_blank" title="Webkul Software Private Limited" href="https://webkul.com/">Webkul</a></p>
+                        <p>User Guide: <a target="_blank" href="https://webkul.com/blog/marketplace-mass-upload-for-magento2/">Click here</a></p>
+                        <p>Store Extension: <a target="_blank" href="https://store.webkul.com/magento2-multi-vendor-bulk-upload.html">Click here</a></p>
+                        <p>Ticket/Customisations: <a target="_blank" href="https://webkul.uvdesk.com/en/customer/create-ticket/">Click here</a></p>
+                        <p>Services: <a target="_blank" href="https://webkul.com/magento-development/">Click here</a></p>
+					]]></label>
+                    <frontend_model>Webkul\MpMassUpload\Block\Adminhtml\System\Config\ModuleInfo</frontend_model>
+                </field>
+            </group>
+
+        </section>
+    </system>
+</config>

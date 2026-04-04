@@ -1,0 +1,44 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Amasty\Mostviewed\ViewModel\Pack\Analytic\RecommendationSimple $recommendationViewModel */
+
+$recommendationViewModel = $block->getData('recommendation_view_model');
+?>
+
+<?php if ($recommendationViewModel->isVisible()): ?>
+<div class="amrelated-dropdown-block">
+    <button class="amrelated-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            data-mage-init='{"dropdown":{}}'>
+        <?= $escaper->escapeHtml(__('Check Recommendations')) ?>
+    </button>
+    <div class="amrelated-options" data-target="dropdown">
+        <div class="amrelated-inner">
+            <?= $escaper->escapeHtml(__('The current bundle pack was created at %1 (%2 days ago) and was sold %3 time(s).', $recommendationViewModel->getFormattedDate(), $recommendationViewModel->getDaysAgo(), $recommendationViewModel->getQtySold())) ?>
+
+            <?php if ($recommendationViewModel->isPackBad()): ?>
+                <?php foreach ($recommendationViewModel->getMainProducts() as $mainProduct): ?>
+                    <div class="amrelated-text">
+                        <?php if ($recommendationViewModel->isSalesFound((int) $mainProduct->getId())): ?>
+                            <?= $escaper->escapeHtml(__('Based on the sales analysis, %1 seems to be sold well in combination with %2.', $mainProduct->getName(), $recommendationViewModel->getSalesProposal((int) $mainProduct->getId()))) ?>
+                        <?php elseif ($recommendationViewModel->isViewsFound((int) $mainProduct->getId())): ?>
+                            <?= $escaper->escapeHtml(__('Sorry, we couldn\'t find any recommended products for %1 based on orders placed. But it was most frequently viewed with %2.', $mainProduct->getName(), $recommendationViewModel->getViewProposal((int) $mainProduct->getId()))) ?>
+                        <?php else: ?>
+                            <?= $escaper->escapeHtml(__('Sorry, we couldn\'t find any recommended products for %1.', $mainProduct->getName())) ?>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <?= $escaper->escapeHtml(__('Based on the sales analysis, it can be concluded that the products for the current pack are selected properly.')) ?>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

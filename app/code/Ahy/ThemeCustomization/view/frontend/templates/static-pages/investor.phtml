@@ -1,0 +1,343 @@
+<div x-data="counterAnimation() ">
+    <div
+        class="bg-[url('/media/investor-landing-page/hero-background-desktop.png')] hidden md:block relative bg-cover bg-center md:h-[396px] lg:h-[494px] xl:h-[593px] 2xl:h-[724px] min-[2100px]:h-[1151px]">
+        <div class="w-full text-center flex flex-col justify-center items-center h-full md:gap-[1.25rem] lg:gap-6 xl:gap-[1.8rem] 2xl:gap-[1.5rem]">
+            <h3 class="font-league-gothic leading-none md:text-[120px] lg:text-[147px] xl:text-[180px] 2xl:text-[213px] text-ahy-blue">INVESTOR RELATIONS</h3>
+            <h3 class="font-bold md:text-[0.95rem] md:max-w-[34rem] lg:text-[1.15rem] lg:max-w-[45rem] xl:text-[1.37rem] xl:max-w-[55rem] 2xl:text-[1.65rem] 2xl:max-w-5xl text-ahy-blue">
+                EVEREST IS THE BRIDGE BETWEEN COMMUNITY AND COMMERCE FOR THE OUTDOOR RECREATION UNIVERSE
+            </h3>
+            <div
+                class="justify-center font-bold flex md:text-[0.7rem] md:w-[27rem] md:gap-4 md:p-5 lg:text-[0.75rem] lg:gap-x-[0.9rem] lg:p-[1.15rem] bg-white rounded-full lg:w-[34rem] xl:w-[39rem] xl:p-[1.25rem] xl:text-[0.85rem] 2xl:gap-[1.32rem] 2xl:text-base 2xl:gap-8 2xl:mt-[1.5rem] 2xl:w-[47rem] 2xl:p-7">
+                <p @click="scrollToRef('aboutUs');" class="hover:underline hover:decoration-2 hover:cursor-pointer hover:underline-offset-8 text-ahy-blue">ABOUT US</p>
+                <p @click="scrollToRef('investmentThesis');" class="hover:underline hover:decoration-2 hover:cursor-pointer hover:underline-offset-8 text-ahy-blue">INVESTMENT THESIS</p>
+                <p @click="scrollToRef('stats');" class="hover:underline hover:decoration-2 hover:cursor-pointer hover:underline-offset-8 text-ahy-blue">STATS</p>
+                <p @click="scrollToRef('contact');" class="hover:underline hover:decoration-2 hover:cursor-pointer hover:underline-offset-8 text-ahy-blue">CONNECT</p>
+            </div>
+        </div>
+    </div>
+    <div class="relative bg-cover bg-bottom md:hidden h-[46rem]">
+        <div class="bg-[url('/media/investor-landing-page/hero-background-mobile-1.png')] bg-cover relative w-full h-full bg-bottom sm:block"></div>
+        <div class="absolute h-full w-full text-center flex flex-col left-0 right-0 justify-center inset-0 items-center gap-[3rem] sm:gap-[2rem]">
+            <h3 class="leading-[0.9] font-league-gothic text-[6.85rem] max-w-[22rem] sm:text-[130px] max-[409px]:text-[5.5rem] sm:max-w-[27rem] text-ahy-blue">INVESTOR RELATIONS</h3>
+            <h3 class="font-bold leading-none text-[1.3rem] max-w-[28rem] sm:text-2xl max-[409px]:text-[1.1rem] sm:max-w-[32rem] text-ahy-blue">
+                EVEREST IS THE BRIDGE BETWEEN COMMUNITY AND COMMERCE FOR THE OUTDOOR RECREATION UNIVERSE
+            </h3>
+            <div
+                class="font-bold text-[0.79rem] max-[409px]:text-[3vw] max-[409px]:p-[1.25rem] p-4 bg-white w-[83vw] max-w-[29rem] rounded-full flex justify-center gap-[5vw] sm:w-[31rem] sm:text-[1rem] p-6 sm:p-[2rem]">
+                <p @click="scrollToRef('aboutUs');" class="hover:underline hover:decoration-2 hover:cursor-pointer hover:underline-offset-8 text-ahy-blue">ABOUT US</p>
+                <p @click="scrollToRef('investmentThesis');" class="hover:underline hover:decoration-2 hover:cursor-pointer hover:underline-offset-8 text-ahy-blue">THESIS</p>
+                <p @click="scrollToRef('stats');" class="hover:underline hover:decoration-2 hover:cursor-pointer hover:underline-offset-8 text-ahy-blue">STATS</p>
+                <p @click="scrollToRef('contact');" class="hover:underline hover:decoration-2 hover:underline-offset-8 hover:cursor-pointer text-ahy-blue">CONNECT</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Common code -->
+    <div class="relative bg-[#efeadd] max-[409px]:h-[56rem] h-[45rem] sm:h-[57rem] md:h-[39rem] lg:h-[49rem] xl:h-[59rem] 2xl:h-[68rem] sm:h-[100%]">
+        <div
+            class="leading-normal flex flex-col justify-center items-center text-center max-[409px]:h-[52rem] max-sm:h-[43rem] gap-[2.5rem] sm:h-[55rem] sm:gap-12 md:h-[39rem] md:gap-[2rem] lg:gap-[2.5rem]
+			lg:h-[54rem] xl:gap-15 xl:h-[61rem] 2xl:gap-17 2xl:h-[71rem]">
+            <h1
+                x-ref="aboutUs"
+                class="font-bold italic pt-8 leading-none text-[3rem] max-w-[22rem] sm:text-[4rem] sm:max-w-[28rem] md:max-w-full md:text-[37px] lg:text-[44px] xl:text-[54px] 2xl:text-[65px] text-ahy-blue">
+                WHAT'S YOUR EVEREST?
+            </h1>
+            <p
+                class="text-ahy-blue font-light leading-snug text-[1.25rem] sm:text-[1.5rem] sm:max-w-[37rem] max-[409px]:max-w-[20rem] max-[409px]:px-[20px] px-[20px] sm:p-0 max-w-[29rem] sm:text-[1.25rem] sm:max-w-[29rem] md:leading-normal md:max-w-[41rem] md:text-[1.6rem] lg:text-[2.1rem] lg:max-w-[57rem] xl:text-[2.5rem] xl:max-w-[67rem] 2xl:text-[3.05rem] 2xl:max-w-[82rem]">
+                If you're like us and love the outdoors, we know you have a dream or goal - and we want to help you accomplish it, from reeling in the big one, to making it to the top of the mountain,
+                to running your fastest mile. So, we want to know - <em>What's Your Everest?</em>
+            </p>
+            <p
+                class="text-ahy-blue font-light leading-snug text-[1.25rem] sm:text-[1.5rem] sm:max-w-[35rem] max-[409px]:max-w-[20rem] max-w-[29rem] max-[409px]:px-[20px] px-[20px] sm:text-[1.25rem] sm:max-w-[29rem] md:max-w-[41rem] md:leading-normal md:text-[1.6rem] lg:text-[2.1rem] lg:max-w-[57rem] xl:text-[2.5rem] xl:max-w-[66rem] 2xl:text-[2.9rem] 2xl:max-w-[77rem]">
+                Everest is a privately owned company. Investment opportunities are available for the right group. Please contact us for more information.
+            </p>
+            <button
+                @click="scrollToHubspot()"
+                class="bg-ahy-red font-bold p-[1.5rem] text-[1.35rem] w-[16rem] sm:w-[19rem] sm:text-[1.5rem] sm:font-bold sm:p-[1.9rem] md:py-[0.75rem] lg:py-[0.85rem] xl:py-[1.2rem] mb-[0.75rem] 2xl:py-[1.45rem] rounded-full text-white font-semibold md:w-[9rem] md:text-[0.75rem] lg:w-[11rem] lg:text-[0.99rem] xl:text-[1.25rem] xl:w-[13rem] 2xl:w-[15rem] 2xl:font-bold 2xl:text-[1.25rem]">
+                Contact Us
+            </button>
+        </div>
+    </div>
+
+    <!-- grid items -->
+    <div class="flex flex-col items-center pb-[5.5rem] md:pb-[6rem] gap-y-12 md:gap-y-0">
+        <div class="flex items-end md:items-center justify-center h-44 w-full self-start">
+            <h2
+                x-ref="investmentThesis"
+                class="font-bold text-[3rem] leading-none md:text-[37px] lg:text-[44px] xl:text-[66px] text-center sm:leading-none w-[19rem] sm:text-[3.8rem] sm:w-[26rem] md:w-full text-ahy-blue max-[409px]:leading-none max-[409px]:text-[2.7rem]">
+                INVESTMENT THESIS
+            </h2>
+        </div>
+
+        <div class="w-[86%] grid grid-cols-1 md:grid-cols-3 2xl:grid-cols-3 gap-x-16 gap-y-[5rem] sm:gap-y-[7rem] md:gap-y-[3rem] lg:gap-y-28 2xl:gap-y-[7.5rem] 2xl:gap-x-[2.5rem]">
+            <div class="flex flex-col gap-y-[2rem] md:gap-[1rem] 2xl:gap-[1.5rem]">
+                <div
+                    class="rounded-full sm:text-[2.7rem] md:text-[1.5rem] text-[2.5rem] bg-black text-white sm:w-[4.2rem] sm:h-[4.2rem] w-12 h-12 md:w-8 md:h-8 lg:w-[2.25rem] lg:h-[2.25rem] xl:w-[2.5rem] xl:h-[2.5rem] 2xl:w-[3.3rem] 2xl:h-[3.3rem] xl:text-[1.875rem] 2xl:text-[2.5rem] flex items-center justify-center font-league-gothic bg-[#0d2f47]">
+                    1
+                </div>
+                <h2 class="text-[1.43rem] sm:text-[1.65rem] md:text-[0.9rem] lg:text-[1.1rem] xl:text-[1.3rem] 2xl:text-[1.5rem] font-bold text-ahy-blue">ONE OF A KIND - FIRST TO MARKET</h2>
+                <p class="text-[1.25rem] sm:text-[1.5rem] md:text-[0.7rem] lg:text-[0.8rem] xl:text-base 2xl:text-[1.15rem] lg:max-w-[83%] text-ahy-blue">
+                    There is a growing demand for specialization from passionate shoppers. Everest is the first online marketplace and community hub exclusively built for the outdoor recreation world.
+                </p>
+            </div>
+
+            <div class="flex flex-col gap-y-[2rem] md:gap-[1rem] 2xl:gap-[1.5rem]">
+                <div
+                    class="rounded-full sm:text-[2.7rem] md:text-[1.5rem] text-[2.5rem] bg-black text-white sm:w-[4.2rem] sm:h-[4.2rem] w-12 h-12 md:w-8 md:h-8 lg:w-[2.25rem] lg:h-[2.25rem] xl:w-[2.5rem] xl:h-[2.5rem] 2xl:w-[3.3rem] 2xl:h-[3.3rem] xl:text-[1.875rem] 2xl:text-[2.5rem] flex items-center justify-center font-league-gothic bg-[#0d2f47]">
+                    2
+                </div>
+                <h2 class="text-[1.43rem] sm:text-[1.65rem] md:text-[0.9rem] lg:text-[1.1rem] xl:text-[1.3rem] 2xl:text-[1.5rem] font-bold text-ahy-blue">COMMUNITY DRIVEN PLATFORM</h2>
+                <p class="text-[1.25rem] sm:text-[1.5rem] md:text-[0.7rem] lg:text-[0.8rem] xl:text-base 2xl:text-[1.15rem] lg:max-w-[83%] text-ahy-blue">
+                    Users can shop great deals on a wide range fo products for different outdoor hobbies. They can also consume and share content, converse with sellers and brands, check out celebrity
+                    picks, and stream outdoor video content.
+                </p>
+            </div>
+
+            <div class="flex flex-col gap-y-[2rem] md:gap-[1rem] 2xl:gap-[1.5rem]">
+                <div
+                    class="rounded-full sm:text-[2.7rem] md:text-[1.5rem] text-[2.5rem] bg-black text-white w-12 h-12 md:w-8 md:h-8 lg:w-[2.25rem] sm:h-[4.2rem] sm:w-[4.2rem] lg:h-[2.25rem] xl:w-[2.5rem] xl:h-[2.5rem] 2xl:w-[3.3rem] 2xl:h-[3.3rem] xl:text-[1.875rem] 2xl:text-[2.5rem] flex items-center justify-center font-league-gothic bg-[#0d2f47]">
+                    3
+                </div>
+                <h2 class="text-[1.43rem] sm:text-[1.65rem] md:text-[0.9rem] lg:text-[1.1rem] xl:text-[1.3rem] 2xl:text-[1.5rem] font-bold text-ahy-blue">EARLY STAGE OPPORTUNITY</h2>
+                <p class="text-[1.25rem] sm:text-[1.5rem] md:text-[0.7rem] lg:text-[0.8rem] xl:text-base 2xl:text-[1.15rem] lg:max-w-[83%] text-ahy-blue">
+                    There is a growing demand for specialization from passionate shoppers. Everest is the first online marketplace and community hub exclusively built for the outdoor recreation world.
+                </p>
+            </div>
+
+            <div class="flex flex-col gap-y-[2rem] md:gap-[1rem] 2xl:gap-[1.5rem]">
+                <div
+                    class="rounded-full sm:text-[2.7rem] md:text-[1.5rem] text-[2.5rem] bg-black text-white sm:w-[4.2rem] sm:h-[4.2rem] w-12 h-12 md:w-8 md:h-8 lg:w-[2.25rem] lg:h-[2.25rem] xl:w-[2.5rem] xl:h-[2.5rem] 2xl:w-[3.3rem] 2xl:h-[3.3rem] xl:text-[1.875rem] 2xl:text-[2.5rem] flex items-center justify-center font-league-gothic bg-[#0d2f47]">
+                    4
+                </div>
+                <h2 class="text-[1.43rem] md:text-[0.9rem] sm:text-[1.65rem] lg:text-[1.1rem] xl:text-[1.3rem] 2xl:text-[1.5rem] font-bold text-ahy-blue">BRAND AWARENESS &amp; REACH</h2>
+                <p class="text-[1.25rem] sm:text-[1.5rem] md:text-[0.7rem] lg:text-[0.8rem] xl:text-base 2xl:text-[1.15rem] lg:max-w-[76%] text-ahy-blue">
+                    As we grow we are building an eternal brand that we know will one day soon be a household name. We're looking to truly disrupt the online market industry.
+                </p>
+            </div>
+
+            <div class="flex flex-col gap-y-[2rem] md:gap-[1rem] 2xl:gap-[1.5rem]">
+                <div
+                    class="rounded-full sm:text-[2.7rem] md:text-[1.5rem] text-[2.5rem] bg-black text-white sm:w-[4.2rem] sm:h-[4.2rem] w-12 h-12 md:w-8 md:h-8 lg:w-[2.25rem] lg:h-[2.25rem] xl:w-[2.5rem] xl:h-[2.5rem] 2xl:w-[3.3rem] 2xl:h-[3.3rem] xl:text-[1.875rem] 2xl:text-[2.5rem] flex items-center justify-center font-league-gothic bg-[#0d2f47]">
+                    5
+                </div>
+                <h2 class="text-[1.43rem] sm:text-[1.65rem] md:text-[0.9rem] lg:text-[1.1rem] xl:text-[1.3rem] 2xl:text-[1.5rem] font-bold text-ahy-blue">WORLD CLASS TALENT</h2>
+                <p class="text-[1.25rem] sm:text-[1.5rem] md:text-[0.7rem] lg:text-[0.8rem] xl:text-base 2xl:text-[1.15rem] lg:max-w-[83%] text-ahy-blue">
+                    Our team has worked for and with some of the biggest names in the outdoor industry. With tons of specific experience in the ecommerce world as well, we're ready to boil the ocean.
+                </p>
+            </div>
+
+            <div class="flex flex-col gap-y-[2rem] md:gap-[1rem] 2xl:gap-[1.5rem]">
+                <div
+                    class="rounded-full sm:text-[2.7rem] md:text-[1.5rem] text-[2.5rem] bg-black text-white sm:w-[4.2rem] sm:h-[4.2rem] w-12 h-12 md:w-8 md:h-8 lg:w-[2.25rem] lg:h-[2.25rem] xl:w-[2.5rem] xl:h-[2.5rem] 2xl:w-[3.3rem] 2xl:h-[3.3rem] xl:text-[1.875rem] 2xl:text-[2.5rem] flex items-center justify-center font-league-gothic bg-[#0d2f47]">
+                    6
+                </div>
+                <h2 class="text-[1.43rem] sm:text-[1.65rem] md:text-[0.9rem] lg:text-[1.1rem] xl:text-[1.3rem] 2xl:text-[1.5rem] font-bold text-ahy-blue">SIGNIFICANT IP VAULT</h2>
+                <p class="text-[1.25rem] sm:text-[1.5rem] md:text-[0.7rem] lg:text-[0.8rem] xl:text-base 2xl:text-[1.15rem] lg:max-w-[83%] text-ahy-blue">
+                    We've got valuable patents, catchy trademarks, memorable URLs, and more in the Everest portfolio.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- animaiton -->
+    <div class="relative">
+        <div
+            class="bg-[url('/media/investor-landing-page/stats-background-desktop.jpg')] hidden md:block relative bg-cover bg-center md:h-[570px] lg:h-[698px] xl:h-[850px] 2xl:h-[65em] min-[2100px]:h-[1151px] flex flex-wrap justify-center items-center text-center leading-none"></div>
+        <div class="bg-[url('/media/investor-landing-page/stats-background-mobile.jpg')] block relative bg-cover bg-center h-[106rem] sm:h-[112rem] md:hidden"></div>
+        <div class="absolute flex-col justify-center align-center inset-0">
+            <div
+                class="flex items-end md:items-center sm:items-end md:items-end xl:items-end justify-center h-52 sm:h-[15rem] md:h-[8.5rem] lg:items-end xl:h-[11rem] 2xl:h-[13.5rem] w-full self-start">
+                <h2 x-ref="stats" class="text-white font-bold text-5xl max-w-[18rem] md:max-w-full md:text-[40px] text-center lg:text-[45px] xl:text-[54px] 2xl:text-[67px]">DATA AT A GLANCE</h2>
+            </div>
+
+            <div>
+                <div class="flex justify-center items-center relative lg:mt-[4rem] md:mt-[1.1rem] 2xl:mt-[6rem]" x-intersect="startCounter()" x-intersect:leave="resetCounter()">
+                    <div
+                        class="grid grid-cols-1 my-[5.5rem] sm:mt-[5.25rem] md:my-5 gap-y-[7rem] md:grid-cols-3 lg:grid-cols-3 md:gap-y-[7rem] md:gap-x-[6rem] lg:gap-y-[8rem] lg:gap-x-[6rem] xl:gap-y-[11rem] xl:gap-x-[7rem] 2xl:gap-y-[13rem] 2xl:gap-x-[8rem]">
+                        <div class="flex flex-col items-center gap-[0.7rem] text-center">
+                            <h3 class="text-[1.4rem] sm:text-[1.65rem] md:text-[0.8rem] lg:text-[1rem] xl:text-[1.2rem] 2xl:text-[1.5rem] text-white font-bold">OUR REACH</h3>
+                            <h1
+                                class="text-[4rem] leading-[0.9] sm:text-[4rem] font-league-gothic md:text-[4.2rem] lg:text-[5rem] xl:text-[6rem] 2xl:text-[7.5rem] text-white font-league-gothic md:block">
+                                <span x-text="counters[0].value"></span>M+
+                            </h1>
+                        </div>
+
+                        <div class="flex flex-col items-center gap-[0.7rem]">
+                            <h3 class="text-[1.4rem] sm:text-[1.65rem] md:text-[0.8rem] lg:text-[1rem] xl:text-[1.2rem] 2xl:text-[1.5rem] text-white font-bold">FOUNDED</h3>
+                            <h1
+                                class="text-[4rem] leading-[0.9] sm:text-[4rem] font-league-gothic md:text-[4.2rem] lg:text-[5rem] xl:text-[6rem] 2xl:text-[7.5rem] text-white font-league-gothic md:block">
+                                <span x-text="counters[1].value"></span>
+                            </h1>
+                        </div>
+
+                        <div class="flex flex-col items-center gap-[0.7rem]">
+                            <h3 class="text-[1.4rem] sm:text-[1.65rem] md:text-[0.8rem] lg:text-[1rem] xl:text-[1.2rem] 2xl:text-[1.5rem] text-white font-bold">ACTIVE SELLERS</h3>
+                            <h1
+                                class="text-[4rem] leading-[0.9] sm:text-[4rem] font-league-gothic md:text-[4.2rem] lg:text-[5rem] xl:text-[6rem] 2xl:text-[7.5rem] text-white font-league-gothic md:block">
+                                <span x-text="counters[2].value.toLocaleString()"></span>+
+                            </h1>
+                        </div>
+
+                        <div class="flex flex-col items-center gap-[0.7rem]">
+                            <h3 class="text-[1.4rem] sm:text-[1.65rem] md:text-[0.8rem] lg:text-[1rem] xl:text-[1.2rem] 2xl:text-[1.5rem] text-white font-bold">ACTIVE SKUs</h3>
+                            <h1
+                                class="text-[4rem] leading-[0.9] sm:text-[4rem] font-league-gothic md:text-[4.2rem] lg:text-[5rem] xl:text-[6rem] 2xl:text-[7.5rem] text-white font-league-gothic md:block">
+                                <span x-text="counters[3].value"></span>M+
+                            </h1>
+                        </div>
+
+                        <div class="flex flex-col items-center gap-[0.7rem]">
+                            <h3 class="text-[1.4rem] sm:text-[1.65rem] md:text-[0.8rem] lg:text-[1rem] xl:text-[1.2rem] 2xl:text-[1.5rem] text-white font-bold"># OF PRODUCTS</h3>
+                            <h1
+                                class="text-[4rem] leading-[0.9] sm:text-[4rem] font-league-gothic md:text-[4.2rem] lg:text-[5rem] xl:text-[6rem] 2xl:text-[7.5rem] text-white font-league-gothic md:block">
+                                <span x-text="counters[4].value.toFixed(2)"></span>M+
+                            </h1>
+                        </div>
+
+                        <div class="flex flex-col items-center gap-[0.7rem]">
+                            <h3 class="max-[409px]:text-[1.2rem] text-[1.4rem] sm:text-[1.65rem] md:text-[0.8rem] lg:text-[1rem] xl:text-[1.2rem] 2xl:text-[1.5rem] text-white font-bold">
+                                INVENTORY UNDER CONTROL
+                            </h3>
+                            <h1
+                                class="text-[4rem] leading-[0.9] sm:text-[4rem] font-league-gothic md:text-[4.2rem] lg:text-[5rem] xl:text-[6rem] 2xl:text-[7.5rem] text-white font-league-gothic md:block">
+                                <span x-text="counters[5].value.toFixed(2)"></span>B+
+                            </h1>
+                        </div>
+
+                        <div class="md:hidden max-w-sm">
+                            <p class="text-white flex flex-col items-center text-center text-lg">Texas, Miami, New Jersey, South Carolina, Ireland, London, South Africa, India</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact us section -->
+    <div class="bg-[#efeadd]">
+        <div class="h-full flex flex-col justify-center items-center gap-[2rem] 2xl:gap-[3rem]">
+            <div
+                x-ref="contact"
+                class="leading-[0.9] font-league-gothic text-center text-[3.5rem] mt-[5.9rem] 2xl:mt-[6rem] sm:text-[5.15rem] md:text-[4rem] lg:text-[4.5rem] xl:text-[5.65rem] 2xl:text-[7.2rem] text-ahy-blue">
+                WE’RE HERE FOR YOU
+            </div>
+            <div
+                class="bg-[#fef9ec] container text-center flex flex-col md:flex-row justify-center items-center rounded-[0.5rem] border-2 border-solid border-grey-700 max-w-[85vw] h-[35.2rem] gap-[1.3rem] max-[409px]:max-w-[92vw] mb-[2rem] sm:h-[40.2rem] sm:max-w-[38rem] sm:gap-[2rem] sm:h-[46.2rem] md:max-w-[45rem] md:gap-[3rem] md:h-[13.9rem] lg:max-w-[49rem] lg:h-[15.9rem] lg:gap-[4rem] xl:max-w-[59rem] xl:h-[19.9rem] 2xl:max-w-[78rem] 2xl:h-[25.9rem] 2xl:gap-[6rem]">
+                <div>
+                    <img
+                        src="/media/investor-landing-page/Bill-Voss.png"
+                        class="max-w-[9rem] sm:max-w-[13rem] md:max-w-[9rem] lg:max-w-[9.5rem] xl:max-w-[12rem] 2xl:max-w-[15.5rem]" />
+                </div>
+                <div class="flex flex-col justify-center items-center gap-[1.3rem] sm:gap-[2rem] md:items-start md:gap-[1.5rem] 2xl:gap-[2rem]">
+                    <div class="flex flex-col justify-center items-center gap-[1.3rem] sm:gap-[2rem] md:items-start md:gap-[0.2rem]">
+                        <div
+                            class="font-bold max-w-[16rem] text-[1.35rem] sm:text-[2rem] sm:max-w-[22rem] sm:leading-[1.2] md:text-[1.3rem] md:max-w-full lg:text-[1.5rem] xl:text-[2rem] 2xl:text-[2.4rem] text-ahy-blue">
+                            TALK DIRECTLY WITH BILL VOSS
+                        </div>
+                        <div class="max-w-[20rem] text-[1.125rem] sm:text-[1.5rem] sm:max-w-[27rem] md:text-[0.6rem] md:max-w-full lg:text-[0.7rem] xl:text-[0.94rem] text-ahy-blue 2xl:text-[1.12rem]">
+                            Our Founder and Chief Executive Officer
+                        </div>
+                    </div>
+                    <div>
+                        <a href="https://calendly.com/_everest_bill_voss/meet-with-bill-voss-ceo-of-everest" target="_blank" rel="noopener noreferrer">
+                            <button
+                                class="bg-ahy-red text-white font-bold rounded-full max-[409px]:w-[83vw] max-[409px]:max-w-[20rem] w-[16rem] py-[1.65rem] text-[1.2rem] sm:text-[1.7rem] sm:py-[1.85rem] sm:w-[30rem] md:py-[0.75rem] md:text-[0.7rem] md:w-[11rem] lg:py-[0.85rem] lg:w-[13rem] lg:text-[0.8rem] xl:w-[17rem] xl:py-[1.2rem] xl:text-[1rem] 2xl:text-[1.25rem] 2xl:py-[1.5rem] 2xl:w-[21rem]">
+                                Schedule a Meeting
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function counterAnimation() {
+        return {
+            scrollToRef(ref) {
+                this.$refs[ref].scrollIntoView({
+                    behavior: "smooth",
+                });
+            },
+            scrollToHubspot() {
+                const conservationEl = document.getElementById("hubspot-form-ahy");
+                if (conservationEl) {
+                    conservationEl.scrollIntoView({
+                        behavior: "smooth",
+                    });
+                }
+            },
+
+            counters: [{
+                    value: 0,
+                    target: 150,
+                    interval: 9,
+                    increment: 1,
+                },
+                {
+                    value: 0,
+                    target: 2020,
+                    interval: 9,
+                    increment: 20,
+                },
+                {
+                    value: 0,
+                    target: 2000,
+                    interval: 10,
+                    increment: 20,
+                },
+                {
+                    value: 0,
+                    target: 2,
+                    interval: 500,
+                    increment: 1,
+                },
+                {
+                    value: 0,
+                    target: 1.15,
+                    interval: 50,
+                    increment: 0.05,
+                },
+                {
+                    value: 0,
+                    target: 1.25,
+                    interval: 50,
+                    increment: 0.05,
+                },
+            ],
+
+            startCounter() {
+                this.counters.forEach((counter, index) => {
+                    let intervalID = setInterval(() => {
+                        if (counter.value < counter.target) {
+                            counter.value += counter.increment;
+                        } else {
+                            clearInterval(intervalID);
+                        }
+                    }, counter.interval);
+                });
+            },
+            resetCounter() {
+                this.counters.forEach((counter, index) => {
+                    counter.value = 0;
+                });
+            },
+        };
+    }
+</script>
+<style>
+    .column.main {
+        background-color: #efeadd;
+    }
+
+    @media screen and (max-width: 409px) {
+        .max-\[409px\]\:text-\[3vw\] {
+            font-size: 3vw;
+        }
+
+        .max-\[409px\]\:text-\[1\.1rem\] {
+            font-size: 1.1rem;
+        }
+    }
+</style>

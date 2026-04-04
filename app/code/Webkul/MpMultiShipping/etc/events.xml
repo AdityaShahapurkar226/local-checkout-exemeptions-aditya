@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMultiShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="mp_order_save_after">
+        <observer name="multiship_sales_order_place_after_observer" instance="Webkul\MpMultiShipping\Observer\SalesOrderPlaceAfterObserver" />
+    </event>
+    <event name="checkout_controller_multishipping_shipping_post">
+        <observer name="multiship_sales_multishipping_shipping_post_observer" instance="Webkul\MpMultiShipping\Observer\MultiAddressShippingPostAfter" />
+    </event>
+</config>

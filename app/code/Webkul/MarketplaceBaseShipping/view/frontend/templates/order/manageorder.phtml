@@ -1,0 +1,40 @@
+<?php
+$order = $block->getOrder();
+if ($block->isOrderCanShip($order) || $block->getRequest()->getParam('shipment_id')) { ?>
+    <?= $block->getChildHtml("shipment_packaging"); ?>
+
+<script>
+    require([
+        "jquery",
+        "Magento_Ui/js/modal/alert",
+        "prototype"
+    ], function(jQuery, alert){
+        window.FORM_KEY = document.getElementsByName("form_key")[0].value;
+        
+        window.toggleCreateLabelCheckbox = function() {
+            var checkbox = $('create_shipping_label');
+            //console.log(checkbox);
+            var submitButton = checkbox.up('.wk-mp-fieldset').select('#mp-create-shipment-btn span')[0];
+            if (checkbox.checked) {
+                //submitButton.innerText += '...';
+                packaging.showWindow();
+            } else {
+                submitButton.innerText = submitButton.innerText.replace(/\.\.\.$/, '');
+            }
+        }
+        jQuery('#create_label').on ('click', function(btn) {
+            packaging.showWindow();
+        });
+        window.validQtyItems = function() {
+            var valid = true;
+            $$('.qty-item').each(function(item) {
+                var val = parseFloat(item.value);
+                if (isNaN(val) || val < 0) {
+                    valid = false;
+                }
+            });
+            return valid;
+        }
+    });
+</script>
+<?php } ?>

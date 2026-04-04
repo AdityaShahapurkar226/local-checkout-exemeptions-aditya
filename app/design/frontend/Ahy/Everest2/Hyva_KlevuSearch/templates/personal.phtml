@@ -1,0 +1,37 @@
+<?php /** @var \Klevu\FrontendJs\Block\Html\Head\InitSessionData $block */ ?>
+<span style="display:none;">
+    <span id="klevu_sessionId"></span>
+    <span id="klevu_loginCustomerGroup"></span>
+    <span id="klevu_loginCustomerEmail"></span>
+    <span id="klevu_shopperIP"></span>
+</span>
+
+<script>
+    var updateKlevuSessionDataElementsFromLocalStorage = function() {
+        var klevuLocalStorage = JSON.parse(window.localStorage.getItem(
+            '<?php /** @noEscape */ echo $block->getLocalStorageKey(); ?>'
+        ) || '{}');
+        var klevuMagentoCustomerDataKey = '<?php /** @noEscape */ echo $block->getCustomerDataKey(); ?>';
+        var klevuLocalStorageCustomerData = klevuLocalStorage.hasOwnProperty(klevuMagentoCustomerDataKey)
+            ? klevuLocalStorage[klevuMagentoCustomerDataKey]
+            : {};
+        document.getElementById('klevu_sessionId').innerText = klevuLocalStorageCustomerData.hasOwnProperty('session_id')
+            ? klevuLocalStorageCustomerData.session_id
+            : '';
+        document.getElementById('klevu_loginCustomerGroup').innerText = klevuLocalStorageCustomerData.hasOwnProperty('customer_group_id')
+            ? klevuLocalStorageCustomerData.customer_group_id
+            : '';
+        document.getElementById('klevu_loginCustomerEmail').innerText = klevuLocalStorageCustomerData.hasOwnProperty('id_code')
+            ? klevuLocalStorageCustomerData.id_code
+            : '';
+        document.getElementById('klevu_shopperIP').innerText = klevuLocalStorageCustomerData.hasOwnProperty('shopper_ip')
+            ? klevuLocalStorageCustomerData.shopper_ip
+            : '';
+    }
+    updateKlevuSessionDataElementsFromLocalStorage();
+
+    document.addEventListener(
+        '<?php /** @noEscape */ echo $block->getCustomerDataLoadedEventName(); ?>',
+        updateKlevuSessionDataElementsFromLocalStorage
+    );
+</script>

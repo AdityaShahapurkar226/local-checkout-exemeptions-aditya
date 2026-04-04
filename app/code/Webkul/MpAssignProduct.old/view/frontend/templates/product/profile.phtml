@@ -1,0 +1,77 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+    $profileId = $block->getProfileId();
+    $productCount = $block->getTotalCount($profileId);
+    $uploadModel = $block->getUploadHelper();
+    $isPartner = $uploadModel->isSeller();
+    $importUrl = $block->getUrl('mpassignproduct/upload/run');
+    $finishUrl = $block->getUrl('mpassignproduct/upload/finish');
+    $postData = $block->getCsvProductData($profileId);
+    $postData['profile_id'] = $profileId;
+    $postData['row'] = 0;
+    $postData['total_row_count'] = $productCount;
+    $data = [
+        "importUrl" => $importUrl,
+        "finishUrl" => $finishUrl,
+        "productCount" => $productCount,
+        "profileId" => $profileId,
+        "deleteLabel" => __("Deleting Profile"),
+        "completeLabel" => __("Completed"),
+        "noProductImportLabel" => __("No Product Imported"),
+        "postData" => $postData
+    ];
+    $data = $block->jsonEncode($data);
+    ?>
+<?php if ($isPartner == 1): ?>
+    <fieldset class="fieldset">
+        <div class="wk-mu-note wk-mu-box">
+            <?= $block->escapeHtml(__("Starting Execution...")); ?>
+        </div>
+        <div class="wk-mu-notice wk-mu-box">
+            <?= $block->escapeHtml(__("Please don't close or refresh the window while importing products.")); ?>
+        </div>
+        <div class="wk-mu-success wk-mu-box">
+            <?= $block->escapeHtml(__("Total %1 Product(s) to import.", $productCount)); ?>
+        </div>
+        <?php if ($productCount > 0): ?>
+            <div class="wk-mu-info-bar">
+                <div class="wk-mu-importing-loader"></div>
+                <div class="wk-mu-info-bar-content">
+                    <?= $block->escapeHtml(__("Importing")); ?>
+                        <span class="wk-current">1</span> of <?= $block->escapeHtml($productCount);?>
+                </div>
+            </div>
+            <div class="wk-mu-progress-bar">
+                <div class="wk-mu-progress-bar-current"></div>
+            </div>
+        <?php else: ?>
+            <div class="wk-mu-note wk-mu-box">
+                <?= $block->escapeHtml(__("No Product to import.")); ?>
+            </div>
+            <div class="wk-mu-note wk-mu-box">
+                <?= $block->escapeHtml(__("Finished Execution.")); ?>
+            </div>
+        <?php endif; ?>
+    </fieldset>
+    <script type="text/x-magento-init">
+        {
+            "body": {
+                "Webkul_MpAssignProduct/js/profile": <?= /* @noEscape */ $data ?>
+            }
+        }
+    </script>
+<?php else: ?>
+    <h2 class="wk-mp-error-msg">
+        <?= $block->escapeHtml(__("To Become Seller Please Contact to Admin.")); ?>
+    </h2>
+<?php endif; ?>

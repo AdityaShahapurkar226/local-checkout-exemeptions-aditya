@@ -1,0 +1,44 @@
+<?php
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+
+$helperBlock = $block->getLayout()->createBlock(\Webkul\MpSellerBuyerCommunication\Block\Helper::class);
+$_helper = $helperBlock->getMpHelper();
+$isPartner= $_helper->isSeller();
+$magentoCurrentUrl = $block->getCurrentUrl();
+$allow_pro_type=$_helper->getAllowedProductType();
+$isSellerGroup = $_helper->isSellerGroupModuleInstalled();
+?>
+<nav data-mage-init='{"Webkul_Marketplace/js/sellerNavigation": {}}' class="wk-mp-menu wk-mp-main">
+    <ul id="wk-mp-nav">
+        <?php
+        if ($isPartner) { ?>
+            <?php if (($isSellerGroup && $_helper->isAllowedAction(
+                'mpsellerbuyercommunication/seller/history'
+            )) || !$isSellerGroup) { ?>
+                <li class="wk-mp-item-customer level-0 
+                    <?= strpos(
+                        $magentoCurrentUrl,
+                        'mpsellerbuyercommunication/seller/history'
+                    )? "current active":"";?>" id="wk-mp-menu-dashboard" >
+                    <a href="<?= $escaper->escapeUrl($block->getUrl(
+                        'mpsellerbuyercommunication/seller/history',
+                        ['_secure' => $block->getRequest()->isSecure()]
+                    )); ?>" class="<?= $escaper->escapeHtml(strpos(
+                        $magentoCurrentUrl,
+                        'mpsellerbuyercommunication/seller/history'
+                    ))? "active":"";?>">
+                        <span><?= $escaper->escapeHtml(__('My Communication History')) ?></span>
+                    </a>
+                </li>
+            <?php } ?>
+        <?php } ?>
+    </ul>
+</nav>

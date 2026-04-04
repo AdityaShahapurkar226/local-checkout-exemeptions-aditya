@@ -1,0 +1,165 @@
+"Add New Sub Account","Add New Sub Account"
+Delete,Delete
+"Are you sure you want to do this?","Are you sure you want to do this?"
+ID,ID
+Name,Name
+Email,Email
+Permissions,Permissions
+Active,Active
+"Account Since","Account Since"
+"Sub Accounts","Sub Accounts"
+"Sub Account Permissions","Sub Account Permissions"
+Back,Back
+Reset,Reset
+"Save and Continue Edit","Save and Continue Edit"
+Save,Save
+"Sub Account was successfully deleted.","Sub Account was successfully deleted."
+"You are not authorized to delete this sub account.","You are not authorized to delete this sub account."
+"Requested sub account doesn't exist","Requested sub account doesn't exist"
+"Edit Sub-Account","Edit Sub-Account"
+"You are not authorized to update this sub account.","You are not authorized to update this sub account."
+"Requested sub account doesn't exist.","Requested sub account doesn't exist."
+"Edit Sub Account with id %1","Edit Sub Account with id %1"
+"New Sub Account","New Sub Account"
+"Seller Sub Accounts","Seller Sub Accounts"
+"Profile information was successfully saved","Profile information was successfully saved"
+"We can't save the customer.","We can't save the customer."
+"Twitterid cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-","Twitterid cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-"
+"Facebookid cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-","Facebookid cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-"
+"Instagram ID cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-","Instagram ID cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-"
+"Google Plus ID cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-","Google Plus ID cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-"
+"Youtube ID cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-","Youtube ID cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-"
+"Vimeo ID cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-","Vimeo ID cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-"
+"Pinterest ID cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-","Pinterest ID cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-"
+"Moleskine ID cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-","Moleskine ID cannot contain space and special characters,
+                        allowed special carecters are @,#,_,-"
+"Tax/VAT Number cannot contain space and special characters","Tax/VAT Number cannot contain space and special characters"
+"Invalid Background Color","Invalid Background Color"
+"A total of %1 record(s) have been deleted.","A total of %1 record(s) have been deleted."
+"Sub Account does not exist.","Sub Account does not exist."
+"Sub Account was successfully created.","Sub Account was successfully created."
+"Customer with this email registered already","Customer with this email registered already"
+"Sub Account was successfully saved.","Sub Account was successfully saved."
+"Seller account does not exist.","Seller account does not exist."
+"Please select valid master seller account.","Please select valid master seller account."
+"Unsupported bookmark action.","Unsupported bookmark action."
+"You are not permitted to cancel this order.","You are not permitted to cancel this order."
+"'We can't send the email order right now. <br>' .","'We can't send the email order right now. <br>' ."
+"The order has been cancelled.","The order has been cancelled."
+"The credit memo's total must be positive.","The credit memo's total must be positive."
+"Cannot create online refund for Refund to Store Credit.","Cannot create online refund for Refund to Store Credit."
+"You created the credit memo.","You created the credit memo."
+"We can't save the credit memo right now.","We can't save the credit memo right now."
+"We can't save the invoice right now.","We can't save the invoice right now."
+"Can not create invoice as order is in HOLD state","Can not create invoice as order is in HOLD state"
+"You can't create an invoice without products.","You can't create an invoice without products."
+"Invoice has been created for this order.","Invoice has been created for this order."
+"Cannot create Invoice for this order.","Cannot create Invoice for this order."
+"There are no printable documents related to selected date range.","There are no printable documents related to selected date range."
+"We can't print the invoice right now.","We can't print the invoice right now."
+"Information was successfully saved","Information was successfully saved"
+"We can't save the shipment right now.","We can't save the shipment right now."
+"Can not create shipment as order is in HOLD state","Can not create shipment as order is in HOLD state"
+"Cannot do shipment for the order separately from invoice.","Cannot do shipment for the order separately from invoice."
+"Cannot do shipment for the order.","Cannot do shipment for the order."
+"The shipment has been created.","The shipment has been created."
+"The shipping label has been created.","The shipping label has been created."
+"We can't print the shipment right now.","We can't print the shipment right now."
+"Marketplace RMA","Marketplace RMA"
+No,No
+Yes,Yes
+"Unable to remove seller sub account with id %1","Unable to remove seller sub account with id %1"
+". '</span>'",". '</span>'"
+"You are not allowed to perform this action.","You are not allowed to perform this action."
+"The URL Rewrite has been saved.","The URL Rewrite has been saved."
+"Payment information was successfully saved","Payment information was successfully saved"
+"Product has been successfully deleted from your account.","Product has been successfully deleted from your account."
+"You are not authorize to delete this product.","You are not authorize to delete this product."
+"You are not authorize to delete products with id(s) %1 .","You are not authorize to delete products with id(s) %1 ."
+"Products are successfully deleted from your account.","Products are successfully deleted from your account."
+"Customer could not be deleted.","Customer could not be deleted."
+"You deleted the customer.","You deleted the customer."
+"A total of %1 record(s) were deleted.","A total of %1 record(s) were deleted."
+"Marketplace Seller Transaction View","Marketplace Seller Transaction View"
+Edit,Edit
+Manage,Manage
+"Select sub seller account permissions list","Select sub seller account permissions list"
+"Your account is disable by Seller","Your account is disable by Seller"
+"Manage Sub-Accounts","Manage Sub-Accounts"
+"Save Sub Account","Save Sub Account"
+"Date Of Birth","Date Of Birth"
+"Address Information","Address Information"
+Address,Address
+"Street Address %1","Street Address %1"
+"Please select a region, state or province.","Please select a region, state or province."
+"Allowed Permissions","Allowed Permissions"
+"Admin didn't select any
+                    permission to seller sub account","Admin didn't select any
+                    permission to seller sub account"
+"To Become Seller Please Contact to Admin.","To Become Seller Please Contact to Admin."
+"Manage Sub Account","Manage Sub Account"
+Settings,Settings
+Menu,Menu
+"Profile Settings","Profile Settings"
+"Go Today","Go Today"
+Close,Close
+" Are you sure you want to edit this sub account? "," Are you sure you want to edit this sub account? "
+" No Checkbox is checked "," No Checkbox is checked "
+" Are you sure you want to delete these sub account(s)? "," Are you sure you want to delete these sub account(s)? "
+" Are you sure you want to delete this sub account? "," Are you sure you want to delete this sub account? "
+Webkul,Webkul
+"Seller Sub Account Settings","Seller Sub Account Settings"
+"General Settings","General Settings"
+"Allow Seller to Manage Sub-Accounts","Allow Seller to Manage Sub-Accounts"
+"Sub Account Permission","Sub Account Permission"
+"Sub Account","Sub Account"
+"Name Prefix","Name Prefix"
+"First Name","First Name"
+"Middle Name/Initial","Middle Name/Initial"
+"Last Name","Last Name"
+"Name Suffix","Name Suffix"
+"Date of Birth","Date of Birth"
+Taxvat,Taxvat
+Gender,Gender
+"Allowed Account Permissions","Allowed Account Permissions"
+Company,Company
+Country,Country
+State/Region,State/Region
+City,City
+"Zip/Postal Code","Zip/Postal Code"
+"Phone Number","Phone Number"
+Fax,Fax
+"VAT Number","VAT Number"
+"Are you sure you wan't to delete selected sub account?","Are you sure you wan't to delete selected sub account?"
+Permission,Permission
+"Vendor Dashboard","Vendor Dashboard"
+"Please check your email %1 for your login details","Please check your email %1 for your login details"
+"Product Information","Product Information"
+"<p>Author: <a target=""_blank"" title=""Webkul Software Private Limited"" href=""https://webkul.com/"">Webkul</a></p>
+                        <p>Version: 5.0.2</p>
+                        <p>User Guide: <a target=""_blank"" href=""https://webkul.com/blog/magento2-multi-vendor-user-accounts-marketplace/"">Click here</a></p>
+                        <p>Store Extension: <a target=""_blank"" href=""https://store.webkul.com/magento2-multi-vendor-sales-rep.html"">Click here</a></p>
+                        <p>Ticket/Customisations: <a target=""_blank"" href=""https://webkul.uvdesk.com/en/customer/create-ticket/"">Click here</a></p>
+                        <p>Services: <a target=""_blank"" href=""https://webkul.com/magento-development/"">Click here</a></p>
+					","<p>Author: <a target=""_blank"" title=""Webkul Software Private Limited"" href=""https://webkul.com/"">Webkul</a></p>
+                        <p>Version: 5.0.2</p>
+                        <p>User Guide: <a target=""_blank"" href=""https://webkul.com/blog/magento2-multi-vendor-user-accounts-marketplace/"">Click here</a></p>
+                        <p>Store Extension: <a target=""_blank"" href=""https://store.webkul.com/magento2-multi-vendor-sales-rep.html"">Click here</a></p>
+                        <p>Ticket/Customisations: <a target=""_blank"" href=""https://webkul.uvdesk.com/en/customer/create-ticket/"">Click here</a></p>
+                        <p>Services: <a target=""_blank"" href=""https://webkul.com/magento-development/"">Click here</a></p>
+					"

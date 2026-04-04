@@ -1,0 +1,270 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpApi
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+ -->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!-- Admin Group -->
+    <route url="/V1/mpapi/admin/sellers" method="GET">
+        <service class="Webkul\MpApi\Api\AdminManagementInterface" method="getSellerListForAdmin"/>
+        <resources>
+            <resource ref="Webkul_MpApi::admin"/>
+        </resources>
+    </route>
+
+    <route url="/V1/mpapi/admin/sellers/:id" method="GET">
+        <service class="Webkul\MpApi\Api\AdminManagementInterface" method="getSellerForAdmin"/>
+        <resources>
+            <resource ref="Webkul_MpApi::admin"/>
+        </resources>
+    </route>
+
+    <route url="/V1/mpapi/admin/sellers/:id/product" method="GET">
+        <service class="Webkul\MpApi\Api\AdminManagementInterface" method="getSellerProducts"/>
+        <resources>
+            <resource ref="Webkul_MpApi::admin"/>
+        </resources>
+    </route>
+
+    <route url="/V1/mpapi/admin/sellers/:id/order" method="GET">
+        <service class="Webkul\MpApi\Api\AdminManagementInterface" method="getSellerSalesList"/>
+        <resources>
+            <resource ref="Webkul_MpApi::admin"/>
+        </resources>
+    </route>
+
+    <route url="/V1/mpapi/admin/sellers/:id/order/sales" method="GET">
+        <service class="Webkul\MpApi\Api\AdminManagementInterface" method="getSellerSalesDetails"/>
+        <resources>
+            <resource ref="Webkul_MpApi::admin"/>
+        </resources>
+    </route>
+
+    <route url="/V1/mpapi/admin/sellers/paytoseller" method="POST">
+        <service class="Webkul\MpApi\Api\AdminManagementInterface" method="payToSeller"/>
+        <resources>
+            <resource ref="Webkul_MpApi::admin"/>
+        </resources>
+    </route>
+
+    <route url="/V1/mpapi/admin/sellers/assign" method="POST">
+        <service class="Webkul\MpApi\Api\AdminManagementInterface" method="assignProduct"/>
+        <resources>
+            <resource ref="Webkul_MpApi::admin"/>
+        </resources>
+    </route>
+
+    <route url="/V1/mpapi/admin/sellers/unassign" method="POST">
+        <service class="Webkul\MpApi\Api\AdminManagementInterface" method="unassignProduct"/>
+        <resources>
+            <resource ref="Webkul_MpApi::admin"/>
+        </resources>
+    </route>
+
+    <!-- Seller Group -->
+
+    <route url="/V1/mpapi/sellers/me" method="GET">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="getSeller"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="id" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/mpapi/sellers/me/product" method="GET">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="getSellerProducts"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="id" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/mpapi/sellers/me/order" method="GET">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="getSellerSalesList"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="id" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/mpapi/sellers/me/order/sales" method="GET">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="getSellerSalesDetails"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="id" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <!-- seller Actions Group -->
+
+    <route url="/V1/mpapi/sellers/me/order/invoice" method="POST">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="createInvoice"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="id" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/mpapi/sellers/me/order/:orderId/invoice/:invoiceId" method="GET">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="viewInvoice"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="id" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/mpapi/sellers/me/order/cancel" method="POST">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="cancelOrder"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="id" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/mpapi/sellers/me/order/creditmemo" method="POST">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="createCreditmemo"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="id" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/mpapi/sellers/me/order/:orderId/creditmemo/:creditmemoId" method="GET">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="viewCreditmemo"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="id" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/mpapi/sellers/me/order/ship" method="POST">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="ship"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="id" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/mpapi/sellers/me/order/:orderId/ship/:shipmentId" method="GET">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="viewShipment"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="id" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/mpapi/sellers/me/mailtoadmin" method="POST">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="mailToAdmin"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="id" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/mpapi/sellers/me/mailtoseller" method="POST">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="mailToSeller"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="id" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/mpapi/sellers/me/becomepartner" method="POST">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="becomePartner"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="id" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/mpapi/sellers/me/addproduct" method="POST">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="saveProduct"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="id" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+
+    <!-- Guest group -->
+    <route url="/V1/mpapi/marketplace" method="GET">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="getLandingPageData"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route url="/V1/mpapi/sellers" method="GET">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="getSellerList"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route url="/V1/mpapi/sellers/:id/reviews" method="GET">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="getSellerReviews"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route url="/V1/mpapi/sellers/reviews" method="POST">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="makeSellerReview"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route url="/V1/mpapi/sellers/:review_id/review" method="GET">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="getReview"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <!-- Seller Create -->
+    <route url="/V1/mpapi/sellers/create" method="POST">
+        <service class="Webkul\MpApi\Api\SellerManagementInterface" method="createAccount"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+</routes>

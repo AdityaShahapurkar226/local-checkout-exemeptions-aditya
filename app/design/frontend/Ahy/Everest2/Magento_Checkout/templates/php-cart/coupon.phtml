@@ -1,0 +1,114 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Magento\Checkout\Block\Cart\Coupon;
+use Magento\Framework\Escaper;
+
+/** @var Coupon $block */
+/** @var Escaper $escaper */
+
+// We should use strlen function because coupon code could be "0", converted to bool will lead to false
+$hasCouponCode = (bool) strlen($block->getCouponCode() ?: "");
+?>
+<script>
+    function initCouponForm() {
+        return {
+            showCouponForm: <?= $hasCouponCode ? 1 : 0 ?>,
+            formData: {
+                coupon_code: '<?= $escaper->escapeJs($block->getCouponCode()) ?>',
+                remove: '<?= (int) $hasCouponCode ?>'
+            },
+            init(){
+                this.showCouponForm = JSON.parse(hyva.getBrowserStorage().getItem('hyva.showCouponForm'))
+            },
+            toggleShowCoupon(){
+                this.showCouponForm = !this.showCouponForm;
+
+                hyva.getBrowserStorage().setItem('hyva.showCouponForm', this.showCouponForm);
+
+                this.$nextTick(() => this.$refs.couponInput.select());
+            }
+        }
+    }
+</script>
+<div class="coupon-form pt-6"
+     x-data="initCouponForm()"
+>
+    <div class="mx-auto md:mx-0">
+        <div class="text-center">
+            <span @click="toggleShowCoupon()"
+                class="cursor-pointer text-primary-lighter select-none whitespace-nowrap"
+                id="discount-form-toggle"
+            >
+                <span class="underline underline-offset-4">
+                    <?= $escaper->escapeHtml(__('Have a Code, Gift Card, or Coupon?')) ?>
+                </span>
+            </span>
+        </div>
+        <div>
+            <form id="discount-coupon-form"
+                  class="my-4 card bg-transparent shadow-none px-0"
+                  x-show="showCouponForm"
+                  x-cloak
+                  action="<?= $escaper->escapeUrl($block->getUrl('checkout/cart/couponPost')) ?>"
+                  method="post"
+                  @submit.prevent="hyva.postCart($event.target)"
+            >
+                <?= $block->getBlockHtml('formkey') ?>
+
+                <div class="fieldset coupon">
+
+                    <input type="hidden" name="remove" id="remove-coupon" value="<?= (int) $hasCouponCode ?>"/>
+
+                    <div class="flex justify-center md:justify-start">
+
+                        <label for="coupon_code" class="label sr-only">
+                            <?= $escaper->escapeHtml(__('Enter discount code')) ?>
+                        </label>
+                        <div class="control w-full">
+                            <input type="text"
+                                   class="form-input disabled:opacity-75 disabled:bg-gray-100 disabled:pointer-events-none focus:ring-transparent rounded-none !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue w-full grow"
+                                   id="coupon_code"
+                                   name="coupon_code"
+                                   value="<?= $escaper->escapeHtmlAttr($block->getCouponCode()) ?>"
+                                   x-model="formData.coupon_code"
+                                   x-ref="couponInput"
+                                   placeholder="<?= $escaper->escapeHtmlAttr(__('Enter discount code')) ?>"
+                                    <?php if ($hasCouponCode): ?>
+                                       disabled="disabled"
+                                    <?php else: ?>
+                                        required
+                                    <?php endif; ?>
+                            />
+                        </div>
+
+                        <div>
+                            <?php if (!$hasCouponCode): ?>
+                            <div class="primary">
+                                <button class="btn border border-ahy-gray transition duration-300 ease-in-out bg-ahy-yellow-card rounded-none focus:ring-transparent hover:bg-ahy-gray h-16 shadow-none text-ahy-blue" type="submit" value="<?= $escaper->escapeHtmlAttr(__('Apply Discount')) ?>">
+                                    <span><?= $escaper->escapeHtml(__('Apply Discount')) ?></span>
+                                </button>
+                            </div>
+                            <?php else: ?>
+                                <div class="primary">
+                                    <button type="submit" class="btn border border-ahy-gray transition duration-300 ease-in-out bg-ahy-yellow-card rounded-none focus:ring-transparent hover:bg-ahy-gray h-16 shadow-none text-ahy-blue "
+                                            value="<?= $escaper->escapeHtmlAttr(__('Cancel Coupon')) ?>">
+                                        <?= $escaper->escapeHtml(__('Cancel Coupon')) ?>
+                                    </button>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

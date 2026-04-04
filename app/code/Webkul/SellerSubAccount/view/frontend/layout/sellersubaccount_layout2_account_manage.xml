@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_SellerSubAccount
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="seller-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    
+    <body>
+        <referenceBlock name="seller.page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">Manage Sub-Accounts</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="seller.content">
+            <block class="Magento\Framework\View\Element\Template" name="sellersubaccount_account_manage" template="Webkul_SellerSubAccount::account/sub_account_manage.phtml" cacheable="false"></block>
+        </referenceContainer>
+        <referenceContainer name="sellersubaccount_account_manage">
+            <uiComponent name="front_sellersubaccount_accounts_list"/>
+        </referenceContainer>
+    </body>
+</page>

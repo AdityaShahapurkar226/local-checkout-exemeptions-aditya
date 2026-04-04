@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Amasty\Mostviewed\Controller\Adminhtml\Product\Mui\Render">
+        <plugin name="Amasty_Mostviewed::save-matched-products" type="Amasty\Mostviewed\Plugin\Mui\Render" />
+    </type>
+
+    <type name="Magento\Sales\Model\ResourceModel\Order\Grid\Collection">
+        <plugin name="Amasty_Mostviewed::join-pack-data" type="Amasty\Mostviewed\Plugin\Sales\Model\ResourceModel\Order\Grid\Collection\JoinPackData" />
+        <plugin name="Amasty_Mostviewed::apply-pack-filters" type="Amasty\Mostviewed\Plugin\Sales\Model\ResourceModel\Order\Grid\Collection\ApplyPackFilters" />
+    </type>
+
+    <type name="Amasty\Mostviewed\Plugin\Sales\Model\ResourceModel\Order\Grid\Collection\ApplyPackFilters">
+        <arguments>
+            <argument name="filterPool" xsi:type="array">
+                <item name="mostviewed_includes_bundles" xsi:type="object">Amasty\Mostviewed\Model\ResourceModel\Pack\Analytic\Sales\OrderFilters\OrderIncludePackFilter</item>
+                <item name="mostviewed_bundles" xsi:type="object">Amasty\Mostviewed\Model\ResourceModel\Pack\Analytic\Sales\OrderFilters\OrderByPackFilter</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Sales\Block\Adminhtml\Order\View\Tab\Info">
+        <plugin name="Amasty_Mostviewed::append-pack-info" type="Amasty\Mostviewed\Plugin\Sales\Block\Adminhtml\Order\View\Tab\Info\AppendPackInfo" />
+    </type>
+
+    <virtualType name="Amasty\Mostviewed\Ui\DataProvider\Pack\Form\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="conditional_discounts" xsi:type="array">
+                    <item name="class" xsi:type="string">Amasty\Mostviewed\Ui\DataProvider\Pack\Form\Modifier\ConditionalDiscounts</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Amasty\Mostviewed\Model\Pack\DataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">Amasty\Mostviewed\Ui\DataProvider\Pack\Form\Modifier\Pool</argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Mostviewed\Model\Backend\Pack\Initialization">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="pack" xsi:type="object">Amasty\Mostviewed\Model\Backend\Pack\Initialization\PackProcessor</item>
+                <item name="store" xsi:type="object">Amasty\Mostviewed\Model\Backend\Pack\Initialization\StoreProcessor</item>
+                <item name="conditional_discounts" xsi:type="object">Amasty\Mostviewed\Model\Backend\Pack\Initialization\ConditionalDiscountProcessor</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Mostviewed\Model\Backend\Pack\Initialization\ConditionalDiscountProcessor">
+        <arguments>
+            <argument name="columnValidators" xsi:type="array">
+                <item name="number_items" xsi:type="array">
+                    <item name="column_name" xsi:type="string">Number of Individual Bundle Items</item>
+                    <item name="validators" xsi:type="array">
+                        <item name="0" xsi:type="object">Amasty\Mostviewed\Model\Backend\Pack\Initialization\ConditionalDiscount\NotEmpty</item>
+                        <item name="1" xsi:type="object">Amasty\Mostviewed\Model\Backend\Pack\Initialization\ConditionalDiscount\GreaterThanOne</item>
+                        <item name="2" xsi:type="object">Amasty\Mostviewed\Model\Backend\Pack\Initialization\ConditionalDiscount\LessThanItemsCount</item>
+                    </item>
+                </item>
+                <item name="discount_amount" xsi:type="array">
+                    <item name="column_name" xsi:type="string">Bundle Discount Amount, %</item>
+                    <item name="validators" xsi:type="array">
+                        <item name="0" xsi:type="object">Amasty\Mostviewed\Model\Backend\Pack\Initialization\ConditionalDiscount\NotEmpty</item>
+                    </item>
+                </item>
+            </argument>
+            <argument name="validators" xsi:type="array">
+                <item name="0" xsi:type="object">Amasty\Mostviewed\Model\Backend\Pack\Initialization\ConditionalDiscount\UniqueNumberField</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

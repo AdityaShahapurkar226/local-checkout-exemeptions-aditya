@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="amasty_mostviewed_analytics_collect_view" instance="Amasty\Mostviewed\Model\Analytics\Collector" method="execute">
+            <schedule>0 * * * *</schedule>
+        </job>
+        <job name="amasty_mostviewed_analytics_clear_temp" instance="Amasty\Mostviewed\Model\Analytics\ClearAnalytic" method="execute">
+            <schedule>5 3 * * 0</schedule>
+        </job>
+        <job name="amasty_mostviewed_build_together_index"
+             instance="Amasty\Mostviewed\Model\Indexer\TogetherCondition\CollectIndexData"
+             method="execute">
+            <schedule>5 * * * *</schedule>
+        </job>
+    </group>
+</config>

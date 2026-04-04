@@ -1,0 +1,22 @@
+.image .product-image-wrapper {
+	height: 125px !important;
+	width: 125px !important;
+	border: none !important;
+}
+
+.gallery .tooltip .delete-tooltiptext {
+	width: 92px !important;
+	left: 28px !important;
+	top: 61px !important;
+}
+
+.image .image-placeholder-text {
+	z-index: 1 !important;
+}
+
+/* *suppress admin panel short description */
+fieldset.admin__field[data-index="container_short_description"] {
+	cursor: not-allowed;
+	pointer-events: none;
+	display: none;
+}

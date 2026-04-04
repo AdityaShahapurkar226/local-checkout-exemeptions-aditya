@@ -1,0 +1,17 @@
+{
+    "name": "printful/module-magento-printful-integration",
+    "description": "Printful Magento 2 Integration",
+    "license": "proprietary",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "autoload": {
+        "files": [ "registration.php" ],
+        "psr-4": {
+            "Printful\\Integration\\": ""
+        }
+    },
+    "require": {
+        "magento/framework": "^2.0.0",
+        "magento/module-integration": "^2.0.0"
+    }
+}

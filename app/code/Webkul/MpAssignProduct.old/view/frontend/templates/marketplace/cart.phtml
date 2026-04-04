@@ -1,0 +1,55 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+    $mpAssignBlock = $block->getLayout()->createBlock(\Webkul\MpAssignProduct\Block\Link::class);
+    $_item = $block->getItem();
+    $product = $_item->getProduct();
+    $helper = $mpAssignBlock->getHelperObject('marketplaceHelper');
+    $_product = $product;
+    $seller_id = '';
+
+    $itemId = $_item->getId();
+    $assignData = $mpAssignBlock->getHelperObject()->getAssignDataByItemId($itemId);
+if ($assignData['assign_id'] == 0) {
+    $marketplaceProduct = $helper->getSellerProductDataByProductId($_product['entity_id']);
+    foreach ($marketplaceProduct as $value) {
+        $seller_id = $value['seller_id'];
+    }
+} else {
+    $seller_id = $assignData['seller_id'];
+}
+if ($seller_id!="") {
+    $rowsocial = $helper->getSellerDataBySellerId($seller_id);
+    $shoptitle = '';
+    $shop_url = '';
+    foreach ($rowsocial as $value) {
+        $shoptitle = $value['shop_title'];
+        $shop_url = $value['shop_url'];
+        if (!$shoptitle) {
+            $shoptitle = $value->getShopUrl();
+        }
+    }
+    ?>
+        <div class="wk-seller-block wk-block" id="mp-wk-block">
+            <div>
+                <span class="wk-block-font-bold-up"><?= /* @noEscape */ __('Sold By')?></span>
+                <span class="wk-block-title-css">
+                    <a 
+                    href="<?= /* @noEscape */ $helper->getRewriteUrl('marketplace/seller/profile/shop/'.$shop_url);?>" 
+                    title="<?= /* @noEscape */ __('Visit Shop') ?>" id="profileconnect">
+                        <?= /* @noEscape */ $shoptitle; ?>
+                    </a>
+                </span>
+            </div>
+        </div>
+    <?php
+} ?>

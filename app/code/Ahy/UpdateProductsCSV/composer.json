@@ -1,0 +1,14 @@
+{
+    "name": "ahy/update-productscsv",
+    "description": "Ahy Update Products through CSV",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ahy\\UpdateProducts\\": "app/code/Ahy/UpdateProductsCSV/"
+        }
+    }
+}

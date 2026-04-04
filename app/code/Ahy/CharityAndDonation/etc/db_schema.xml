@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="sales_order">
+        <column xsi:type="decimal" name="donation_amount" nullable="true" comment="Donation Amount"/>
+        <column xsi:type="boolean" name="hasDonationAppliedFlag" nullable="true" default="0" comment="Has Donation Applied Flag"/>
+    </table>
+    <table name="quote">
+        <column xsi:type="decimal" name="donation_amount" nullable="true" comment="Donation Amount"/>
+        <column xsi:type="boolean" name="hasDonationAppliedFlag" nullable="true" default="0" comment="Has Donation Applied Flag"/>
+    </table>
+</schema>

@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<node>
+	<product>
+		<status>1</status>
+		<category>Men,Women</category>
+		<attribute_mapping_category>Men</attribute_mapping_category>
+		<name>test</name>
+		<description>Downloadable1</description>
+		<short_description>Downloadable1</short_description>
+		<sku>test_download</sku>
+		<price>90</price>
+    <special_price>70</special_price>
+    <special_from_date>2015-05-21</special_from_date>
+    <special_to_date>2016-05-25</special_to_date>
+		<tax_class_id>none</tax_class_id>
+		<is_in_stock>In stock</is_in_stock>
+		<stock>90</stock>
+		<images>1.jpg</images>
+    <meta_title>test title</meta_title>
+    <meta_keyword>test keyword</meta_keyword>
+    <meta_description>test description</meta_description>
+		<links_title>Links</links_title>
+		<links_purchased_separately>yes</links_purchased_separately>
+		<downloadable_link_title>link1,link2</downloadable_link_title>
+		<downloadable_link_price>10,20</downloadable_link_price>
+		<downloadable_link_type>file,file</downloadable_link_type>
+		<downloadable_link_file>file.pdf,sample.pdf</downloadable_link_file>
+		<downloadable_link_sample_type>file,file</downloadable_link_sample_type>
+		<downloadable_link_sample>file.pdf,sample.pdf</downloadable_link_sample>
+		<downloadable_link_is_sharable>Use Config,Use config</downloadable_link_is_sharable>
+		<downloadable_link_is_unlimited>yes,no</downloadable_link_is_unlimited>
+		<downloadable_link_number_of_downloads>0,5</downloadable_link_number_of_downloads>
+		<samples_title>Samples</samples_title>
+		<downloadable_sample_title>Sample1,Sample2</downloadable_sample_title>
+		<downloadable_sample_file>sample1.png,sample2.pdf</downloadable_sample_file>
+		<downloadable_sample_type>file,file</downloadable_sample_type>
+		<color>Red</color><!-- create a separate tag for each custom attribute -->
+    <custom_option>[
+  {
+    "is_require": 1,
+    "title": "Color",
+    "type": "drop_down",
+    "sort_order": 0,
+    "sku": "co01",
+    "values": [
+ {"title":"cream", "price": 50,
+        "price_type": "fixed","sku":"co011","sort_order": 5},{"title":"cream1", "price": 50,
+        "price_type": "fixed","sku":"co012","sort_order": 5}  ]
+  }, {
+    "is_require": 1,
+    "title": "Color2",
+    "type": "drop_down",
+    "sort_order": 0,
+    "sku": "co02",
+    "values": [
+ {"title":"cream", "price": 50,
+        "price_type": "fixed","sku":"co021","sort_order": 5},{"title":"cream1", "price": 50,
+        "price_type": "fixed","sku":"co022","sort_order": 5}  ]
+  }]</custom_option>
+    <tier_price>
+        [
+    {
+      "cust_group": "ALL GROUPS",
+      "price_qty": "2",
+      "price": "10"
+    }, {
+      "cust_group":"Wholesale" ,
+      "price_qty": "10",
+      "price": "40"
+    }]
+    </tier_price>
+    <related_skus></related_skus>
+    <crosssell_skus></crosssell_skus>
+    <upsell_skus></upsell_skus>
+    <seller_id></seller_id>
+	</product>
+</node>

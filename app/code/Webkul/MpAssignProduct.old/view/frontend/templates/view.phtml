@@ -1,0 +1,94 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+    $helper = $block->getHelperObject();
+    $queryString = $helper->getEscaper($helper->getQueryString());
+    $isPartner = $block->getHelperObject("marketplaceHelper")->isSeller();
+    $collection = $block->getAllProducts();
+?>
+<?php if ($isPartner == 1): ?>
+    <div class="wk-profile-alert">
+        <span>
+        <?= /* @noEscape */ __('Assign product is available for Simple, Configurable and Virtual type products.');?>
+        </span>
+    </div>
+    <form method="get" 
+    action="<?= /* @noEscape */ $block->getUrl('mpassignproduct/product/view'); ?>" 
+    id="wk_mpassignproduct_form" enctype="multipart/form-data" data-mage-init='{"validation":{}}'>
+        <fieldset class="fieldset">
+            <?= /* @noEscape */ $block->getFormKeyBlockHtml(); ?>
+            <legend class="legend">
+                <span><?= /* @noEscape */ __("Assign Product"); ?></span>
+            </legend>
+            <div class="field required">
+                <label for="attribute_set" class="label">
+                    <span><?= /* @noEscape */ __("Search For Product"); ?></span>
+                </label>
+                <div class="control">
+                    <input value="<?= /* @noEscape */ $queryString; ?>" type="text" 
+                    data-validate="{required:true}" class="input-text required-entry" 
+                    title="query" name="query" id="query" aria-required="true">
+                    <button class="button wk-ap-btn" type="submit">
+                        <span><span><?= /* @noEscape */ __("Search"); ?></span></span>
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <?php if ($collection->getSize()): ?>
+        <fieldset class="fieldset wk-ap-fieldset">
+            <table class="data table wk-table-product-list">
+                <thead>
+                    <th><?= $block->escapeHtml(__("Image")); ?></th>
+                    <th><?= $block->escapeHtml(__("Name")); ?></th>
+                    <th><?= $block->escapeHtml(__("Price")); ?></th>
+                    <th><?= $block->escapeHtml(__("Action")); ?></th>
+                </thead>
+                <?php foreach ($collection as $product): ?>
+                    <tr>
+                        <td class="col wk-ap-img-col">
+                            <img src="<?= $block->escapeUrl($block->getProductImage($product)); ?>" />
+                        </td>
+                        <td class="col">
+                            <?= $block->escapeHtml($product->getName()); ?>
+                        </td>
+                        <td class="col">
+                            <?= $block->escapeHtml($block->getFormatedPrice($product->getFinalPrice())); ?>
+                        </td>
+                        <td class="col wk-ap-btn-col">
+                            <a href="<?= $block->escapeUrl($block->getAddProductPageUrl($product->getId())); ?>
+                            ">
+                                <button class="button wk-ap-btn">
+                                <span><span>
+                                <?= /* @noEscape */ __("Sell Yours"); ?>
+                                </span></span>
+                                </button>
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+        </fieldset>
+    <?php elseif ($block->getRequest()->getParam('query')!= ''): ?>
+        <br>
+        <div class="wk-profile-alert">
+            <?= /* @noEscape */ __("No Product Found"); ?>
+        </div>
+<?php endif; ?>
+    <?php if ($block->getPagerHtml()): ?>
+        <div class="order-products-toolbar toolbar bottom"><?= /* @noEscape */ $block->getPagerHtml(); ?></div>
+    <?php endif ?>
+<?php else: ?>
+    <h2 class="wk-mp-error-msg">
+        <?= /* @noEscape */ __("To Become Seller Please Contact to Admin."); ?>
+    </h2>
+<?php endif; ?>

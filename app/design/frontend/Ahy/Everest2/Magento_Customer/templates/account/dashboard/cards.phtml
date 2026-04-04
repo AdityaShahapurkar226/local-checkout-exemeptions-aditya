@@ -1,0 +1,306 @@
+<?php
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Ahy\Authorizenet\ViewModel\CustomerVaultCards;
+use Magento\Framework\Escaper;
+use Ahy\Authorizenet\ViewModel\CustomerAddressHelper;
+
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+/** @var CustomerVaultCards $vaultCards */
+$vaultCards = $viewModels->require(CustomerVaultCards::class);
+
+/** @var \Ahy\SavedCC\ViewModel\ConfigProvider $savedCcConfig */
+$savedCcConfig = $viewModels->require(\Ahy\SavedCC\ViewModel\ConfigProvider::class);
+
+if (!$savedCcConfig->isEnabled()) {
+    return; // do not render anything
+}
+
+$tokens = $vaultCards->getAllVisibleCustomerTokens();
+$currentYear = (int) date('Y');
+$currentMonth = (int) date('m');
+
+$activeTokens = [];
+$expiredTokens = [];
+
+/**
+ * Normalize card type from raw gateway format to readable and mappable format
+ */
+function normalizeCardType(string $rawType): string
+{
+    $map = [
+        'VISA' => 'Visa',
+        'MASTERCARD' => 'Mastercard',
+        'AMEX' => 'American Express',
+        'AMERICANEXPRESS' => 'American Express', // Added for no-space variant
+        'AMERICAN EXPRESS' => 'American Express',
+        'DISCOVER' => 'Discover',
+        'JCB' => 'JCB',
+        'DINERSCLUB' => 'Diners Club/ Carte Blanche', // No-space variant
+        'DINERS CLUB' => 'Diners Club/ Carte Blanche',
+        'DINERS CLUB/ CARTE BLANCHE' => 'Diners Club/ Carte Blanche',
+    ];
+
+    // Normalize: remove spaces, slashes, make uppercase
+    $key = strtoupper(preg_replace('/[^A-Z]/', '', $rawType));
+    return $map[$key] ?? 'Unknown';
+}
+// Short label map
+function normalizeCardShortName(string $rawType): string
+{
+    $map = [
+        'VISA' => 'VISA',
+        'MASTERCARD' => 'MASTERCARD',
+        'AMEX' => 'AMEX',
+        'AMERICANEXPRESS' => 'AMEX',
+        'AMERICAN EXPRESS' => 'AMEX',
+        'DISCOVER' => 'DISCOVER',
+        'JCB' => 'JCB',
+        'DINERSCLUB' => 'DINERS CLUB',
+        'DINERS CLUB' => 'DINERS CLUB',
+        'DINERS CLUB/ CARTE BLANCHE' => 'DINERS CLUB',
+    ];
+    $key = strtoupper(preg_replace('/[^A-Z]/', '', $rawType));
+    return $map[$key] ?? $rawType;
+}
+
+/**
+ * Get logo URL for card type
+ */
+function getCardLogoUrl(string $cardType): string
+{
+    $map = [
+        'Visa' => '/media/icons/visa.svg',
+        'Mastercard' => '/media/icons/mastercard.svg',
+        'American Express' => '/media/icons/amex.svg',
+        'Discover' => '/media/icons/discover.svg',
+        'JCB' => '/media/icons/jcb.svg',
+        'Diners Club/ Carte Blanche' => '/media/icons/diners.svg',
+        'Unknown' => '/media/icons/unknown-code.svg',
+    ];
+    return $map[$cardType] ?? $map['Unknown'];
+}
+
+foreach ($tokens as $token) {
+    $details = $vaultCards->getCardDetails($token);
+    $expDate = DateTime::createFromFormat('m/Y', $details['expirationDate'] ?? '00/0000');
+    $isExpired = $expDate < new DateTime('first day of this month');
+
+    $entry = [
+        'token' => $token,
+        'details' => $details,
+        'expDate' => $expDate,
+    ];
+
+    if ($isExpired) {
+        $expiredTokens[] = $entry;
+    } else {
+        $activeTokens[] = $entry;
+    }
+}
+
+$sortedTokens = array_merge($activeTokens, $expiredTokens);
+?>
+
+<div class="block block-dashboard-card">
+    <div class="block-title mb-6 mt-12 flex justify-between items-start bg-ahy-bg border-b border-ahy-yellow-card pb-4 flex-col">
+        <p class="text-2xl block font-extrabold text-ahy-blue mb-2"><?= $escaper->escapeHtml(__('Saved Payment Methods')) ?></p>
+        <p class="text-sm font-normal block text-red-600 italic">
+            <sup>*</sup><?= $escaper->escapeHtml(__('You can save up to 10 cards to your account.')) ?>
+        </p>
+    </div>
+    <div class="block-content p-6 pt-0 bg-ahy-yellow-card card border rounded-xl shadow-lg">
+        <?php if (count($sortedTokens)): ?>
+            <?php foreach ($sortedTokens as $entry): ?>
+                <?php
+                $token = $entry['token'];
+                $details = $entry['details'];
+                $expDate = $entry['expDate'];
+
+                $tokenId = (int) $token->getEntityId();
+                $expMonth = (int) $expDate->format('m');
+                $expYear = (int) $expDate->format('Y');
+                $isExpiringThisMonth = $expMonth === $currentMonth && $expYear === $currentYear;
+                $isExpired = $expDate < new DateTime('first day of this month');
+
+                $rawType = $details['type'] ?? 'Unknown';
+                $normalizedType = normalizeCardType($rawType);
+                $cardLogo = getCardLogoUrl($normalizedType);
+                ?>
+                <div
+                    class="p-4 rounded-xl bg-white mt-6 <?= $isExpiringThisMonth ? 'border-2 border-red-600' : 'border border-gray-300' ?>"
+                    x-data="{
+                        showEditModal<?= $tokenId ?>: false,
+                        showDeleteModal<?= $tokenId ?>: false,
+                        lockScroll() { document.body.classList.add('overflow-hidden'); },
+                        unlockScroll() { document.body.classList.remove('overflow-hidden'); }
+                    }">
+
+                    <p class="flex items-center gap-2 text-ahy-blue">
+                        <strong><?= $escaper->escapeHtml(__('Card Type:')) ?></strong>
+                        <img src="<?= $escaper->escapeUrl($cardLogo) ?>"
+                            alt="<?= $escaper->escapeHtmlAttr($normalizedType) ?>"
+                            class="w-8 h-6 inline-block" />
+                        <?= $escaper->escapeHtml(normalizeCardShortName($rawType)) ?>
+                    </p>
+                    <p class="text-ahy-blue">
+                        <strong><?= $escaper->escapeHtml(__('Card Number:')) ?></strong>
+                        **** **** **** <?= $escaper->escapeHtml($details['maskedCC']) ?>
+                    </p>
+                    <p class="text-ahy-blue">
+                        <strong><?= $escaper->escapeHtml(__('Expiration Date:')) ?></strong>
+                        <?= $escaper->escapeHtml($details['expirationDate']) ?>
+                    </p>
+
+                    <?php if ($isExpiringThisMonth): ?>
+                        <p class="text-red-600 font-semibold mt-2"><?= $escaper->escapeHtml(__('This card will expire this month.')) ?></p>
+                    <?php endif; ?>
+
+                    <?php if ($isExpired): ?>
+                        <p class="text-red-600 font-semibold mt-2"><?= $escaper->escapeHtml(__('This card has expired.')) ?></p>
+                    <?php endif; ?>
+
+                    <div class="mt-4 flex gap-6">
+                        <?php if (!$isExpired): ?>
+                            <a
+                                @click.prevent="showEditModal<?= $tokenId ?> = true; lockScroll()"
+                                class="inline-flex items-center text-sm text-ahy-blue hover:text-ahy-blue-light cursor-pointer">
+                                <?= $escaper->escapeHtml(__('Edit')) ?>
+                                <?= $heroicons->arrowRightHtml('ml-2', 14, 14); ?>
+                            </a>
+                        <?php endif; ?>
+
+                        <button
+                            @click.prevent="showDeleteModal<?= $tokenId ?> = true; lockScroll()"
+                            type="button"
+                            class="inline-flex items-center text-sm text-red-600 hover:text-red-800">
+                            <?= $escaper->escapeHtml(__('Delete')) ?>
+                            <?= $heroicons->trashHtml('ml-2', 14, 14); ?>
+                        </button>
+                    </div>
+
+                    <!-- Edit Modal -->
+                    <?php if (!$isExpired): ?>
+                        <div
+                            x-show="showEditModal<?= $tokenId ?>"
+                            x-transition
+                            x-cloak
+                            @keydown.window.escape="showEditModal<?= $tokenId ?> = false; unlockScroll()"
+                            x-init="$watch('showEditModal<?= $tokenId ?>', value => { if (!value) unlockScroll() })"
+                            class="fixed inset-0 z-50 flex items-center justify-center px-4 py-6 bg-white/30 backdrop-blur-sm">
+                            <div
+                                @click.away="showEditModal<?= $tokenId ?> = false; unlockScroll()"
+                                class="bg-ahy-yellow-card rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-auto p-6 relative">
+                                <button
+                                    @click="showEditModal<?= $tokenId ?> = false; unlockScroll()"
+                                    class="absolute top-4 right-4 text-gray-500 hover:text-red-500 transition"
+                                    aria-label="Close">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                                <?php
+                                $editModalBlock = $block->getLayout()->createBlock(\Magento\Framework\View\Element\Template::class);
+                                $editModalBlock->setTemplate('Ahy_Authorizenet::inter-card.phtml');
+                                $editModalBlock->setData('token', $token);
+                                $editModalBlock->setData('details', $details);
+                                $editModalBlock->setData('address_helper', $viewModels->require(CustomerAddressHelper::class));
+                                echo $editModalBlock->toHtml();
+                                ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Delete Modal -->
+                    <div
+                        x-show="showDeleteModal<?= $tokenId ?>"
+                        x-transition
+                        x-cloak
+                        @keydown.window.escape="showDeleteModal<?= $tokenId ?> = false; unlockScroll()"
+                        x-init="$watch('showDeleteModal<?= $tokenId ?>', value => { if (!value) unlockScroll() })"
+                        class="fixed inset-0 z-50 flex items-center justify-center px-4 py-6 bg-white/30 backdrop-blur-sm">
+                        <div
+                            @click.away="showDeleteModal<?= $tokenId ?> = false; unlockScroll()"
+                            class="bg-ahy-yellow-card rounded-xl shadow-lg p-6 w-full max-w-md">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4"><?= $escaper->escapeHtml(__('Confirm Delete')) ?></h2>
+                            <p class="text-gray-600 mb-6"><?= $escaper->escapeHtml(__('Are you sure you want to delete this card? This action cannot be undone.')) ?></p>
+                            <div class="flex justify-end gap-4">
+                                <button
+                                    @click="showDeleteModal<?= $tokenId ?> = false; unlockScroll()"
+                                    type="button"
+                                    class="text-gray-600 hover:text-gray-800 px-4 py-2">
+                                    <?= $escaper->escapeHtml(__('Cancel')) ?>
+                                </button>
+
+                                <form method="POST" action="<?= $escaper->escapeUrl($block->getUrl('customer/account/deleteSavedCard')) ?>">
+                                    <input type="hidden" name="form_key" value="<?= $escaper->escapeHtml($block->getFormKey()) ?>" />
+                                    <input type="hidden" name="vault_token_id" value="<?= $tokenId ?>" />
+                                    <input type="hidden" name="payment_profile_id" value="<?= $escaper->escapeHtmlAttr($token->getGatewayToken()) ?>" />
+                                    <button
+                                        type="submit"
+                                        class="bg-ahy-red text-white font-bold text-sm hover:bg-ahy-red-light px-4 py-2 rounded">
+                                        <?= $escaper->escapeHtml(__('Delete')) ?>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="text-gray-600 pt-6"><?= $escaper->escapeHtml(__('No saved credit cards found.')) ?></p>
+        <?php endif; ?>
+    </div>
+</div>
+
+<div class="mt-6" x-data="{
+    showModal: false,
+    lockScroll() {
+        document.body.classList.add('overflow-hidden');
+    },
+    unlockScroll() {
+        document.body.classList.remove('overflow-hidden');
+    }
+}">
+    <a
+        @click.prevent="showModal = true; lockScroll()"
+        class="inline-flex items-center text-ahy-blue hover:text-ahy-blue-light cursor-pointer text-lg">
+        <?= $escaper->escapeHtml(__('Add New Card')) ?>
+        <?= $heroicons->plusCircleHtml('ml-2', 18, 18); ?>
+    </a>
+
+    <!-- Modal Overlay -->
+    <div
+        x-show="showModal"
+        x-transition
+        x-cloak
+        @keydown.window.escape="showModal = false; unlockScroll()"
+        x-init="$watch('showModal', value => { if (!value) unlockScroll() })"
+        class="fixed inset-0 z-50 flex items-center justify-center px-4 py-6 bg-white/30 backdrop-blur-sm address-form-wrapper">
+        <div
+            @click.away="showModal = false; unlockScroll()"
+            class="bg-ahy-yellow-card rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-auto p-6 relative max-height-modal">
+            <button
+                @click="showModal = false; unlockScroll()"
+                class="absolute top-4 right-4 text-gray-500 hover:text-red-500 transition"
+                aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <?php
+            /** @var \Magento\Framework\View\Element\Template $modalBlock */
+            $modalBlock = $block->getLayout()->createBlock(\Magento\Framework\View\Element\Template::class);
+            $modalBlock->setTemplate('Ahy_Authorizenet::inter-new-card.phtml');
+            $modalBlock->setData('address_helper', $viewModels->require(CustomerAddressHelper::class));
+            echo $modalBlock->toHtml();
+            ?>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+{
+    "name": "ahy/module-delete-elasticsearch",
+    "description": "Magento 2 module to delete Elasticsearch indices periodically.",
+    "authors": [
+        {
+            "name": "Mage2Gen",
+            "email": "info@mage2gen.com"
+        },
+        {
+            "name": "Afzal Sayed",
+            "email": "afzal.sayed04@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "magento/framework": ">=103.0.0"
+    },
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ahy\\DeleteElasticsearch\\": ""
+        }
+    }
+}

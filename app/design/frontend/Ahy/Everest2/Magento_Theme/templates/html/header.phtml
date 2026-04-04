@@ -1,0 +1,336 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Ahy\ThemeCustomization\Helper\Session;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+/** @var Session $_helper */
+$_helper = $this->helper('Ahy\ThemeCustomization\Helper\Session');
+
+/** @var Hyva\Theme\ViewModel\StoreConfig $storeConfig */
+$storeConfig = $viewModels->require(Hyva\Theme\ViewModel\StoreConfig::class);
+$showMiniCart = $storeConfig->getStoreConfig(\Magento\Checkout\Block\Cart\Sidebar::XML_PATH_CHECKOUT_SIDEBAR_DISPLAY);
+?>
+<script>
+    function initHeader () {
+        return {
+            searchOpen: false,
+            isHovering: false,
+            cart: {},
+            getData(data) {
+                if (data.cart) { this.cart = data.cart }
+            }
+        }
+    }
+    function initCompareHeader() {
+        return {
+            compareProducts: null,
+            itemCount: 0,
+            receiveCompareData(data) {
+                if (data['compare-products']) {
+                    this.compareProducts = data['compare-products'];
+                    this.itemCount = this.compareProducts.count;
+                }
+            }
+        }
+    }
+</script>
+
+<div x-on:resize.window="isMobile = (window.innerWidth < 1024) ? true : false" x-data="{isMobile: (window.innerWidth < 1024) ? true : false}" class="min-h-[161px] h-auto lg:h-[174px]">
+    <template x-if="isMobile">
+        <section class="ahy-header">
+            <div class="pre-header flex justify-center bg-ahy-blue text-white text-xs">
+                <span class="p-3 text-center"><?= __("EVEREST.COM IS AN OUTDOOR GEAR MARKETPLACE SUPPORTING 1,000'S OF SELLERS - SHOP TODAY AND SAVE!") ?></span>
+            </div>
+            <div id="header"
+                class="relative z-40 w-full bg-ahy-bg"
+                x-data="initHeader()"
+                @keydown.window.escape="searchOpen = false;"
+                @private-content-loaded.window="getData(event.detail.data)"
+            >
+                <div class="container flex justify-between flex-wrap items-center w-full px-6 py-3 mx-auto mt-0">
+                    <div x-on:resize.window="isMobile = (window.innerWidth < 1024) ? true : false" class="" x-data="{isMobile: (window.innerWidth < 1024) ? true : false}">
+                        <template x-if="isMobile">
+                        <div class="flex">
+                            <!--Logo-->
+                            <?= $block->getChildHtml('logo'); ?>
+                            <!--Main Navigation-->
+                            <?= $block->getChildHtml('topmenu') ?>
+                        </div>
+                        </template>
+                    </div>
+
+                    <div class="lg:hidden order-3 flex items-center">
+                        <!-- Free gift mobile -->
+                        <div class="free-gift-button flex lg:hidden opacity-0 order-3 mr-2">
+                            <a href="#"><button class="rounded-full font-semibold text-[11px] w-24 h-8 border-red-500 border-2 hover:border-3 hover:border-[#ff4545] text-ahy-blue bg-ahy-bg"><?= __('FREE GIFT') ?></button></a>
+                        </div>
+                        <style>
+                            @media screen and (max-width: 367px) {
+                                .ahy-hamburger-icon-mobile{
+                                    padding: 0.75rem !important;
+                                }
+                                #header #menu-cart-icon #Layer_1{
+                                    width: 1.5rem !important;
+                                    height: 1.5rem !important;
+                                }
+                            }
+                            @media screen and (max-width: 347px) {
+                                .ahy-logo-small-mobile{
+                                    width: 6rem !important;
+                                }
+                            }
+                        </style>
+                        <!--Cart Icon mobile-->
+                        <a id="menu-cart-icon"
+                            <?php if ($showMiniCart): ?>@click.prevent.stop="$dispatch('toggle-cart',{});"<?php endif ?>
+                            class="relative inline-block lg:hidden order-3 no-underline sm:ml-4 hover:text-black"
+                            href="<?= $escaper->escapeUrl($block->getUrl('checkout/cart/index')) ?>"
+                        >
+                            <span class="sr-only label">
+                                <?= $escaper->escapeHtml(__('Cart')) ?>
+                            </span>
+                            <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 hover:text-black" viewBox="0 0 30.61 25.71"><defs><style>.cls-1,.cls-2{fill:none !important;stroke:#0d2f47;stroke-width:1.5px;}.cls-1{stroke-linecap:round;stroke-linejoin:round;}.cls-2{stroke-miterlimit:10;}</style></defs><polyline class="cls-1" points="0.75 0.75 5.51 0.75 10.82 15.88 25.24 15.88 29.86 3.3 10.84 3.3"/><circle class="cls-2" cx="11.98" cy="22.46" r="2.5"/><circle class="cls-2" cx="24.48" cy="22.46" r="2.5"/></svg>
+                            <?php /* $heroicons->shoppingCartHtml(
+                                "w-8 h-8 hover:text-black",
+                                25,
+                                25
+                            ) */ ?>
+                            <span x-text="cart.summary_count"
+                                    class="absolute top-0 right-0 hidden h-5 px-2 py-1 -mt-5 -mr-4 text-xs font-semibold
+                                    leading-none text-center text-white uppercase transform -translate-x-1
+                                    translate-y-1/2 rounded-full bg-red-500"
+                                    :class="{
+                                    'hidden': !cart.summary_count,
+                                    'block': cart.summary_count }"
+                            ></span>
+                            <div x-show="isHovering && cart.summary_count === 0" class="absolute bg-white border rounded-md shadow-md p-4 mt-2.5 text-center top-full z-10 right-0 w-[300px]">
+                                Your cart is empty
+                            </div>
+                        </a>
+                        <!--Cart Icon mobile end -->
+                    </div>
+                    <div x-on:resize.window="isMobile = (window.innerWidth < 1024) ? true : false" class="order-4 w-full" x-data="{isMobile: (window.innerWidth < 1024) ? true : false}">
+                        <template x-if="isMobile">
+                            <!--Search Icon mobile-->
+                            <div class="relative z-10 w-full lg:hidden order-4 block drop-shadow-xl" id="search-content">
+                                <?= $block->getChildHtml('header-search'); ?>
+                                <div class="absolute inset-y-0 right-0 pr-6 flex items-center">
+                                    <button id="menu-search-icon"
+                                        class="inline-block no-underline hover:text-black"
+                                        @click.prevent="
+                                            searchOpen = !searchOpen;
+                                            $nextTick(() => {
+                                            const searchInput = document.querySelector('#search');
+                                            searchInput.focus();
+                                            searchInput.select();
+                                        });
+                                        "
+                                    >
+                                    <span class="sr-only label">
+                                        <?= $escaper->escapeHtml(__('Search')) ?>
+                                    </span>
+
+                                    <span class="pr-2 pl-3 bg-[url('/media/icons/mag-icon.svg')] bg-contain bg-no-repeat bg-center"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                    <!-- Desktop order -->
+                    <div class="flex items-center justify-between order-3 w-[80%] xl:w-[84%] 2xl:w-[87%]">
+                        <div x-on:resize.window="isDesktop = (window.innerWidth >= 1024) ? true : false" class="w-auto lg:w-4/12 xl:w-[45%] 2xl:w-[50%]" x-data="{isDesktop: (window.innerWidth >= 1024) ? true : false}">
+                            <template x-if="isDesktop">
+                                <!--Search Icon-->
+                                <div class="relative block drop-shadow-xl ml-4 xl:ml-6" id="search-content">
+                                    <?= $block->getChildHtml('header-search'); ?>
+                                    <div class="absolute inset-y-0 right-0 pr-6 flex items-center">
+                                        <button id="menu-search-icon"
+                                            class="inline-block no-underline hover:text-black"
+                                            @click.prevent="
+                                                searchOpen = !searchOpen;
+                                                $nextTick(() => {
+                                                const searchInput = document.querySelector('#search');
+                                                searchInput.focus();
+                                                searchInput.select();
+                                            });
+                                            "
+                                        >
+                                        <span class="sr-only label">
+                                            <?= $escaper->escapeHtml(__('Search')) ?>
+                                        </span>
+
+                                        <span class="pr-2 pl-3 bg-[url('/media/icons/mag-icon.svg')] bg-contain bg-no-repeat bg-center"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                        <!-- Free gift -->
+                        <div class="free-gift-button hidden lg:flex border-transparent opacity-0" >
+                            <button class="hover:border-3 text-ahy-blue bg-ahy-bg h-9 w-32 rounded-full border-2 border-red-500 text-xs font-medium hover:border-[#ff4545]"><a href="#"><?= __('FREE GIFT') ?></a></button>
+                        </div>
+
+                        <!-- Contact Us -->
+                        <div class="contact-us hidden lg:flex items-center ">
+                            <div class="contact-us-header-icon p-5 text-white rounded-full mr-2 bg-[url('/media/icons/contact-us-icon.png')] bg-cover bg-center text-ahy-blue">
+                            </div>
+                            <div class="contact-us-header-content text-ahy-blue">
+                                <p class="font-normal text-sm"><?= __('Need Help?') ?></p>
+                                <a href="/contact"><span class="font-extrabold text-ahy-blue xl:text-lg lg:text-md"><?= __('Contact us') ?></span></a>
+                            </div>
+                        </div>
+
+                        <!--Customer Icon & Dropdown-->
+                        <?= $block->getChildHtml('customer') ?>
+                    </div>
+                </div>
+
+                <!--Cart Drawer-->
+                <?= $block->getChildHtml('cart-drawer'); ?>
+
+                <!--Authentication Pop-Up-->
+                <?= $block->getChildHtml('authentication-popup'); ?>
+            </div>
+        </section>
+    </template>
+    <template x-if="!isMobile">
+        <section class="ahy-header desktop">
+            <div class="pre-header flex justify-center bg-ahy-blue text-white">
+                <span class="py-3 text-center"><?= __("EVEREST.COM IS AN OUTDOOR GEAR MARKETPLACE SUPPORTING 1,000'S OF SELLERS - SHOP TODAY AND SAVE!") ?></span>
+            </div>
+            <div id="header"
+                class="relative z-40 w-full bg-ahy-bg"
+                x-data="initHeader()"
+                @keydown.window.escape="searchOpen = false;"
+                @private-content-loaded.window="getData(event.detail.data)"
+            >
+                <div class="container flex justify-between flex-wrap items-center w-full px-6 pt-3 mx-auto mt-0">
+                    <!--Logo-->
+                    <?= $block->getChildHtml('logo'); ?>
+                    <!-- Desktop order -->
+                    <div class="flex items-center justify-between order-3 w-[81%] xl:w-[84%]">
+                        <div x-on:resize.window="isDesktop = (window.innerWidth >= 1024) ? true : false" class="w-auto lg:w-4/12 xl:w-[45%] 2xl:w-[50%]" x-data="{isDesktop: (window.innerWidth >= 1024) ? true : false}">
+                            <template x-if="isDesktop">
+                                <!--Search Icon-->
+                                <div class="relative block drop-shadow-xl ml-4 xl:ml-6" id="search-content">
+                                    <?= $block->getChildHtml('header-search'); ?>
+                                    <div class="absolute inset-y-0 right-0 pr-6 flex items-center">
+                                        <button id="menu-search-icon"
+                                            class="inline-block no-underline hover:text-black"
+                                            @click.prevent="
+                                                searchOpen = !searchOpen;
+                                                $nextTick(() => {
+                                                const searchInput = document.querySelector('#search');
+                                                searchInput.focus();
+                                                searchInput.select();
+                                            });
+                                            "
+                                        >
+                                        <span class="sr-only label">
+                                            <?= $escaper->escapeHtml(__('Search')) ?>
+                                        </span>
+
+                                        <span class="pr-2 pl-3 bg-[url('/media/icons/mag-icon.svg')] bg-contain bg-no-repeat bg-center"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                        <!-- Free gift -->
+                        <div class="free-gift-button hidden lg:flex border-transparent opacity-0" >
+                            <button class="hover:border-3 text-ahy-blue bg-ahy-bg h-9 w-32 rounded-full border-2 border-red-500 text-xs font-semibold hover:border-[#ff4545]"><a href="#"><?= __('FREE GIFT') ?></a></button>
+                        </div>
+
+                        <!-- Contact Us -->
+                        <div class="contact-us hidden lg:flex items-center ">
+                            <div class="contact-us-header-icon p-5 text-white rounded-full mr-2 bg-[url('/media/icons/contact-us-icon.png')] bg-cover bg-center text-ahy-blue">
+                            </div>
+                            <div class="contact-us-header-content text-ahy-blue">
+                                <p class="font-normal text-sm"><?= __('Need Help?') ?></p>
+                                <a href="/contact">
+                                    <span class="font-extrabold text-ahy-blue xl:text-lg lg:text-md hover:underline transition duration-150 ease-out hover:ease-in underline-offset-6">
+                                        <?= __('Contact us') ?>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!--Customer Icon & Dropdown-->
+                        <?= $block->getChildHtml('customer') ?>
+                        <!--Cart Icon-->
+                        <a id="menu-cart-icon"
+                            x-on:mouseenter="isHovering = true" x-on:mouseleave="isHovering = false"
+                            <?php if ($showMiniCart): ?>@click.prevent.stop="$dispatch('toggle-cart',{});"<?php endif ?>
+                            class="hello-hello relative  hidden lg:inline-block ml-1 no-underline sm:ml-3 hover:text-black"
+                            href="<?= $escaper->escapeUrl($block->getUrl('checkout/cart/index')) ?>"
+                        >
+                            <span class="sr-only label">
+                                <?= $escaper->escapeHtml(__('Cart')) ?>
+                            </span>
+
+                            <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 hover:text-black" viewBox="0 0 30.61 25.71">
+                                <defs>
+                                    <style>.cls-1,.cls-2{fill:none !important;stroke:#0d2f47;stroke-width:1.5px;}.cls-1{stroke-linecap:round;stroke-linejoin:round;}.cls-2{stroke-miterlimit:10;}</style>
+                                </defs>
+                                <polyline class="cls-1" points="0.75 0.75 5.51 0.75 10.82 15.88 25.24 15.88 29.86 3.3 10.84 3.3"/>
+                                <circle class="cls-2" cx="11.98" cy="22.46" r="2.5"/>
+                                <circle class="cls-2" cx="24.48" cy="22.46" r="2.5"/>
+                            </svg>
+
+                            <span x-text="cart.summary_count"
+                                class="absolute top-0 right-0 hidden h-5 px-2 py-1 -mt-5 -mr-4 text-xs font-semibold
+                                leading-none text-center text-white uppercase transform -translate-x-1
+                                translate-y-1/2 rounded-full bg-red-500"
+                                :class="{
+                                    'hidden': !cart.summary_count,
+                                    'block': cart.summary_count
+                                }"
+                            ></span>
+
+                            <div x-show="isHovering && cart.summary_count === 0" class="absolute bg-white border rounded-md shadow-md p-4 mt-2.5 text-center top-full z-10 right-0 w-[300px]">
+                                Your cart is empty
+                            </div>
+                        </a>
+                    </div>
+                    <!--Main Navigation-->
+                </div>
+                <div class="container flex justify-between flex-wrap items-center w-full px-6 pb-3 mx-auto mt-0">
+                    <?= $block->getChildHtml('topmenu') ?>
+                </div>
+
+                <!--Cart Drawer-->
+                <?php if ($showMiniCart && $block->getRequest()->getFullActionName() !== 'checkout_cart_index'): ?><?= $block->getChildHtml('cart-drawer'); ?><?php endif ?>
+
+                <!--Authentication Pop-Up-->
+                <?= $block->getChildHtml('authentication-popup'); ?>
+            </div>
+        </section>
+    </template>
+</div>
+
+
+<!-- <div x-on:resize.window="isDesktop = (window.innerWidth >= 1024) ? true : false" class="" x-data="{isDesktop: (window.innerWidth >= 1024) ? true : false}">
+</div> -->
+
+<section class="alert-banner">
+    <?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('header-alert-banner')->toHtml(); ?>
+</section>
+

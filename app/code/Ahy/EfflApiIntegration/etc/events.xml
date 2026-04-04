@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+
+    <!-- Fires before the order is placed, so we can copy custom fields -->
+    <event name="sales_model_service_quote_submit_before">
+        <observer name="ahy_ffl_save_to_order" instance="Ahy\EfflApiIntegration\Observer\SaveFflDealerToOrder"/>
+    </event>
+
+    <event name="sales_order_invoice_save_before">
+        <observer name="ahy_effl_save_ffl_to_invoice" instance="Ahy\EfflApiIntegration\Observer\SaveFflDealerToInvoice"/>
+    </event>
+
+    <event name="sales_order_creditmemo_save_after">
+        <observer name="ahy_effl_save_ffl_to_creditmemo" instance="Ahy\EfflApiIntegration\Observer\SaveFflDealerToCreditMemo"/>
+    </event>
+</config>

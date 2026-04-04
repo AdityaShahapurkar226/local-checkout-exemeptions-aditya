@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<body>
+        <referenceBlock name="seller_account_navigation">
+            <block class="Webkul\Marketplace\Block\Account\Navigation" name="marketplace-navigation-mpsellerbuyercommunication-link" template="Webkul_MpSellerBuyerCommunication::account/navigation.phtml">
+            </block>
+        </referenceBlock>
+		<referenceBlock name="customer_account_navigation">
+			<block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-navigation-mpsellerbuyercommunication-link">
+				<arguments>
+					<argument name="path" xsi:type="string">mpsellerbuyercommunication/customer/history</argument>
+					<argument name="label" translate="true" xsi:type="string">Seller Communication History</argument>
+				</arguments>
+			</block>
+		</referenceBlock>
+	</body>
+</page>

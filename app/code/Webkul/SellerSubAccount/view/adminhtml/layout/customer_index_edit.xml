@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_SellerSubAccount
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="styles"/>
+    <body>
+        <referenceBlock name="customer_form">
+            <block class="Webkul\SellerSubAccount\Block\Adminhtml\Customer\Edit\Tab\SubAccount" name="seller_edit_subaccount_tab_view" as="seller-subaccount-tab" >
+                <arguments>
+                    <argument name="config" xsi:type="array">
+                        <item name="label" xsi:type="string" translate="true">Sub Accounts</item>
+                        <item name="collapsible" xsi:type="boolean">true</item>
+                        <item name="opened" xsi:type="boolean">true</item>
+                        <item name="sortOrder" xsi:type="string">2</item>
+                        <item name="canShow" xsi:type="boolean">true</item>
+                        <item name="componentType" xsi:type="string">fieldset</item>
+                    </argument>
+                </arguments>
+            </block>
+            <block class="Webkul\SellerSubAccount\Block\Adminhtml\Customer\Edit\Tab\SubAccountPermissions" name="seller_edit_subaccount_permission_tab_view" as="seller-subaccount-permission-tab" >
+                <arguments>
+                    <argument name="config" xsi:type="array">
+                        <item name="label" xsi:type="string" translate="true">Sub Account Permissions</item>
+                        <item name="collapsible" xsi:type="boolean">true</item>
+                        <item name="opened" xsi:type="boolean">true</item>
+                        <item name="sortOrder" xsi:type="string">3</item>
+                        <item name="canShow" xsi:type="boolean">true</item>
+                        <item name="componentType" xsi:type="string">fieldset</item>
+                    </argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

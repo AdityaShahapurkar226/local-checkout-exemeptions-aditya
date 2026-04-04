@@ -1,0 +1,218 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$productList = $block->getLayout()->createBlock(\Webkul\MpAssignProduct\Block\Product\ProductList::class);
+if ($block->getConfigData('active') && $block->getConfigData('allow_seller')) {
+    $helper = $productList->getHelperObject('marketplaceHelper');
+    $productType = $block->getData('product_type');
+    $regionBlock = $block->getLayout()->createBlock(
+        \Webkul\Mppercountryperproductshipping\Block\Adminhtml\RegionRule\Create::class
+    );
+    $ar['countries'] = $regionBlock->getCountriesByRegion();
+    $regionArray = array_merge($regionBlock->getRegion(), $ar);
+
+    $isAvail = false;
+    if ($productType!='virtual' && $productType!='downloadable' && $productType!='grouped') {
+        $isAvail = true;
+    }
+    ?>
+    <div class="field shippingprice">
+        <?php if ($isAvail) { ?>
+        <div class="control">
+            <input type="hidden" value="" id="mp_shipping_country_charge" name="shipping_country_charge"/>
+        </div>
+        <?php } ?>
+        <label class="label"><?= /* @noEscape */ __('Per Country Per Product Shipping:') ?></label>
+        <div class="wk_mp_option-box">
+        <?php if ($isAvail) { ?>
+            <div class="table-wrapper order-items">
+                <table class="data table" id="shipping_table">
+                <thead>
+                    <tr class="wk_mp_headcus ul_first headings">
+                        <th class="col applyon"><span><?= /* @noEscape */ __('Select Apply on') ?></span></th>
+                        <th class="col country-region">
+                            <span><?= /* @noEscape */ __('Select Country/Region') ?></span>
+                        </th>
+                        <th class="col cost"><span><?= /* @noEscape */ __('Shipping Cost') ?></span></th>
+                        <th class="col action"><span><?= /* @noEscape */ __('Action') ?></span></th>
+                        <th class="col more"><span>
+                            <button class="button addshippingprice" title="<?= /* @noEscape */ __('Add') ?>" 
+                            type="button">
+                                <span>
+                                    <span><?= /* @noEscape */ __('Add') ?></span>
+                                </span>
+                            </button>
+                        </span></th>
+                    </tr>
+                </thead>
+
+                </table>
+            </div>
+        </div>
+        <?php } else { ?>
+            <?= /* @noEscape */ __('Not available for this product type.');
+        } ?>
+    </div>
+    <?php if ($isAvail) { ?>
+    <script id="shipping-template" type="text/x-magento-template">
+        <tbody class="wk_mp_headcus wk-mp-body">
+            <?php if ($block->getConfigData('sallowspecific')): ?>
+                <tr class="wk-shipbody">
+                    <td class="col applyon" data-th="<?= /* @noEscape */ __('Select Apply on') ?>">
+                        <select class="required-entry applyon" name="ship[<%- data.index %>][1]">
+                            <option value="" disabled="disabled"><?= /* @noEscape */ __('Select Option')?></option>
+                            <option selected="selected" value="R"><?= /* @noEscape */ __('Region') ?></option>
+                            <option value="C"><?= /* @noEscape */ __('Country') ?></option>
+                        </select>
+                    </td>
+                    <td class="col country-region" data-th="<?= /* @noEscape */ __('Select Country/Region') ?>">
+                        <select style="display:none;" name="ship[<%- data.index %>][2]" 
+                        class="country-select required-entry countryoption">
+                            <option value="" selected="selected" disabled="disabled">
+                            <?= /* @noEscape */ __('Select Country')?></option>
+                            <?php  $shippingcountries = $block->getConfigData('specificcountry');
+                                $arrcountry = explode(',', $shippingcountries);
+                            foreach ($arrcountry as $country) {
+                                $country_name=$block->getCountryNameByLocale($country);
+                                ?>
+
+                                    <option value="<?= /* @noEscape */ $country; ?>">
+                                    <?= /* @noEscape */ $country_name; ?></option>
+                                <?php }    ?>
+                        </select>
+                        <select name="ship[<%- data.index %>][3]" class="required-entry regionoption">
+                            <option value="" selected="selected" disabled="disabled">
+                            <?= /* @noEscape */ __('Select Region')?></option>
+                            <?php	foreach ($regionArray['region'] as $region) {
+                                $countryByRegion = $regionArray['countries'][$region['value']];
+                                $regionCollection = $regionBlock->getRegionDataByRegionCode($region['value']);
+                                $allowedCountries = $block->getAllowedCountriesFromCollection($regionCollection);
+                                ?>
+                                <option class="optionparent" value="<?= /* @noEscape */ $region['value']; ?>" >
+                                <?= /* @noEscape */ $region['label']; ?></option>
+                                <?php
+                                foreach ($countryByRegion as $country) {
+                                    if (in_array($country['value'], $allowedCountries)) {
+                                        ?>
+                                        <option value="<?= /* @noEscape */ $region['value']; ?>" class="optionchild" 
+                                        disabled> -<?= /* @noEscape */ $country['label']; ?></option>
+                                        <?php
+                                    }
+                                }
+                                ?>                                                
+                        <?php }    ?>
+                        </select>
+                    </td>
+                    <td class="col cost" data-th="<?= /* @noEscape */ __('Shipping Cost') ?>">
+                        <div class="control">
+                            <input class="input-text required-entry validate-zero-or-greater" 
+                            type="text" name="ship[<%- data.index %>][]">
+                        </div>
+                    </td>
+                    <td class="col action" data-th="<?= /* @noEscape */ __('Action') ?>">
+                        <button style="margin:0" class="button delete" 
+                        title="<?= /* @noEscape */ __('Delete') ?>" type="button">
+                            <span>
+                                <span><%- data.button %></span>
+                            </span>
+                        </button>
+                    </td>        
+                </tr>
+            <?php else: ?>
+                <tr class="wk-shipbody">
+                    <td class="col applyon" data-th="<?= /* @noEscape */ __('Select Apply on') ?>">
+                        <select class="required-entry applyon" name="ship[<%- data.index %>][1]">
+                            <option value="" disabled="disabled"><?= /* @noEscape */ __('Select Option') ?></option>
+                            <option selected="selected" value="R"><?= /* @noEscape */ __('Region') ?></option>
+                            <option value="C"><?= /* @noEscape */ __('Country') ?></option>
+                        </select>
+                    </td>
+                    <td class="col country-region" data-th="<?= /* @noEscape */ __('Select Country/Region') ?>">
+                        <select style="display:none;" name="ship[<%- data.index %>][2]" 
+                        class="country-select countryoption">
+                            <option value="" selected="selected" disabled="disabled">
+                            <?= /* @noEscape */ __('Select Country')?></option>
+                            <?php $shippingcountries = $block->getCountryList();
+                            foreach ($shippingcountries as $country) {
+                                if ($country['value'] != ''):
+                                    ?>
+                                    <option value="<?= /* @noEscape */ $country['value']; ?>">
+                                    <?= /* @noEscape */ $country['label']; ?></option>
+                                    <?php
+                                    endif;
+                            }    ?>
+                        </select>
+                        <select name="ship[<%- data.index %>][3]" class="required-entry regionoption">
+                            <option value="" selected="selected" disabled="disabled">
+                            <?= /* @noEscape */ __('Select Region')?></option>
+                            <?php	foreach ($regionArray['region'] as $region) {
+                                $countryByRegion = $regionArray['countries'][$region['value']];
+                                $regionCollection = $regionBlock->getRegionDataByRegionCode($region['value']);
+                                $allowedCountries = $block->getAllowedCountriesFromCollection($regionCollection);
+                                ?>
+                                <option class="optionparent" value="<?= /* @noEscape */ $region['value']; ?>" >
+                                <?= /* @noEscape */ $region['label']; ?></option>
+                                <?php
+                                foreach ($countryByRegion as $country) {
+                                    if (in_array($country['value'], $allowedCountries)) {
+                                        ?>
+                                        <option value="<?= /* @noEscape */ $region['value']; ?>" 
+                                        class="optionchild" disabled> -<?= /* @noEscape */ $country['label']; ?>
+                                        </option>
+                                        <?php
+                                    }
+                                }
+                                ?>                                                
+                        <?php }    ?>
+                        </select>
+                    </td>
+                    <td class="col cost" data-th="<?= /* @noEscape */ __('Shipping Cost') ?>">
+                        <div class="control">
+                            <input class="input-text required-entry validate-zero-or-greater" type="text" 
+                            name="ship[<%- data.index %>][]">
+                        </div>
+                    </td>
+                    <td class="col action" data-th="<?= /* @noEscape */ __('Action') ?>">
+                        <button style="margin:0" class="button delete" 
+                        title="<?= /* @noEscape */ __('Delete') ?>" type="button">
+                            <span>
+                                <span><%- data.button %></span>
+                            </span>
+                        </button>
+                    </td>        
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </script>
+        <?php
+        $data = [
+            'count' => 0,
+            'templateSelector'  => '#shipping-template',
+            'addTemplateAfter'  => '.shippingprice .wk_mp_option-box #shipping_table',
+            'topParentSelector' => '.shippingprice',
+            'addShippingButton' => '.addshippingprice',
+            'deleteButton'        => '.delete',
+            'productSaveForm'   => '.wk-product-save-btn',
+            'shippingCharge'    => '#mp_shipping_country_charge',
+            'removeContent'     => '.wk_mp_headcus',
+            'onCountrySelect'    => '.country-select',
+            'mapDataSelector'   => '.wk-shipbody input,.wk-shipbody select',
+        ];
+        $serializedData = $productList->getHelperObject('jsonHelper')->jsonEncode($data);
+        ?>
+    <script type="text/x-magento-init">
+    {
+        "*": {
+            "addShippingPrice": <?= /* @noEscape */ $serializedData; ?>
+        }
+    }
+    </script>
+<?php } ?>
+<?php } ?>

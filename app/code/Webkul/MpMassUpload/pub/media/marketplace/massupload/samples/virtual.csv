@@ -1,0 +1,36 @@
+status,category,name,description,short_description,sku,price,special_price,special_from_date,special_to_date,tax_class_id,is_in_stock,stock,images,meta_title,meta_keyword,meta_description,color,manufacturer,custom_option,tier_price,attribute_mapping_category,related_skus,crosssell_skus,upsell_skus,seller_id
+1,"Men,Women",Virtual1,Virtual1,Virtual1,Virtual1,100,80,2017-05-20,2018-05-20,None,In Stock,10000,"1.jpg,6.jpg",Test Title,Test Keyword,Test Description,Red,Nike,"[
+  {
+    ""is_require"": 1,
+    ""title"": ""Color"",
+    ""type"": ""drop_down"",
+    ""sort_order"": 0,
+    ""sku"": ""co01"",   
+    ""values"": [
+ {""title"":""cream"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co011"",""sort_order"": 5},{""title"":""cream1"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co012"",""sort_order"": 5}  ]
+  }, {
+    ""is_require"": 1,
+    ""title"": ""Color2"",
+    ""type"": ""drop_down"",
+    ""sort_order"": 0,
+    ""sku"": ""co02"",   
+    ""values"": [
+ {""title"":""cream"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co021"",""sort_order"": 5},{""title"":""cream1"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co022"",""sort_order"": 5}  ]
+  }]","[
+  {
+    ""cust_group"": ""ALL GROUPS"",
+    ""price_qty"": ""2"",
+    ""price"": ""10""
+  }, {
+    ""cust_group"":""Wholesale"" ,
+    ""price_qty"": ""10"",
+    ""price"": ""40""
+  }]",Men,,,,
+1,"Men,Women",Virtual2,Virtual2,Virtual2,Virtual2,101,81,2017-05-19,2018-05-19,None,In Stock,10001,"2.jpg,7.jpg",Test Title,Test Keyword,Test Description,Red,Nike,,,Men,Virtual1,Virtual1,Virtual1,
+1,"Men,Women",Virtual3,Virtual3,Virtual3,Virtual3,102,82,2017-05-18,2018-05-18,None,In Stock,10002,"3.jpg,8.jpg",Test Title,Test Keyword,Test Description,Red,Nike,,,Men,"Virtual1,Virtual2","Virtual1,Virtual2","Virtual1,Virtual2",
+1,"Men,Women",Virtual4,Virtual4,Virtual4,Virtual4,103,83,2017-05-17,2018-05-17,None,In Stock,10003,"4.jpg,9.jpg",Test Title,Test Keyword,Test Description,Red,Nike,,,Women,"Virtual2,Virtual3","Virtual2,Virtual3","Virtual2,Virtual3",
+1,"Men,Women",Virtual5,Virtual5,Virtual5,Virtual5,104,84,2017-05-16,2018-05-16,None,In Stock,10004,"5.jpg,10.jpg",Test Title,Test Keyword,Test Description,Red,Nike,,,Women,"Virtual3,Virtual4","Virtual3,Virtual4","Virtual3,Virtual4",

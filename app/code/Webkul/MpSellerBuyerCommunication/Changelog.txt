@@ -1,0 +1,85 @@
+Legend
+
++ Features
+- Bugs
+-------------------------------- Version 5.0.0-p1 --------------------------------------
+
+	+ Compatible with Magento 2.4.x CE & Marketplace 5.0.*.
+-------------------------------- Version 5.0.0 --------------------------------------
+
+	+ Compatible with Magento 2.4.x CE & Marketplace 5.0.0.
+
+-------------------------------- Version 4.0.0 --------------------------------------
+
+	+ Compatible with Magento 2.4.x CE & Marketplace 4.0.0.
+
+-------------------------------- Version 3.0.2 --------------------------------------
+
+	+ Customer can ask queries from order view page.
+	+ Admin can reply to any query and can intervene in conversation.
+	+ Admin can ask queries from order view page.
+	+ Admin can decide whether mail to be sent from admin email or seller email.
+	+ Added customer login for guest user if admin disallow queries for guest customer.
+	+ Seller can ask queries from order page.
+	+ Admin can set the communication option based on order status.
+	
+-------------------------------- Version 3.0.1 --------------------------------------
+
+	+ Now customer can also raise queries on admin products.
+	+ Admin can reply to the queries raised on its products by customers.
+	+ Admin can send multiple attachment with the reply.
+	+ Admin can change the status of the query.
+	+ Submenu for Seller Buyer Communication created.
+	- Loops reduced.
+	- Bugs Fixed
+	
+-------------------------------- Version 3.0.0 --------------------------------------
+
+	- Fixed cache issue while updating response rate
+	- Fixed editor issue on contact seller form
+
+-------------------------------- Version 2.2.0 --------------------------------------
+
+	- Fixed card type issue on product page
+
+-------------------------------- Version 2.1.1 --------------------------------------
+  	- Fixed bug with guest user
+
+-------------------------------- Version 2.1.0 --------------------------------------
+  	+ compatible with magento 2.3.x
+
+-------------------------------- Version 2.0.5 --------------------------------------
+
+	- Fixed issue related with guest user
+
+-------------------------------- Version 2.0.4 --------------------------------------
+
+	- Fixed varnish related issue at catalog product view page
+	- display delete product name at communication history and view page
+
+-------------------------------- Version 2.0.3 --------------------------------------
+
+	+ Compatible with marketplace 2.1.3 and above.
+
+-------------------------------- Version 2.0.2 --------------------------------------
+
+	+ Compatible with magento 2.2.*
+
+-------------------------------- Version 2.0.1 --------------------------------------
+
+	+ Buyer/Seller can send multiple attachment with query
+	+ Include wysiwyg editor
+	+ Include query status feature
+	+ Buyer choose support type like presale , support , techical etc
+	+ Response rate and response time for a seller product
+	+ Response rate and response time of a seller
+	+ Filter message by content
+
+-------------------------------- Version 2.0.0 --------------------------------------
+
+	+ All Asked Query list showing in seller’s account.
+	+ Enable/disable reply mail notification to admin by admin panel.
+	+ Admin can delete asked query/Conversation history between seller and buyer.
+	+ Seller can send reply message regarding query to buyer and vice versa.
+	+ Seller and buyer get mail for each reply message.
+	+ Buyer can also ask the question to the seller using seller profile page.

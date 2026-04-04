@@ -1,0 +1,566 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <!-- <head>
+        <css src="Ahy_ApplePay::css/apple-pay.css" defer="defer"/>
+    </head> -->
+
+    <body>
+        <!-- The hyva.checkout.components block does not really exist. It is only a virtual
+        "container". -->
+        <!-- To render a component declared here, it needs to be <move>d to the target column in the
+        step. -->
+        <!-- The reason to declare a component here is if it is more complex and will be used in
+        more than one step. -->
+        <referenceBlock name="hyva.checkout.components">
+
+            <!-- component paypal button -->
+            <!-- Component: Shipping Details -->
+            <container name="checkout.shipping-details.section" htmlTag="section"
+                htmlId="shipping-details" htmlClass="px-2 md:px-12 mt-0">
+
+                <block name="checkout.express.pre.payment" template="Ahy_ThemeCustomization::paypal/checkout-express-pre-payment.phtml" />
+
+                <container
+                    name="checkout.express.payments"
+                    htmlTag="div"
+                    htmlClass="express-checkout-payment-methods-wrapper md:flex gap-4"
+                    after="checkout.express.pre.payment"
+                >
+
+                    <!-- PayPal -->
+                    <block
+                        class="Magento\Paypal\Block\Express\InContext\Minicart\SmartButton"
+                        name="paypal.button.on.first.step"
+                        template="Ahy_ThemeCustomization::paypal/show-paypal-on-first-step.phtml"
+                    />
+
+                    <!-- Google Pay -->
+                    <block
+                        class="PayPal\Braintree\Block\GooglePay\Shortcut\Button"
+                        name="googlepay.minicart.button"
+                        template="Ahy_GooglePay::express/button.phtml"
+                        after="paypal.button.on.first.step"
+                    >
+                        <arguments>
+                            <argument name="button_id" xsi:type="string">googlepay-minicart</argument>
+                            <argument name="alias" xsi:type="string">minicart</argument>
+                            <argument name="viewModel" xsi:type="object">
+                                Ahy\GooglePay\ViewModel\RestrictVisibility
+                            </argument>
+                        </arguments>
+                    </block>
+
+                    <!-- <block 
+                        class="PayPal\Braintree\Block\ApplePay\Shortcut\Button"
+                        name="apple.cart.button"
+                        template="Ahy_ApplePay::express/button.phtml"
+                    >
+                        <arguments>
+                            <argument name="button_id" xsi:type="string">apple-cart</argument>
+                            <argument name="alias" xsi:type="string">cart</argument>
+                            <argument name="viewModel" xsi:type="object">Ahy\ApplePay\ViewModel\RestrictVisibility</argument>
+                        </arguments>
+                    </block> -->
+
+                </container>
+
+                <block name="checkout.express.post.payment" template="Ahy_ThemeCustomization::paypal/checkout-express-post-payment.phtml" before="checkout.shipping-details.title" />
+
+                <block name="checkout.shipping-details.title"
+                    template="Hyva_Checkout::section/title.phtml"
+                    after="paypal.button.on.first.step">
+                    <action method="setTitle">
+                        <argument name="title" translate="true" xsi:type="string">Billing &amp;
+                            Shipping Address</argument>
+                    </action>
+                </block>
+                <container name="checkout.shipping-details.before">
+                    <block name="component-messenger-shipping-details"
+                        template="Hyva_Checkout::page/messenger.phtml" before="-">
+                        <arguments>
+                            <argument name="event_prefix" xsi:type="string">shipping:details</argument>
+                        </arguments>
+                    </block>
+                </container>
+
+                <!-- @see \Hyva\Checkout\Model\Frontend\AddressTypeShipping -->
+                <block name="checkout.shipping-details"
+                    template="Hyva_Checkout::checkout/address-view/shipping-details.phtml">
+                    <arguments>
+                        <argument name="address_view" xsi:type="object">
+                            \Hyva\Checkout\ViewModel\Checkout\AddressView\AddressViewShipping
+                        </argument>
+
+                        <argument name="magewire" xsi:type="object">
+                            \Hyva\Checkout\Magewire\Checkout\AddressView\ShippingDetails
+                        </argument>
+                    </arguments>
+
+                    <block name="checkout.shipping-details.address-list" as="address-list"
+                        template="Hyva_Checkout::checkout/address-view/address-list.phtml">
+                        <arguments>
+                            <argument name="address_list" xsi:type="object">
+                                \Hyva\Checkout\ViewModel\Checkout\AddressView\AddressList\AddressListShipping
+                            </argument>
+
+                            <argument name="magewire" xsi:type="object">
+                                \Hyva\Checkout\Magewire\Checkout\AddressView\ShippingDetails\AddressList
+                            </argument>
+                        </arguments>
+
+                        <!-- Renderer: grid view -->
+                        <block name="checkout.shipping-details.address-list.grid"
+                            template="Hyva_Checkout::checkout/address-view/address-list/grid.phtml"
+                            as="grid" />
+                        <!-- Renderer: select (dropdown) view -->
+                        <block name="checkout.shipping-details.address-list.select"
+                            template="Hyva_Checkout::checkout/address-view/address-list/select.phtml"
+                            as="select" />
+
+                        <!-- Form: shipping address -->
+                        <block name="checkout.shipping-details.address-list.form" as="address-form"
+                            template="Hyva_Checkout::checkout/address-view/address-list/form.phtml">
+                            <container name="shipping-details.address-form.before"
+                                as="address-form.before" />
+
+                            <arguments>
+                                <argument name="magewire" xsi:type="object">
+                                    \Hyva\Checkout\Magewire\Checkout\AddressView\ShippingDetails\AddressForm
+                                </argument>
+                            </arguments>
+
+                            <container name="shipping-details.address-form.after"
+                                as="address-form.after" />
+                        </block>
+                    </block>
+
+                    <!-- Form: shipping address -->
+                    <block name="checkout.shipping-details.address-form"
+                        template="Hyva_Checkout::checkout/address-view/address-form.phtml">
+                        <container name="shipping-details.address-form.customer.before"
+                            as="address-form.before" />
+
+                        <arguments>
+                            <argument name="magewire" xsi:type="object">
+                                \Hyva\Checkout\Magewire\Checkout\AddressView\ShippingDetails\AddressForm
+                            </argument>
+                        </arguments>
+
+                        <container name="shipping-details.address-form.customer.after"
+                            as="address-form.after" />
+                    </block>
+                </block>
+            </container>
+
+            <!-- Component: Billing Details -->
+            <container name="checkout.billing-details.section" htmlTag="section"
+                htmlId="billing-details" htmlClass="px-2 md:px-12 mt-0 billing-details-checkout">
+                <block name="checkout.billing-details.title"
+                    template="Hyva_Checkout::section/title.phtml" before="-">
+                    <action method="setTitle">
+                        <argument name="title" translate="true" xsi:type="string">Billing Address</argument>
+                    </action>
+                </block>
+
+                <container name="checkout.billing-details.before">
+                    <block name="component-messenger-billing-details"
+                        template="Hyva_Checkout::page/messenger.phtml" before="-">
+                        <arguments>
+                            <argument name="event_prefix" xsi:type="string">billing:details</argument>
+                        </arguments>
+                    </block>
+                </container>
+
+                <!-- @see \Hyva\Checkout\Model\Frontend\AddressTypeBilling -->
+                <block name="checkout.billing-details"
+                    template="Hyva_Checkout::checkout/address-view/billing-details.phtml">
+                    <arguments>
+                        <argument name="address_view" xsi:type="object">
+                            \Hyva\Checkout\ViewModel\Checkout\AddressView\AddressViewBilling
+                        </argument>
+
+                        <argument name="magewire" xsi:type="object">
+                            \Hyva\Checkout\Magewire\Checkout\AddressView\BillingDetails
+                        </argument>
+                    </arguments>
+
+                    <block name="checkout.billing-details.address-list" as="address-list"
+                        template="Hyva_Checkout::checkout/address-view/address-list.phtml">
+                        <arguments>
+                            <argument name="address_list" xsi:type="object">
+                                \Hyva\Checkout\ViewModel\Checkout\AddressView\AddressList\AddressListBilling
+                            </argument>
+
+                            <argument name="magewire" xsi:type="object">
+                                \Hyva\Checkout\Magewire\Checkout\AddressView\BillingDetails\AddressList
+                            </argument>
+                        </arguments>
+
+                        <!-- Renderer: grid view -->
+                        <block name="checkout.billing-details.address-list.grid"
+                            template="Hyva_Checkout::checkout/address-view/address-list/grid.phtml"
+                            as="grid" />
+                        <!-- Renderer: select (dropdown) view -->
+                        <block name="checkout.billing-details.address-list.select"
+                            template="Hyva_Checkout::checkout/address-view/address-list/select.phtml"
+                            as="select" />
+
+                        <!-- Form: billing address -->
+                        <block name="checkout.billing-details.address-list.form" as="address-form"
+                            template="Hyva_Checkout::checkout/address-view/address-list/form.phtml">
+                            <container name="billing-details.address-form.before"
+                                as="address-form.before" />
+
+                            <arguments>
+                                <argument name="magewire" xsi:type="object">
+                                    \Hyva\Checkout\Magewire\Checkout\AddressView\BillingDetails\AddressForm
+                                </argument>
+                            </arguments>
+
+                            <container name="billing-details.address-form.after"
+                                as="address-form.after" />
+                        </block>
+                    </block>
+
+                    <!-- Billing address form -->
+                    <block name="checkout.billing-details.address-form"
+                        template="Hyva_Checkout::checkout/address-view/address-form.phtml">
+                        <container name="billing-details.address-form.customer.before"
+                            as="address-form.before" />
+
+                        <arguments>
+                            <argument name="magewire" xsi:type="object">
+                                \Hyva\Checkout\Magewire\Checkout\AddressView\BillingDetails\AddressForm
+                            </argument>
+                        </arguments>
+
+                        <container name="billing-details.address-form.customer.after"
+                            as="address-form.after" />
+                    </block>
+
+                    <!-- Address renderer for when the billing address is the same as shipping -->
+                    <block name="checkout.billing-details.address"
+                        template="Hyva_Checkout::checkout/address-view/billing-details/address.phtml" />
+                </block>
+
+                <container name="checkout.billing-details.after" />
+            </container>
+
+            <!-- Section: Shipping -->
+            <container name="checkout.shipping.section" htmlTag="section" htmlId="shipping"
+                htmlClass="px-2 md:px-12 mt-0 shipping-methods-checkout">
+                <block name="checkout.shipping.title" template="Hyva_Checkout::section/title.phtml"
+                    before="-">
+                    <action method="setTitle">
+                        <argument name="title" translate="true" xsi:type="string">Shipping Methods</argument>
+                    </action>
+                </block>
+
+                <container name="checkout.shipping.methods.before">
+                    <block name="component-messenger-shipping-methods"
+                        template="Hyva_Checkout::page/messenger.phtml" before="-">
+                        <arguments>
+                            <argument name="event_prefix" xsi:type="string">shipping:method</argument>
+                        </arguments>
+                    </block>
+                </container>
+
+                <block name="checkout.shipping.methods"
+                    template="Hyva_Checkout::checkout/shipping/method-list.phtml">
+                    <arguments>
+                        <argument name="magewire" xsi:type="object">
+                            \Hyva\Checkout\Magewire\Checkout\Shipping\MethodList
+                        </argument>
+                    </arguments>
+
+                    <!-- Register payment method view and make hereby available -->
+                    <!-- Will not show an additional view as long as the template is not assigned
+                    onto the block -->
+                    <!-- Shipping method view should go into
+                    templates/component/shipping/method/{carrier-method}.phtml-->
+                    <block name="checkout.shipping.method.freeshipping_freeshipping"
+                        as="freeshipping_freeshipping" />
+                    <block name="checkout.shipping.method.flatrate_flatrate" as="flatrate_flatrate" />
+                    <block name="checkout.shipping.method.tablerate_bestway" as="tablerate_bestway" />
+                </block>
+
+                <!-- In case you want to add block after the shipping method list -->
+                <container name="checkout.shipping.methods.after" />
+            </container>
+
+            <!-- Component: Payment -->
+            <container name="checkout.payment.section" htmlTag="section" htmlId="payment"
+                htmlClass="px-2 md:px-12 mt-0">
+                <block name="checkout.payment.title" template="Hyva_Checkout::section/title.phtml"
+                    before="-">
+                    <action method="setTitle">
+                        <argument name="title" translate="true" xsi:type="string">Payment Method</argument>
+                    </action>
+                </block>
+
+                <container name="checkout.payment.methods.before">
+                    <block name="component-messenger-payment-methods"
+                        template="Hyva_Checkout::page/messenger.phtml" before="-">
+                        <arguments>
+                            <argument name="event_prefix" xsi:type="string">payment:method</argument>
+                        </arguments>
+                    </block>
+                </container>
+
+                <block name="checkout.payment.methods"
+                    template="Hyva_Checkout::checkout/payment/method-list.phtml">
+                    <arguments>
+                        <argument name="magewire" xsi:type="object">
+                            \Hyva\Checkout\Magewire\Checkout\Payment\MethodList
+                        </argument>
+                    </arguments>
+
+                    <!-- Payment Renderer: Apple Pay: -->
+                    <block 
+                        name="checkout.payment.method.applepay" as="braintree_applepay"
+                        template="Ahy_ApplePay::checkout/payment/method/applepay.phtml"
+                    >
+                        <arguments>
+                            <argument name="magewire" xsi:type="object">
+                                \Ahy\ApplePay\Magewire\Checkout\Payment\Method\ApplePay
+                            </argument>
+                        </arguments>
+                    </block>
+
+                    <!-- Payment Renderer: Bank Transfer Payment -->
+                    <block name="checkout.payment.method.banktransfer" as="banktransfer"
+                        template="Hyva_Checkout::checkout/payment/method/banktransfer.phtml" />
+
+                    <!-- Payment Renderer: Check / Money Order -->
+                    <block name="checkout.payment.method.checkmo" as="checkmo"
+                        template="Hyva_Checkout::checkout/payment/method/checkmo.phtml" />
+
+                    <!-- Payment Renderer: Purchase Order -->
+                    <block name="checkout.payment.method.purchaseorder" as="purchaseorder"
+                        template="Hyva_Checkout::checkout/payment/method/purchaseorder.phtml">
+                        <arguments>
+                            <argument name="magewire" xsi:type="object">
+                                \Hyva\Checkout\Magewire\Checkout\Payment\Method\PurchaseOrder
+                            </argument>
+                        </arguments>
+                    </block>
+                    <!-- Payment Renderer: Authorize Net -->
+                    <block name="checkout.payment.varification"
+                        template="Hyva_Checkout::page/messenger.phtml">
+                        <arguments>
+                            <argument name="event_prefix" xsi:type="string">payment:validation</argument>
+                        </arguments>
+                    </block>
+                    <block name="checkout.payment.method.authnetahypayment" as="authnetahypayment"
+                        template="Ahy_Authorizenet::checkout/payment/method/authnetAhyPayment.phtml">
+                        <arguments>
+                            <argument name="magewire" xsi:type="object">
+                                \Ahy\Authorizenet\Magewire\HyvaCheckout\AuthorizeNet
+                            </argument>
+                            <argument name="viewModel" xsi:type="object">
+                                \Ahy\Authorizenet\ViewModel\Checkout\CustomerSession
+                            </argument>
+                            <argument name="configProvider" xsi:type="object">
+                                \Ahy\SavedCC\ViewModel\ConfigProvider
+                            </argument>
+                        </arguments>
+                    </block>
+                    <block name="checkout.payment.method.customervaultcards"
+                        as="customervaultcards"
+                        template="Ahy_Authorizenet::checkout/payment/method/showStoredCardsOnCheckout.phtml">
+                        <arguments>
+                            <argument name="vault_cards" xsi:type="object">
+                                Ahy\Authorizenet\ViewModel\CustomerVaultCards
+                            </argument>
+                        </arguments>
+                    </block>
+                </block>
+
+                <!-- In case you want to add block after the payment method list -->
+                <container name="checkout.payment.methods.after" />
+            </container>
+            <referenceBlock name="checkout.payment.methods">
+                <block name="checkout.payment.method.paypal-express" as="paypal_express"
+                    template="Hyva_CheckoutPayPal::checkout/payment/method/paypal-express.phtml">
+                    <arguments>
+                        <argument name="magewire" xsi:type="object">
+                            \Hyva\CheckoutPayPal\Magewire\Payment\Method\PPExpress
+                        </argument>
+                    </arguments>
+
+                    <!-- Payment context (e.g. PayPal buttons) -->
+                    <block
+                        template="Hyva_CheckoutPayPal::checkout/payment/method/paypal-express/context.phtml"
+                        name="method.paypal-express.context" as="context" />
+
+                    <!-- Payment not context (e.g. redirect to paypal) -->
+                    <block
+                        template="Hyva_CheckoutPayPal::checkout/payment/method/paypal-express/paypal_redirect.phtml"
+                        name="method.paypal-express.paypal_redirect" as="paypal_redirect" />
+
+                    <!-- Payment review -->
+                    <block name="method.paypal-express.review"
+                        template="Hyva_CheckoutPayPal::checkout/payment/method/paypal-express/review.phtml"
+                        as="review" />
+                </block>
+
+                <block name="checkout.payment.method.paypal-express-bml" as="paypal_express_bml"
+                    template="Hyva_CheckoutPayPal::checkout/payment/method/under-construction.phtml" />
+            </referenceBlock>
+            <!-- Component: Quote Summary -->
+            <container name="checkout.quote-summary.section" htmlTag="section"
+                htmlId="quote-summary">
+                <container name="checkout.price-summary.section" htmlTag="section"
+                    htmlClass="price-summary card">
+                    <block name="checkout.quote-summary.title"
+                        template="Hyva_Checkout::section/title.phtml" before="-">
+                        <action method="setTitle">
+                            <argument name="title" translate="true" xsi:type="string">Order Summary</argument>
+                        </action>
+                    </block>
+
+                    <block name="price-summary.cart-items"
+                        template="Hyva_Checkout::checkout/price-summary/cart-items.phtml">
+                        <arguments>
+                            <argument name="magewire" xsi:type="object">
+                                Hyva\Checkout\Magewire\Checkout\PriceSummary\CartItems</argument>
+                        </arguments>
+
+                        <!-- Cart item type renderer options -->
+                        <block name="cart-items.product-type-renderers" as="product-type-renderers">
+                            <block name="product-type.simple" as="default"
+                                template="Hyva_Checkout::checkout/price-summary/cart-items/type/default.phtml" />
+                        </block>
+                    </block>
+
+                    <block name="price-summary.total-segments"
+                        template="Hyva_Checkout::checkout/price-summary/total-segments.phtml">
+                        <arguments>
+                            <argument name="magewire" xsi:type="object">
+                                \Hyva\Checkout\Magewire\Checkout\PriceSummary
+                            </argument>
+                        </arguments>
+
+                        <block name="price-summary.total-segment.default" as="default"
+                            template="Hyva_Checkout::checkout/price-summary/total-segments/default.phtml" />
+                        <block name="price-summary.total-segment.subtotal" as="subtotal"
+                            template="Hyva_Checkout::checkout/price-summary/total-segments/subtotal.phtml" />
+                        <block name="price-summary.total-segment.discount" as="discount"
+                            template="Hyva_Checkout::checkout/price-summary/total-segments/discount.phtml" />
+                        <block name="price-summary.total-segment.tax" as="tax"
+                            template="Hyva_Checkout::checkout/price-summary/total-segments/tax.phtml" />
+                        <block name="price-summary.total-segment.weee" as="weee"
+                            template="Hyva_Checkout::checkout/price-summary/total-segments/weee.phtml" />
+                        <block name="price-summary.total-segment.grand_total" as="grand_total"
+                            template="Hyva_Checkout::checkout/price-summary/total-segments/grand-total.phtml" />
+                        <block name="price-summary.total-segment.donation_amount"
+                            as="donation_amount"
+                            template="Hyva_Checkout::checkout/price-summary/total-segments/donation.phtml"
+                            after="-" />
+
+                    </block>
+                    <block name="custom.dealerinfo.above.summary"
+                    template="Ahy_EfflApiIntegration::checkout/DealerInfo.phtml"/>
+                    <block name="ahy.charity.and.donation"
+                        template="Ahy_CharityAndDonation::charityAndDonation.phtml">
+                        <arguments>
+                            <argument name="magewire" xsi:type="object">
+                                \Ahy\CharityAndDonation\Magewire\HyvaCheckout\CharityAndDonation
+                            </argument>
+                        </arguments>
+                    </block>
+
+                </container>
+                <block name="coupon-code" template="Hyva_Checkout::checkout/coupon-code.phtml"
+                    after="-" ifconfig="hyva_themes_checkout/component/discount_code/enable">
+                    <arguments>
+                        <argument name="magewire" xsi:type="object">
+                            \Hyva\Checkout\Magewire\Checkout\CouponCode
+                        </argument>
+                    </arguments>
+                </block>
+            </container>
+
+            <!-- Component: Additional Options -->
+            <container name="checkout.section.additional-options" htmlTag="section"
+                htmlId="additional-options">
+                <block name="checkout.order-comment.title"
+                    template="Hyva_Checkout::section/title.phtml">
+                    <action method="setTitle">
+                        <argument name="title" translate="true" xsi:type="string">Options</argument>
+                    </action>
+                </block>
+
+                <block name="checkout.order-comment"
+                    template="Hyva_Checkout::checkout/customer-comment.phtml"
+                    ifconfig="hyva_themes_checkout/component/order_comment/enable">
+                    <arguments>
+                        <argument name="magewire" xsi:type="object">
+                            \Hyva\Checkout\Magewire\Checkout\CustomerComment
+                        </argument>
+                    </arguments>
+                </block>
+            </container>
+
+            <!-- Component: Quote Actions -->
+            <container name="checkout.section.quote-actions" htmlTag="section"
+                htmlId="quote-actions">
+                <block name="checkout.terms-conditions.title"
+                    template="Hyva_Checkout::section/title.phtml"
+                    ifconfig="checkout/options/enable_agreements">
+                    <action method="setTitle">
+                        <argument name="title" translate="true" xsi:type="string">Terms and
+                            Conditions</argument>
+                    </action>
+                </block>
+
+                <container name="checkout.section.quote-actions.before">
+                    <block name="component-messenger-quote-actions"
+                        template="Hyva_Checkout::page/messenger.phtml" before="-">
+                        <arguments>
+                            <argument name="event_prefix" xsi:type="string">quote:actions</argument>
+                        </arguments>
+                    </block>
+                </container>
+
+                <block name="checkout.terms-conditions"
+                    template="Hyva_Checkout::checkout/terms-conditions.phtml"
+                    ifconfig="checkout/options/enable_agreements">
+                    <arguments>
+                        <argument name="magewire" xsi:type="object">
+                            \Hyva\Checkout\Magewire\Checkout\TermsConditions
+                        </argument>
+                    </arguments>
+
+                    <block name="checkout.terms-conditions.list" as="list"
+                        template="Hyva_Checkout::checkout/terms-conditions/list.phtml" />
+                    <block name="checkout.terms-conditions.message-only" as="message"
+                        template="Hyva_Checkout::checkout/terms-conditions/message.phtml" />
+                    <block name="checkout.terms-conditions.message-including-page" as="page"
+                        template="Hyva_Checkout::checkout/terms-conditions/message.phtml" />
+                </block>
+            </container>
+        </referenceBlock>
+
+        <!-- Summary: Adding shipping total costs. -->
+        <referenceBlock name="price-summary.total-segments">
+            <block name="price-summary.total-segment.shipping" as="shipping"
+                template="Hyva_Checkout::checkout/price-summary/total-segments/shipping.phtml" />
+        </referenceBlock>
+
+        <!-- <referenceContainer name="before.body.end">
+            <block name="braintree.apple.express.js"
+                   template="Ahy_ApplePay::express/express-js.phtml"
+                   ifconfig="payment/braintree_applepay/active"/>
+        </referenceContainer> -->
+    </body>
+</page>

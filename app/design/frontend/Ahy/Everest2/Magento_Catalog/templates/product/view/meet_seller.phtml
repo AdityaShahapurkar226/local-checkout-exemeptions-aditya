@@ -1,0 +1,77 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductAttributes;
+use Hyva\Theme\ViewModel\ProductCompare;
+use Hyva\Theme\ViewModel\ProductPage;
+use Hyva\Theme\ViewModel\Wishlist;
+use Magento\Catalog\Model\Product;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var HeroiconsOutline $heroicons */
+/** @var ViewModelRegistry $viewModels */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+/** @var ProductPage $productViewModel */
+$productViewModel = $viewModels->require(ProductPage::class);
+
+/** @var ProductAttributes $attributesViewModel */
+$attributesViewModel = $viewModels->require(ProductAttributes::class);
+
+/** @var Product $product */
+$product = $productViewModel->getProduct();
+
+$_helper = $this->helper('Webkul\Marketplace\Helper\data');
+$seller = $_helper->getSellerProductDataByProductId($product->getId());
+$sellerId = 0;
+if(isset($seller->getData()[0]) && $seller->getData()[0]){
+    $sellerObj = $seller->getData()[0];
+    $sellerId = $sellerObj['seller_id'];
+    $sellerDataObj = $_helper->getSellerDataBySellerId($sellerId);
+    $shopTitle = '';
+    $shopUrl = '';
+    $sellerData = $sellerDataObj->getData()[0];
+    // echo '<pre>'; 
+    // print_r($sellerData);
+    // echo '</pre>'; exit;
+    $shopTitle = (
+        $sellerData['shop_title'] !== null && $sellerData['shop_title'] !== '') ? $sellerData['shop_title'] : (($sellerData['name'] !== null && $sellerData['name'] !== '') ? $sellerData['name'] : 'Seller Name Not Available'
+    );
+    $shopUrl = $sellerData['shop_url'];
+    $sellerDescription = $sellerData['company_description'];
+    $sellerLogo = $sellerData['logo_pic'];
+}else{
+    $shopTitle = 'Everest';
+}
+
+?>
+<?php if(isset($seller->getData()[0]) && $seller->getData()[0]):  ?>
+    <section class="meet-seller-tabs text-ahy-blue">
+        <div class="flex gap-4 flex-col lg:flex-row lg:gap-9 items-center pb-2">
+            <img src="/media/avatar/<?= $sellerLogo ?>" alt="<?= trim($shopTitle) ?>" class="mix-blend-darken aspect-3/3 object-cover max-w-[100px]" >
+            <div class="font-bold text-center font-league-gothic text-[48px] md:text-[68px] xl:text-[88px] !leading-none mb-4 md:mb-0 uppercase text-ahy-blue tracking-wide">
+                <?= trim($shopTitle) ?>
+            </div>
+        </div>
+        <div class="md:py-8 prose ">
+            <?= $sellerDescription ?>
+        </div>
+        <div class="font-bold text-ahy-blue-light hover:underline hover:underline-offset-6">
+            <a href="/<?= $shopUrl ?>">
+                <span>Learn More</span>
+            </a>
+        </div>
+    </section>
+<?php endif; ?>

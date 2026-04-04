@@ -1,0 +1,802 @@
+<?php
+    declare(strict_types=1);
+    use Hyva\Theme\Model\ViewModelRegistry;
+    use Hyva\Theme\ViewModel\ProductAttributes;
+    use Hyva\Theme\ViewModel\ProductCompare;
+    use Hyva\Theme\ViewModel\ProductPage;
+    use Hyva\Theme\ViewModel\Wishlist;
+    use Magento\Catalog\Model\Product;
+    use Magento\Framework\Escaper;
+    use Magento\Framework\View\Element\Template;
+    use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+    /** @var HeroiconsOutline $heroicons */
+
+    /** @var Template $block */
+    /** @var Escaper $escaper */
+    /** @var ViewModelRegistry $viewModels */
+
+    /** @var ProductPage $productViewModel */
+    $productViewModel = $viewModels->require(ProductPage::class);
+
+    /** @var ProductAttributes $attributesViewModel */
+    $attributesViewModel = $viewModels->require(ProductAttributes::class);
+
+    /** @var Product $product */
+    $product    = $productViewModel->getProduct();
+
+    $apiKey     = "klevu-168266850400116098";
+    $_helper    = $this->helper('Webkul\Marketplace\Helper\data');
+    $seller     = $_helper->getSellerProductDataByProductId($product->getId());
+    $sellerId   = 0;
+    if(isset($seller->getData()[0]) && $seller->getData()[0]){
+        $sellerObj  = $seller->getData()[0];
+        $sellerId   = $sellerObj['seller_id'];
+        $sellerDataObj = $_helper->getSellerDataBySellerId($sellerId);
+        $shopTitle  = '';
+        $shopUrl    = '';
+        $sellerData = $sellerDataObj->getData()[0];
+        $shopTitle  = ($sellerData['shop_title'] !== null && $sellerData['shop_title'] !== '') ? $sellerData['shop_title'] : (($sellerData['name'] !== null && $sellerData['name'] !== '') ? $sellerData['name'] : null);
+        $shopUrl    = $sellerData['shop_url'];
+    }
+?>
+<?php if(isset($seller->getData()[0]) && $seller->getData()[0]): ?>
+    <section class="more-seller-items 123 " x-data="sellerProduct">
+        <template x-if="data && data.length > 1" >
+            <div class="kuRECSContainer relative py-8 h-[640px]" >
+                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 h-full w-screen bg-ahy-bg z-[-1]"></div>
+                <div class="kuRECSHeader" style=" padding: 24px 0; ">
+                    <h3 class="kuRECSTitle text-ahy-blue !font-extrabold uppercase" title="You may also like">MORE SELLER ITEMS</h3>
+                </div>
+                <div class="swiper">
+                    <div class="kuRECSResultsInner swiper-wrapper">
+                        <!-- Assuming you have an array of products in the data variable -->
+                        <template x-for="product in data" :key="product.id">
+                            <template x-if="'<?= $product->getId() ?>' !== product.itemGroupId && '<?= $product->getId() ?>' !== product.id">
+                                <div class="kuRECS-itemWrap kuRECSItem border border-ahy-bg swiper-slide" :data-id="product.id">
+                                    <div class="kuRECS-item">
+                                        <div class="kuRECS-itemImg relative">
+                                            <a :title="product.name" :href="product.url" :data-id="product.id" class="kuRECSItemClick kuRECSImg">
+                                            <img
+                                                :src="product.imageUrl.replace(/\.(jpg|jpeg|png)$/i, '.webp')"
+                                                :data-original-src="product.imageUrl"
+                                                :alt="product.name"
+                                                class="prodImg"
+                                                width="100%"
+                                                loading="lazy"
+                                                onerror="
+                                                    if (this.src.endsWith('.webp')) {
+                                                        this.onerror = null;
+                                                        this.src = this.getAttribute('data-original-src');
+                                                    } else {
+                                                        klevu.dom.helpers.cleanUpProductImage(this);
+                                                    }
+                                                "
+                                            />
+
+                                                <!-- <img :src="product.imageUrl" :alt="product.name" onerror="klevu.dom.helpers.cleanUpProductImage(this)" class="prodImg" width="100%" loading="lazy"/> -->
+                                            </a>
+                                            <button
+                                                x-data="initWishlist()"
+                                                @click.prevent="addToWishlist(product.id)"
+                                                aria-label="Add to Wish List"
+                                                type="button"
+                                                class="rounded-full hidden md:inline-flex ring-1 ring-gray-300 absolute top-2.5 right-2.5 w-9 h-9 shadow-xl bg-white p-0 border-0 shrink-0 items-center justify-center text-gray-500 hover:text-red-600 ml-2"
+                                            >
+                                                <svg
+                                                    id="Layer_1"
+                                                    class="w-5 h-5"
+                                                    data-name="Layer 1"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 15.91 20"
+                                                >
+                                                    <defs>
+                                                        <style>
+                                                            .wishList {
+                                                                fill: #0d2f47;
+                                                            }
+                                                        </style>
+                                                    </defs>
+                                                    <path
+                                                        class="wishList"
+                                                        d="M14.41,1.5v16L9.27,12.71a1.62,1.62,0,0,0-2.19,0L1.5,17.58V1.5H14.41M14.76,0H1.15A1.16,1.16,0,0,0,0,1.15v18.1a.74.74,0,0,0,1.24.56l6.83-6a.12.12,0,0,1,.18,0l6.38,5.9a.74.74,0,0,0,.52.21.76.76,0,0,0,.76-.77v-18A1.15,1.15,0,0,0,14.76,0Z"
+                                                    ></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="ku-product-detail-padding">
+                                            <div class="flex justify-between h-[18px]">
+                                                <div class="flex items-baseline">  
+                                                    <div class="klevu-stars-small-l2"
+                                                        x-bind:style="{
+                                                            display: (product.rating > 0 && typeof product.rating !== 'undefined' ) > 0 ? 'block' : 'none'
+                                                        }"
+                                                    > 
+                                                        <div class="klevu-rating-l2" 
+                                                            x-bind:style="{
+                                                                width: (20 * Number(product.rating)) + '%',
+                                                                display: (product.rating > 0 && typeof product.rating !== 'undefined' ) > 0 ? 'block' : 'none'
+                                                            }"
+                                                        >
+                                                        </div>
+                                                    </div>  
+                                                    <template x-if="typeof product.ratingCount !== 'undefined' && product.ratingCount && product.ratingCount > 1">
+                                                        <div class="ml-1" x-html="' | ' + product.ratingCount"></div> 
+                                                    </template>
+                                                </div>
+                                                <template x-if="
+                                                    (product.hasOwnProperty('color') && product.color !== '') &&
+                                                    JSON.parse(product.additionalDataToReturn).swatches && 
+                                                    JSON.parse(product.additionalDataToReturn).swatches.color && 
+                                                    JSON.parse(product.additionalDataToReturn).swatches.color.options && 
+                                                    JSON.parse(product.additionalDataToReturn).swatches.color.options.length > 1
+                                                " >
+                                                    <div class="capitalize text-xs !text-ahy-blue hidden md:block" x-show="JSON.parse(product.additionalDataToReturn).swatches.color.options.length > 1" x-html="JSON.parse(product.additionalDataToReturn).swatches.color.options.length + ' Color'"></div>
+                                                </template>
+                                            </div>
+                                            <div class="kuRECS-itemDesc">
+                                                <a
+                                                    :title="product.name"
+                                                    :href="product.url"
+                                                    :data-id="product.id"
+                                                    class="kuRECSItemClick kuRECSTitle klevuProductClick kuTrackRecentView line-clamp-2 !text-lg !font-extrabold !h-10 !text-ahy-blue !leading-[1.21rem]"
+                                                    x-html="product.name"
+                                                ></a>
+                                                <div class="capitalize !text-xs text-ahy-rating-text !font-medium whitespace-normal line-clamp-1 h-4">
+                                                    <span>sold by</span> <span class="capitalize text-xs !text-ahy-blue" x-text="product.shoptitle"></span> 
+                                                </div>
+                                                <div class="kuRECS-itemPrice">
+                                                    <!-- KU pricing start -->
+                                                    <div class="kuPrice min-h-[5.5rem] !overflow-visible">
+                                                        <div class="kuSalePrice kuStartPrice flex !text-2xl">
+                                                            <div class="capitalize text-ahy-red !font-bold !text-sm">
+                                                                <template x-if="JSON.parse(product.additionalDataToReturn).product_types.productType === 'configurable'">
+                                                                    <div class="">from</div>
+                                                                </template>
+                                                            </div>
+                                                            <span class="!text-ahy-blue !font-extrabold" x-html="hyva.formatPrice(product.startPrice)"></span>
+                                                        </div>
+                                                    </div>
+                                                    <!-- KU pricing end -->
+                                                </div>
+                                            </div>
+                                            <div class="grid grid-cols-2 items-center gap-4 md:h-[55px]">
+                                                <div class="capitalize !text-ahy-blue !font-semibold !text-sm" x-text="product.shipping"></div>
+                                                <div class="kuRECSItemBottom">
+                                                    <template x-if="JSON.parse(product.additionalDataToReturn).product_types.productType === 'configurable' && product.inStock === 'yes'">
+                                                        <div
+                                                            class="kuAddtocart !m-0" x-data="{ 
+                                                                open: false, 
+                                                                addStylesheet: function() {
+                                                                    if (!this.open) {
+                                                                        const existingStyleTag = document.getElementById('swiperjs-slider-styles');
+                                                                        if (existingStyleTag) {
+                                                                            existingStyleTag.remove();
+                                                                        }
+                                                                        return;
+                                                                    }
+                                                                    const styleTag = document.createElement('style'); 
+                                                                    styleTag.setAttribute('id', 'swiperjs-slider-styles'); 
+                                                                    document.head.appendChild(styleTag); this.updateStyles(); 
+                                                                }, 
+                                                                updateStyles: function() { 
+                                                                    const styleTag = document.getElementById('swiperjs-slider-styles'); 
+                                                                    if (styleTag) { 
+                                                                        styleTag.innerHTML = this.open ? `
+                                                                            .swiper-backface-hidden .swiper-slide,
+                                                                            .swiper-android .swiper-slide,
+                                                                            .swiper-ios .swiper-slide,
+                                                                            .swiper-wrapper {
+                                                                                transform: none !important;
+                                                                            }
+                                                                            .swiper-scrollbar.swiper-scrollbar-horizontal {
+                                                                                z-index: 0 !important;
+                                                                            }
+                                                                            .more-seller-items .swiper.swiper-initialized.swiper-horizontal.swiper-free-mode{
+                                                                                z-index: 999;
+                                                                            }
+                                                                        ` : ''; 
+                                                                    } 
+                                                                } 
+                                                            }" 
+                                                            x-init="addStylesheet" 
+                                                            x-bind:id="'<%=item.id%>'" 
+                                                            x-ref="optionsConfigurableSidebarQuickviewComponent"
+                                                        >
+                                                            <button
+                                                                class="capitalize kuBtnDark !flex justify-center items-center w-full !rounded-full !bg-transparent !text-ahy-blue hover:shadow-[#0d2f47_0px_0px_0px_1px_inset] !text-sm !py-1.5 !px-2.5 font-bold !border-2 !border-ahy-blue kuLandingAddToCartBtn"
+                                                                role="button"
+                                                                tabindex="0"
+                                                                area-label="Option"
+                                                                x-on:click.prevent="open = true; addStylesheet()"
+                                                            >
+                                                                options
+                                                            </button>
+                                                            <template x-if="open">
+                                                                <div class="fixed inset-0 overflow-hidden z-[500]" x-ref="slideOutModal" x-on:click.self="open=false; addStylesheet()">
+                                                                    <div class="absolute inset-0 overflow-hidden">
+                                                                        <div class="absolute inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true" x-on:click="open=false; addStylesheet()"></div>
+                                                                        <section class="absolute inset-y-0 right-0 pl-10 max-w-full flex" aria-labelledby="slide-over-title">
+                                                                            <div class="relative w-screen max-w-md">
+                                                                                <div class="h-full flex flex-col p-6 bg-white shadow-xl overflow-y-scroll">
+                                                                                    <div class="px-4 sm:px-6">
+                                                                                        <div class="flex items-start justify-between">
+                                                                                            <div class="text-lg font-medium text-ahy-blue whitespace-normal" id="slide-over-title"  x-html="product.name">
+                                                                                            </div>
+                                                                                            <div class="ml-3 h-7 flex items-center">
+                                                                                                <button class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500" x-on:click="open=false; addStylesheet()">
+                                                                                                    <span class="sr-only">Close panel</span>
+                                                                                                    <!-- Heroicon name: x -->
+                                                                                                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                                                                    </svg>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="mt-6 relative px-4 whitespace-normal sm:px-6">
+                                                                                        <span>Sold and Shipped by <span x-text="product.shoptitle"></span></span>
+                                                                                        <div class="flex items-baseline">  
+                                                                                            <div class="klevu-stars-small-l2"
+                                                                                                x-bind:style="{
+                                                                                                    display: (product.rating > 0 && typeof product.rating !== 'undefined' ) ? 'block' : 'none'
+                                                                                                }"
+                                                                                            > 
+                                                                                                <div class="klevu-rating-l2" 
+                                                                                                    x-bind:style="{
+                                                                                                        width: (20 * Number(product.rating)) + '%',
+                                                                                                        display: (product.rating > 0 && typeof product.rating !== 'undefined' ) > 0 ? 'block' : 'none'
+                                                                                                    }"
+                                                                                                >
+                                                                                                </div>
+                                                                                            </div>  
+                                                                                            <template x-if="typeof product.ratingCount !== 'undefined' && product.ratingCount && product.ratingCount > 1">
+                                                                                                <div class="ml-1" x-html="' | ' + product.ratingCount"></div> 
+                                                                                            </template>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div id="product-swatch-gallery-html" class="py-4"></div>
+                                                                                    <div class="kuPriceAhy" id="product-price-ahy"></div>
+                                                                                    <div class="quickviewsidecart-parent-node" @close-quickview.window="open = false">
+                                                                                        <div class="kuAddtocart quickview-sidecart !m-0 z-30 bg-white absolute right-0 left-0 bottom-0 p-8" data-id="" style="display:none;">
+                                                                                            <button disabled data-id=""  onClick=""  title="Please choose your options" class="btn bg-ahy-red hover:bg-ahy-red-light rounded-full focus:ring-transparent w-full" id="product-addtocart-button">
+                                                                                                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 ml-4 md:ml-0 lg:ml-2 hover:text-black" viewBox="0 0 30.61 25.71">
+                                                                                                    <defs>
+                                                                                                        <style>
+                                                                                                            .stroke-2{stroke-width: 2!important;} .cls-1,.cls-2{fill:none !important;stroke:#0d2f47;}.cls-1{stroke-linecap:round;stroke-linejoin:round;} .cls-2{stroke-miterlimit:10;}
+                                                                                                        </style>
+                                                                                                    </defs>
+                                                                                                    <polyline class="cls-1 stroke-2" points="0.75 0.75 5.51 0.75 10.82 15.88 25.24 15.88 29.86 3.3 10.84 3.3"></polyline>
+                                                                                                    <circle class="cls-2 stroke-2" cx="11.98" cy="22.46" r="2.5"></circle>
+                                                                                                    <circle class="cls-2 stroke-2" cx="24.48" cy="22.46" r="2.5"></circle>
+                                                                                                </svg>
+                                                                                                <span class="w-full font-bold py-3 md:py-0 relative md:left-0">Please Select Options</span>
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <?php // Swatch Content Start ?>
+                                                                                        <div id="swatch_html" class='mb-16' x-data="fetchConfigurableProductSwatches()" x-init="fetchSwatches(product.itemGroupId)">Loading Swatch Content...</div>
+                                                                                    <?php // Swatch Content Ends ?>
+                                                                                </div>
+                                                                            </div>
+                                                                        </section>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                        </div>
+                                                    </template>
+                                                    <template x-if="JSON.parse(product.additionalDataToReturn).product_types.productType === 'simple' && product.inStock === 'yes'">
+                                                        <div class="kuRECSItemBottom" x-data="klevuCartHandler()" x-init="init()">
+                                                            <button
+                                                                class="kcButtonElement kcButtonAddToCart w-full"
+                                                                 x-ref="addToCartButton"
+                                                                @click="klevu_addtocart(product.id, product.url, 1)"
+                                                                data-productid="product.id"
+                                                                data-producturl="product.url"
+
+                                                            >
+                                                                <span
+                                                                    x-bind:id="'kuAddToCartBtn-' + product.id"
+                                                                    class="capitalize kuBtnDark !flex justify-center items-center w-full !rounded-full !bg-transparent !text-ahy-blue hover:shadow-[#0d2f47_0px_0px_0px_1px_inset] !text-sm !py-1.5 !px-2.5 font-bold !border-2 !border-ahy-blue kuLandingAddToCartBtn"
+                                                                >
+                                                                    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 lg:ml-2 hover:text-black" viewBox="0 0 30.61 25.71">
+                                                                        <defs>
+                                                                            <style>
+                                                                                .stroke-2 {
+                                                                                    stroke-width: 2.5 !important;
+                                                                                }
+                                                                                .cls-1,
+                                                                                .cls-2 {
+                                                                                    fill: none !important;
+                                                                                    stroke: #0d2f47;
+                                                                                }
+                                                                                .cls-1 {
+                                                                                    stroke-linecap: round;
+                                                                                    stroke-linejoin: round;
+                                                                                }
+                                                                                .cls-2 {
+                                                                                    stroke-miterlimit: 10;
+                                                                                }
+                                                                            </style>
+                                                                        </defs>
+                                                                        <polyline class="cls-1 stroke-2" points="0.75 0.75 5.51 0.75 10.82 15.88 25.24 15.88 29.86 3.3 10.84 3.3"></polyline>
+                                                                        <circle class="cls-2 stroke-2" cx="11.98" cy="22.46" r="2.5"></circle>
+                                                                        <circle class="cls-2 stroke-2" cx="24.48" cy="22.46" r="2.5"></circle>
+                                                                    </svg>
+                                                                    <span class="!text-sm px-2 font-bold"> add </span>
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                    </template>
+                                                    <template x-if="(product.inStock !== 'yes')">
+                                                        <a :href="product.url" class="capitalize kuBtnDark !flex justify-center items-center w-full !rounded-full !bg-transparent !text-ahy-blue hover:shadow-[#0d2f47_0px_0px_0px_1px_inset] !text-sm !py-1.5 !px-2.5 font-bold !border-2 !border-ahy-blue">
+                                                            <span class="!text-sm px-2 font-bold">
+                                                                <?= __('Details') ?>
+                                                            </span>
+                                                        </a>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                    </div>
+                    <div class="swiper-scrollbar"></div>
+                </div>
+        </template>
+    </section>
+
+    <script>
+        function sellerProduct() {
+            return {
+                apiKey: <?= json_encode($apiKey) ?>,
+                shopTitle: <?= json_encode(trim($shopTitle)) ?>,
+                data: [], // Alpine.js reactive property to store the data
+                additionalDataToReturn: [],
+
+                init() {
+                    var myHeaders = new Headers();
+                    myHeaders.append("Content-Type", "application/json");
+
+                    var raw = JSON.stringify({
+                        "context": {
+                            "apiKeys": [
+                                this.apiKey
+                            ]
+                        },
+                        "recordQueries": [
+                            {
+                                "id": "productList",
+                                "typeOfRequest": "SEARCH",
+                                "settings": {
+                                    "query": {
+                                        "term": "*"
+                                    },
+                                    "typeOfRecords": [
+                                        "KLEVU_PRODUCT"
+                                    ],
+                                    "limit": "12",
+                                    "searchPrefs": [
+                                        "searchCompoundsAsAndQuery"
+                                    ],
+                                    "fallbackQueryId": "productListFallback",
+                                    "customANDQuery": "(shoptitle:\"" + this.shopTitle + "\")"
+                                }
+                            },
+                            {
+                                "id": "productListFallback",
+                                "typeOfRequest": "SEARCH",
+                                "isFallbackQuery": "true",
+                                "settings": {
+                                    "query": {
+                                        "term": "*"
+                                    },
+                                    "typeOfRecords": [
+                                        "KLEVU_PRODUCT"
+                                    ],
+                                    "limit": "12",
+                                    "searchPrefs": [
+                                        "excludeDescription",
+                                        "searchCompoundsAsAndQuery"
+                                    ],
+                                    "sort": "RELEVANCE"
+                                }
+                            }
+                        ]
+                    });
+
+                    var requestOptions = {
+                        method: 'POST',
+                        headers: myHeaders,
+                        body: raw,
+                        redirect: 'follow'
+                    };
+                    fetch("https://uscs32v2.ksearchnet.com/cs/v2/search", requestOptions)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Set the data as the Alpine.js reactive property
+                            this.data = data.queryResults[0].records;
+                            // Call processData function to process the data
+                            this.processData();
+                        })
+                        .catch(error => console.log('Error:', error));
+                },
+                processData() {
+                    this.data.forEach(product => {
+                        this.additionalDataToReturn.push(JSON.parse(product.additionalDataToReturn ?? ''));
+                        // this.price.push(product.price ?? '');
+                        // this.imageUrl.push(product.imageUrl ?? '');
+                        // this.inStock.push(product.inStock ?? false);
+                        // this.id.push(product.id ?? '');
+                        // this.itemGroupId.push(product.itemGroupId ?? '');
+                        // this.toPrice.push(product.toPrice ?? '');
+                        // this.product_brand.push(product.product_brand ?? '');
+                        // this.shoptitle.push(product.shoptitle ?? '');
+                        // this.sku.push(product.sku ?? '');
+                        // this.swatchesInfo.push(product.swatchesInfo ?? '');
+                        // this.totalVariants.push(product.totalVariants ?? '');
+                        // this.groupPrices.push(product.groupPrices ?? '');
+                        // this.name.push(product.name ?? '');
+                        // this.url.push(product.url ?? '');
+                        // this.color.push(product.color ?? '');
+                    });
+                },
+                async klevu_addtocart(id, url, qty, options = {}) {
+                    let spinnerColor = '#000'; //Black for simple products and white for configurable
+
+                    let form = document.createElement("form");
+                    form.setAttribute('id', "ahyAddToCartFormId");
+                    form.setAttribute('method', "post");
+                    form.setAttribute('action', `${BASE_URL}/checkout/cart/add/`);
+                    let formKey = document.createElement("input"); //input element form_key, hidden
+                    formKey.setAttribute('type', "hidden");
+                    formKey.setAttribute('name', "form_key");
+                    formKey.setAttribute('value', hyva.getFormKey());
+
+                    let productId = document.createElement("input"); //input element product, hidden
+                    productId.setAttribute('type', "hidden");
+                    productId.setAttribute('name', "product");
+                    productId.setAttribute('value', id);
+
+                    let quantity = document.createElement("input"); //input element qty, hidden
+                    quantity.setAttribute('type', "hidden");
+                    quantity.setAttribute('name', "qty");
+                    quantity.setAttribute('value', qty);
+
+                    form.appendChild(formKey);
+                    form.appendChild(productId);
+                    form.appendChild(quantity);
+
+                    // Add options for configurable products
+
+                    if (Object.keys(options).length > 0) {
+                        spinnerColor = '#fff';
+                        for (const [key, value] of Object.entries(options)) {
+                            let option = document.createElement("input");
+                            option.setAttribute('type', "hidden");
+                            option.setAttribute('name', `super_attribute[${key}]`);
+                            option.setAttribute('value', value);
+                            form.appendChild(option);
+                        }
+                    }
+
+                    document.body.appendChild(form);
+
+                        const data = new URLSearchParams(new FormData(form)),
+                            button = form.querySelector('button') ?
+                                form.querySelector('button') :
+                                ( document.getElementById('kuAddToCartBtn-' + id) || document.querySelector('[data-productid="' + id + '"]') ),
+
+                            loader = document.createElement('div');
+
+                            loader.className = 'absolute inset-0 flex justify-center items-center loader';
+
+                            loader.innerHTML = `
+                                <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="32" height="32" viewBox="0 0 128 128" xml:space="preserve">
+                                    <g>
+                                        <circle cx="16" cy="64" r="4" fill="${spinnerColor}"/>
+                                        <circle cx="16" cy="64" r="8" fill="${spinnerColor}" transform="rotate(45 64 64)"/>
+                                        <circle cx="16" cy="64" r="12" fill="${spinnerColor}" transform="rotate(90 64 64)"/>
+                                        <circle cx="16" cy="64" r="16" fill="${spinnerColor}" transform="rotate(135 64 64)"/>
+                                        <animateTransform attributeName="transform" type="rotate" values="45 64 64;90 64 64;135 64 64;180 64 64;225 64 64;270 64 64;315 64 64;0 64 64" calcMode="discrete" dur="960ms" repeatCount="indefinite"/>
+                                    </g>
+                                </svg>
+                            `;
+                        button.prepend(loader);
+                        button.classList.add('relative', 'is-loading');
+                        button.disabled = true;
+                        // Estate Api Integration
+                        const orchidResult = await window.ahy_handleOrchid();
+                        console.log("Orchid check result:", orchidResult);
+
+                        if (orchidResult !== 1) {
+                            console.warn('Orchid validation failed, stopping ATC.');
+                            loader.remove();
+                            button.classList.remove('is-loading');
+                            button.disabled = false;
+                            return; 
+                        }
+
+                        fetch(form.action, {
+                            method: 'POST',
+                            body: data,
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                            .then(res => {
+                                if (!res.ok) {
+                                    return form.submit();
+                                }
+
+                                if (res.redirected) {
+                                    return [];
+                                }
+
+                                return res.json();
+                            })
+                            .then(data => {
+                                if (data.backUrl) {
+                                    form.submit();
+                                }
+                                window.dispatchEvent(new CustomEvent('product-addtocart-success'));
+                                window.dispatchEvent(new CustomEvent('reload-customer-section-data'));
+                            })
+                            .catch(err => {
+                                window.dispatchEvent(new CustomEvent('product-addtocart-error'));
+
+                                this.setMessage({
+                                    text:'There was a problem adding your item to the cart.',
+                                    type: 'error'
+                                });
+                            })
+                            .finally(() => {
+                                try {
+                                    var messages = hyva.getCookie('mage-messages');
+                                    messages = messages ? JSON.parse(decodeURIComponent(messages).replace(/\+/g, ' ')) : [];
+                                    document.cookie = 'mage-messages=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
+                                } catch (error) {
+                                    console.warn('Error parsing Cookie Messages:', error);
+                                    return;
+                                }
+
+                                setTimeout(() => {
+                                    loader.remove();
+                                    button.classList.remove('is-loading');
+                                    button.disabled = false;
+
+                                    //Close Quickview sidebar
+                                    window.dispatchEvent(new CustomEvent('close-quickview'));
+
+                                    // toggle the mini cart after add to cart.
+                                    window.dispatchEvent(new CustomEvent("toggle-cart"));
+
+                                    messages.forEach(message => {
+                                        this.setMessage(message);
+                                    });
+                                }, 1000);
+                            });
+                    document.body.removeChild(form);
+                },
+                setMessage(message) {
+                    typeof window.dispatchMessages !== "undefined" && window.dispatchMessages(
+                        [message], 5000
+                    );
+                },
+            };
+        }
+    </script>
+    <style>
+        .more-seller-items .meet-marcus-section {
+            display: none;
+        }
+
+        .kuRECSContainer {
+            position: relative;
+        }
+        .swiper-horizontal>.swiper-scrollbar{
+            height: 10px !important;
+        }
+        .kuRECSContainer .kuRECSHeader .kuRECSTitle {
+            display: block;
+            line-height: 1;
+            font-size: 2rem;
+            font-weight: bold;
+            overflow: visible;
+            white-space: pre-wrap;
+            text-overflow: ellipsis;
+        }
+
+        .swiper-scrollbar.swiper-scrollbar-horizontal {
+            height: 10px !important;
+            width: 100% !important;
+            left: 0 !important;
+        }
+
+        @media screen and (max-width: 500px) {
+            .kuRECSContainer .kuRECSHeader .kuRECSTitle {
+                font-size: 1.5rem;
+            }
+        }
+
+        .klevu-product-card-shipping-label {
+            white-space: break-spaces;
+        }
+
+        .ku-product-card {
+            height: 530px;
+        }
+
+        .ku-product-detail-padding {
+            padding: 24px 24px 0;
+        }
+
+        /* Padding for screens below 470px */
+        @media screen and (max-width: 470px) {
+            .ku-product-detail-padding {
+            padding: 24px 0 0;
+            }
+        }
+
+        .kuRECSContainer .kuRECSWrap {
+            max-width: 100%;
+            position: relative;
+            padding: 0px;
+            box-sizing: border-box;
+            font-family: inherit;
+            overflow: hidden;
+        }
+
+        .kuRECSContainer .kuRECSWrap * {
+            outline: none;
+        }
+
+        .kuRECSContainer .kuRECSResults {
+            width: 100%;
+            max-width: 100%;
+            overflow: auto;
+        }
+
+        .kuRECSContainer .kuRECSResultsInner {
+            transition: -ms-transform 0.5s ease 0s, -webkit-transform 0.5s ease 0s, transform 0.5s ease 0s;
+            position: relative;
+            white-space: nowrap;
+            transition: all 0.5s ease;
+        }
+
+        .kuRECSContainer .kuRECSResultsInner .kuRECS-itemWrap {
+            display: inline-block;
+            margin: 0px;
+            vertical-align: top;
+        }
+
+        .kuRECSContainer .kuRECSResultsInner .kuRECS-item {
+            margin: 0 auto;
+            padding: 12px;
+            background: #fff;
+        }
+
+        .kuRECS-itemWrap.kuRECSItem {
+            background: white;
+        }
+
+        /* Styles for mobile devices */
+        @media screen and (max-width: 767px) {
+            .kuRECS-itemWrap.kuRECSItem {
+            width: 70%;
+            }
+        }
+
+        /* Styles for tablets */
+        @media screen and (min-width: 768px) and (max-width: 1023px) {
+            .kuRECS-itemWrap.kuRECSItem {
+            width: 50%;
+            }
+        }
+
+        /* Styles for Minicart */
+        .ahy-minicart-drawer .kuRECS-itemWrap.kuRECSItem {
+            width: 270px !important;
+        }
+
+        /* Styles for laptops */
+        @media screen and (min-width: 1024px) and (max-width: 1279px) {
+            .kuRECS-itemWrap.kuRECSItem {
+            width: 33.33%;
+            }
+        }
+
+        /* Styles for desktops */
+        @media screen and (min-width: 1280px) {
+            .kuRECS-itemWrap.kuRECSItem {
+            width: 25%;
+            }
+        }
+
+        .kuRECSContainer .kuRECSResultsInner .kuRECS-itemImg {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            height: 210px;
+        }
+
+        .kuRECSContainer .kuRECSResultsInner a.kuRECSImg img {
+            max-width: 100%;
+            height: auto;
+            width: auto;
+            display: inline-block;
+            margin: 0 auto;
+        }
+
+        .kuRECSContainer .kuRECSResultsInner a.kuRECSTitle {
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            display: block;
+            color: #000;
+        }
+
+        .kuRECSContainer .kuRECSResultsInner .kuRECS-itemDesc {
+            margin-top: 12px;
+            box-sizing: border-box;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipse;
+        }
+
+        .kuRECSContainer .kuRECSResultsInner .kuRECS-itemTag {
+            color: rgba(0, 0, 0, 0.5);
+            line-height: 110%;
+            margin-bottom: 5px;
+            min-height: 20px;
+        }
+
+        .kuRECSContainer .kuRECSResultsInner .kuRECS-itemSku {
+            color: rgba(0, 0, 0, 0.5);
+            font-size: 80%;
+            line-height: 110%;
+            margin-bottom: 5px;
+        }
+
+        .kuRECSContainer .kuRECSResultsInner .kuRECS-itemPrice {
+            font-size: 12px;
+            color: #545454;
+            margin-bottom: 4px;
+            margin-top: 4px;
+        }
+
+        .kuRECSContainer .kuRECSResultsInner .kuRECS-itemPrice .kuSalePrice {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .kuRECSContainer .kuRECSResultsInner .kuRECSAddToCartBtn {
+            border: 0px;
+            width: 100%;
+            padding: 6px;
+            cursor: pointer;
+            margin-top: 8px;
+            background: #ececec;
+            color: #000;
+            border-radius: 2px;
+        }
+
+        .kuRECSContainer .kuRECSResultsInner .kuRECSAddToCartBtn:hover {
+            background: #333333;
+            color: #ececec;
+        }
+
+        </style>
+
+    
+<?php endif;?>

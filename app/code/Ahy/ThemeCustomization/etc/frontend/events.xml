@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="hyva_checkout_ahy_booted">
+        <observer name="ahy_themecustomization_observer_frontend_hyva_checkoutahybooted_hyva_checkout_ahy_booted" instance="Ahy\ThemeCustomization\Observer\Frontend\Hyva\CheckoutAhyBooted"/>
+    </event>
+</config>

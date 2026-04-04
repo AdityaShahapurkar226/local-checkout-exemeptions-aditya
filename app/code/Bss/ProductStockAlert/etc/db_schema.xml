@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Bss_ProductStockAlert
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2020-2022 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="bss_product_alert_stock" resource="default" engine="innodb" comment="Product Alert Stock">
+    <column xsi:type="int" name="alert_stock_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Product alert stock id"/>
+    <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Customer id"/>
+    <column xsi:type="varchar" name="customer_email" nullable="false" length="255" comment="Customer Email"/>
+    <column xsi:type="varchar" name="customer_name" nullable="false" length="255" comment="Customer Name"/>
+    <column xsi:type="varchar" name="product_sku" nullable="false" length="255" comment="Product Sku"/>
+    <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Product id"/>
+    <column xsi:type="smallint" name="website_id" padding="5" unsigned="true" nullable="false" identity="false" default="0" comment="Website id"/>
+    <column xsi:type="timestamp" name="add_date" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Product alert add date"/>
+    <column xsi:type="timestamp" name="send_date" on_update="false" nullable="true" comment="Product alert send date"/>
+    <column xsi:type="smallint" name="send_count" padding="5" unsigned="true" nullable="false" identity="false" default="0" comment="Send Count"/>
+    <column xsi:type="smallint" name="status" padding="5" unsigned="true" nullable="false" identity="false" default="0" comment="Product alert status"/>
+    <column xsi:type="int" name="parent_id" padding="10" unsigned="false" nullable="true" identity="false" comment="Parent ID"/>
+    <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false" default="0" comment="store_id"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="alert_stock_id"/>
+    </constraint>
+    <constraint xsi:type="unique" referenceId="BSS_PRODUCT_ALERT_STOCK_CUSTOMER_EMAIL_WEBSITE_ID_PRODUCT_ID">
+      <column name="customer_email"/>
+      <column name="website_id"/>
+      <column name="product_id"/>
+    </constraint>
+    <index referenceId="BSS_PRODUCT_ALERT_STOCK_CUSTOMER_ID" indexType="btree">
+      <column name="customer_id"/>
+    </index>
+    <index referenceId="BSS_PRODUCT_ALERT_STOCK_PRODUCT_ID" indexType="btree">
+      <column name="product_id"/>
+    </index>
+    <index referenceId="BSS_PRODUCT_ALERT_STOCK_WEBSITE_ID" indexType="btree">
+      <column name="website_id"/>
+    </index>
+  </table>
+</schema>

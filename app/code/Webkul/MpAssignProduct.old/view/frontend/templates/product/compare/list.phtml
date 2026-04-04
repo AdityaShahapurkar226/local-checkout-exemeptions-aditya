@@ -1,0 +1,38 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+    $mpAssignBlock = $block->getLayout()->createBlock(\Webkul\MpAssignProduct\Block\Link::class);
+    $helper = $mpAssignBlock->getHelperObject();
+    $_productCollection = $block->getLoadedProductCollection();
+    $assignInfo = [];
+foreach ($block->getItems() as $_product) {
+    $productUrl = $_product->getProductUrl();
+    $totalSellers = $helper->assignProductsCount($_product->getId());
+    $productType = $_product->getTypeId();
+
+    $assignInfo[$productUrl]['msg'] =  __('Available from %1 more seller(s)', $totalSellers);
+    $assignInfo[$productUrl]['totalSellers'] = $totalSellers;
+}
+    $data = [
+                "assignInfo" => $assignInfo,
+                "msg" => __('Availabe from other sellers'),
+                "label" => __("view")
+            ];
+    $data = json_encode($data);
+    ?>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "list": <?= /* @noEscape */ $data ?>
+        }
+    }
+</script>

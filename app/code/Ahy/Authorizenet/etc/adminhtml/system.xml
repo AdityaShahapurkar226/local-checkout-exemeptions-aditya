@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <!-- <section id="payment" sortOrder="1000" showInWebsite="1" showInStore="1" showInDefault="1" translate="label "> -->
+        <section id="payment" sortOrder="1000" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+
+            <group id="authnetahypayment" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label comment">
+                <label>Authorize.net CIM (by Ahy Consulting)</label>
+                <comment><![CDATA[<div style="float:left;margin-left:50px;text-align:center;"><img src="/media/logo/authorize.net-ahyconsulting-hyva.png" width="250" height="auto" border="0" alt="Authorize.net Certified Solution" /><br />by <a href="https://ahyconsulting.com/" target="_blank">Ahy Consulting.</a></div>]]></comment>
+                <field id="active" type="select" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="title" type="text" sortOrder="20" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                    <label>Title</label>
+                </field>
+                <field id="accountType" translate="label comment" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Account Type</label>
+                    <options>
+                        <option label="Sandbox Account">sandBoxAccount</option>
+                        <option label="Live Merchant Account">liveAccount</option>
+                    </options>
+                    <comment>Test mode must be disabled on the account.</comment>
+                </field>
+                <field id="login" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>API Login ID</label>
+                </field>
+                <field id="trans_key" translate="label comment" type="obscure" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Transaction Key</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <comment><![CDATA[Required. Find these in Authorize.net at <em>Account &gt; Settings &gt; Security Settings &gt; General Security Settings &gt; API Credentials &amp; Keys</em>.]]></comment>
+                </field>
+                <field id="order_status" type="select" sortOrder="40" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                    <label>New Order Status</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status\Newprocessing</source_model>
+                </field>
+                <field id="api_authentication" translate="label" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>API Authentication Status:</label>
+                    <frontend_model>Ahy\Authorizenet\Block\Adminhtml\Config\ApiAuthentication</frontend_model>
+                    <config_path>payment/ahyauthorizenet/api_authentication</config_path>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

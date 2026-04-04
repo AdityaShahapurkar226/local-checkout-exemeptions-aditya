@@ -1,0 +1,103 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Catalog\Block\Product\View\Details;
+use Magento\Framework\Escaper;
+
+/** @var Details $block */
+/** @var Escaper $escaper */
+
+$titleRenderer = $block->getChildBlock('product.section.title.renderer');
+$defaultTitleTemplate = $titleRenderer->getTemplate();
+
+$handleTitle = [];
+$handleContent = [];
+
+foreach ($block->getGroupSortedChildNames('detailed_info', '') as $sectionName) {
+    $sectionBlock = $block->getLayout()->getBlock($sectionName);
+    $sectionHtml = (string) $sectionBlock->toHtml();
+    $titleTemplate = $sectionBlock->getData('title_template') ?? $defaultTitleTemplate;
+
+    if (empty(trim($sectionHtml))) {
+        continue;
+    }
+
+    $handleTitle[] = $sectionBlock->getTitle() ? $escaper->escapeHtml($sectionBlock->getTitle()) : '&nbsp;';
+    $handleContent[] = $sectionHtml;
+}
+
+$tabTitle = '';
+$tabContent = '';
+
+foreach ($handleTitle as $title) {
+    $tabTitle .= '
+        <a :class="{ \'active border-b-4 border-ahy-blue text-ahy-blue\': tab === \'' . $title . '\' }"
+            @click.prevent="tab = \'' . $title . '\'" href="#" class="text-sm mx-4 font-bold pb-4 pt-6 mt-1" :id="$id(\'' . $title . '\')"
+            data-title= "' . $title . '">' . $title .'</a>
+        ';
+
+    $tabContent .= '<div x-show="tab === \'' . $title . '\'"> ' . array_shift($handleContent) . ' </div>';
+}
+?>
+<div 
+    x-data="{ 
+        tab: '<?= $handleTitle[0] ?>',
+        isMobile: (window.innerWidth < 768) ? true : false,
+        open: false
+    }" 
+    id="tab_wrapper" class="pt-8 pl-4"
+    x-on:resize.window="isMobile = (window.innerWidth < 768) ? true : false" 
+>
+    <div 
+        class="text-center tab-bg-line-desktop overflow-auto md:overflow-visible pb-4 uppercase flex justify-start md:justify-center" 
+        :class="{'w-screen left-1/2 right-1/2 mx-[-50vw] relative': isMobile}"
+    >
+        <div class="bg-ahy-bg text-ahy-blue tab-bg-mobile relative flex pr-4 pl-4 sm:pl-6 shadow-lg md:rounded-full md:pr-8 md:pl-12 w-[767px] sm:justify-center md:w-full">
+            <?= $tabTitle ?>
+        </div>
+    </div>
+    <div class="flex flex-col mt-4 xl:w-[77%] xl:m-auto pt-4 md:pt-11">
+        <?= $tabContent ?>
+    </div>
+</div>
+
+<style>
+    a[data-title="shipping & returns"] {
+        width: 10rem;
+    }
+
+    #tab_wrapper p {
+        padding: 0;
+    }
+
+    /* .tab-bg-line-desktop::-webkit-scrollbar {
+        background-color: transparent;
+    }
+
+    .tab-bg-line-desktop::-webkit-scrollbar-thumb {
+        background-color: transparent;
+    }
+
+    @media screen and (min-width: 768px) {
+        .tab-bg-line-desktop:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 100%;
+            width: 100vw;
+            z-index: -1;
+            background: linear-gradient(0deg, transparent 59%, #cfcfcf 60%, transparent 61%);
+        }
+    } */
+
+    @media screen and (max-width: 767px) {
+        a[data-title="meet seller"] {
+            width: 6rem;
+        }
+        a[data-title="shipping & returns"] {
+            width: 9.3rem;
+        }
+    }
+</style>

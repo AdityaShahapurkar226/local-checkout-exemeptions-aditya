@@ -1,0 +1,47 @@
+<?php
+/** @var \Ahy\EstateApiIntegration\Block\SuccessMessage $block */
+$message = $block->getOrderHoldMessage();
+if ($message):
+?>
+<div class="message-wrapper">
+
+    <div class="message notice sm:mt-10 mt-16 mb-0">
+        <?php echo $message; ?>
+    </div>
+
+</div>
+    
+<?php endif; ?>
+
+<style>
+    .message{
+        width: 65% !important;
+        display: flex;
+        justify-content: center;
+        align-items: start;
+        line-height: 1.7;
+    }
+    .message-wrapper{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    @media (max-width:1440px) {
+        .message{
+            width: 80% !important;
+        }
+    }
+
+    @media (max-width: 768px){
+        .message{
+            width: 100% !important;
+        }
+    }
+
+     .underline-weight{
+        text-decoration-thickness: 1.4px; 
+        text-underline-offset: 5px;
+          display: inline-block;
+    }
+</style>

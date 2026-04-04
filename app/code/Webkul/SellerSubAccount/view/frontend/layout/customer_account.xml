@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_SellerSubAccount
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="seller_account_navigation">
+            <block class="Webkul\SellerSubAccount\Block\Link"  name="seller_sub_account_link" before="-" template="Webkul_SellerSubAccount::account/navigation.phtml" />
+        </referenceBlock>
+    </body>
+</page>

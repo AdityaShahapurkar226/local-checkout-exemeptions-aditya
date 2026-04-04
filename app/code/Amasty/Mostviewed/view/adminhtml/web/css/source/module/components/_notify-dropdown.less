@@ -1,0 +1,67 @@
+//
+// Notification dropdown styles
+// _______________________________________________
+
+//
+//  Common
+//  ----------------------------------------------
+
+& when (@media-common = true) {
+    .amrelated-dropdown-block {
+        > .amrelated-toggle {
+            & {
+                .lib-icon-font(@icon-up, @_icon-font-size: 3rem, @_icon-font-position: after);
+
+                position: relative;
+                padding: 0;
+                border: none;
+                background-color: transparent;
+                color: #007bdb;
+                text-decoration: none;
+                font-size: 1.3rem;
+                line-height: 1;
+            }
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        &:not(.active) > .amrelated-options {
+            display: none;
+        }
+
+        &:not(.active) > .amrelated-toggle {
+            .lib-icon-font-symbol(@icon-down, @_icon-font-position: after);
+        }
+
+        .amrelated-separator {
+            &:after {
+                margin: 0 3px 0 -3px;
+                content: ',';
+            }
+
+            &:last-of-type:after {
+                content: '.';
+            }
+        }
+    }
+
+    .amrelated-dropdown-block > .amrelated-options {
+        & {
+            .lib-message-icon-inner(notice);
+
+            margin-top: .5rem;
+        }
+
+        .amrelated-inner {
+            & {
+                line-height: 1.4;
+            }
+
+            &:before {
+                content: @icon-info;
+            }
+        }
+    }
+}

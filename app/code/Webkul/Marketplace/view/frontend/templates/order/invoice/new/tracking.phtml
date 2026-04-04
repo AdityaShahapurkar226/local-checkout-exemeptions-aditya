@@ -1,0 +1,50 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$viewModel = $block->getViewModel();
+$orderHelper = $viewModel->getOrderHelper();
+$orderId = $block->getRequest()->getParam('id');
+$tracking = $orderHelper->getOrderinfo($orderId);
+$disabled = '';
+if ($tracking != "") {
+    $disabled = $tracking->getTrackingNumber()==''? "":"readonly='readonly'";
+}
+?>
+<table class="data-table orders wk-mp-list_table" id="my-orders-table">
+    <col width="1" />
+    <col width="1" />
+    <tbody>
+        <?php
+        foreach ($block->getChildNames() as $key => $blockName) {
+            if ($blockName != 'marketplace_order_items') { ?>
+                <?= /* @noEscape */  $block->getChildHtml($blockName, false) ?>
+            <?php }
+        } ?>
+        <?= /* @noEscape */ $block->getChildHtml(); ?>
+        <tr>
+            <td>
+                <input class="carrier input-text"
+                    value="<?= $escaper->escapeHtml($tracking->getCarrierName()); ?>"
+                    <?= /* @noEscape */ $disabled;?> type="text" name="carrier"
+                    placeholder="<?= /* @noEscape */ __('Carrier') ?>"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input class="required-entry input-text"
+                    value="<?= $escaper->escapeHtml($tracking->getTrackingNumber());?>"
+                    <?= /* @noEscape */ $disabled;?> type="text" name="tracking_id"
+                    placeholder="<?= /* @noEscape */ __('Tracking Number') ?>"/>
+            </td>
+        </tr>
+    </tbody>
+</table>

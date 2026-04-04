@@ -1,0 +1,590 @@
+<?php
+
+/** @var \Ahy\EstateApiIntegration\ViewModel\CustomerInfo $customerViewModel */
+$customerViewModel = $block->getData('viewModel');
+
+$isLoggedIn = $customerViewModel
+    ? $customerViewModel->isLoggedIn()
+    : false;
+
+$customerState = $customerViewModel
+    ? $customerViewModel->getCustomerState()
+    : null;
+
+$customerStateName = $customerViewModel
+    ? $customerViewModel->getCustomerStateName()
+    : null;
+
+$customerCity = $customerViewModel
+    ? $customerViewModel->getCustomerCity()
+    : null;
+
+$showRegulatedProductModal = $customerViewModel
+    ? $customerViewModel->shouldShowRegulatedWeaponModal()
+    : false;
+
+$isMagazineProduct = $customerViewModel
+    ? $customerViewModel->isMagazineProduct()
+    : false;
+
+$logger = \Magento\Framework\App\ObjectManager::getInstance()
+    ->get(\Psr\Log\LoggerInterface::class);
+
+$logger->info('DEBUG: restriction-alpine.phtml', [
+    'isLoggedIn'  => $isLoggedIn,
+    'state_code'  => $customerState,
+    'state_name'  => $customerStateName,
+    'city'        => $customerCity,
+]);
+
+$usStates = [
+    'AL' => 'Alabama',       'AK' => 'Alaska',         'AZ' => 'Arizona',
+    'AR' => 'Arkansas',      'CA' => 'California',      'CO' => 'Colorado',
+    'CT' => 'Connecticut',   'DE' => 'Delaware',        'FL' => 'Florida',
+    'GA' => 'Georgia',       'HI' => 'Hawaii',          'ID' => 'Idaho',
+    'IL' => 'Illinois',      'IN' => 'Indiana',         'IA' => 'Iowa',
+    'KS' => 'Kansas',        'KY' => 'Kentucky',        'LA' => 'Louisiana',
+    'ME' => 'Maine',         'MD' => 'Maryland',        'MA' => 'Massachusetts',
+    'MI' => 'Michigan',      'MN' => 'Minnesota',       'MS' => 'Mississippi',
+    'MO' => 'Missouri',      'MT' => 'Montana',         'NE' => 'Nebraska',
+    'NV' => 'Nevada',        'NH' => 'New Hampshire',   'NJ' => 'New Jersey',
+    'NM' => 'New Mexico',    'NY' => 'New York',        'NC' => 'North Carolina',
+    'ND' => 'North Dakota',  'OH' => 'Ohio',            'OK' => 'Oklahoma',
+    'OR' => 'Oregon',        'PA' => 'Pennsylvania',    'RI' => 'Rhode Island',
+    'SC' => 'South Carolina','SD' => 'South Dakota',    'TN' => 'Tennessee',
+    'TX' => 'Texas',         'UT' => 'Utah',            'VT' => 'Vermont',
+    'VA' => 'Virginia',      'WA' => 'Washington',      'WV' => 'West Virginia',
+    'WI' => 'Wisconsin',     'WY' => 'Wyoming',         'DC' => 'District of Columbia',
+];
+?>
+
+<!-- =====================================================================
+     TOAST NOTIFICATION
+     ===================================================================== -->
+<div x-data
+    x-show="$store.stateAgeApi.toast.show"
+    x-transition
+    style="display:none;"
+    class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 rounded-3xl mt-2 toaster toaster-margin-top">
+
+    <div class="bg-ahy-red text-white px-4 py-3 rounded shadow-lg flex items-center gap-3 min-w-[250px]">
+        <span x-text="$store.stateAgeApi.toast.message"></span>
+    </div>
+</div>
+
+<!-- =====================================================================
+     AGE VERIFICATION MODAL — logged-in users only
+     ===================================================================== -->
+<div x-data
+    x-show="$store.stateAgeApi.showModal"
+    x-effect="$store.stateAgeApi.showModal
+        ? document.body.classList.add('overflow-hidden')
+        : document.body.classList.remove('overflow-hidden')"
+    style="display:none;"
+    class="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50">
+
+    <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full mx-4">
+        <h3 class="text-xl font-bold mb-2">Age Verification Required</h3>
+        <p class="text-gray-600 mb-4" x-text="$store.stateAgeApi.modalMessage"></p>
+
+        <input
+            type="number"
+            x-model="$store.stateAgeApi.age"
+            @keyup.enter="$store.stateAgeApi.submit()"
+            placeholder="Enter your age"
+            min="1"
+            max="120"
+            class="w-full border border-gray-300 rounded px-3 py-2 mb-4 text-lg h-[46px]" />
+
+        <div class="flex gap-3">
+            <button
+                @click="$store.stateAgeApi.submit()"
+                class="flex-1 bg-ahy-red text-white py-2 px-4 rounded hover:bg-ahy-red-light transition">
+                Confirm Age
+            </button>
+            <button
+                @click="$store.stateAgeApi.cancel()"
+                class="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- =====================================================================
+     GUEST MODAL — non-logged-in users
+     ===================================================================== -->
+<div x-data
+    x-show="$store.stateAgeApi.showGuestModal"
+    x-effect="$store.stateAgeApi.showGuestModal
+        ? document.body.classList.add('overflow-hidden')
+        : document.body.classList.remove('overflow-hidden')"
+    style="display:none;"
+    class="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50">
+
+    <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full mx-4">
+
+        <h3 class="text-xl font-bold mb-2" x-text="$store.stateAgeApi.guestModalTitle"></h3>
+        <p class="text-gray-600 mb-4" x-text="$store.stateAgeApi.guestModalMessage"></p>
+
+        <!-- State Dropdown — always shown -->
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+            State <span class="text-red-500">*</span>
+        </label>
+        <select
+            x-model="$store.stateAgeApi.guestState"
+            @change="$store.stateAgeApi.onGuestStateChange()"
+            :disabled="$store.stateAgeApi.citiesLoading"
+            class="w-full border border-gray-300 rounded px-3 py-2 mb-4 text-lg h-[46px]">
+            <option value="">-- Select your state --</option>
+            <?php foreach ($usStates as $code => $name): ?>
+                <option value="<?= $code ?>"><?= $name ?></option>
+            <?php endforeach; ?>
+        </select>
+
+        <!-- City Dropdown — shown only when cities are available -->
+        <div x-show="$store.stateAgeApi.showGuestCityField" style="display:none;">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                City <span class="text-red-500">*</span>
+            </label>
+
+            <!-- Loading indicator -->
+            <div
+                x-show="$store.stateAgeApi.citiesLoading"
+                class="w-full border border-gray-200 rounded px-3 py-2 mb-4 text-gray-400 text-sm h-[46px] flex items-center">
+                Loading cities…
+            </div>
+
+            <!-- City select — hidden while loading -->
+            <select
+                x-show="!$store.stateAgeApi.citiesLoading"
+                x-model="$store.stateAgeApi.guestCity"
+                class="w-full border border-gray-300 rounded px-3 py-2 mb-4 text-lg h-[46px]">
+                <option value="">-- Select your city --</option>
+                <template x-for="city in $store.stateAgeApi.availableCities" :key="city">
+                    <option
+                        :value="city"
+                        x-text="city.charAt(0).toUpperCase() + city.slice(1)">
+                    </option>
+                </template>
+            </select>
+        </div>
+
+        <!-- Age field — only shown for regulated / magazine products -->
+        <div x-show="$store.stateAgeApi.showGuestAgeField" style="display:none;">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Age <span class="text-red-500">*</span>
+            </label>
+            <input
+                type="number"
+                x-model="$store.stateAgeApi.guestAge"
+                placeholder="Enter your age"
+                min="1"
+                max="120"
+                class="w-full border border-gray-300 rounded px-3 py-2 mb-4 text-lg h-[46px]" />
+        </div>
+
+        <div class="flex gap-3">
+            <button
+                @click="$store.stateAgeApi.submitGuest()"
+                :disabled="$store.stateAgeApi.citiesLoading"
+                class="flex-1 bg-ahy-red text-white py-2 px-4 rounded hover:bg-ahy-red-light transition disabled:opacity-50 disabled:cursor-not-allowed">
+                Continue
+            </button>
+            <button
+                @click="$store.stateAgeApi.cancelGuest()"
+                class="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.store('stateAgeApi', {
+
+        /* ----------------------------------------------------------------
+           STATE
+        ---------------------------------------------------------------- */
+        showModal:    false,
+        modalMessage: '',
+        age:          '',
+        resolve:      null,
+
+        // Server-rendered flags (PHP → JS)
+        isLoggedIn:                    <?= $isLoggedIn            ? 'true' : 'false' ?>,
+        customerState:                 <?= json_encode($customerState  ?: '') ?>,
+        customerCity:                  <?= json_encode($customerCity   ?: '') ?>,
+        shouldShowRegulatedProductModal: <?= $showRegulatedProductModal ? 'true' : 'false' ?>,
+        isMagazineProduct:             <?= $isMagazineProduct     ? 'true' : 'false' ?>,
+
+        // Guest modal
+        showGuestModal:     false,
+        guestModalTitle:    '',
+        guestModalMessage:  '',
+        guestResolve:       null,
+        guestState:         '',
+        guestCity:          '',
+        guestAge:           '',
+        showGuestCityField: false,
+        showGuestAgeField:  false,
+        citiesLoading:      false,
+        availableCities:    [],
+
+        // Toast
+        toast: { show: false, message: '' },
+
+        /* ----------------------------------------------------------------
+           HELPERS — derive rule type from product flags
+        ---------------------------------------------------------------- */
+        _ruleType() {
+            return this.shouldShowRegulatedProductModal ? 'regulated_weapon' : 'magazine';
+        },
+
+        /* ----------------------------------------------------------------
+           TOAST
+        ---------------------------------------------------------------- */
+        showToast(message, duration = 3500) {
+            console.log('[TOAST]', message);
+            this.toast.message = message;
+            this.toast.show    = true;
+            setTimeout(() => { this.toast.show = false; }, duration);
+        },
+
+        /* ----------------------------------------------------------------
+           AGE MODAL (logged-in users)
+        ---------------------------------------------------------------- */
+        openModal() {
+            console.log('[MODAL] Opening age verification modal');
+            return new Promise((resolve) => {
+                this.age          = '';
+                this.modalMessage = '';
+                this.resolve      = resolve;
+                this.showModal    = true;
+            });
+        },
+
+        submit() {
+            const parsed = parseInt(this.age);
+            if (!this.age || isNaN(parsed) || parsed < 1 || parsed > 120) {
+                this.showToast('Please enter a valid age (1–120).');
+                return;
+            }
+            console.log('[MODAL] Age confirmed:', parsed);
+            this.showModal = false;
+            this.resolve?.(parsed);
+            this.resolve = null;
+        },
+
+        cancel() {
+            console.log('[MODAL] Age verification cancelled');
+            this.showModal = false;
+            this.resolve?.(null);
+            this.resolve = null;
+        },
+
+        /* ----------------------------------------------------------------
+           GUEST MODAL — state change: fetch cities from API
+        ---------------------------------------------------------------- */
+        async onGuestStateChange() {
+            // Reset city state whenever the state selection changes
+            this.availableCities    = [];
+            this.guestCity          = '';
+            this.showGuestCityField = false;
+
+            if (!this.guestState) {
+                console.log('[CITY API] No state selected — skipping fetch');
+                return;
+            }
+
+            const ruleType = this._ruleType();
+            const url      = `/rest/V1/get-available-cities?ruleType=${encodeURIComponent(ruleType)}&state=${encodeURIComponent(this.guestState)}`;
+
+            console.log('[CITY API] Fetching cities →', url);
+            this.citiesLoading      = true;
+
+            try {
+                const res = await fetch(url);
+
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                }
+
+                const raw = await res.json();
+                console.log('[CITY API] Raw response:', raw);
+
+                if (!Array.isArray(raw)) {
+                    throw new Error('Expected an array of cities from API');
+                }
+
+                // Deduplicate, preserve order, keep lowercase for consistent comparison
+                const seen   = new Set();
+                const cities = [];
+                for (const c of raw) {
+                    const normalised = String(c).trim().toLowerCase();
+                    if (normalised && !seen.has(normalised)) {
+                        seen.add(normalised);
+                        cities.push(normalised);
+                    }
+                }
+
+                console.log('[CITY API] Deduplicated cities:', cities);
+
+                // If the only entry is "other city" there is nothing meaningful to pick —
+                // hide the dropdown and let city default to null on submit.
+                const isOtherCityOnly =
+                    cities.length === 1 && cities[0] === 'other city';
+
+                if (cities.length === 0 || isOtherCityOnly) {
+                    console.log('[CITY API] No selectable cities (empty or "other city" only) — hiding city field, city will be null');
+                    this.availableCities    = [];
+                    this.showGuestCityField = false;
+                } else {
+                    this.availableCities    = cities;
+                    this.showGuestCityField = true;
+                    console.log('[CITY API] Cities populated:', cities);
+                }
+
+            } catch (err) {
+                console.error('[CITY API] Error fetching cities:', err);
+                this.showToast('Failed to load cities. Please try again.');
+                this.showGuestCityField = false;
+            } finally {
+                this.citiesLoading = false;
+            }
+        },
+
+        /* ----------------------------------------------------------------
+           GUEST MODAL — open / submit / cancel
+        ---------------------------------------------------------------- */
+        openGuestModal(showAge = false) {
+            console.log('[GUEST MODAL] Opening — showAge:', showAge);
+            return new Promise((resolve) => {
+                this.guestState         = '';
+                this.guestCity          = '';
+                this.guestAge           = '';
+                this.availableCities    = [];
+                this.showGuestCityField = false;
+                this.showGuestAgeField  = showAge;
+                this.citiesLoading      = false;
+                this.guestModalTitle    = showAge
+                    ? 'Age & Location Verification'
+                    : 'Location Verification';
+                this.guestModalMessage  = showAge
+                    ? 'Please select your state, city (if applicable), and confirm your age to continue.'
+                    : 'Please select your state and city (if applicable) to continue.';
+                this.guestResolve       = resolve;
+                this.showGuestModal     = true;
+            });
+        },
+
+        submitGuest() {
+            // --- Validate state ---
+            if (!this.guestState) {
+                this.showToast('Please select your state.');
+                return;
+            }
+
+            // --- Validate city when the dropdown is visible ---
+            if (this.showGuestCityField && !this.citiesLoading && !this.guestCity) {
+                this.showToast('Please select your city.');
+                return;
+            }
+
+            // --- Validate age when required ---
+            if (this.showGuestAgeField) {
+                const parsedAge = parseInt(this.guestAge);
+                if (!this.guestAge || isNaN(parsedAge) || parsedAge < 1 || parsedAge > 120) {
+                    this.showToast('Please enter a valid age (1–120).');
+                    return;
+                }
+            }
+
+            // --- Resolve city value ---
+            // "other city" from the API → send null to the backend
+            let resolvedCity = null;
+            if (this.showGuestCityField && this.guestCity) {
+                resolvedCity = this.guestCity.toLowerCase() === 'other city'
+                    ? null
+                    : this.guestCity;
+            }
+
+            const payload = {
+                state: this.guestState,
+                city:  resolvedCity,
+                age:   this.showGuestAgeField ? parseInt(this.guestAge) : 0,
+            };
+            console.log('[GUEST MODAL] Submitting payload:', payload);
+
+            this.showGuestModal = false;
+            this.guestResolve?.(payload);
+            this.guestResolve = null;
+        },
+
+        cancelGuest() {
+            console.log('[GUEST MODAL] Cancelled');
+            this.showGuestModal = false;
+            this.guestResolve?.(null);
+            this.guestResolve = null;
+        },
+
+        /* ----------------------------------------------------------------
+           VALIDATION API  →  POST /rest/V1/restriction/validate
+        ---------------------------------------------------------------- */
+        async callApi(productId, age = 0, state = null, city = null) {
+            const useState = state || this.customerState;
+            let   useCity  = city;
+
+            // For logged-in users city may come from the customer profile
+            if (useCity === undefined || useCity === null) {
+                useCity = this.customerCity || null;
+            }
+
+            // Normalise city: lowercase + trim, keep null as null
+            if (useCity && typeof useCity === 'string') {
+                useCity = useCity.toLowerCase().trim() || null;
+            }
+
+            const requestBody = {
+                productId: productId,
+                state:     useState,
+                city:      useCity,   // null when "other city" or no city required
+                age:       age,
+            };
+
+            console.log('[VALIDATE API] POST /rest/V1/restriction/validate →', requestBody);
+
+            if (!useState) {
+                this.showToast('State is required for validation.');
+                return 0;
+            }
+
+            try {
+                const res = await fetch('/rest/V1/restriction/validate', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify(requestBody),
+                });
+
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                }
+
+                const data = await res.json();
+                console.log('[VALIDATE API] Response:', data);
+
+                if (data.restricted) {
+                    if (data.reason && data.reason.startsWith('__AGE_REQUIRED__|')) {
+                        const requiredAge = parseInt(data.reason.split('|')[1]);
+                        console.warn('[VALIDATE API] Age restriction — minimum age:', requiredAge);
+                        this.showToast(`You must be at least ${requiredAge} years old to purchase this product.`);
+                    } else {
+                        console.warn('[VALIDATE API] Restricted:', data.reason);
+                        this.showToast(data.reason || 'This product cannot be shipped to your location.');
+                    }
+                    return 0;
+                }
+
+                console.log('[VALIDATE API] Product is allowed for this location/age.');
+                return 1;
+
+            } catch (err) {
+                console.error('[VALIDATE API] Error:', err);
+                this.showToast('Validation check failed. Please try again.');
+                return 0;
+            }
+        },
+
+        /* ----------------------------------------------------------------
+           MAIN ENTRY POINT  —  called by add-to-cart / buy buttons
+        ---------------------------------------------------------------- */
+        async check(productId) {
+            console.log('[CHECK] Starting restriction check', {
+                productId,
+                isLoggedIn:  this.isLoggedIn,
+                isMagazine:  this.isMagazineProduct,
+                isRegulated: this.shouldShowRegulatedProductModal,
+            });
+
+            // No restriction applies to this product — allow immediately
+            if (!this.isMagazineProduct && !this.shouldShowRegulatedProductModal) {
+                console.log('[CHECK] No restriction — allowed');
+                return 1;
+            }
+
+            /* ---------- GUEST FLOW ---------- */
+            if (!this.isLoggedIn) {
+
+                if (this.shouldShowRegulatedProductModal) {
+                    // Regulated weapon: collect state, city AND age; send all to API
+                    console.log('[CHECK] Guest flow — regulated weapon (age required)');
+
+                    const data = await this.openGuestModal(true);
+
+                    if (!data) {
+                        console.log('[CHECK] Guest modal cancelled');
+                        return 0;
+                    }
+
+                    return await this.callApi(
+                        productId,
+                        data.age,
+                        data.state,
+                        data.city
+                    );
+                }
+
+                if (this.isMagazineProduct) {
+                    console.log('[CHECK] Guest flow — magazine (age required)');
+
+                    const data = await this.openGuestModal(true);
+
+                    if (!data) {
+                        console.log('[CHECK] Guest modal cancelled');
+                        return 0;
+                    }
+
+                    console.log('[CHECK] Guest magazine — age from modal:', data.age);
+
+                    return await this.callApi(
+                        productId,
+                        data.age,   // ← use the age the user actually entered
+                        data.state,
+                        data.city
+                    );
+                }
+
+                return 1;
+            }
+
+            /* ---------- LOGGED-IN FLOW ---------- */
+            console.log('[CHECK] Logged-in flow — opening age modal');
+
+            const age = await this.openModal();
+
+            if (!age) {
+                console.warn('[CHECK] Age verification cancelled or invalid');
+                this.showToast('Age verification is required to continue.');
+                return 0;
+            }
+
+            console.log('[CHECK] Logged-in — age from modal:', age, '| state:', this.customerState, '| city:', this.customerCity);
+
+            return await this.callApi(
+                productId,
+                age,
+                this.customerState,
+                this.customerCity || null
+            );
+        },
+
+    }); // end Alpine.store
+}); // end alpine:init
+</script>
+
+<style>
+    .toaster-margin-top {
+        margin-top: 11rem !important;
+    }
+</style>

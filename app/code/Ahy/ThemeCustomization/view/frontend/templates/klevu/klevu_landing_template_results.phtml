@@ -1,0 +1,226 @@
+<?php /** @var Klevu\FrontendJs\Block\Template $block */ ?>
+<!-- custom version of the klevuLandingTemplateResults template -->
+<script type="template/klevu" id="ahyKlevuLandingTemplateResults">
+    <div class="kuResultsListing" x-data="{ showMobileFilter: false }">
+        <%
+            // Check if the device width is greater than or equal to 768px
+            var isMobile = window.innerWidth < 768 ? true : false;
+        %>
+        <div class="productList klevuMeta" data-section="productList">
+            <div class="kuResultContent">
+                <div class="kuResultWrap <%=(data.query.productList.filters.length == 0 )?'kuBlockFullwidth':''%>">
+
+                    <div ku-container data-container-id="ku_landing_main_content_container" data-container-role="content">
+                        <section ku-container data-container-id="ku_landing_main_content_left"  data-container-position="left" data-container-role="left">
+                            <div class="hidden md:block">
+                                <%=helper.render('klevuLandingTemplateResultsHeadingTitle',scope,data,"productList") %>
+                                <%=helper.render('filtersTop',scope,data,"productList") %>
+                                <%= helper.render('kuFilterTagsTemplate',scope,data,"productList") %>
+                                <%if(!isMobile){%>
+                                    <div ku-block data-block-id="ku_landing_left_facets">
+                                        <%=helper.render('filters',scope,data,"productList") %>
+                                    </div>
+                                <%}%>
+                                <div ku-block data-block-id="ku_landing_left_call_outs"></div>
+                                <div ku-block data-block-id="ku_landing_left_banner"></div>
+                            </div>
+
+                            <!-- mobile Filter start -->
+                            <div class="flex gap-2 my-6 items-center justify-between !px-6 md:hidden ku-ahy-mobile-filters-sidebar-container">
+                                <button @click="showMobileFilter = !showMobileFilter"
+                                    class="border-2 border-ahy-blue text-ahy-blue uppercase text-xs tracking-widest font-bold py-3 px-4 rounded-full transition duration-300 ease-in-out w-full">
+                                    Filter By
+                                </button>
+                                <div x-show="showMobileFilter">
+                                    <div class="fixed inset-0 overflow-hidden z-[500]" x-on:click.self="showMobileFilter=false">
+                                        <div class="absolute inset-0 overflow-hidden">
+                                            <div class="absolute inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true"></div>
+                                            <section class="absolute inset-y-0 right-0 pl-10 max-w-full flex" aria-labelledby="slide-over-title">
+                                                <div class="relative w-screen max-w-[769px]">
+                                                    <div class="h-full flex flex-col p-6 bg-white shadow-xl overflow-y-scroll">
+                                                        <div class="px-4 sm:px-6">
+                                                            <div class="flex items-start justify-end">
+                                                                <div class="ml-3 h-7 flex items-center">
+                                                                    <button class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                                                        x-on:click="showMobileFilter=false">
+                                                                        <span class="sr-only">Close panel</span>
+                                                                        <!-- Heroicon name: x -->
+                                                                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                                        </svg>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="rounded transition duration-300 ease-in-out" x-data="{ selectedFiltersCount: 0 }">
+                                                            <div class="flex py-6 gap-4 justify-between" x-data="getSelectedFiltersCount()">
+                                                                <span class="kuFilterTagClearAll capitalize">reset</span>
+                                                                <span class="capitalize" @click="showMobileFilter = false" >apply <span x-html="calculateSelectedFiltersCount()"></span></span>
+                                                            </div>
+                                                            <section ku-container data-container-id="ku_landing_main_content_left"  data-container-position="left" data-container-role="left">
+                                                                <%=helper.render('klevuLandingTemplateResultsHeadingTitle',scope,data,"productList") %>
+                                                                <%= helper.render('kuFilterTagsTemplate',scope,data,"productList") %>
+                                                                <%if(isMobile){%>
+                                                                    <div ku-block data-block-id="ku_landing_left_facets">
+                                                                        <%=helper.render('filters',scope,data,"productList") %>
+                                                                    </div>
+                                                                <%}%>
+                                                                <div ku-block data-block-id="ku_landing_left_call_outs"></div>
+                                                                <div ku-block data-block-id="ku_landing_left_banner"></div>
+                                                            </section>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-full w-full flex justify-end">
+                                    <% if(helper.hasResults(data,"productList")) { %>
+                                        <%=helper.render('sortBy',scope,data,"productList") %>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <!-- mobile Filter end -->
+
+                        </section>
+                        <section ku-container data-container-id="ku_landing_main_content_center" data-container-position="center" data-container-role="center">
+                            <header ku-block data-block-id="ku_landing_result_header" class="!px-6 flex justify-end">
+                                <%=helper.render('filtersTop',scope,data,"productList") %>
+                                <div class="hidden md:block">
+                                    <% if(helper.hasResults(data,"productList")) { %>
+                                        <%=helper.render('sortBy',scope,data,"productList") %>
+                                        <!-- // <%=helper.render('limit',scope,data,"productList") %> -->
+                                        <!-- // <%=helper.render('kuTemplateLandingResultsViewSwitch',scope,data,"productList") %> -->
+                                    <% } %>
+                                </div>
+                                <div class="kuClearBoth"></div>
+                            </header>
+                            <div ku-block data-block-id="ku_landing_result_items">
+                                <div class="kuResults">
+                                    <% if(helper.hasResults(data,"productList")) { %>
+                                        <ul>
+                                            <% helper.each(data.query.productList.result,function(key,item){ %>
+                                                <% if(item.typeOfRecord == "KLEVU_PRODUCT") { %>
+                                                    <%=helper.render('productBlock',scope,data,item) %>
+                                                <% } %>
+                                            <% }); %>
+                                        </ul>
+                                    <% } else { %>
+                                        <div class="kuNoRecordsFoundLabelTextContainer">
+                                            <span class="kuNoRecordsFoundLabelText"><%= helper.translate("No records found for your selection") %></span>
+                                        </div>
+                                    <% } %>
+                                    <div class="kuClearBoth"></div>
+                                </div>
+                            </div>
+
+                            <div ku-block data-block-id="ku_landing_other_items">
+                                <%=helper.render('klevuLandingTemplateInfiniteScrollDown',scope,data) %>
+                            </div>
+                            <footer ku-block data-block-id="ku_landing_result_footer">
+                                <%=helper.render('pagination',scope,data,"productList") %>
+                            </footer>
+                        </section>
+                        <section ku-container data-container-id="ku_landing_main_content_right" data-container-position="right" data-container-role="right">
+                            <div ku-block data-block-id="ku_landing_right_facets"></div>
+                            <div ku-block data-block-id="ku_landing_right_call_outs"></div>
+                            <div ku-block data-block-id="ku_landing_right_banner"></div>
+                        </section>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <% if(data.query.contentList) { %>
+            <div class="contentList klevuMeta" data-section="contentList" data-result-view="list">
+                <div class="kuResultContent">
+                    <div class="kuResultWrap <%=(data.query.contentList.filters.length == 0 )?'kuBlockFullwidth':''%>">
+
+                        <div ku-container data-container-id="ku_landing_main_content_container" data-container-role="content">
+                            <section ku-container data-container-id="ku_landing_main_content_left" data-container-position="left" data-container-role="left">
+                                <div ku-block data-block-id="ku_landing_left_facets">
+
+                                    <%=helper.render('filters',scope,data,"contentList") %>
+
+                                </div>
+                                <div ku-block data-block-id="ku_landing_left_call_outs"></div>
+                                <div ku-block data-block-id="ku_landing_left_banner"></div>
+                            </section>
+                            <section ku-container data-container-id="ku_landing_main_content_center" data-container-position="center" data-container-role="center">
+
+                                <header ku-block data-block-id="ku_landing_result_header">
+                                    <%=helper.render('filtersTop',scope,data,"contentList") %>
+                                    <%= helper.render('kuFilterTagsTemplate',scope,data,"contentList") %>
+                                    <% if(helper.hasResults(data,"contentList")) { %>
+                                        <%=helper.render('limit',scope,data,"contentList") %>
+                                        <%=helper.render('pagination',scope,data,"contentList") %>
+                                    <% } %>
+                                    <div class="kuClearBoth"></div>
+                                </header>
+
+                                <div ku-block data-block-id="ku_landing_result_items">
+                                    <div class="kuClearBoth"></div>
+                                    <div class="kuResults">
+                                        <% if(helper.hasResults(data,"contentList")) { %>
+                                            <ul>
+                                                <% helper.each(data.query.contentList.result,function(key,item){ %>
+                                                    <% if(item.typeOfRecord == "KLEVU_CMS") { %>
+                                                        <%=helper.render('contentBlock',scope,data,item) %>
+                                                    <% }%>
+                                                <% }); %>
+                                            </ul>
+                                        <% } else { %>
+                                            <div class="kuNoRecordsFoundLabelTextContainer">
+                                                <span class="kuNoRecordsFoundLabelText"><%= helper.translate("No records found for your selection") %></span>
+                                            </div>
+                                        <% } %>
+                                        <div class="kuClearBoth"></div>
+                                    </div>
+                                </div>
+                                <div ku-block data-block-id="ku_landing_other_items">
+                                    <%=helper.render('klevuLandingTemplateInfiniteScrollDown',scope,data) %>
+                                </div>
+                                <footer ku-block data-block-id="ku_landing_result_footer"></footer>
+                            </section>
+                            <section ku-container data-container-id="ku_landing_main_content_right" data-container-position="right" data-container-role="right">
+                                <div ku-block data-block-id="ku_landing_right_facets"></div>
+                                <div ku-block data-block-id="ku_landing_right_call_outs"></div>
+                                <div ku-block data-block-id="ku_landing_right_banner"></div>
+                            </section>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        <% } %>
+
+    </div>
+</script>
+<script>
+    function getSelectedFiltersCount() {
+        return {
+            selectedFilterCount: 0,
+            calculateSelectedFiltersCount(){
+                const selectedFiltersEls = document.querySelectorAll('.ku-ahy-mobile-filters-sidebar-container .kuFilterTag.selected-filters');
+                let totalSelectedCount = 0;
+
+                if(selectedFiltersEls){
+                    selectedFiltersEls.forEach(selectedFiltersEl => {
+                        totalSelectedCount += selectedFiltersEl.children.length;
+                    });
+                    this.selectedFilterCount = totalSelectedCount;
+                }
+
+                if(this.selectedFilterCount === 0){
+                    return '';
+                } else{
+                    return this.selectedFilterCount;
+                }
+
+            }
+        }
+    }
+
+</script>

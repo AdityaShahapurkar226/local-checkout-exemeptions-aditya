@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul Software Private Limited
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+	<menu>
+		<add id="Webkul_MpAssignProduct::manager" title="Manage Assign Products" translate="title" module="Webkul_MpAssignProduct" sortOrder="10" resource="Webkul_MpAssignProduct::manager" parent="Webkul_Marketplace::marketplace"/>
+    	<add id="Webkul_MpAssignProduct::product" title="Assign Products List" translate="title" module="Webkul_MpAssignProduct" sortOrder="30" parent="Webkul_MpAssignProduct::addproduct" action="mpassignproduct/product" resource="Webkul_MpAssignProduct::product"/>
+		<add id="Webkul_MpAssignProduct::addproduct" title="Add Assign Product" translate="title" module="Webkul_MpAssignProduct" sortOrder="20" parent="Webkul_MpAssignProduct::manager" action="mpassignproduct/add" resource="Webkul_MpAssignProduct::addproduct"/>
+		<add id="Webkul_MpAssignProduct::massupload" title="Mass Assign Product Upload" translate="title" module="Webkul_MpAssignProduct" sortOrder="40" parent="Webkul_MpAssignProduct::product" action="mpassignproduct/upload/view" resource="Webkul_MpAssignProduct::massupload"/>
+	</menu>
+</config>

@@ -1,0 +1,73 @@
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+.wk-ap-table {
+    width : 100%;
+}
+.wk-ap-table tr td {
+    padding: 10px;
+}
+.wk-ap-table tr td:nth-child(1) {
+    font-weight: bold;
+    width: 150px;
+}
+.wk-associate-table {
+    width: 100%;
+}
+.wk-ap-table .wk-associate-table tr td:nth-child(1) {
+    font-weight: normal;
+    width: auto;
+}
+.wk-associate-table th {
+    text-align : left;
+    padding: 10px;
+}
+.wk-associate-table tbody tr:nth-child(2n+0) {
+    background: #f5f5f5 none repeat scroll 0 0;
+}
+.wk-associate-table thead tr {
+    background: #f5f5f5 none repeat scroll 0 0;
+}
+.wk-associate-table {
+    border: 1px solid #ccc;
+}
+.wk-associate-table th {
+    border-bottom: 1px solid #ccc;
+}
+.wk-ap-product-details {
+    display : inline-block;
+    width : 100%;
+}
+.wk-ap-product-details table {
+    width: 100%;
+}
+.wk-ap-product-details th {
+    padding: 10px;
+    text-align: left;
+}
+.wk-ap-product-details td {
+    padding: 10px;
+    text-align: left;
+}
+.wk-ap-seller-logo {
+    width:100px;
+}
+.wk-ap-product-details thead tr {
+    background: #f5f5f5 none repeat scroll 0 0;
+}
+.wk-ap-product-details tbody tr {
+    border-top: 1px solid #ccc;
+}
+.wk-ap-associate-name {
+    padding: 10px;
+    margin : 0 -10px;
+}
+tr .wk-ap-associate-name:nth-child(2n+1) {
+    background:#f5f5f5;
+}

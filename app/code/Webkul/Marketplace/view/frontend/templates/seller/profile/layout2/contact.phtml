@@ -1,0 +1,92 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$viewModel = $block->getViewModel();
+$helper = $viewModel->getHelper();
+$partner=$block->getProfileDetail();
+$captchenable = $helper->getCaptchaEnable();
+if (!empty($partner['shop_url'])) { ?>
+    <div class="wk-seller-contact-contaainer">
+        <div class="wk-seller-contact-left-container">
+            <?php
+                $locsearch = $partner['company_locality'];
+                $paramData['loc'] = $locsearch;
+            ?>
+            <div class="wk-mp-collection-container">
+                <iframe width="100%" height="350" frameborder="0"
+                scrolling="no" marginheight="0" marginwidth="0" 
+                src="//maps.google.com/maps?q=<?= /* @noEscape */$paramData['loc'];?>&amp;output=embed"></iframe>
+                <br />
+                <small>
+                    <a href="//maps.google.com/maps?q=<?= $escaper->escapeHtml($paramData['loc']);?>" 
+                    class="wk_loc_inf"><?= $escaper->escapeHtml(__('View Larger Map')) ?></a>
+                </small>
+            </div>
+        </div>
+        <div class="wk-seller-contact-right-container">
+           <div class="form-class-container">
+                <form id="ask-form" method="post" action="#" class="fieldset">
+                    <?php
+                    if ($helper->isCustomerLoggedIn()) {
+                        $readonly = "readonly='readonly'";
+                        $customer = $helper->getCustomerData();
+                        $buyerName = $customer->getName();
+                            $buyerEmail = $customer->getEmail();
+                    } else {
+                        $readonly = '';
+                        $buyerName = '';
+                        $buyerEmail = '';
+                    }
+                    ?>
+                    <?php $sellerId =  $partner->getSellerId();?>
+                    <div class="modal-body form-list field required">
+                        <label class="label"><?= $escaper->escapeHtml(__('Name')) ?></label>
+                        <input type="text" name="name" 
+                        class="queryemail wk-contact_input_fields required-entry" 
+                        value="<?= $escaper->escapeHtml($buyerName)?>" <?= /* @noEscape */ $readonly?>/>
+                        <label class="label"><?= $escaper->escapeHtml(__('Email')) ?></label>
+                        <input type="text" name="email" 
+                        class="queryemail required-entry validate-email wk-contact_input_fields" 
+                        value="<?= $escaper->escapeHtml($buyerEmail)?>" <?= /* @noEscape */ $readonly?>/>
+                        <label class="label"><?= $escaper->escapeHtml(__('Subject')) ?></label>
+                        <input type="text" name="subject" class="wk-contact_input_fields required-entry"/>
+                        <label class="label"><?= $escaper->escapeHtml(__('Message')) ?></label>
+                        <textarea  name="ask" 
+                        class="wk-full-width queryquestion wk-contact_input_fields required-entry"></textarea>
+                        <input type="hidden" name="seller-id" value="<?= $escaper->escapeHtml($sellerId);?>"/>
+                        <?php if ($captchenable) { ?>
+                            <label class="label">
+                                <?= $escaper->escapeHtml(__('Please enter desired result')) ?></label>
+                            <div>
+                                <span>
+                                    <label for="wk-mp-captcha"><span id="wk-mp-captchalable1">
+                                        <?= $escaper->escapeHtml(rand(1, 20))?></span> + 
+                                        <span id="wk-mp-captchalable2">
+                                            <?= $escaper->escapeHtml(rand(1, 20))?></span> =</label>
+                                </span>
+                                <input type="text" class="required-entry wk-contact_input_fields" 
+                                name="wk-mp-captcha" id="wk-mp-captcha" />
+                            </div>
+                            <?php
+                        }?>
+                    </div>
+                    <div class="modal-footer">
+                        <span class="error"></span>
+                        <span class="errormail"></span>
+                        
+                        <input type="submit" value="<?= $escaper->escapeHtml(__('Send')) ?>"
+                            id="askbtn" class="wk-btn wk-btn-primary clickask"/>
+                        <span class="wk-clear"></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php } ?>

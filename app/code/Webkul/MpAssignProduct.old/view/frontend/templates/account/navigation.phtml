@@ -1,0 +1,83 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+    $_helper = $block->getHelperObject("marketplaceHelper");
+    $isPartner= $_helper->isSeller();
+    $magentoCurrentUrl = $block->getCurrentUrl();
+    $isSellerGroup = $_helper->isSellerGroupModuleInstalled();
+    $productViewUrl = $block->getUrl(
+        'mpassignproduct/product/view',
+        ['_secure' => $block->getRequest()->isSecure()]
+    );
+    $productListUrl = $block->getUrl(
+        'mpassignproduct/product/productlist',
+        ['_secure' => $block->getRequest()->isSecure()]
+    );
+    $productUploadUrl = $block->getUrl(
+        'mpassignproduct/upload/view',
+        ['_secure' => $block->getRequest()->isSecure()]
+    );
+    ?>
+
+<li class="mp-assign-menu nav item <?= /* @noEscape */ strpos($magentoCurrentUrl, 'mpassignproduct/product/view')
+    ? "current":"";
+echo strpos($magentoCurrentUrl, 'mpassignproduct/product/productlist')? "current":"";?>">
+        <?php if ($isPartner && (($isSellerGroup && ($_helper->isAllowedAction('mpassignproduct/product/view')
+            || $_helper->isAllowedAction('mpassignproduct/product/productlist')
+             || $_helper->isAllowedAction('mpassignproduct/upload/view')))
+             || !$isSellerGroup)): ?>
+            <a>
+                <?= /* @noEscape */ __('Manage Assign Product') ?>
+            </a>
+            <ul class="nav items">
+                <?php if ((
+                        $isSellerGroup &&
+                        $_helper->isAllowedAction('mpassignproduct/product/view')
+                    )
+                    || !$isSellerGroup
+                    ): ?>
+                    <li class="mp-assign-menu nav item 
+                    <?= /* @noEscape */ strpos($magentoCurrentUrl, 'mpassignproduct/product/view')? "current":"";?>">
+                        <a href="<?= $block->escapeUrl($productViewUrl); ?>">
+                            <?= /* @noEscape */ __('Assign Product') ?>
+                        </a>
+                    </li>
+                <?php endif; ?>
+                <?php if ((
+                    $isSellerGroup &&
+                    $_helper->isAllowedAction('mpassignproduct/product/productlist')
+                    )
+                    || !$isSellerGroup
+                    ): ?>
+                    <li class="nav item 
+                    <?= strpos($magentoCurrentUrl, 'mpassignproduct/product/productlist')? "current":"";?>">
+                        <a href="<?= $block->escapeUrl($productListUrl); ?>">
+                            <?= /* @noEscape */ __('Assigned Product List') ?>
+                        </a>
+                    </li>
+                <?php endif; ?>
+                <?php if ((
+                    $isSellerGroup &&
+                    $_helper->isAllowedAction('mpassignproduct/upload/view')
+                    )
+                    || !$isSellerGroup
+                    ): ?>
+                    <li class="nav item 
+                    <?= strpos($magentoCurrentUrl, 'mpassignproduct/upload/view')? "current":"";?>">
+                        <a href="<?= $block->escapeUrl($productUploadUrl); ?>">
+                            <?= /* @noEscape */ __('Mass Assigned Product Upload') ?>
+                        </a>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        <?php endif; ?>
+</li>

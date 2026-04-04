@@ -1,0 +1,21 @@
+{
+    "name": "webkul/marketplace-api",
+    "description": "Marketplace api for magento2",
+    "require": {
+	    "webkul/module-marketplace": "5.0.*"
+
+    },
+    "type": "magento2-module",
+    "version": "5.0.2",
+    "license": [
+        "proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Webkul\\MpApi\\": ""
+        }
+    }
+}

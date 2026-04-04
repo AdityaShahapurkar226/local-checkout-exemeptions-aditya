@@ -1,0 +1,169 @@
+title,identifier,content
+Marketplace Landing Page Block Layout3,marketplace_layout3,"
+<div class=""wk-list-container-wrapper wk-text-transform-left"">
+        <div class=""wk-layout2-box-container"">
+            <span class=""wk-layout2-box-span-container"">Huge Buyers</span>
+            <span class=""wk-layout2-box-span"">
+                <span class=""wk-layout2-box-span-image""></span>
+            </span>
+            <div class=""wk-i
+            con-div"">Get your product showcased to a huge range of customers,
+               as everyday many user shops from us.</div>
+        </div>
+        <div class=""wk-layout2-box-container"">
+            <span class=""wk-layout2-box-span-container"">Ask Questions</span>
+            <span class=""wk-layout2-box-span"">
+                <span class=""wk-layout2-box-span-image wk-layout2-box-span-image-ask""></span>
+            </span>
+            <div class=""wk-icon-div"">If you ever get stuck, let us know and we will help you with the
+               best we have in minimum possible time.</div>
+        </div>
+        <div class=""wk-layout2-box-container"">
+            <span class=""wk-layout2-box-span-container"">Quick Payments</span>
+            <span class=""wk-layout2-box-span"">
+                <span class=""wk-layout2-box-span-image wk-layout2-box-span-image-quickpay""></span>
+            </span>
+            <div class=""wk-icon-div"">Once goods have been successfully delivered to respective customers,
+               you can request for payout.</div>
+        </div>
+        <div class=""wk-layout2-box-container"">
+            <span class=""wk-layout2-box-span-container"">Manage Your Orders</span>
+            <span class=""wk-layout2-box-span"">
+                <span class=""wk-layout2-box-span-image wk-layout2-box-span-image-order""></span>
+            </span>
+            <div class=""wk-icon-div"">Manage your orders at maximum ease and help customers to 
+              have a better shopping experience.</div>
+        </div>
+        <div class=""wk-layout2-box-container"">
+            <span class=""wk-layout2-box-span-container"">Earn Badges</span>
+            <span class=""wk-layout2-box-span"">
+                <span class=""wk-layout2-box-span-image wk-layout2-box-span-image-badges""></span>
+            </span>
+            <div class=""wk-icon-div"">Once you climb a milestone you get awarded with a badge,
+               which make you look like more pro.</div>
+        </div>
+        <div class=""wk-layout2-box-container"">
+            <span class=""wk-layout2-box-span-container"">Get Yourself Verified</span>
+            <span class=""wk-layout2-box-span"">
+                <span class=""wk-layout2-box-span-image wk-layout2-box-span-image-verified""></span>
+            </span>
+            <div class=""wk-icon-div"">Add a verified brooch to your profile by providing very necessary 
+              some business details and documents.</div>
+        </div>
+        <div class=""wk-layout2-box-container"">
+            <span class=""wk-layout2-box-span-container"">Customize Profile</span>
+            <span class=""wk-layout2-box-span"">
+                <span class=""wk-layout2-box-span-image wk-layout2-box-span-image-profile""></span>
+            </span>
+            <div class=""wk-icon-div"">Customize your profile with information like profile logo, shop location,
+               shipping and refund policies.</div>
+        </div>
+        <div class=""wk-layout2-box-container"">
+            <span class=""wk-layout2-box-span-container"">Add Media</span>
+            <span class=""wk-layout2-box-span"">
+                <span class=""wk-layout2-box-span-image wk-layout2-box-span-image-media""></span>
+            </span>
+            <div class=""wk-icon-div"">Embed video YouTube to make your account more genuine and stand out in the queue.</div>
+        </div>
+    </div>
+"
+Marketplace Landing Page Block Layout2,marketplace_layout2,"
+<div class=""wk-list-container-wrapper wk-text-transform-left"">
+        <div class=""wk-list-container"">
+            <ul>
+                <li class=""wk-icon1"">
+                    <div class=""wk-icon-container"">
+                    </div>
+                    <div class=""wk-icon-content"">
+                        <span class=""wk-icon-span"">Huge Buyers</span>
+                        <div class=""wk-icon-div"">Get your product showcased to a huge range of customers,
+                          as everyday many user shops from us.</div>
+                    </div>
+                </li>
+                <li class=""wk-icon3"">
+                    <div class=""wk-icon-container"">
+                    </div>
+                    <div class=""wk-icon-content"">
+                        <span class=""wk-icon-span"">Quick Payments</span>
+                        <div class=""wk-icon-div"">Once goods have been successfully delivered to respective customers,
+                          you can request for payout.</div>
+                    </div>
+                </li>
+                <li class=""wk-icon5"">
+                    <div class=""wk-icon-container"">
+                    </div>
+                    <div class=""wk-icon-content"">
+                        <span class=""wk-icon-span"">Earn Badges</span>
+                        <div class=""wk-icon-div"">Once you climb a milestone you get awarded with a badge,
+                          which make you look like more pro.</div>
+                    </div>
+                </li>
+                <li class=""wk-icon7"">
+                    <div class=""wk-icon-container"">
+                    </div>
+                    <div class=""wk-icon-content"">
+                        <span class=""wk-icon-span"">Customize Profile</span>
+                        <div class=""wk-icon-div"">Customize your profile with information like profile logo,
+                          shop location, shipping and refund policies.</div>
+                    </div>
+                </li>
+                <li class=""wk-icon9"">
+                    <div class=""wk-icon-container"">
+                    </div>
+                    <div class=""wk-icon-content"">
+                        <span class=""wk-icon-span"">Add Media</span>
+                        <div class=""wk-icon-div"">Embed video YouTube to make your account more genuine and stand out in the queue.</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class=""wk-list-container"">
+            <ul>
+                <li class=""wk-icon2"">
+                    <div class=""wk-icon-container"">
+                    </div>
+                    <div class=""wk-icon-content"">
+                        <span class=""wk-icon-span"">Got Stuck? Ask Questions</span>
+                        <div class=""wk-icon-div"">If you ever get stuck, let us know and we will help you with the 
+                         best we have in minimum possible time.</div>
+                    </div>
+                </li>
+                <li class=""wk-icon4"">
+                    <div class=""wk-icon-container"">
+                    </div>
+                    <div class=""wk-icon-content"">
+                        <span class=""wk-icon-span"">Manage Your Orders</span>
+                        <div class=""wk-icon-div"">Manage your orders at maximum ease and help customers to have
+                          a better shopping experience.</div>
+                    </div>
+                </li>
+                <li class=""wk-icon6"">
+                    <div class=""wk-icon-container"">
+                    </div>
+                    <div class=""wk-icon-content"">
+                        <span class=""wk-icon-span"">Get Yourself Verified</span>
+                        <div class=""wk-icon-div"">Add a verified brooch to your profile by providing very necessary 
+                         some business details and documents.</div>
+                    </div>
+                </li>
+                <li class=""wk-icon8"">
+                    <div class=""wk-icon-container"">
+                    </div>
+                    <div class=""wk-icon-content"">
+                        <span class=""wk-icon-span"">Create Your Own Collection</span>
+                        <div class=""wk-icon-div"">Add various products and create your own product
+                          collection that will be visible to customers.</div>
+                    </div>
+                </li>
+                <li class=""wk-icon10"">
+                    <div class=""wk-icon-container"">
+                    </div>
+                    <div class=""wk-icon-content"">
+                        <span class=""wk-icon-span"">Add Unlimited Products</span>
+                        <div class=""wk-icon-div"">Add unlimited products which you want and fulfill your customers need.</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+"

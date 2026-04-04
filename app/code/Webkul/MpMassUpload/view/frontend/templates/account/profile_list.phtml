@@ -1,0 +1,63 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$isPartner = $block->isSeller();
+$profileListArray = $block->uploadedProfileName();
+?>
+<?php if ($isPartner == 1): ?>
+    <style>
+        th.wk-check-first-td, td.wk-check-first-td {
+            width: 2%;
+            text-align: center;
+        }
+    </style>
+    <!-- Start : Export Proucts in file -->
+    <form method="post"
+        action="<?= $block->escapeHtml($block->getUrl('mpmassupload/profilelisting/profilelist')); ?>"
+        id="wk_massupload_profile_list_form"
+        class="wk-massupload-container"
+        enctype="multipart/form-data"
+        data-mage-init='{"validation":{}}'>
+        <fieldset class="fieldset">
+            <?= $block->getBlockHtml('formkey') ?>
+            <?= $block->getBlockHtml('seller.formkey')?>
+            <legend class="legend">
+                <span><?= $block->escapeHtml(__("Mass Uploaded Profile(s) List")); ?></span>
+                <button class="button wk-mp-btn" type="submit">
+                    <span><span><?= $block->escapeHtml(__("Delete")); ?></span></span>
+                </button>
+            </legend>
+            <div class="field required">
+                <label for="attribute_set" class="label">
+                    <span><?= $block->escapeHtml(__("Select Profile(s) to be deleted")); ?></span>
+                </label>
+                <div class="control">
+                    <select multiple="multiple" data-validate="{'validate-select':true}"
+                        title="<?= $block->escapeHtml(__("Profile List")); ?>"
+                        class="required-entry"
+                        id="profile_list"
+                        name="profile_list[]"
+                        aria-required="true">
+                            <?php foreach ($profileListArray as $key => $value) {?>
+                                <option value=<?= $block->escapeHtml($key)?>>
+                                    <?= $block->escapeHtml($value) ?>
+                                </option>
+                            <?php } ?>
+                    </select>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+<?php else: ?>
+<h2 class="wk-mp-error-msg">
+    <?= $block->escapeHtml(__("To Become Seller Please Contact to Admin.")); ?>
+</h2>
+<?php endif; ?>

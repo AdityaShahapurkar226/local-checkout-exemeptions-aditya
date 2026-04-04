@@ -1,0 +1,286 @@
+<?php
+
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+// phpcs:disable Magento2.Files.LineLength.MaxExceeded
+
+use Magento\Checkout\Block\Cart\Item\Renderer;
+use Magento\Framework\Escaper;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductStockItem;
+use Magento\Catalog\Block\Product\View;
+use Magento\Catalog\Model\Product;
+use Hyva\Theme\ViewModel\ProductPage;
+
+// phpcs:disable Generic.WhiteSpace.ScopeIndent.Incorrect
+
+/** @var View $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var Product $product */
+$product = $block->getProduct();
+/** @var ProductStockItem $stockItemViewModel */
+$stockItemViewModel = $viewModels->require(ProductStockItem::class);
+$minSalesQty        = $stockItemViewModel->getMinSaleQty($product);
+$maxSalesQty        = $stockItemViewModel->getMaxSaleQty($product);
+
+$maxSalesQtyLength  = ($maxSalesQty ? strlen((string) $maxSalesQty) : 4)
+    + (/* add one if decimal for separator */
+        (int) $stockItemViewModel->isQtyDecimal($product));
+
+$step = $stockItemViewModel->getQtyIncrements($product)
+    ? $stockItemViewModel->getQtyIncrements($product)
+    : null;
+
+/** @var Renderer $block */
+
+$item = $block->getItem();
+$product = $item->getProduct();
+$isFreeGift = false;
+$ahyHelper = $this->helper('Ahy\ThemeCustomization\Helper\Data');
+$isFflRequired = $ahyHelper->getProductAttribute($product->getId(), 'ffl_selection_required');
+$isAgeVerificationRequired = $ahyHelper->getProductAttribute($product->getId(), 'age_verification_required');
+$isVisibleProduct = $product->isVisibleInSiteVisibility();
+$_helper = $this->helper('Webkul\Marketplace\Helper\data');
+$seller = $_helper->getSellerProductDataByProductId($product->getId());
+$sellerId = 0;
+if (isset($seller->getData()[0]) && $seller->getData()[0]) {
+    $sellerObj = $seller->getData()[0];
+    $sellerId = $sellerObj['seller_id'];
+    $sellerDataObj = $_helper->getSellerDataBySellerId($sellerId);
+    $shopTitle = '';
+    $shopUrl = '';
+    $sellerData = $sellerDataObj->getData()[0];
+    $shopTitle = ($sellerData['shop_title'] !== null && $sellerData['shop_title'] !== '') ? $sellerData['shop_title'] : (($sellerData['name'] !== null && $sellerData['name'] !== '') ? $sellerData['name'] : 'Everest');
+    $shopUrl = $sellerData['shop_url'];
+} else {
+    $shopTitle = null;
+}
+
+?>
+<?php if ($messages = $block->getMessages()): ?>
+    <?php foreach ($messages as $message): ?>
+        <?php $isFreeGift = $message['text'] == 'FREE!'; ?>
+        <?php if ($isFreeGift): ?>
+            <?php break; ?>
+        <?php endif; ?>
+    <?php endforeach; ?>
+<?php endif; ?>
+<tbody class="cart item bg-white <?= $isFreeGift ? 'free-gift shadow-[#FCCC2D_0px_0px_0px_8px_inset]' : 'normal-product border-b border-ahy-yellow-card' ?>" data-product-id="<?= $product->getId() ?>">
+    <tr class="item-info align-top text-left lg:text-right flex-col sm:flex-row flex lg:items-center">
+        <td data-th="<?= $escaper->escapeHtml(__('Item')) ?>" class="col item pt-6 px-4 flex gap-4 text-left w-full lg:w-2/3 items-center justify-center">
+            <?php if ($block->hasProductUrl()): ?>
+                <a href="<?= $escaper->escapeUrl($block->getProductUrl()) ?>"
+                    title="<?= $escaper->escapeHtmlAttr($block->getProductName()) ?>"
+                    tabindex="-1"
+                    class="product-item-photo shrink-0 ">
+                <?php else: ?>
+                    <span class="product-item-photo shrink-0">
+                    <?php endif; ?>
+                    <?= $block->getImage($block->getProductForThumbnail(), 'cart_page_product_thumbnail')
+                        ->setTemplate('Magento_Catalog::product/image.phtml')
+                        ->toHtml() ?>
+                    <?php if ($block->hasProductUrl()): ?>
+                </a>
+            <?php else: ?>
+                </span>
+            <?php endif; ?>
+            <div class="product-item-details grow">
+                <strong class="product-item-name">
+                    <?php if ($block->hasProductUrl()): ?>
+                        <a href="<?= $escaper->escapeUrl($block->getProductUrl()) ?>"><?= $escaper->escapeHtml($block->getProductName()) ?></a>
+                    <?php else: ?>
+                        <?= $escaper->escapeHtml($block->getProductName()) ?>
+                    <?php endif; ?>
+                </strong>
+                <div class="seller-name text-sm text-gray-500">
+                    <span class="py-2">
+                        <?php if ($shopTitle): ?>
+                            Shipped by <?= $shopTitle ?>
+                        <?php endif; ?>
+                    </span>
+                </div>
+                <?php if ($options = $block->getOptionList()): ?>
+                    <dl class="item-options w-full break-all mt-4 pb-2 text-sm clearfix">
+                        <?php foreach ($options as $option): ?>
+                            <?php $formatedOptionValue = $block->getFormatedOptionValue($option) ?>
+                            <dt class="font-bold float-left clear-left mr-2 mb-2"><?= $escaper->escapeHtml($option['label']) ?>:</dt>
+                            <dd class="float-left">
+                                <?php if (isset($formatedOptionValue['full_view'])): ?>
+                                    <?= $escaper->escapeHtml($formatedOptionValue['full_view']) ?>
+                                <?php else: ?>
+                                    <?= $escaper->escapeHtml($formatedOptionValue['value'], ['span', 'a']) ?>
+                                <?php endif; ?>
+                            </dd>
+                        <?php endforeach; ?>
+                    </dl>
+                <?php endif; ?>
+                <?php if ($messages = $block->getMessages()): ?>
+                    <?php foreach ($messages as $message): ?>
+                        <?php if ($message['text'] == 'FREE!'): ?>
+                            <div class="cart item">
+                                <p class="uppercase text-ahy-red font-bold">
+                                    <?= $escaper->escapeHtmlAttr($block->getQty()) ?> free gift<?= $block->getQty() > 1 ? 's' : '' ?>!
+                                </p>
+                            </div>
+                        <?php else: ?>
+                            <div class="cart item message <?= $escaper->escapeHtmlAttr($message['type']) ?>">
+                                <div><?= $escaper->escapeHtml($message['text']) ?></div>
+                            </div>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <?php $addInfoBlock = $block->getProductAdditionalInformationBlock(); ?>
+                <?php if ($addInfoBlock): ?>
+                    <?= $addInfoBlock->setItem($item)->toHtml() ?>
+                <?php endif; ?>
+            </div>
+        </td>
+
+        <td class="col price pt-6 px-4 flex flex-col items-end justify-center w-full lg:w-1/3 relative">
+            <span class="font-bold"><?= $block->getRowTotalHtml($item) ?></span>
+            <?php if ($block->getRowTotalHtml($item) !== $block->getUnitPriceHtml($item)): ?>
+                <span class="flex justify-end gap-2">
+                    <?= $escaper->escapeHtml(__('Each ')) ?> <?= $block->getUnitPriceHtml($item) ?>
+                </span>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php if ($isFflRequired): ?>
+        <tr class="flex items-center container">
+            <td class="restriction-product">
+                <!-- <div class="restriction-note text-ahy-blue">
+                    <div class="uppercase font-bold ffl_message">
+                        Must ship to ffl dealer
+                    </div>
+                     <div class="">
+                        <span class="text-ahy-red">
+                            Note
+                        </span>
+                        <span class="text-ahy-blue">
+                            You must be 18 years of age to purchase this item.
+                        </span>
+                    </div> -->
+                    <!-- <div class="">
+                        <span class="text-ahy-red">
+                            Note
+                        </span>
+                        <span class="text-ahy-blue">
+                            PayPal is unavailable as a payment method for this item.
+                        </span>
+                    </div> 
+                    <div class="underline underline-offset-6">
+                        <a href="javascript.void()" class="">PayPal acceptable use policy</a>
+                    </div> 
+                </div> -->
+            </td>
+        </tr>
+    <?php endif; ?>
+    <?php if ($isAgeVerificationRequired && !$isFflRequired): ?>
+        <tr class="flex items-center container">
+            <td class="restriction-product">
+                <div class="restriction-note text-ahy-blue xl:ml-[120px]">
+                    <!-- <div class="">
+                        <span class="text-ahy-red">
+                            Note
+                        </span>
+                        <span class="text-ahy-blue">
+                            You must be 18 years of age to purchase this item.
+                        </span>
+                    </div> -->
+                </div>
+            </td>
+        </tr>
+    <?php endif; ?>
+    <tr class="item-actions">
+        
+        <td colspan="8">
+            <div class=''>
+              <!-- FFL Message on the left -->
+                <?php if ($isFflRequired): ?>
+                    <div class="restriction-note text-ahy-red uppercase font-bold ffl_message">
+                        <span class="underline underline-weight">NOTE</span>: MUST SHIP TO FFL DEALER!
+                    </div>
+
+                <?php endif; ?>
+        </div>
+            <div class="flex justify-end items-start flex-col sm:flex-row sm:items-center gap-4 p-4 pt-2">
+                <?php if (!$isFreeGift): ?>
+                    <div class="flex gap-2 items-center"><?= /* @noEscape */ $block->getActions($item) ?></div>
+                    <div class="w-full sm:w-auto">
+                        <span class="lg:hidden font-bold">
+                            <!-- <? //= $escaper->escapeHtml(__('Qty')) 
+                                    ?> -->
+                        </span>
+                        <div class="field qty !mt-0">
+                            <div class="control qty">
+                                <label for="cart-<?= $escaper->escapeHtmlAttr($item->getId()) ?>-qty">
+                                    <span class="label sr-only"><?= $escaper->escapeHtml(__('Qty')) ?></span>
+                                </label>
+                                <div class="mb-4 md:mb-0 md:mr-2 flex justify-between border-2 border-ahy-border-color rounded-full items-center">
+                                    <button class="increment-qty minus text-ahy-blue md:w-13 md:h-13 lg:w-15 lg:h-15 hover:bg-ahy-blue group flex h-11 w-11 items-center justify-center rounded-full text-lg font-bold transition duration-300 ease-out hover:text-white hover:ease-in disabled:text-gray-400 disabled:hover:text-white"
+                                        onclick="handleQty(event)">—</button>
+                                    <input id="cart-<?= $escaper->escapeHtmlAttr($item->getId()) ?>-qty"
+                                        name="cart[<?= $escaper->escapeHtmlAttr($item->getId()) ?>][qty]"
+                                        value="<?= $escaper->escapeHtmlAttr($block->getQty()) ?>"
+                                        type="text"
+                                        size="4"
+                                        step="any"
+                                        title="<?= $escaper->escapeHtmlAttr(__('Qty')) ?>"
+                                        class="qty form-input px-2 py-2 w-20 text-center form-input shadow-none px-2 py-2 w-20 text-center focus:ring-transparent bg-transparent border-none font-bold text-lg invalid:ring-2 invalid:ring-red-500"
+                                        required="required"
+                                        min="0"
+                                        @change="$event.target.form && $event.target.form.dispatchEvent(new Event('submit', { cancelable: true }));"
+                                        data-role="cart-item-qty" />
+                                    <button class="increment-qty plus font-black text-2xl text-ahy-blue hover:text-white duration-300 ease-out hover:ease-in group w-11 h-11 md:w-13 md:h-13 lg:w-15 lg:h-15 flex items-center justify-center transition hover:bg-ahy-blue rounded-full" onclick="handleQty(event)">＋</button>
+                                </div>
+                                <script>
+                                    function handleQty(event) {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                        const inputElement = event.target.parentNode.querySelector('.qty');
+                                        if (inputElement) {
+                                            const currentValue = parseInt(inputElement.value);
+                                            if (!isNaN(currentValue)) {
+
+                                                if (event.target.classList.contains('plus')) {
+                                                    inputElement.value = currentValue + 1;
+                                                } else if (event.target.classList.contains('minus')) {
+                                                    inputElement.value = Math.max(currentValue - 1, 0);
+                                                }
+                                                clearTimeout(inputElement.timeout);
+                                                inputElement.timeout = setTimeout(() => {
+                                                    inputElement.dispatchEvent(new Event('change'));
+                                                }, 200);
+                                            }
+                                        }
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </td>
+    </tr>
+</tbody>
+
+<style>
+    .ffl_message {
+        margin-top: 30px;
+        margin-left: 10px;
+    }
+
+    .underline-weight{
+        text-decoration-thickness: 2px; 
+        text-underline-offset: 5px;
+    }
+</style>

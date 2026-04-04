@@ -1,0 +1,80 @@
+Legend
+
++ Features
+- Bugs
+-------------------------------- Version 5.0.2 --------------------------------------
+
+    + RestApi added
+    - Bug fixed
+
+-------------------------------- Version 5.0.1 --------------------------------------
+    
+    + Multi seller import functionality for admin
+    + RestApi added
+    - Bug fixed
+
+-------------------------------- Version 5.0.0 --------------------------------------
+    
+    + compatible with magento 2.4.0 and marketplace 5.0.x
+    
+-------------------------------- Version 3.0.0 --------------------------------------
+    
+    + compatible with magento 2.3.x and marketplace 3.0.x
+
+-------------------------------- Version 2.1.2 --------------------------------------
+    -  admin can export vendor product csv
+    -  image upload from external url during csv upload
+    -  Fixed Export issues with configurable product 
+    
+-------------------------------- Version 2.1.1 --------------------------------------
+    - Minor bug fixes
+    - Multiple form submission issue fixed
+    - date issues on product upload fixed
+    
+-------------------------------- Version 2.1.0 --------------------------------------
+    + compatible with magento 2.3.x
+
+-------------------------------- Version 2.0.7 --------------------------------------
+    +  admin can export vendor product csv
+    +  image upload from external url during csv upload
+    -  Fixed Export issues with configurable product 
+
+-------------------------------- Version 2.0.6 --------------------------------------
+    - Removed phpoffice/phpexcel package dependency as package phpoffice/phpexcel is abandoned
+	+ Added package phpoffice/phpspreadsheet dependency as package phpoffice/phpexcel is abandoned.
+
+-------------------------------- Version 2.0.5 --------------------------------------
+	+ Compatible with Marketplace 2.1.x
+	+ Compatible with Magento 2.2.x
+	+ Compatible with Marketplace Seller Subaccount Module.
+
+-------------------------------- Version 2.0.4 --------------------------------------
+    + Updated database schema.
+    - Fixed issue with product massupload through large size uploaded file(csv, xml, xls).
+
+-------------------------------- Version 2.0.3 --------------------------------------
+    + Allow to upload products using csv, xml, xls files.
+    + Allow to mass update products using csv, xml, xls files.
+    + Allow to export simple, virtual, downloadable and configurable type products in csv file format.
+    + Allow to add dataflow profile for mapping of attributes.
+    - Fixed product upload issues.
+
+-------------------------------- Version 2.0.2 --------------------------------------
+    + Special price functionality added.
+    + Tier price feature added
+    - Multiselect issue fixed.
+
+-------------------------------- Version 2.0.1 --------------------------------------
+    + Works with marketplace custom attribute module.
+    + Display super attribute on frontend.
+    + Display super attribute's options on frontend.
+    + Display custom attribute on frontend if using custom attribute module.
+    - Product upload from admin issue fixed.
+
+-------------------------------- Version 2.0.0 --------------------------------------
+    + Ajax one by one product import feature.
+    + Vendor / Seller and Admin can import Simple, Virtual , Downloadable and Configurable products.
+    + CSV upload features.
+    + Seller can add bulk product.
+    + Admin can add bulk product for individual Seller.
+    + Image attachment with product within CSV.

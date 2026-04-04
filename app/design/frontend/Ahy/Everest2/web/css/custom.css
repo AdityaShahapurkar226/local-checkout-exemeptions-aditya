@@ -1,0 +1,32 @@
+/* Express checkout container */
+/* Express checkout buttons full width */
+.express-checkout-payment-methods-wrapper {
+    display: flex;
+    /* flex-direction: column;  */
+    width: 100%;
+    /* background-color: tomato; */
+    
+}
+
+.express-checkout-payment-methods-wrapper >div
+{
+    width: 100% !important;
+}
+
+/* Ensure full-width buttons */
+.express-checkout-wrapper > div,
+.express-checkout-wrapper iframe {
+    width: 100% !important;
+}
+
+/* Optional pill style */
+.express-checkout-wrapper > div {
+    border-radius: 9999px;
+    overflow: hidden;
+}
+@media (max-width: 768px) {
+    .express-checkout-payment-methods-wrapper{
+        gap: 0px !important;
+        flex-direction: column;
+    }
+}

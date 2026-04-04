@@ -1,0 +1,122 @@
+<?php
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+?>
+<?php
+/**
+ * @var $block \Magento\Bundle\Block\Adminhtml\Catalog\Product\Composite\Fieldset\Options\Type\Select
+ */
+?>
+<?php $_option = $block->getOption(); ?>
+<?php $_selections = $_option->getSelections(); ?>
+<?php $_default = $_option->getDefaultSelection(); ?>
+<?php $_skipSaleableCheck = $this->helper(Magento\Catalog\Helper\Product::class)->getSkipSaleableCheck(); ?>
+<?php list($_defaultQty, $_canChangeQty) = $block->getDefaultValues(); ?>
+<?php $_qtyDisabledClass = ' qty-disabled'; ?>
+
+<div class="field admin__field select-options option<?php if ($_option->getDecoratedIsLast()): ?> last<?php endif; ?><?php if ($_option->getRequired()) { echo ' _required'; } ?>">
+    <label class="label admin__field-label"><span><?= $block->escapeHtml($_option->getTitle()) ?></span></label>
+    <div class="control admin__field-control">
+        <?php if ($block->showSingle()) : ?>
+            <?= /* @noEscape */ $block->getSelectionTitlePrice($_selections[0]) ?>
+            <input type="hidden"
+                   name="bundle_option[<?= $block->escapeHtmlAttr($_option->getId()) ?>]"
+                   value="<?= $block->escapeHtmlAttr($_selections[0]->getSelectionId()) ?>"
+                   price="<?= $block->escapeHtmlAttr($block->getSelectionPrice($_selections[0])) ?>"/>
+            <?php if ($selectionBlock = $block->getChildBlock('product.info.bundle.option.select.selection')): ?>
+                <?php /* @escapeNotVerified */ echo $selectionBlock->setOption($_option)->setSelection($_selections[0])->toHtml(); ?>
+            <?php endif; ?>
+        <?php else : ?>
+            <select id="bundle-option-<?= $block->escapeHtmlAttr($_option->getId()) ?>"
+                    name="bundle_option[<?= $block->escapeHtmlAttr($_option->getId()) ?>]"
+                    class="bundle-option-<?= $block->escapeHtmlAttr($_option->getId()) ?><?php if ($_option->getRequired()) { echo ' required-entry'; } ?> select admin__control-select select-option change-container-classname">
+                <option value=""><?= $block->escapeHtml(__('Choose a selection...')) ?></option>
+                <?php foreach ($_selections as $_selection) : ?>
+                    <option
+                        value="<?= $block->escapeHtmlAttr($_selection->getSelectionId()) ?>"
+                        <?php if ($block->isSelected($_selection)) { echo ' selected="selected"'; } ?>
+                        <?php if (!$_selection->isSaleable() && !$_skipSaleableCheck) { echo ' disabled="disabled"'; } ?>
+                        price="<?= $block->escapeHtmlAttr($block->getSelectionPrice($_selection)) ?>"
+                        qtyId="bundle-option-<?= $block->escapeHtmlAttr($_option->getId()) ?>-qty-input"
+                        data-default-qty="<?= intval($_selection->getSelectionQty())?>"
+                        data-can-change-qty="<?= intval($_selection->getSelectionCanChangeQty()) ?>">
+                        <?= /* @noEscape */ $block->getSelectionTitlePrice($_selection, false) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <?php if ($selectionBlock = $block->getChildBlock('product.info.bundle.option.select.selection')): ?>
+                <?php foreach ($_selections as $_selection): ?>
+                    <?php /* @escapeNotVerified */ echo $selectionBlock->setOption($_option)->setSelection($_selection)->toHtml(); ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <div class="nested">
+            <div class="field admin__field qty">
+                <label class="label admin__field-label"
+                       for="bundle-option-<?= $block->escapeHtmlAttr($_option->getId()) ?>-qty-input">
+                    <span><?= $block->escapeHtml(__('Quantity:')) ?></span>
+                </label>
+                <div class="control admin__field-control">
+                    <input <?php if (!$_canChangeQty) { echo ' disabled="disabled"'; } ?>
+                        id="bundle-option-<?= $block->escapeHtmlAttr($_option->getId()) ?>-qty-input"
+                        class="input-text admin__control-text qty validate-greater-than-zero<?php if (!$_canChangeQty) { echo $_qtyDisabledClass; } ?>"
+                        type="text"
+                        name="bundle_option_qty[<?= $block->escapeHtmlAttr($_option->getId()) ?>]"
+                        value="<?= $block->escapeHtmlAttr($_defaultQty) ?>"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+require([
+    'jquery'
+], function($){
+
+    var selectOptions = {
+        init: function () {
+            this.checkOptions();
+            this.bind();
+        },
+
+        bind: function () {
+            var self = this;
+            $('#catalog_product_composite_configure_fields_bundle .select-options .select-option').off().on('change', function () {
+                self.checkOptions();
+            });
+        },
+
+        checkOptions: function() {
+            var selectOptionsContainer = $('#catalog_product_composite_configure_fields_bundle .select-options'),
+                selectOptions = selectOptionsContainer.find('.select-option'),
+                selectedOption = selectOptions.find(':selected'),
+                selectedOptionValue = selectedOption.val(),
+                selectedOptionQty = selectedOption.data('default-qty'),
+                selectedCanChangeQty = Boolean(selectedOption.data('can-change-qty')),
+                options = selectOptionsContainer.find('.select-option ~ fieldset'),
+                requiredClass = "<?= $_option->getRequired() ? 'required-entry' : ''; ?>",
+                selectedOptionContainer = $('#catalog_product_composite_configure_fields_configurable_' + selectedOptionValue),
+                inputQty = selectedOptionContainer.parent().find('input.qty');
+
+            options.hide();
+            options.find('[data-rule-required]').removeClass('{$requiredClass}');
+
+            if (selectedOptionValue) {
+                selectedOptionContainer.show();
+                selectedOptionContainer.find('[data-rule-required]').addClass(requiredClass);
+                inputQty.val(selectedOptionQty);
+                inputQty.attr('disabled', !selectedCanChangeQty);
+
+                if (selectedCanChangeQty) {
+                    inputQty.removeClass('<?= $_qtyDisabledClass ?>').addClass('required-entry');
+                } else {
+                    inputQty.addClass('<?= $_qtyDisabledClass ?>').removeClass('required-entry mage-error');
+                }
+            }
+        }
+    };
+
+    selectOptions.init();
+});
+</script>

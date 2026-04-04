@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>
+		<css src="Webkul_MpAssignProduct::css/styles.css"/>
+	</head>
+	<body>
+		<referenceContainer name="content">
+			<block class="Webkul\MpAssignProduct\Block\Product\Products" name="assignproduct_list" template="Webkul_MpAssignProduct::assignproduct.phtml" before="product.info.details" />
+		</referenceContainer>
+		<referenceContainer name="product.info.main">
+			<block class="Magento\Catalog\Block\Product\View" name="assignproduct_price" template="Webkul_MpAssignProduct::price.phtml" after="product.info.price" />
+		</referenceContainer>
+	</body>
+</page>

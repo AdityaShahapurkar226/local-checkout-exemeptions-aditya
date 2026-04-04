@@ -1,0 +1,29 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceBaseShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+    // $_helper = $this->helper('Webkul\Marketplace\Helper\Data');
+    $helperBlock = $block->getLayout()->createBlock(\Webkul\MarketplaceBaseShipping\Block\Marketplacehelper::class);
+    $_helper=$helperBlock->helperObj();
+    $isPartner = $_helper->isSeller();
+    $isSellerGroup = $_helper->isSellerGroupModuleInstalled();
+    $magentoCurrentUrl = $block->getCurrentUrl();
+    //$helper = $this->helper('Webkul\MpAramexShipping\Helper\Data');
+?>
+<?php if ($isPartner): ?>
+    <?php if (($isSellerGroup && $_helper->isAllowedAction('baseshipping/shipping')) || !$isSellerGroup): ?>
+    <li id="wk-mp-menu-base-shipping" class="level-2 <?=
+        strpos($magentoCurrentUrl, 'baseshipping/shipping')? "current active":"";?>">
+        <a href="<?= /* @noEscape */
+        $block->getUrl('baseshipping/shipping', ['_secure' => $block->getRequest()->isSecure()]); ?>">
+            <?= /* @noEscape */  __('Shipping Setting') ?>
+        </a>
+    </li>
+<?php endif; ?>
+<?php endif; ?>

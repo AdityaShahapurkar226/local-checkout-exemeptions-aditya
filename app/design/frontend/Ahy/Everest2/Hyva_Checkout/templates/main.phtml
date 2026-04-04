@@ -1,0 +1,62 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var Template $block */
+/** @var MagewireComponent $magewire */
+/** @var ViewModel $viewModel */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+use Hyva\Checkout\Magewire\Main as MagewireComponent;
+use Hyva\Checkout\ViewModel\Main as ViewModel;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Checkout\ViewModel\Breadcrumbs;
+
+$viewModel = $viewModels->require(ViewModel::class);
+$stepName   = $viewModel->getStepClassesAsString();
+
+$getCurrentStep = $viewModels->require(Breadcrumbs::class);
+$config = $getCurrentStep->getCheckoutConfig();
+$currentStepLabel = '';
+
+if ($config && isset($config->getCurrentStep()['label'])) {
+    $currentStep = $config->getCurrentStep()['label'];
+    switch ($currentStep) {
+        case 'SELECT FFL':
+            $currentStepLabel = 'ffl selection';
+            break;
+        case 'VERIFY AGE':
+            $currentStepLabel = 'verify your age';
+            break;
+        default:
+            $currentStepLabel = $currentStep;
+            break;
+    }
+}
+?>
+<?php /* Change the Frontend API main.id when you change the id attribute value. */ ?>
+<div id="hyva-checkout-main" class="<?= $escaper->escapeHtmlAttr($viewModel->getStepClassesAsString()) ?>" role="main">
+    <?= $block->getChildHtml('hyva.checkout.breadcrumbs') ?>
+    <?php if((!empty($currentStepLabel))): ?>
+        <div class="checkout-page-heading py-6">
+            <div class="text-4xl font-extrabold uppercase text-ahy-blue"><?= $currentStepLabel ?></div>
+            <div class="required text-ahy-blue ">*Required info</div>
+        </div>
+    <?php endif; ?>
+    <?php /* Change the Frontend API main.container when you change the id attribute value. */ ?>
+    <div id="hyva-checkout-container">
+        <?= $block->getChildHtml('hyva.checkout.container') ?>
+    </div>
+
+    <?php /* Render if it is still is a child of "hyva.checkout.main", usually it will be moved into a column. */ ?>
+    <?= $block->getChildHtml('hyva.checkout.navigation') ?>
+</div>

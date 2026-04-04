@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="amasty_mostviewed_product_index" resource="default" engine="innodb" comment="Product Matches">
+        <column xsi:type="int" name="index_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Index ID"/>
+        <column xsi:type="int" name="rule_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Rule Id"/>
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Related Product Id" disabled="true"/>
+        <column xsi:type="varchar" name="relation" nullable="false" comment="Type of rule" onCreate="migrateDataFrom(relation)" length="12"/>
+        <column xsi:type="int" name="store_id" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Store id when rule applicable"/>
+        <column xsi:type="varchar" name="position" nullable="false" comment="Position where label need displayed" onCreate="migrateDataFrom(position)" length="30"/>
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Must be Product Or Category Id" onCreate="migrateDataFrom(product_id)"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="index_id"/>
+        </constraint>
+        <index referenceId="AMASTY_MOSTVIEWED_PRODUCT_INDEX_RULE_ID_PRODUCT_ID" indexType="btree" disabled="true">
+            <column name="rule_id"/>
+            <column name="product_id"/>
+        </index>
+        <index referenceId="AMASTY_MOSTVIEWED_PRODUCT_INDEX_RULE_ID" indexType="btree">
+            <column name="rule_id"/>
+        </index>
+        <index referenceId="AMASTY_MOSTVIEWED_PRODUCT_INDEX_PRODUCT_ID" indexType="btree" disabled="true">
+            <column name="product_id"/>
+        </index>
+        <index referenceId="AMASTY_MOSTVIEWED_PRODUCT_INDEX_ENT_ID_PST_RLT_STR_ID" indexType="btree">
+            <column name="entity_id"/>
+            <column name="position"/>
+            <column name="relation"/>
+            <column name="store_id"/>
+        </index>
+    </table>
+    <table name="amasty_mostviewed_group" resource="default" engine="innodb" comment="amasty_mostviewed_group">
+        <column xsi:type="int" name="group_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Group ID"/>
+        <column xsi:type="boolean" name="status" nullable="false" comment="Group Status"/>
+        <column xsi:type="int" name="priority" padding="11" unsigned="false" nullable="false" identity="false" default="1" comment="Priority"/>
+        <column xsi:type="varchar" name="name" nullable="true" length="255" comment="Group Name"/>
+        <column xsi:type="varchar" name="block_position" nullable="true" length="255" comment="Block Position"/>
+        <column xsi:type="text" name="stores" nullable="false" comment="Stores"/>
+        <column xsi:type="text" name="customer_group_ids" nullable="false" comment="Customer groups"/>
+        <column xsi:type="mediumtext" name="where_conditions_serialized" nullable="true" comment="Where to display Products Serialized"/>
+        <column xsi:type="text" name="category_ids" nullable="false" comment="Category Ids where to display"/>
+        <column xsi:type="mediumtext" name="conditions_serialized" nullable="true" comment="What to display Products Serialized"/>
+        <column xsi:type="mediumtext" name="same_as_conditions_serialized" nullable="true" comment="Same as Serialized"/>
+        <column xsi:type="varchar" name="block_title" nullable="true" length="255" comment="Block Title"/>
+        <column xsi:type="smallint" name="block_layout" padding="6" unsigned="false" nullable="false" identity="false" default="0" comment="Block Layout"/>
+        <column xsi:type="smallint" name="source_type" padding="6" unsigned="false" nullable="false" identity="false" default="0" comment="Source Type"/>
+        <column xsi:type="boolean" name="same_as" nullable="false" comment="Same as attribute"/>
+        <column xsi:type="smallint" name="replace_type" padding="6" unsigned="false" nullable="false" identity="false" default="0" comment="Replace Types"/>
+        <column xsi:type="boolean" name="add_to_cart" nullable="false" comment="Display Add to cart button"/>
+        <column xsi:type="int" name="max_products" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Max Products"/>
+        <column xsi:type="varchar" name="sorting" nullable="true" length="255" comment="Sort Products By"/>
+        <column xsi:type="boolean" name="for_out_of_stock" nullable="false" comment="Show For Out of Stock only"/>
+        <column xsi:type="boolean" name="show_out_of_stock" nullable="false" comment="Show Out of Stock"/>
+        <column xsi:type="int" name="layout_update_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Layout Update Id"/>
+        <column xsi:type="boolean" name="current_category" nullable="false" comment="Products from current category only toggle"/>
+        <column xsi:type="boolean" name="display_wishlist_button" nullable="false" default="true" comment="Display Add to wishlist button"/>
+        <column xsi:type="boolean" name="display_compare_button" nullable="false" default="true" comment="Display Add to compare button"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="group_id"/>
+        </constraint>
+    </table>
+    <table name="mostviewed_view_temp" resource="default" engine="innodb" comment="mostviewed_view_temp">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="View ID"/>
+        <column xsi:type="int" name="visitor_id" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Visitor Id"/>
+        <column xsi:type="int" name="block_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Block Id"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+    <table name="mostviewed_click_temp" resource="default" engine="innodb" comment="mostviewed_click_temp">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Click ID"/>
+        <column xsi:type="int" name="visitor_id" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Visitor Id"/>
+        <column xsi:type="int" name="product_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Product Id"/>
+        <column xsi:type="int" name="block_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Block Id"/>
+        <column xsi:type="smallint" name="click_type" padding="2" unsigned="true" nullable="false" identity="false" default="0" comment="Click Type"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+    <table name="mostviewed_analytics" resource="default" engine="innodb" comment="mostviewed_analytics">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Analytic ID"/>
+        <column xsi:type="varchar" name="type" nullable="true" length="15" comment="Type of Analytics"/>
+        <column xsi:type="decimal" name="counter" unsigned="false" nullable="true" scale="2" precision="9"/>
+        <column xsi:type="int" name="block_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Block Id"/>
+        <column xsi:type="int" name="version_id" padding="11" unsigned="false" nullable="false" identity="false" comment="Version Id"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="MOSTVIEWED_ANALYTICS_TYPE_BLOCK_ID">
+            <column name="type"/>
+            <column name="block_id"/>
+        </constraint>
+    </table>
+    <table name="amasty_mostviewed_pack" resource="default" engine="innodb" comment="amasty_mostviewed_pack">
+        <column xsi:type="int" name="pack_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Pack ID"/>
+        <column xsi:type="boolean" name="status" nullable="false" comment="Pack Status"/>
+        <column xsi:type="int" name="store_id" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="store id(deprecated)"/>
+        <column xsi:type="int" name="priority" padding="11" unsigned="false" nullable="false" identity="false" default="1" comment="Priority"/>
+        <column xsi:type="varchar" name="name" nullable="true" length="255" comment="Pack Name"/>
+        <column xsi:type="text" name="customer_group_ids" nullable="false" comment="Customer groups"/>
+        <column xsi:type="text" name="product_ids" nullable="false" comment="Product Ids what to display"/>
+        <column xsi:type="varchar" name="block_title" nullable="true" length="255" comment="Block Title"/>
+        <column xsi:type="smallint" name="discount_type" padding="6" unsigned="false" nullable="false" identity="false" default="0" comment="Discount Type"/>
+        <column xsi:type="smallint" name="apply_for_parent" padding="6" unsigned="false" nullable="false" identity="false" default="0" comment="Apply Discount for Main Product "/>
+        <column xsi:type="smallint" name="apply_condition" padding="6" unsigned="false" nullable="false" identity="false" default="0" comment="Apply Discount If"/>
+        <column xsi:type="varchar" name="discount_amount" nullable="true" length="255" comment="Discount Amount"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="text" name="cart_message" nullable="false" comment="Cart Message"/>
+        <column xsi:type="datetime" name="date_from" on_update="false" nullable="true" comment="From"/>
+        <column xsi:type="datetime" name="date_to" on_update="false" nullable="true" comment="To"/>
+        <column xsi:type="text" name="products_info" nullable="false" comment="Info about bundle pack products"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="pack_id"/>
+        </constraint>
+    </table>
+    <table name="amasty_mostviewed_pack_product" resource="default" engine="innodb" comment="amasty_mostviewed_pack_product">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="int" name="pack_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Pack id"/>
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="product id"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="AMASTY_MOSTVIEWED_PACK_PRD_PCK_ID_AMASTY_MOSTVIEWED_PACK_PCK_ID" table="amasty_mostviewed_pack_product" column="pack_id" referenceTable="amasty_mostviewed_pack" referenceColumn="pack_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="AMASTY_MOSTVIEWED_PACK_PRD_PRD_ID_CAT_PRD_ENTT_ENTT_ID" table="amasty_mostviewed_pack_product" column="product_id" referenceTable="catalog_product_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <constraint xsi:type="unique" referenceId="AMASTY_MOSTVIEWED_PACK_PRD_ENTT_ID_PACK_ID_PRD_ID">
+            <column name="entity_id"/>
+            <column name="pack_id"/>
+            <column name="product_id"/>
+        </constraint>
+        <index referenceId="AMASTY_MOSTVIEWED_PACK_PRODUCT_PACK_ID" indexType="btree">
+            <column name="pack_id"/>
+        </index>
+        <index referenceId="AMASTY_MOSTVIEWED_PACK_PRODUCT_PRODUCT_ID" indexType="btree">
+            <column name="product_id"/>
+        </index>
+    </table>
+    <table name="amasty_mostviewed_pack_store" resource="default" engine="innodb" comment="Link Pack With Stores">
+        <column xsi:type="int" name="pack_id" padding="10" unsigned="true" nullable="false" comment="Pack ID" />
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" comment="Store ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="pack_id"/>
+            <column name="store_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="AMASTY_MOSTVIEWED_PACK_STR_PCK_ID_AMASTY_MOSTVIEWED_PACK_PCK_ID" table="amasty_mostviewed_pack_store" column="pack_id" referenceTable="amasty_mostviewed_pack" referenceColumn="pack_id" onDelete="CASCADE" />
+        <constraint xsi:type="foreign" referenceId="AMASTY_MOSTVIEWED_PACK_STR_STR_ID_STORE_STORE_ID" table="amasty_mostviewed_pack_store" column="store_id" referenceTable="store" referenceColumn="store_id" onDelete="CASCADE" />
+    </table>
+    <table name="amasty_mostviewed_pack_sales_history" resource="default" engine="innodb" comment="Link Pack With Orders">
+        <column xsi:type="int" name="pack_id" padding="10" unsigned="true" nullable="false" comment="Pack ID" />
+        <column xsi:type="varchar" name="pack_name" nullable="true" length="255" comment="Pack Name"/>
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" comment="Order ID" />
+        <column xsi:type="smallint" name="qty" unsigned="true" nullable="false" comment="Pack Qty in Order" />
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="pack_id"/>
+            <column name="order_id"/>
+        </constraint>
+        <index referenceId="AMASTY_MSTVWD_PCK_SLS_HSTR_ORDR_ID" indexType="btree">
+            <column name="order_id"/>
+        </index>
+    </table>
+    <table name="amasty_mostviewed_pack_conditional_discounts" resource="default" engine="innodb" comment="Link Pack With Conditional Discounts">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID" />
+        <column xsi:type="int" name="pack_id" padding="10" unsigned="true" nullable="false" comment="Pack ID" />
+        <column xsi:type="tinyint" name="number_items" unsigned="true" nullable="false" comment="Number of Individual Items"/>
+        <column xsi:type="decimal" name="discount_amount" precision="6" scale="4" unsigned="true" nullable="false" comment="Discount Amount"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="AMASTY_MOSTVIEWED_PACK_CND_DSC_PCK_ID_AMASTY_MOSTVIEWED_PACK_PCK_ID" table="amasty_mostviewed_pack_conditional_discounts" column="pack_id" referenceTable="amasty_mostviewed_pack" referenceColumn="pack_id" onDelete="CASCADE" />
+    </table>
+    <table name="amasty_mostviewed_pack_sales" resource="sales" engine="innodb" comment="Pack Sales">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID" />
+        <column xsi:type="int" name="pack_id" padding="10" unsigned="true" nullable="false" comment="Pack ID" />
+        <column xsi:type="varchar" name="pack_name" nullable="true" length="255" comment="Pack Name" />
+        <column xsi:type="varchar" name="product_names" nullable="true" length="255" comment="Bundle Items" />
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" comment="Order ID" />
+        <column xsi:type="decimal" name="base_subtotal" scale="4" precision="20" unsigned="false" nullable="true" comment="Subtotal (Base)" />
+        <column xsi:type="decimal" name="base_grand_total" scale="4" precision="20" unsigned="false" nullable="true" comment="Grand Total (Base)" />
+        <column xsi:type="decimal" name="grand_total" scale="4" precision="20" unsigned="false" nullable="true" comment="Grand Total (Purchased)" />
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id" />
+        </constraint>
+    </table>
+    <table name="sales_order_item" resource="sales">
+        <index referenceId="AMASTY_MOSTVIEWED_ORDER_ITEM_PRODUCT_ID" indexType="btree">
+<!-- Index for BoughtTogether @see \Amasty\Mostviewed\Model\ResourceModel\Product\LoadBoughtTogether::execute -->
+            <column name="product_id"/>
+        </index>
+    </table>
+
+    <table name="amasty_mostviewed_product_bought_index" resource="default" engine="innodb"
+           comment="Bought Together Products">
+        <column xsi:type="int" name="source_product_id" unsigned="true" nullable="false" comment="Source Product ID" />
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false"
+                comment="Bought Together Product ID" />
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" comment="Store ID"/>
+        <column xsi:type="smallint" name="count" unsigned="true" nullable="false" comment="Count Viewed Together"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="source_product_id"/>
+            <column name="product_id"/>
+            <column name="store_id"/>
+        </constraint>
+    </table>
+    <table name="amasty_mostviewed_product_bought_index_replica" resource="default" engine="innodb"
+           comment="Bought Together Products">
+        <column xsi:type="int" name="source_product_id" unsigned="true" nullable="false" comment="Source Product ID" />
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false"
+                comment="Bought Together Product ID" />
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" comment="Store ID"/>
+        <column xsi:type="smallint" name="count" unsigned="true" nullable="false" comment="Count Viewed Together"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="source_product_id"/>
+            <column name="product_id"/>
+            <column name="store_id"/>
+        </constraint>
+    </table>
+    <table name="amasty_mostviewed_product_viewed_index" resource="default" engine="innodb"
+           comment="Viewed Together Products">
+        <column xsi:type="int" name="source_product_id" unsigned="true" nullable="false" comment="Source Product ID" />
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false"
+                comment="Viewed Together Product ID" />
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" comment="Store ID"/>
+        <column xsi:type="smallint" name="count" unsigned="true" nullable="false" comment="Count Viewed Together"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="source_product_id"/>
+            <column name="product_id"/>
+            <column name="store_id"/>
+        </constraint>
+    </table>
+    <table name="amasty_mostviewed_product_viewed_index_replica" resource="default" engine="innodb"
+           comment="Viewed Together Products">
+        <column xsi:type="int" name="source_product_id" unsigned="true" nullable="false" comment="Source Product ID" />
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false"
+                comment="Viewed Together Product ID" />
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" comment="Store ID"/>
+        <column xsi:type="smallint" name="count" unsigned="true" nullable="false" comment="Count Viewed Together"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="source_product_id"/>
+            <column name="product_id"/>
+            <column name="store_id"/>
+        </constraint>
+    </table>
+</schema>

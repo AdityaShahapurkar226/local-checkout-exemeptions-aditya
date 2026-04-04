@@ -1,0 +1,36 @@
+//
+//  Mixins
+//  _____________________________________
+
+.am-flex(
+    @horiz-pos: none,
+    @vert-pos: none,
+    @wrap: none
+) {
+    & {
+        display: flex;
+    }
+
+    & when not (@horiz-pos = none) {
+        justify-content: @horiz-pos;
+    }
+
+    & when not (@vert-pos = none) {
+        align-items: @vert-pos;
+    }
+
+    & when not (@wrap = none) {
+        flex-wrap: @wrap;
+    }
+}
+
+.am-word-break {
+    & {
+        word-wrap: break-word;
+        word-break: break-word;
+    }
+
+    .ie11 & {
+        word-break: break-all;
+    }
+}

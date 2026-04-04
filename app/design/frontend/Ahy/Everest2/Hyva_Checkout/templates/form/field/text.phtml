@@ -1,0 +1,189 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var Template $block */
+/** @var EntityFieldInterface $field */
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+/** @var MagewireFormComponent $magewire */
+
+/** @Tailwind md:w-1/4 md:w-2/4 md:w-3/4 md:w-4/4 mb-2 */
+
+use Hyva\Checkout\Model\Form\EntityFieldInterface;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Magewirephp\Magewire\Component\Form as MagewireFormComponent;
+
+$field = $block->getData('field');
+$form = $block->getData('form_name');
+$namespace = $field->getName();
+// var_dump($field->getName());
+?>
+<div class="block text-sm font-medium text-gray-700 <?= /* @noEscape */ $field->isRequired() ? 'required' : 'not-required' ?>">
+    <?php
+        $firstName = $magewire->getAddress();
+        $fieldName = $field->getName();
+        $validateField = $magewire->getAddress()[$fieldName];
+    ?>
+    <?php if (($field->hasAncestor() && $field->getAncestor()->getId() !== $field->getId() && $field->getName()) || ! $field->hasAncestor() && $field->getName()): ?>
+        <label for="<?= $escaper->escapeHtmlAttr($field->getName()) ?>" class="<?= $namespace == 'email' ? 'flex gap-2 justify-between items-center' : '' ?>" >
+            <span class=" text-ahy-blue font-bold capitalize">
+                <?= $escaper->escapeHtml(__($field->getLabel())) ?>
+            </span>
+            <?php if($namespace == 'email'):?>
+                <div x-data="{ tooltipVisible: false }" class="relative">
+                    <!-- For desktop devices -->
+                    <div x-on:mouseenter="tooltipVisible = true" @click="tooltipVisible = !tooltipVisible" x-on:mouseleave="tooltipVisible = false" class="hover:cursor-pointer ">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 opacity-75 hover:opacity-100 mt-1 icon" width="24" height="24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+
+                    <!-- Tooltip content -->
+                    <template x-if="tooltipVisible">
+                        <div class="absolute -right-3 z-20 px-3 pt-3 w-80">
+                            <div class="shadow-lg px-3 py-2 bg-gray-500 relative text-white rounded-md">
+                                <div class="h-3 w-3 bg-gray-500 rotate-45 transform origin-bottom-left absolute right-3 -top-3"></div>
+                                We'll send your order confirmation here.
+                            </div>
+                        </div>
+                    </template>
+                </div>  
+            <?php endif;?>
+        </label>
+    <?php endif ?>
+
+    <?= /* @noEscape */ $field->getRenderer()->renderBefore($field, $form) ?>
+
+    <?php if ($field->hasRelatives()): ?>
+        <div class="group space-y-2 <?= $escaper->escapeHtmlAttr('group-' . $field->getId()) ?>">
+    <?php endif ?>
+
+    <div class="flex items-baseline flex-col gap-4 relative <?= $namespace == 'email' ? 'flex-col items-baseline' : '' ?>">
+        <input class="focus:ring-transparent !text-ahy-blue !h-16 ahy-checkout-shipping-input text-[sm] md:text-base !border border-ahy-gray rounded-md focus:border-ahy-blue <?= $escaper->escapeHtmlAttr($field->getClass(['block w-full !form-input grow'])) ?>"
+            <?php if ($field->hasAttributes()): ?>
+                <?= /* @noEscape */ $field->renderAttributes() ?>
+            <?php endif ?>
+            @change="checkInput('<?= $field->getId() ?>', $event)"
+            <?php switch ($fieldName):
+                case 'firstname':
+            ?>
+                maxlength="25"
+                oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')"
+                placeholder="Enter your first name"
+            <?php
+                break;
+                case 'lastname':
+            ?>  
+                maxlength="25"
+                oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')"
+                placeholder="Enter your last name"
+            <?php
+                break;
+                case 'postcode':
+            ?>
+                id="postcode-field"
+                maxlength="10"
+                placeholder="12345 / 12345-7890"
+                oninput="this.value = this.value.replace(/[^0-9-]/g, '')"
+            <?php
+                break;
+                case 'telephone': ?>
+                maxlength="15"
+                oninput="this.value = this.value.replace(/[^+0-9()\-]/g, '')"
+                placeholder="+1(555)123-4567"
+            <?php
+                break;
+                case 'email':
+            ?>
+                placeholder="john@example.com"
+                oninput="this.value = this.value.replace(/[^a-zA-Z0-9@._-]/g, '')"
+            <?php
+                break;
+                case 'street':
+            ?>
+                placeholder="Enter your street address"
+                maxlength="225"
+            <?php
+                break;
+                case 'city':
+            ?>
+                placeholder="Enter your city"
+                maxlength="30"
+            <?php
+                // Add street and city specific attributes here
+                break;
+            default:
+                break;
+            endswitch; ?>
+
+        />
+        <div class="cursor-pointer px-4 absolute right-0 <?= $namespace == 'email' ? 'top-[20%]' : 'top-[40%]' ?>" id="input-checkmark-<?= $field->getId() ?>" style="display: none">
+            <img src="/media/icons/checkmark.svg" alt="checked" class="w-4" />
+        </div>
+         <?php switch ($fieldName):
+            case 'firstname':
+            case 'lastname':
+            case 'postcode':
+            case 'telephone':
+            case 'email':
+            case 'street':
+            case 'city':
+        ?>
+            <div
+                class="text-ahy-error"
+                x-text="<?= $field->getName().'Error'?>"
+                x-bind:class="<?= $field->getName().'Error'?> ? 'my-2 block' : 'hidden'"
+            >
+            </div>
+        <?php
+            break;
+        default:
+            break;
+        endswitch; ?>
+        <?php if($namespace == 'email'):?>
+            <div class="cursor-pointer">
+                <label for="klaviyoCheckbox" class="">
+                    <input type="checkbox" wire:model="klaviyoOptIn" name="signup-newsletter" id="klaviyoCheckbox" class="" >
+                    <span class="cursor-pointer ml-2">Sign Up for Weekly Everest Email Newsletters</span>
+                </label>
+            </div>
+        <?php endif;?>
+        <?php if ($field->hasTooltip()): ?>
+            <?php
+                /**
+                 ** removed the tooltips from the address form
+                 */
+            ?>
+            <!-- <?//= /* @noEscape */ $field->getRenderer()->renderTooltip($field) ?> -->
+        <?php endif ?>
+    </div>
+
+
+    <?php if ($field->hasRelatives()): ?>
+        <?php foreach ($field->getRelatives() as $child): ?>
+            <?= /* @noEscape */ $child->render($form, $child) ?>
+        <?php endforeach ?>
+    <?php endif ?>
+
+    <?php if ($field->hasRelatives()): ?>
+        <button id="second-street-toggle-button" x-show="isSecondStreetVisible" @click.prevent="toggleSecondStreetField()" class="w-full flex justify-end capitalize underline underline-offset-4">+ add line 2</button>
+    </div>
+    <?php endif ?>
+    <?= /* @noEscape */ $field->getRenderer()->renderAfter($field, $form) ?>
+</div>
+<style>
+    @media screen and (max-width: 460px) {
+        .ahy-checkout-shipping-input{
+            font-size: 0.75rem;
+        }
+    }
+</style>

@@ -1,0 +1,16 @@
+{
+    "name": "ahy/module-flxpoint",
+    "description": "Flx point integration module",
+    "type": "magento2-module",
+    "license": "GPL-3.0",
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ahy\\FlxPoint\\": ""
+        }
+    }
+}

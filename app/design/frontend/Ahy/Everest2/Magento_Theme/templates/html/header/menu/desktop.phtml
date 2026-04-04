@@ -1,0 +1,191 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsSolid;
+use Hyva\Theme\ViewModel\Navigation;
+use Magento\Cms\Block\Block as CmsBlock;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\Escaper;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Navigation $viewModelNavigation */
+$viewModelNavigation = $viewModels->require(Navigation::class);
+
+/** @var HeroiconsSolid $heroiconsSolid */
+$heroiconsSolid = $viewModels->require(HeroiconsSolid::class);
+
+$uniqueId = '_' . uniqid();
+
+// Order is important here: 1. build the menu data, 2. then set the cache tags from the view model identities
+$menuItems = $viewModelNavigation->getNavigation(5);
+$block->setData('cache_tags', $viewModelNavigation->getIdentities());
+
+?>
+
+<div x-data="initMenuDesktop<?= $escaper->escapeHtml($uniqueId) ?>()"
+     class="w-full order-4 lg:w-[86%] navigation hidden lg:flex "
+>
+    <!-- desktop -->
+    <div @load.window="setActiveMenu($el)"
+         class="justify-between mx-auto w-full flex"
+    >
+        <nav
+                class="flex flex-wrap -mx-2"
+        >
+            <?php foreach ($menuItems as $index => $itemLevel1): ?>
+                <?php $singleItems = []; ?>
+                <div class="level-0 flex items-center border-b-2 border-transparent transition transition-colors duration-500 group hover:border-primary focus-within:border-primary"
+                     @mouseover.stop="hoverTopPosition = $event.currentTarget.offsetTop + $event.currentTarget.getBoundingClientRect().height"
+                >
+                    <a href="<?= $escaper->escapeUrl($itemLevel1['url']) ?>"
+                       @focus="hoverTopPosition = $event.currentTarget.parentNode.offsetTop + $event.currentTarget.parentNode.getBoundingClientRect().height"
+                       title="<?= $escaper->escapeHtmlAttr($itemLevel1['name']) ?>"
+                       class="level-0 block p-2 pr-0 xl:pr-2 font-semibold text-sm text-ahy-blue whitespace-nowrap">
+                        <span><?= $escaper->escapeHtml(preg_replace('/\bgear\b/i', '', $itemLevel1['name'])) ?></span>
+                        <?php if (!empty($itemLevel1['childData'])): ?>
+
+                        <?php endif; ?>
+                    </a>
+                    <?php if (!empty($itemLevel1['childData'])): ?>
+                        <div class="absolute left-0 top-full z-10 -mt-3 w-[80%] translate-x-[13%] bg-ahy-bg opacity-0 transition-opacity ease-out delay-300 pointer-events-none group-hover:opacity-100 focus-within:opacity-100 group-hover:pointer-events-auto"
+                             :style="`margin-top: 0; top: ${hoverTopPosition}px;`"
+                        >
+                            <div class="grid grid-cols-4 gap-4 justify-evenly mt-16 mb-8">
+                                <?php $catIdLvl1    = ($pos = strrpos($itemLevel1['id'], '-')) !== false
+                                    ? substr($itemLevel1['id'], $pos + 1)
+                                    : 0;
+                                $cmsBlockHtml = $catIdLvl1
+                                    ? $this->getLayout()
+                                           ->createBlock(CmsBlock::class)
+                                           ->setBlockId('megamenu_block_left_cat' . $catIdLvl1)
+                                           ->toHtml()
+                                    : '';
+
+                                if (!empty($cmsBlockHtml)): ?>
+                                <div class="2xl:block col-span-3">
+                                    <?= /** @noEscape */ $cmsBlockHtml ?>
+                                </div>
+                                <?php endif; ?>
+                                <div class="">
+                                    <ul class="grid flex-1 gap-y-4 gap-x-8 p-4 justify-evenly">
+                                        <?php foreach ($itemLevel1['childData'] as $itemLevel2): ?>
+                                            <?php if (empty($itemLevel2['childData'])): ?>
+                                                <?php $singleItems[] = $itemLevel2 ?>
+                                                <?php continue; ?>
+                                            <?php endif; ?>
+                                            <li class="level-1 min-w-48">
+                                                <a href="<?= $escaper->escapeUrl($itemLevel2['url']) ?>"
+                                                   title="<?= $escaper->escapeHtmlAttr($itemLevel2['name']) ?>"
+                                                   class="level-1 px-1 py-2 block text-base font-bold leading-loose hover:underline underline-offset-4">
+                                                    <?= $escaper->escapeHtml($itemLevel2['name']) ?>
+                                                    <hr class="p-px bg-white mt-2">
+                                                </a>
+
+                                                <ul class="z-10 w-full">
+                                                    <?php foreach ($itemLevel2['childData'] as $itemLevel3): ?>
+                                                        <li class="level-2">
+                                                            <a href="<?= $escaper->escapeUrl($itemLevel3['url']) ?>"
+                                                               title="<?= $escaper->escapeHtmlAttr($itemLevel3['name']) ?>"
+                                                               class="level-2 px-1 py-2 block text-lg md:text-sm font-semi-bold hover:underline underline-offset-4"><?= $escaper->escapeHtml($itemLevel3['name']) ?>
+                                                            <hr class="p-px bg-white mt-2">
+                                                            </a>
+                                                        </li>
+                                                    <?php endforeach; ?>
+                                                </ul>
+
+                                            </li>
+                                        <?php endforeach; ?>
+                                        <?php if ($singleItems): ?>
+                                        <li class="level-1 min-w-48">
+                                            <?php foreach ($singleItems as $item): ?>
+                                                <a href="<?= $escaper->escapeUrl($item['url']) ?>"
+                                                   title="<?= $escaper->escapeHtmlAttr($item['name']) ?>"
+                                                   class="level-1 px-1 py-2 block text-base font-bold leading-loose hover:underline underline-offset-4">
+                                                    <?= $escaper->escapeHtml($item['name']) ?>
+                                                    <hr class="p-px bg-white mt-2">
+                                                </a>
+                                            <?php endforeach; ?>
+                                            <?php endif; ?>
+                                    </ul>
+                                </div>
+                                <?php
+                                $cmsBlockHtml = $catIdLvl1
+                                    ? $this->getLayout()
+                                           ->createBlock(CmsBlock::class)
+                                           ->setBlockId('megamenu_block_right_cat' . $catIdLvl1)
+                                           ->toHtml()
+                                    : '';
+
+                                if (!empty($cmsBlockHtml)): ?>
+                                <div class="2xl:block col-span-3">
+                                    <?= /** @noEscape */ $cmsBlockHtml ?>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+            
+            <div class="level-0 flex items-center border-b-2 border-transparent">
+                <div class="level-0 block p-2 pr-0 xl:pr-2 font-semibold text-sm text-ahy-blue whitespace-nowrap">
+                    <span>|</span>
+                </div>
+            </div>
+            <!-- Brands menu section -->
+            <div class="level-0 flex items-center border-b-2 border-transparent transition transition-colors duration-500 group hover:border-primary focus-within:border-primary" 
+                @mouseover.stop="hoverTopPosition = $event.currentTarget.offsetTop + $event.currentTarget.getBoundingClientRect().height">
+                <a href="/brands" @focus="hoverTopPosition = $event.currentTarget.parentNode.offsetTop + $event.currentTarget.parentNode.getBoundingClientRect().height" title="Brands" class="level-0 block p-2 pr-0 xl:pr-2 font-semibold text-sm text-ahy-blue whitespace-nowrap">
+                    <span>Shop By Brand</span>
+                </a>
+            </div>
+        </nav>
+        <div class="flex items-center">
+            <a title="outdoor news" href="/storefront" class="no-underline hover:underline transition duration-150 ease-out hover:ease-in underline-offset-6 font-semibold text-sm text-ahy-blue mr-4">Become a Seller</a>
+            <a title="outdoor news" href="/everestdigest" target="_blank" rel="noopener noreferrer" class="no-underline hover:underline transition duration-150 ease-out hover:ease-in underline-offset-6 font-semibold text-sm text-ahy-blue mr-4">Outdoor Content</a>
+            <!-- <a title="about us" href="/about-us" class="no-underline hover:underline transition duration-150 ease-out hover:ease-in underline-offset-6 font-semibold text-sm text-ahy-blue">About Us</a> -->
+        </div>
+        <!-- <div class="flex items-center hidden">
+            <a href="#" class="no-underline hover:underline transition duration-150 ease-out hover:ease-in underline-offset-6 font-semibold text-sm text-ahy-blue mr-4">
+                <span class="pr-1.5 pl-3 mr-2 bg-[url('/media/icons/caliber-nation-icon.svg')] bg-contain bg-no-repeat bg-center"></span> Caliber Nation
+            </a>
+            <a href="#" class="no-underline hover:underline transition duration-150 ease-out hover:ease-in underline-offset-6 font-semibold text-sm text-ahy-blue mr-4">Video</a>
+            <a href="#" class="no-underline hover:underline transition duration-150 ease-out hover:ease-in underline-offset-6 font-semibold text-sm text-ahy-blue mr-4">News</a>
+            <a href="#" class="no-underline hover:underline transition duration-150 ease-out hover:ease-in underline-offset-6 font-semibold text-sm text-ahy-blue">About Us</a>
+        </div> -->
+    </div>
+
+</div>
+
+<script>
+    'use strict';
+
+    const initMenuDesktop<?= $escaper->escapeHtml($uniqueId) ?> = () => {
+        return {
+            hoverTopPosition: '100%',
+            setActiveMenu(menuNode) {
+                Array.from(menuNode.querySelectorAll('a')).filter(link => {
+                    return link.href === window.location.href.split('?')[0];
+                    }).map(item => {
+                        if (!item.classList.contains('level-0')) {
+                            item.classList.add('underline');
+                        }
+                        item.closest('div.level-0') &&
+                        item.closest('div.level-0').classList.add('border-secondary');
+                    }
+                );
+            }
+        }
+    }
+</script>

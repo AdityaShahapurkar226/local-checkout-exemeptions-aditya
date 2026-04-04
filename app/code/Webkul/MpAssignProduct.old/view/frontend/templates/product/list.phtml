@@ -1,0 +1,68 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+    $mpAssignBlock = $block->getLayout()->createBlock(\Webkul\MpAssignProduct\Block\Link::class);
+    $helper = $mpAssignBlock->getHelperObject();
+    $_productCollection = $block->getLoadedProductCollection();
+    $assignInfo = [];
+
+foreach ($_productCollection as $_product) {
+    $check = false;
+    $minPriceToShow = 0;
+    $minPriceProduct = false;
+    $productUrl = $_product->getProductUrl();
+    $totalSellers = $helper->getAssignProductsCount($_product->getId());
+    $productType = $_product->getTypeId();
+
+    if (($productType == 'simple') || ($productType == 'virtual') && $totalSellers) {
+        $originalQty = $helper->getOriginalQty($_product->getId());
+        $minPriceProducts = $helper->getMinimumPriceProductDetails($_product->getId(), $_product->getTypeId());
+
+        if ($minPriceProducts) {
+            $minPriceToShow = $mpAssignBlock->getHelperObject('pricingHelper')
+                                    ->currency($minPriceProducts[0]['price'], true, false);
+            $minPriceProduct = $minPriceProducts[0];
+        }
+        if ($totalSellers > 0) {
+            $check = true;
+        }
+    } elseif ($productType == 'configurable' && $helper->showMinimumPrice() && $totalSellers > 0) {
+        $configProPrice = [];
+        $configProPrice = $helper->getConfigProducts($_product->getId());
+        sort($configProPrice, 1);
+        $price = $configProPrice[0];
+        $assignPrice = $helper->getMinimumPriceHtml($_product->getId(), $productType, false, true);
+        if ($assignPrice < $price) {
+            $minPriceToShow = $assignPrice;
+        }
+    }
+
+    $assignInfo[$productUrl]['msg'] =  __('Available from %1 more seller(s)', $totalSellers);
+    $assignInfo[$productUrl]['stock'] = $check;
+    $assignInfo[$productUrl]['minPrice'] = $minPriceToShow;
+    $assignInfo[$productUrl]['minPriceProduct'] = $minPriceProduct;
+    $assignInfo[$productUrl]['totalSellers'] = $totalSellers;
+}
+    $data = [
+                "assignInfo" => $assignInfo,
+                "msg" => __('Availabe from other sellers'),
+                "label" => __("view")
+            ];
+    $data = json_encode($data);
+    ?>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "list": <?= /* @noEscape */ $data ?>
+        }
+    }
+</script>

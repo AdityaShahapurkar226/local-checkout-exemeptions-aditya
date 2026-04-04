@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="marketplace_userdata" resource="default" engine="innodb" comment="Marketplace Product Table">
+        <column name="flxPoint_seller_id" nullable="true" xsi:type="varchar" comment="FlxPoint Seller Id" length="255"/>
+        <column name="seller_active" nullable="true" xsi:type="boolean" comment="Seller is deleted from the Flxpoint"/>
+    </table>
+    <table name="marketplace_product" resource="default" engine="innodb" comment="Marketplace Product Table">
+        <column xsi:type="varchar" name="product_upc" nullable="false" comment="Product UPC"/>
+    </table>
+</schema>

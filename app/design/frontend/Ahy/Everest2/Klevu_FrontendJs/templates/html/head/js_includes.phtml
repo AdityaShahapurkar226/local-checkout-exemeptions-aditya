@@ -1,0 +1,22 @@
+<?php
+    /** @var Klevu\FrontendJs\Block\Html\Head\JsIncludes $block */
+    $jsIncludesUrls = $block->getJsIncludesUrls();
+?>
+<?php foreach ($jsIncludesUrls as $jsIncludesUrl): ?>
+    <?php
+        // if($jsIncludesUrl == 'https://js.klevu.com/core/v2/klevu.js'){
+        //     $jsIncludesUrl = 'https://klevu.yellowgap.com/klevu-core.js';
+        // }
+    ?>
+    <script type="text/javascript" src="<?php echo $block->escapeUrl($jsIncludesUrl); ?>"
+        <?php
+            if ($jsIncludesUrl !== 'https://js.klevu.com/core/v2/klevu.js') {
+                echo 'rel="preload" rel="dns-prefetch"';
+                // echo 'defer rel="dns-prefetch"';
+            }else{
+                echo 'preload="true" as="script"  rel="dns-prefetch"';
+            }
+        ?>
+    >
+    </script>
+<?php endforeach; ?>

@@ -1,0 +1,289 @@
+<section
+	class="Amy-Robbin h-full text-ahy-blue container relative text-black before:bg-[url(/media/wysiwyg/creators/Amy/gray-dirty-paperboard.png)] before:absolute before:-inset-1 before:left-1/2 before:z-[-1] before:-translate-x-1/2 before:w-screen h-full"
+>
+	<div class="hero-section text-center text-black sm:text-left flex flex-col lg:flex-row mb-6 items-center justify-end sm:justify-center sm:gap-[25px] lg:gap-3 gap-[3vw] relative w-full sm:h-[1372px] md:h-[1380px] lg:h-[550px] xl:h-[700px] 2xl:h-[850px] h-[225vw]">
+        <div class="sm:w-[315px] lg:w-[115px] xl:w-[175px] 2xl:w-[230px] w-[45vw] block lg:hidden">
+            <img src="/media/wysiwyg/creators/Amy/amy_logo.png" class="w-[100%]" >
+        </div>
+        <div class="sm:w-[616px] lg:w-[515px] xl:w-[640px] 2xl:w-[730px] w-[92vw] h-auto sm:h-[630px] lg:h-[515px] xl:h-[631px] 2xl:h-[760px]">
+            <img src="/media/wysiwyg/creators/Amy/hero_image.png" class="w-[100%]">
+        </div>
+        <div class="self-center flex flex-col items-center gap-[25px] lg:gap-[17px] xl:gap-[30px] 2xl:gap-[35px] lg:my-2.5">
+            <div class="w-[150px] lg:w-[210px] xl:w-[255px] 2xl:w-[280px] pb-2.5 hidden lg:block">
+                <img src="/media/wysiwyg/creators/Amy/amy_logo.png" class="w-[100%]" >
+            </div>
+			<div class="flex flex-col items-center">
+				<div class="font-bold mt-[0px] sm:text-[75px] lg:text-[50px] xl:text-[65px] 2xl:text-[6rem] text-[11vw] sm:w-[550px] lg:w-[472px] xl:w-[600px] 2xl:w-[729px] w-[75vw] sm:leading-[72px] lg:leading-[55px] xl:leading-[69px] 2xl:leading-[90px] leading-[11vw] text-center tracking-[1px] text-transform-uppercase">GET TO THE NEXT LEVEL WITH AMY'S PICKS</div>
+				<div class="sm:w-[230px] lg:w-[115px] xl:w-[150px] 2xl:w-[200px] w-[30vw] pt-4"><hr class="border border-black"></div>
+			</div>
+            <div class="sm:text-[20px] lg:text-[13px] xl:text-[22px] 2xl:text-[22px] text-[3vw] text-center sm:w-[321px] lg:w-[185px] xl:w-[455px] w-[62vw] sm:leading-[24px] lg:leading-[17px] xl:leading-[30px] leading-[4vw]">Find Beauty in Getting Outside with Amy's Curated Items Just For You!</div>
+            <div x-data="scrollSmoothOnClick()" id="tab_wrapper">
+                <div class="tab-bg-line-desktop relative pb-4 flex justify-center">
+                    <div class="bg-black tab-bg-mobile relative flex shadow-[4px_4px_40px_0px_rgba(0,0,0,0.5)] justify-center w-[75vw] md:w-[30rem] rounded-full">
+                        <button	
+                            @click.prevent="scrollToRecommendation()"
+                            class="mx-2 sm:mx-4 text-white uppercase h-16 text-xs sm:text-sm flex items-center hover:underline hover:decoration-2 hover:underline-offset-6 font-bold"
+                        >
+                            My Picks
+                        </button>
+						<button
+                            @click.prevent="scrollToAboutUs()"
+                            class="mx-2 sm:mx-4 text-white uppercase h-16 text-xs sm:text-sm flex items-center hover:underline hover:decoration-2 hover:underline-offset-6 font-bold"
+                        >
+                            About
+                        </button>
+                        <button
+                            @click.prevent="scrollToFeatured()"
+                            class="mx-2 sm:mx-4 text-white uppercase h-16 text-xs sm:text-sm flex items-center hover:underline hover:decoration-2 hover:underline-offset-6 font-bold"
+                        >
+                            gear up
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+	<div class="curated-just-for-you flex flex-col lg:flex-row gap-6 lg:py-12 lg:my-12 justify-between relative">
+		<div class="curated-products flex flex-col lg:flex-row gap-6 lg:gap-4 lg:w-[55%] order-2 lg:order-1 py-4">
+			<a href="https://www.everest.com/everest-mountainscape-logo-tshirt.html" class="curated-main-product flex flex-col w-full lg:w-8/12 text-ahy-blue">
+				<div class="w-full flex justify-center items-center bg-white py-6">
+					<img src="/media/wysiwyg/creators/Amy/Curated-Just-for-you/Main_unisex-staple-t-shirt-true-royal-front-65e6236017f5f.png" alt="Curated Main Product" class="w-full max-w-[400px] max-h-[400px] aspect-3/3 object-contain" />
+				</div>
+				<div class="flex justify-center items-center py-4 bg-white px-6"><span class="border-2 border-ahy-blue w-full px-6"></span></div>
+				<div class="curated-main-product-text bg-white px-6 pb-6 xl:pb-11">
+					<h1 class="font-bold pt-4 line-clamp-2 overflow-hidden h-16 xl:h-24">The Everest Mountainscape Logo T-shirt</h1>
+					<!-- <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p> -->
+				</div>
+			</a>
+			<div class="curated-thumb-product flex lg:flex-col gap-6 w-full lg:w-[30%] justify-between lg:justify-center lg:justify-start items-center overflow-scroll lg:overflow-auto">
+				<a href="https://www.everest.com/everest-mountain-distressed-hat.html">
+					<img src="/media/wysiwyg/creators/Amy/Curated-Just-for-you/Top_distressed-dad-hat-black-front-654cec2cb0167.png" class="aspect-3/3 bg-white object-contain" width="192" height="192" alt="Curated Thumb Product" />
+				</a>
+				<a href="https://www.everest.com/everest-map-tshirt.html">
+					<img src="/media/wysiwyg/creators/Amy/Curated-Just-for-you/Middle_unisex-staple-t-shirt-heather-deep-teal-front-654e3adf75787.png" class="aspect-3/3 bg-white object-contain" width="192" height="192" alt="Curated Thumb Product" />
+				</a>
+				<a href="https://www.everest.com/everest-collegiate-branded-sweatshirt.html">
+					<img src="/media/wysiwyg/creators/Amy/Curated-Just-for-you/Bottom_unisex-premium-sweatshirt-forest-green-front-65789b9a7fd91.png" class="aspect-3/3 bg-white object-contain" width="192" height="192" alt="Curated Thumb Product" />
+				</a>
+			</div>
+		</div>
+		<div class="curated-content lg:w-2/5 order-1 lg:order-2 py-4">
+			<div class="flex flex-row items-center justify-start gap-[15px] md:gap-6 pb-6">
+                <div>
+                    <img src="/media/wysiwyg/creators/Amy/amy_logo.png" alt="Amy Robbin Logo" height="200" width="200" />
+                </div>
+				<div class="font-bold text-[25px] md:text-4xl">X</div>
+				<div class="font-bold text-[25px] text-3xl">everest</div>
+			</div>
+			<h1 class="text-[30px] leading-[30px] md:text-3xl lg:4xl xl:text-5xl lg:max-w-[400px] font-extrabold">CURATED JUST <br> FOR YOU.</h1>
+			<div class="flex justify-start items-center py-4"><span class="border border-black w-32 lg:w-44"></span></div>
+			<p class="text-sm lg:max-w-[420px]">
+            We understand that every adventure is unique, and so is every adventurer. That's why we've chosen to partner with a creator that truly understands the outdoors.  We have worked closely with Amy Robbins to curate a selection of gear tailored specifically for your next adventure, ensuring you're well-equipped for whatever challenges you face. Our experts have handpicked items based on Amy's preferences for durability, adaptibility, and efficiency. From the latest in ultralight gear to weather-resistant apparel and high-tech gadgets, each piece is chosen to enhance your experience and performance. Our goal is to help you elevate your next journey with gear that's as ready as you are to explore the great outdoors, so you can forget the rest and focus on your next adventure.
+
+			</p>
+			<div class="hidden lg:flex mt-6 pt-6" x-data="scrollSmoothOnClick()">
+				<button class="bg-black rounded-full h-16 w-full lg:w-52 text-white font-extrabold hover:bg-ahy-blue-light duration-300 transition ease-in-out"	@click.prevent="scrollToRecommendation()">
+					Shop Now
+				</button>
+			</div>
+		</div>
+		<div class="lg:hidden order-3 w-full py-4" x-data="scrollSmoothOnClick()">
+			<button class="bg-black rounded-full h-16 w-full lg:w-52 text-white font-extrabold hover:bg-ahy-blue-light duration-300 transition ease-in-out"	@click.prevent="scrollToRecommendation()">
+				Shop Now
+			</button>
+		</div>
+	</div>
+	<div class="about-amy flex flex-col lg:flex-row justify-between gap-16 py-12 lg:my-12" id="about-us">
+		<div class="about-content order-2 lg:order-1 w-full lg:w-[55.3%] xl:w-[43.8%] 2xl:w-[46.3%] flex flex-col justify-center">
+			<h1 class="text-3xl lg:4xl xl:text-5xl max-w-[550px] uppercase font-extrabold">ABOUT AMY ROBBINS</h1>
+			<div class="flex justify-start items-center py-4"><span class="border border-black w-32 lg:w-11rem"></span></div>
+			<p class="text-sm">
+            Amy Robbins is a wife, mom, American Entrepreneur, National Keynote speaker, National TV/Podcast host of the “Not Your Average Gun Girls" show, CEO/Founder of Alexo Athletica. She has been featured as a leading thought leader and disruptor in the activewear space in Forbes Magazine, Fox News, South Magazine, Personal Defense World, Recoil Magazine, Yahoo Finance, What Women Create: Work Magazine, Washington Post Magazine and many more. You can catch her regular appearances on Real Americas Voice, the Blaze, Newsmax and other news outlets. She also currently serves on the Board of Directors for Face Forward International, Empowered 2A and the Leadership Council for the Metroplex Civic and Business Association. Amy created Alexo Athletica in 2015 out of a need she had after being followed & harassed during her marathon training. This allowed her to use her passion to see an uprising of empowered, self-reliant women live confidently as they exercise their 2A rights while exercising and wearing Athleisure wear. 
+			</p>
+            <p class="text-sm pt-5">
+            Amy created Alexo Athletica in 2015 out of a need she had after being followed & harassed during her marathon training. This allowed her to use her passion to see an uprising of empowered, self-reliant women live confidently as they exercise their 2A rights while exercising and wearing Athleisure wear.
+			</p>
+		</div>
+		<div class="amy-robbins-image order-1 lg:order-2 w-full lg:w-5/12 flex justify-center lg:justify-end">
+			<img src="/media/wysiwyg/creators/Amy/secondary_image.png" alt="Amy Robbins" height="610" width="610" class="" />
+		</div>
+	</div>
+	<div class="featured-product pb-8 md:pb-12 mb-6 relative" id="featured">
+		<div class="featured-product-heading flex gap-6 items-center justify-between">
+			<div class="flex justify-center hidden lg:block">
+				<img src="/media/wysiwyg/creators/Amy/amy_logo.png" alt="Amy Robbins Logo" height="250" width="250" class="" />
+			</div>
+			<div class="lg:w-1/2 xl:w-3/5 2xl:w-8/12 hidden lg:block">
+				<div class="flex justify-start items-center py-4"><span class="border border-black w-full"></span></div>
+			</div>
+			<div class="flex justify-end">
+				<h1 class="font-bold text-lg uppercase">
+					featured products
+				</h1>
+			</div>
+		</div>
+		<div class="featured-products-klevu">
+			<!-- Klevu Smart Recommendation products -->
+			<div class="klevu-recs h-[610px] klevuTarget" id="k-7e08193d-2f40-4096-a542-cdc9b323e16a" x-data="{ shown: false }" x-intersect="shown = true"></div>
+			<!-- initialization code for the swiper JS -->
+			<?php
+				echo $this->getLayout()
+				->createBlock('Magento\Cms\Block\Block')
+				->setBlockId('swiperjs-init-code')
+				->toHtml();
+			?>
+			<!-- get product swatches for configurable products in lightbox  -->
+			<?php
+				echo $this->getLayout()
+				->createBlock('Magento\Cms\Block\Block')
+				->setBlockId('get_product_swatches')
+				->toHtml();
+			?>
+		</div>
+	</div>
+	<div class="quote py-[70px] md:py-[8rem] mb-12 flex flex-col items-center justify-center gap-8 md:gap-14 relative before:bg-black before:bg-no-repeat before:bg-left-top before:md:bg-[center_0] before:bg-cover before:absolute before:-inset-1 before:left-1/2 before:z-[-1] before:-translate-x-1/2 before:w-screen before:h-full">
+		<div class="">
+			<h1 class="font-league-gothic text-center text-white pb-5 w-full md:w-4/5 lg:w-full xl:w-4/5 2xl:w-[74%] m-auto leading-none text-[42px] uppercase lg:text-[88px]">"Without a way to defend your freedom you don’t really have freedom."
+            </h1>
+            <h3 class="text-center font-poppins text-white">- Amy Robbins</h3>
+		</div>
+		<iframe 
+			width="1027" 
+			height="578" 
+			class="max-w-[1027px] w-full shadow-[4px_4px_40px_0px_rgba(0,0,0,0.5)] "
+			src="https://www.youtube.com/embed/HXcq4XuOARU?si=24sPOYcd0HQ8lVag" 
+			title="YouTube video player" 
+			frameborder="0" 
+			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+			referrerpolicy="strict-origin-when-cross-origin" 
+			allowfullscreen
+		>
+		</iframe>
+	</div>
+	<div class="complete-the-situation flex flex-col lg:flex-row justify-between items-start gap-8 pb-12 mb-12 relative">
+		<div class="complete-the-situation-heading lg:w-3/5">
+			<div class="flex gap-6 items-center py-6 lg:pt-12 lg:pb-8">
+				<h1 class="font-extrabold text-lg md:text-xl uppercase w-full">
+					Complete The Situation
+				</h1>
+				<div class="lg:w-8/12 xl:w-full 2xl:w-[160%] hidden lg:block">
+					<div class="flex justify-start items-center py-4"><span class="border border-black w-full"></span></div>
+				</div>
+			</div>
+			<p class="text-sm pb-6 mb-6 md:pb-8 md:mb-8 lg:w-4/6">
+				Check out these top picks curated just for you to help complete the situation.  These picks will help you conquer your goals and make getting outdoors more exciting!
+			</p>
+			<div class="thumb-products flex max-[511px] gap-6 w-full items-start overflow-scroll md:overflow-auto  ">
+				<a href="https://www.everest.com/sig-sauer-p365-tekmat-gun-cleaning-mat-11x17.html" class="flex flex-col gap-8 w-1/3 items-center justify-center">
+					<div class="flex justify-center items-center bg-white w-full"><img src="/media/wysiwyg/creators/Amy/Complete-The-Situation/Left_GSMTEKR17SIGP365-0.jpeg" class="aspect-3/3 bg-white object-contain" width="225" height="225" alt="Curated Thumb Product" /></div>
+					<div class="font-bold line-clamp-2 overflow-hidden h-12 capitalize max-sm:hidden">Sig Sauer P365 Tekmat Gun Cleaning Mat 11x17</div>
+				</a>
+				<a href="https://www.everest.com/streamlight-tlr-6-white-led-red-laser-sig-sauer-365-1.html" class="flex flex-col gap-8 w-1/3 items-center justify-center">
+					<div class="flex justify-center items-center bg-white w-full"><img src="/media/wysiwyg/creators/Amy/Complete-The-Situation/Middle_SMS_4018497.png" class="aspect-3/3 bg-white object-contain" width="225" height="225" alt="Curated Thumb Product" /></div>
+					<div class="font-bold line-clamp-2 overflow-hidden h-12 capitalize max-sm:hidden">
+                    Triumph Systems Ethical Harvest Turkey Target 2 Pack</div>
+				</a>
+				<a href="https://www.everest.com/protac-2l-x-includes-2-cr123a-lithium-batteries-holster-clam-black.html" class="flex flex-col gap-8 w-1/3 items-center justify-center">
+					<div class="flex justify-center items-center bg-white w-full"><img src="/media/wysiwyg/creators/Amy/Complete-The-Situation/Right_STRM88062-0.jpeg" class="aspect-3/3 bg-white object-contain" width="225" height="225" alt="Curated Thumb Product" /></div>
+					<div class="font-bold line-clamp-2 overflow-hidden h-12 capitalize max-sm:hidden">Montana Decoy Purr-fect Pair Xd 3d Combo</div>
+				</a>
+			</div>
+		</div>
+		<div class="w-full lg:w-2/5 flex justify-end">
+			<div class="complete-the-situation-main-product flex flex-col w-full lg:w-10/12 text-ahy-blue">
+				<div class="w-full flex justify-center items-center bg-white py-6">
+					<img src="/media/wysiwyg/creators/Amy/Complete-The-Situation/Main_optimized-rounded_triage_kit_1.jpg" alt="complete-the-situation Main Product" class="w-full max-w-[400px] max-h-[400px] aspect-3/3 object-contain" />
+				</div>
+				<div class="flex justify-center items-center py-4 bg-white px-6"><span class="border-2 border-ahy-blue w-full px-6"></span></div>
+				<div class="complete-the-situation-main-product-text bg-white px-6 pb-11">
+					<h1 class="font-bold py-4">Rounded Gear Range Triage Kit</h1>
+					<a href="https://www.everest.com/rounded-gear-range-triage-kit.html"
+						><button class="rounded-full bg-black h-16 w-full lg:w-52 text-white font-extrabold hover:bg-ahy-blue-light hover:text-white duration-300 transition ease-in-out">
+							Explore
+						</button></a
+					>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="other-recommendations pb-48 md:pb-56 lg:pb-60">
+		<div class="other-recommendations-heading flex gap-6 items-center justify-between">
+			<div class="w-full lg:w-1/2 xl:w-3/5 2xl:w-8/12">
+				<div class="flex justify-start items-center py-4"><span class="border border-black w-full"></span></div>
+			</div>
+			<div class="flex justify-center">
+				<img src="/media/wysiwyg/creators/Amy/avatar.png" alt="Amy Robbins Logo" height="192" width="192" class="" />
+			</div>
+			<div class="w-full lg:w-1/2 xl:w-3/5 2xl:w-8/12">
+				<div class="flex justify-start items-center py-4"><span class="border border-black w-full"></span></div>
+			</div>
+		</div>
+		<div class="pt-8" id="recommendation">
+			<h1 class="text-center pb-5  m-auto text-[25px] font-extrabold md:text-[31px] w-[97%] lg:text-[33px] 2xl:text-[40px] lg:w-[77%] md:w-[98%] w-[83%] xl:w-[77%] text-black">OTHER RECOMMENDATIONS FROM ROBBINS</h1>
+            <p class="text-sm text-center text-black lg:w-[58%]  2xl:w-[35%] md:w-[77%] xl:w-[47%] w-[75%] m-auto">
+            Gear specifically chosen so you can meet your potential in your passion outdoors.  The below handpicked gear will help you find your Everest.
+			</p>
+		</div>
+		<div class="other-recommendations-klevu">
+			<!-- Klevu Smart Recommendation products -->
+			<div class="klevu-recs h-[610px] klevuTarget" id="k-13a96779-dbbe-48b4-8e7e-09858cd2af28" x-data="{ shown: false }" x-intersect="shown = true"></div>
+			<!-- initialization code for the swiper JS -->
+			<?php
+				echo $this->getLayout()
+				->createBlock('Magento\Cms\Block\Block')
+				->setBlockId('swiperjs-init-code')
+				->toHtml();
+			?>
+			<!-- get product swatches for configurable products in lightbox  -->
+			<?php
+				echo $this->getLayout()
+				->createBlock('Magento\Cms\Block\Block')
+				->setBlockId('get_product_swatches')
+				->toHtml();
+			?>
+		</div>
+	</div>
+</section>
+<script id="smooth-scroll">
+	function scrollSmoothOnClick() {
+		return {
+			scrollToAboutUs() {
+				const aboutUsEl = document.getElementById("about-us");
+				if (aboutUsEl) {
+					aboutUsEl.scrollIntoView({
+						behavior: "smooth",
+					});
+				}
+			},
+			scrollToFeatured() {
+				const featuredEl = document.getElementById("featured");
+				if (featuredEl) {
+					featuredEl.scrollIntoView({
+						behavior: "smooth",
+					});
+				}
+			},
+			scrollToRecommendation() {
+				const recommendationEl = document.getElementById("recommendation");
+				if (recommendationEl) {
+					recommendationEl.scrollIntoView({
+						behavior: "smooth",
+					});
+				}
+			},
+		};
+	}
+</script>
+<style>
+	.featured-products-klevu h3.kuRECSTitle.uppercase.text-ahy-blue,
+	.other-recommendations-klevu h3.kuRECSTitle.uppercase.text-ahy-blue 
+	{
+		display: none;
+	}
+	[data-pb-style="NDRAL2K"]>div,
+	[data-pb-style="DRI0V0M"],
+	[data-pb-style="OIXNYXR"]
+	{
+		padding: 0 !important;
+	}
+</style>

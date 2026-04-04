@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceBaseShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="checkout_submit_all_after">
+        <observer name="baseshipping_checkout_submit_all_after_observer" instance="Webkul\MarketplaceBaseShipping\Observer\CheckoutSubmitAllAfterObserver"/>
+    </event>
+
+    <event name="sales_quote_collect_totals_before">
+        <observer name="baseshipping_collect_totals_before_observer" instance="Webkul\MarketplaceBaseShipping\Observer\CollectTotalsBeforeObserver"/>
+    </event>
+</config>

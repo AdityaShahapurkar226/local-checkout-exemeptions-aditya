@@ -1,0 +1,47 @@
+.wk-mprma-container * {
+    box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+}
+body .wk-mprma-fieldset.fieldset {
+    width: 100%;
+}
+.wk-mp-rma-newrma > a {
+    background: #36ada7 none repeat scroll 0 0;
+    color: #fff;
+    display: inline-block;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px 0;
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+}
+.wk-mp-rma-newrma {
+    margin-bottom: 10px;
+}
+.wk-mp-rma-newrma > a:hover {
+    background: #2E8983;
+}
+.wk-loading-mask {
+    background: none repeat scroll 0 0 rgba(255, 255, 255, 0.62);
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+}
+.wk-loader {
+    background: url("../images/ajax-loader.gif") repeat scroll 0 0 rgba(0, 0, 0, 0);
+    height: 32px;
+    left: 50%;
+    margin-left: -16px;
+    margin-top: -16px;
+    position: absolute;
+    top: 50%;
+    width: 32px;
+}
+.wk-display-none {
+    display: none !important;
+}

@@ -1,0 +1,30 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsSolid;
+use Magento\Checkout\Block\Cart\Item\Renderer\Actions\Remove;
+use Magento\Framework\Escaper;
+
+/** @var Remove $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+
+/** @var HeroiconsSolid $heroicons */
+$heroicons = $viewModels->require(HeroiconsSolid::class);
+?>
+<a href="#"
+   title="<?= $escaper->escapeHtml(__('Remove item')) ?>"
+   class="action action-delete pr-4"
+   x-data="{}"
+   @click.prevent='hyva.postForm(<?= /* @noEscape */ $block->getDeletePostJson() ?>)'
+>
+    <span class=""><?= $escaper->escapeHtml(__('Remove')) ?></span>
+</a>

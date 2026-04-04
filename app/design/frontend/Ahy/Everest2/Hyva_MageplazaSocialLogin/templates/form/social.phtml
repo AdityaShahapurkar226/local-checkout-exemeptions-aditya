@@ -1,0 +1,71 @@
+<?php
+$availableSocials = $block->getAvailableSocials();
+
+if ($block->canShow() && sizeof($availableSocials)):
+    ?>
+    <div class="!flex social-login-authentication-channel container max-w-6xl p-0">
+        <div class="block-content flex justify-start md:justify-end items-center w-full md:w-4/5 md:mr-12 relative">
+            <span class="mr-2 md:mr-4">or sign up with</span>
+            <?php
+            foreach ($availableSocials as $key => $social):
+                ?>
+                <div class="social-btn social-btn-actions-toolbar mr-1.5 <?= $key ?>-login"  x-data="{ open: false }">
+                    <a class="pl-3.5 pr-5 btn btn-block rounded-full cursor-pointer focus:ring-transparent items-baseline font-bold text-sm gap-2 btn-<?= $block->getBtnKey($key)    ?>"   @click="openPopUp('<?= $social['login_url'] ?>',  '<?= $social['label'] ?>')"
+                    <span class="fa fa-<?= $block->getBtnKey($key) ?>"></span>
+                    <?php if($social['label'] == 'Google'):?>
+                        <div class="w-5 h-5">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1792 1792" class="text-white w-4 h-4 mb-0.5">
+                                <path d="M896 786h725q12 67 12 128 0 217-91 387.5T1282.5 1568 896 1664q-157 0-299-60.5T352 1440t-163.5-245T128 896t60.5-299T352 352t245-163.5T896 128q300 0 515 201l-209 201q-123-119-306-119-129 0-238.5 65T484 652.5 420 896t64 243.5T657.5 1316t238.5 65q87 0 160-24t120-60 82-82 51.5-87 22.5-78H896V786z" fill="#ffffff"/>
+                            </svg>
+                        </div>
+                    <?php elseif($social['label'] == 'Facebook'):?>
+                        <div class="w-4 h-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-4 h-4 mb-0.5">
+                                <path fill="#fff" d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"></path>
+                            </svg>
+                        </div>
+                    <?php endif?>
+                    <?= __('%1', $social['label']) ?>
+                    </a>
+                </div>
+            <?php
+            endforeach;
+            ?>
+        </div>
+        <div class="md:w-1/2">
+        </div>
+    </div>
+<?php
+endif;
+$childBlock = $block->getChildBlock('hyva.request.info');
+?>
+
+<script>
+    const popupCenter = ({url, title, w, h}) => {
+        const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
+        const dualScreenTop = window.screenTop !==  undefined   ? window.screenTop  : window.screenY;
+        const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+        const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+        const systemZoom = width / window.screen.availWidth;
+        const left = (width - w) / 2 / systemZoom + dualScreenLeft;
+        const top = (height - h) / 2 / systemZoom + dualScreenTop;
+        const newWindow = window.open(url, title,
+          `
+          scrollbars=yes,
+          width=${w / systemZoom},
+          height=${h / systemZoom},
+          top=${top},
+          left=${left}
+          `
+        )
+
+        if (window.focus) newWindow.focus();
+    }
+
+    const openPopUp = (url , label) => {
+        const date = new Date();
+        const currentTime = date.getTime();
+
+        popupCenter({url: url + '?' + currentTime, title: label, w: 450, h: 550});
+    }
+</script>

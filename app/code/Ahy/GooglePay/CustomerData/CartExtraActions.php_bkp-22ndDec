@@ -1,0 +1,50 @@
+<?php
+declare(strict_types=1);
+
+namespace Ahy\GooglePay\CustomerData;
+
+use Magento\Customer\CustomerData\SectionSourceInterface;
+use Magento\Framework\View\LayoutInterface;
+use Ahy\GooglePay\ViewModel\RestrictVisibility;
+use PayPal\Braintree\Block\GooglePay\Shortcut\Button;
+
+class CartExtraActions implements SectionSourceInterface
+{
+    private LayoutInterface $layout;
+    private RestrictVisibility $restrictVisibility;
+
+    public function __construct(
+        LayoutInterface $layout,
+        RestrictVisibility $restrictVisibility
+    ) {
+        $this->layout = $layout;
+        $this->restrictVisibility = $restrictVisibility;
+    }
+
+    public function getSectionData(): array
+    {
+        $block = $this->layout->createBlock(
+            Button::class,
+            'googlepay.minicart.button',
+            [
+                'data' => [
+                    'template'      => 'Ahy_GooglePay::express/button.phtml',
+                    'alias'         => 'minicart',
+                    'container_id'  => 'googlepay-minicart-container',
+                    'button_id'     => 'googlepay-minicart-button',
+                    'viewModel'     => $this->restrictVisibility
+                ]
+            ]
+        );
+
+        if (!$block || !$block->getAmount()) {
+            return [];
+        }
+
+        return [
+            'extra_actions' => [
+                $block->toHtml()
+            ]
+        ];
+    }
+}

@@ -1,0 +1,458 @@
+<?php /** @var Magento\Framework\View\Element\Template $block */ ?>
+// Define a new custom event, which will fire after SRLP has initialised
+klevu.coreEvent.build({
+    name: "setRemoteConfigLandingOverride",
+    fire: function () {
+        if (klevu.getSetting(klevu,"settings.flags.setRemoteConfigLanding.build", false)) {
+            return true;
+        }
+        return false;
+    },
+    maxCount: 150,
+    delay: 100
+});
+
+// Listen in to our custom event, to make our overrides
+klevu.coreEvent.attach("setRemoteConfigLandingOverride", {
+    name: "attachRemoteConfigLandingOverride",
+    fire: function () {
+        // Attach to the Klevu query request chain
+        klevu.search.landing.getScope().chains.request.control.addAfter("initRequest", {
+            name: "modifyLandingQuery",
+            fire: function (data, scope) {
+                // OVERRIDE API PARAMETER HERE
+                // SET max filter options to retrieve
+                klevu.setObjectPath( data, "localOverrides.query.productList.settings.limit", 24);
+            }
+        });
+        // Override the klevuTemplateLanding template with our own
+        klevu.search.landing.getScope().template.setTemplate(
+            klevu.dom.helpers.getHTML("#ahyKlevuLandingTemplateBase"),
+            "klevuTemplateLanding",
+            true
+        );
+
+        // Override the kuFilterTagsTemplate template with our own
+        klevu.search.landing.getScope().template.setTemplate(
+            klevu.dom.helpers.getHTML("#ahyKuFilterTagsTemplate"), "kuFilterTagsTemplate", true
+        );
+
+        // Override the pagination template with our own
+        klevu.search.landing.getScope().template.setTemplate(
+            klevu.dom.helpers.getHTML("#ahyKlevuLandingTemplatePagination"), "pagination", true
+        );
+
+        // Override the klevuLandingTemplateResultsHeadingTitle template with our own
+        klevu.search.landing.getScope().template.setTemplate(
+            klevu.dom.helpers.getHTML("#ahyKlevuLandingTemplateResultsHeadingTitle"), "klevuLandingTemplateResultsHeadingTitle", true
+        );
+
+        // Override the filters template with our own
+        klevu.search.landing.getScope().template.setTemplate(
+            klevu.dom.helpers.getHTML("#ahyKlevuLandingTemplateFilters"), "filters", true
+        );
+
+        // Override the klevuLandingTemplateSortBy template with our own
+        klevu.search.landing.getScope().template.setTemplate(
+            klevu.dom.helpers.getHTML("#ahyKlevuLandingTemplateSortBy"), "sortBy", true
+        );
+
+        // Override the klevuLandingTemplateResults template with our own
+        klevu.search.landing.getScope().template.setTemplate(
+            klevu.dom.helpers.getHTML("#ahyKlevuLandingTemplateResults"), "results", true
+        );
+
+        // Override the KlevuLandingTemplateProductBlock template with our own
+        klevu.search.landing.getScope().template.setTemplate(
+            klevu.dom.helpers.getHTML("#ahyKlevuLandingTemplateProductBlock"), "productBlock", true
+        );
+
+        // Override the landingPageProductAddToCart template with our own
+        klevu.search.landing.getScope().template.setTemplate(
+            klevu.dom.helpers.getHTML("#ahyLandingPageProductAddToCart"), "landingPageProductAddToCart", true
+        );
+
+        // Apply the page value supplied in the current URL string
+        klevu.search.landing.getScope().chains.request.control.addAfter("initRequest", {
+            name: "selectPageNumberFromURL",
+            fire: function (data, scope) {
+                klevu.search.modules.addPaginationToURL.base.getAndUpdatePagination(data, scope);
+            }
+        });
+
+        // Add selected page value to the URL string
+        klevu.search.landing.getScope().chains.template.events.add({
+            name: "attachURLUpdateOnPaginationSelect",
+            fire: function (data, scope) {
+                klevu.search.modules.addPaginationToURL.base.setPagination(data, scope);
+            }
+        });
+
+        // Apply the facets supplied in the current URL string
+        klevu.search.landing.getScope().chains.request.control.addAfter("initRequest", {
+            name: "selectFiltersFromURL",
+            fire: function (data, scope) {
+                klevu.search.modules.addFiltersToURL.base.getAndUpdateFilters(data, scope);
+            }
+        });
+
+        // Add selected facets to the URL string
+        klevu.search.landing.getScope().chains.template.events.add({
+            name: "attachURLUpdateOnFilterSelect",
+            fire: function (data, scope) {
+                klevu.search.modules.addFiltersToURL.base.setFilters(data, scope);
+            }
+        });
+
+        /** place the product sizing in the ascending order */
+        klevu.modifyResponse("landing,catnav", function(data, scope){
+
+            /* loop through filters in the response */
+            
+            klevu.each(data.template.query.productList.filters, function(indx, filter)
+            {
+                if (filter.key === 'size') {
+                            
+                    /* set desired order for 'size' facet options */
+                    const optionOrder = [
+                        "XS",
+                        "X-Small",
+                        "Xsmall",
+                        "Youth XSS-Small",
+                        "Adult X-Small",
+                        "Womens X-Small",
+                        "Ladies X-Small",
+                        "Youth X-Small",
+                        "S",
+                        "Small",
+                        "Small / Medium",
+                        "Small/Medium",
+                        "Small/Youth",
+                        "Adult Small",
+                        "Ladies Small",
+                        "Womens Small",
+                        "Youth Small",
+                        "M",
+                        "Med",
+                        "Medium",
+                        "Medium/Large",
+                        "Adult Medium",
+                        "Ladies Medium",
+                        "Womens Medium",
+                        "Youth Medium",
+                        "L",
+                        "Large",
+                        "Adult Large",
+                        "Ladies Large",
+                        "Womens Large",
+                        "Youth Large",
+                        "XL",
+                        "Adult X-Large",
+                        "Ladies X-Large",
+                        "Womens X-Large",
+                        "Youth X-Large",
+                        "2XL",
+                        "xxl",
+                        "XXL",
+                        "XXLarge",
+                        "Adult 2X-Large",
+                        "Ladies 2X-Large",
+                        "Womens 2X-Large",
+                        "XXXL",
+                        "Adult 3X-Large",
+                        "Ladies 3X-Large",
+                        "Adult 4X-Large",
+                        "Ladies 4X-Large",
+                        "Adult 5X-Large",
+                        "5XL",
+                        "6XL",
+                        "7XL"
+                    ];
+
+                    
+                    /* get the filter options that are NOT numeric */
+                    
+                    const alphabetic = filter.options.filter(value => {
+                        return isNaN(value.name)
+                    });
+                    
+                    /* sort object by 'name' value matching desired sortOrder */
+                    optionOrder.reverse().forEach(function(elm) {
+                    
+                        alphabetic.sort(function (a, b) {
+                            if (a.name === elm)  return -1;
+                            if (a.name !== elm && b.name !== elm)  return 0;
+                            return 1;
+                        });
+                    
+                    });
+
+                    /* get the filter options that ARE numeric */
+                    const numeric = filter.options.filter(value => {
+                        return !isNaN(value.name)
+                    });
+                    
+                    /* sort object by 'name' value ascending */
+                    numeric.sort(function (a, b) {
+                        var numberOptionA = +a.name ? +a.name : 1000;
+                        var numberOptionB = +b.name ? +b.name : 1000;
+                        return numberOptionA - numberOptionB
+                    }); 
+
+                    /* concatenate the two sorted objects */
+                    const orderedOptions = numeric.concat(alphabetic);
+
+
+                    filter.options = orderedOptions;
+
+                }
+            });
+        });
+
+        
+        // We're done with our overrides, tell Klevu to power up!
+        klevu({
+            powerUp: {
+                landing: true
+            }
+        });
+    }
+});
+
+
+// addPaginationToURL module
+(function(klevu) {
+    klevu.extend(true, klevu.search.modules, {
+        addPaginationToURL: {
+            base: {
+                setPagination: function(data, scope, queryId) {
+                    var hasPaginationEnabled = klevu.getSetting(klevu, "settings.theme.modules.pagination.searchResultsPage.enable");
+                    if (hasPaginationEnabled === true) {
+                        var activeQueryId = klevu.getObjectPath(data, "context.activeQueryId");
+                        if (queryId && queryId.length) {
+                            activeQueryId = queryId;
+                        }
+                        var paginationQueryParam = activeQueryId + "PgNo";
+                        var activeQueryMeta = klevu.getObjectPath(data, "template.query." + activeQueryId + ".meta");
+                        var paginationValuesQueryParam = 0;
+                        if (activeQueryMeta) {
+                            var productListLimit = activeQueryMeta.noOfResults;
+                            paginationValuesQueryParam = Math.ceil(activeQueryMeta.offset / productListLimit) + 1;
+                        }
+                        var searchPath = window.location.search;
+                        var updatedPath = klevu.dom.helpers.updateQueryStringParameter(searchPath, paginationQueryParam, paginationValuesQueryParam);
+                        if (paginationValuesQueryParam === 0) {
+                            updatedPath = updatedPath.replace("&" + paginationQueryParam + "=", "");
+                        }
+                        if ('undefined' !== typeof window.history && 'undefined' !== typeof window.history.replaceState) {
+                            window.history.replaceState({}, "", updatedPath);
+                        } else {
+                            console.log("This browser does not have the support of window.history or window.history.replaceState");
+                        }
+                    }
+                },
+                getAndUpdatePagination: function(data, scope, queryId) {
+                    var hasAlreadyTriggered = klevu.getObjectPath(scope.kScope, "element.kScope.getAndUpdatePaginationTriggered");
+                    if (hasAlreadyTriggered === true) {
+                        return;
+                    }
+                    var matchedQueryParamId = ""
+                      , matchedQueryParamValue = "";
+                    var recordQueries = klevu.getObjectPath(data, "request.current.recordQueries");
+                    if (recordQueries && recordQueries.length) {
+                        klevu.each(recordQueries, function(key, query) {
+                            if (query.id) {
+                                var paginationFromURL = klevu.dom.helpers.getQueryStringValue(query.id + "PgNo");
+                                if (paginationFromURL && paginationFromURL.length) {
+                                    matchedQueryParamId = query.id;
+                                    matchedQueryParamValue = paginationFromURL;
+                                }
+                            }
+                        })
+                    }
+                    klevu.setObjectPath(scope.kScope, "element.kScope.getAndUpdatePaginationTriggered", true);
+                    var activeQueryId = klevu.getObjectPath(data, "context.activeQueryId");
+                    if (queryId && queryId.length) {
+                        activeQueryId = queryId;
+                    } else if (matchedQueryParamId.length && matchedQueryParamValue.length) {
+                        activeQueryId = matchedQueryParamId;
+                        var storage = klevu.getSetting(scope.kScope.settings, "settings.storage");
+                        if (storage.tabs) {
+                            storage.tabs.setStorage("local");
+                            storage.tabs.mergeFromGlobal();
+                            storage.tabs.addElement("active", activeQueryId);
+                            storage.tabs.mergeToGlobal();
+                        }
+                    }
+                    var paginationQueryParam = activeQueryId + "PgNo";
+                    var paginationFromURL = klevu.dom.helpers.getQueryStringValue(paginationQueryParam);
+                    paginationFromURL = Number(paginationFromURL);
+                    if (paginationFromURL && paginationFromURL > 1) {
+                        var recordQueries = klevu.getObjectPath(data, "request.current.recordQueries");
+                        if (recordQueries.length) {
+                            klevu.each(recordQueries, function(key, recordQuery) {
+                                if (recordQuery.id === activeQueryId) {
+                                    var limit = klevu.getObjectPath(recordQuery, "settings.limit");
+                                    limit = Number(limit);
+                                    if (limit > 0) {
+                                        var expectedOffset = (paginationFromURL - 1) * limit;
+                                        klevu.setObjectPath(data, "localOverrides.query." + activeQueryId + ".settings.offset", expectedOffset);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            },
+            build: true
+        }
+    });
+}
+)(klevu);
+
+
+// addFiltersToURL Module
+    (function (klevu) {
+        klevu.extend(true, klevu.search.modules, {
+            addFiltersToURL: {
+                base: {
+                    setFilters: function (data, scope, queryId) {
+                        var activeQueryId = klevu.getObjectPath(data, "context.activeQueryId");
+                        if (queryId && queryId.length) {
+                            activeQueryId = queryId;
+                        }
+                        var filterQueryParam = activeQueryId + "Filters";
+                        var activeQueryFilters = klevu.getObjectPath(data, "template.query." + activeQueryId + ".filters");
+                        var filterValuesQueryParam = "";
+                        if (activeQueryFilters) {
+                            klevu.each(activeQueryFilters, function (key, filter) {
+                                var selectedFilterKeyString = "";
+                                var filterOptions = filter.options;
+                                var selectedValues = "";
+                                if (filterOptions && filterOptions.length) {
+                                    klevu.each(filterOptions, function (key, option) {
+                                        if (option.selected === true) {
+                                            if (selectedValues.length) {
+                                                selectedValues += ",";
+                                            }
+                                            selectedValues += option.value;
+                                        }
+                                    });
+                                } else if (filter.type === "SLIDER") {
+                                    var startValue = filter.start;
+                                    var endValue = filter.end;
+                                    var minValue = filter.min;
+                                    var maxValue = filter.max;
+                                    if (typeof startValue !== "undefined" && startValue !== null && typeof endValue !== "undefined" && endValue !== null) {
+                                        if (Number(startValue) === Number(minValue) && Number(endValue) === Number(maxValue)) {} else {
+                                            selectedValues = startValue + "-" + endValue;
+                                        }
+                                    }
+                                }
+                                if (selectedValues.length) {
+                                    selectedFilterKeyString += filter.key + ":" + selectedValues;
+                                }
+                                if (selectedFilterKeyString.length) {
+                                    if (filterValuesQueryParam.length) {
+                                        filterValuesQueryParam += ";";
+                                    }
+                                    filterValuesQueryParam += selectedFilterKeyString;
+                                }
+                            });
+                        }
+                        filterValuesQueryParam = encodeURIComponent(filterValuesQueryParam);
+                        var searchPath = window.location.search;
+                        var updatedPath = klevu.dom.helpers.updateQueryStringParameter(searchPath, filterQueryParam, filterValuesQueryParam);
+                        if (!filterValuesQueryParam.length) {
+                            updatedPath = updatedPath.replace("&" + filterQueryParam + "=", "");
+                        }
+                        if ('undefined' !== typeof window.history && 'undefined' !== typeof window.history.replaceState) {
+                            window.history.replaceState({}, "", updatedPath);
+                        } else {
+                            console.log("This browser does not have the support of window.history or window.history.replaceState");
+                        }
+                    },
+                    getAndUpdateFilters: function (data, scope, queryId) {
+                        var hasAlreadyTriggered = klevu.getObjectPath(scope.kScope, "element.kScope.getAndUpdateFiltersTriggered");
+                        if (hasAlreadyTriggered === true) {
+                            return;
+                        }
+                        var matchedQueryParamId = "",
+                            matchedQueryParamValue = "";
+                        var recordQueries = klevu.getObjectPath(data, "request.current.recordQueries");
+                        if (recordQueries && recordQueries.length) {
+                            klevu.each(recordQueries, function (key, query) {
+                                if (query.id) {
+                                    var filtersFromURL = klevu.dom.helpers.getQueryStringValue(query.id + "Filters");
+                                    if (filtersFromURL && filtersFromURL.length) {
+                                        matchedQueryParamId = query.id;
+                                        matchedQueryParamValue = filtersFromURL;
+                                    }
+                                }
+                            })
+                        }
+                        klevu.setObjectPath(scope.kScope, "element.kScope.getAndUpdateFiltersTriggered", true);
+                        var activeQueryId = klevu.getObjectPath(data, "context.activeQueryId");
+                        if (queryId && queryId.length) {
+                            activeQueryId = queryId;
+                        } else if (matchedQueryParamId.length && matchedQueryParamValue.length) {
+                            activeQueryId = matchedQueryParamId;
+                            var storage = klevu.getSetting(scope.kScope.settings, "settings.storage");
+                            if (storage.tabs) {
+                                storage.tabs.setStorage("local");
+                                storage.tabs.mergeFromGlobal();
+                                storage.tabs.addElement("active", activeQueryId);
+                                storage.tabs.mergeToGlobal();
+                            }
+                        }
+                        var filterQueryParam = activeQueryId + "Filters";
+                        var filtersFromURL = klevu.dom.helpers.getQueryStringValue(filterQueryParam);
+                        if (filtersFromURL && filtersFromURL.length) {
+                            var facets = filtersFromURL.split(";");
+                            if (facets) {
+                                klevu.each(facets, function (key, facet) {
+                                    var splitFacet = facet.split(":");
+                                    if (splitFacet.length) {
+                                        var facetKey = splitFacet[0];
+                                        var facetValues = splitFacet[1].split(",");
+                                        var applyFilters = klevu.getObjectPath(data, "localOverrides.query." + activeQueryId + ".filters.applyFilters.filters");
+                                        if (applyFilters && applyFilters.length) {
+                                            var isExistingKey = false;
+                                            klevu.each(applyFilters, function (key, applyFilter) {
+                                                if (applyFilter.key === facetKey) {
+                                                    isExistingKey = true;
+                                                    klevu.each(facetValues, function (key, facetValue) {
+                                                        var isFilterOptionMatched = false;
+                                                        klevu.each(applyFilter.values, function (key, value) {
+                                                            if (facetValue === value) {
+                                                                isFilterOptionMatched = true;
+                                                            }
+                                                        });
+                                                        if (!isFilterOptionMatched) {
+                                                            applyFilter.values.push(facetValue);
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                            if (!isExistingKey) {
+                                                applyFilters.push({
+                                                    key: facetKey,
+                                                    values: facetValues
+                                                });
+                                            }
+                                        } else {
+                                            klevu.setObjectPath(data, "localOverrides.query." + activeQueryId + ".filters.applyFilters.filters", [{
+                                                key: facetKey,
+                                                values: facetValues
+                                            }]);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                },
+                build: true
+            }
+        });
+    })(klevu);

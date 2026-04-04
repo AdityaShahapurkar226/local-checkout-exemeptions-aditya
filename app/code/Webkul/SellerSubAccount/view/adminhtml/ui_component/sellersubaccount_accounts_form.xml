@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_SellerSubAccount
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">sellersubaccount_accounts_form.sellersubaccount_accounts_form_data_source</item>
+            <item name="deps" xsi:type="string">sellersubaccount_accounts_form.sellersubaccount_accounts_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Manage Sub Account</item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">sub_account</item>
+            <item name="namespace" xsi:type="string">sellersubaccount_accounts_form</item>
+        </item>
+        <item name="layout" xsi:type="array">
+            <item name="type" xsi:type="string">tabs</item>
+            <item name="navContainerName" xsi:type="string">left</item>
+        </item>
+        <item name="buttons" xsi:type="array">
+            <item name="back" xsi:type="string">Webkul\SellerSubAccount\Block\Adminhtml\Edit\BackButton</item>
+            <item name="delete" xsi:type="string">Webkul\SellerSubAccount\Block\Adminhtml\Account\Edit\DeleteButton</item>
+            <item name="reset" xsi:type="string">Webkul\SellerSubAccount\Block\Adminhtml\Edit\ResetButton</item>
+            <item name="save" xsi:type="string">Webkul\SellerSubAccount\Block\Adminhtml\Edit\SaveButton</item>
+            <item name="save_and_continue" xsi:type="string">Webkul\SellerSubAccount\Block\Adminhtml\Edit\SaveAndContinue</item>
+        </item>
+        <item name="childrenFromMeta" xsi:type="boolean">true</item>
+        <item name="reverseMetadataMerge" xsi:type="boolean">true</item>
+    </argument>
+    <dataSource name="sellersubaccount_accounts_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Webkul\SellerSubAccount\Ui\DataProvider\SubAccount\DataProvider</argument>
+            <argument name="name" xsi:type="string">sellersubaccount_accounts_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="sellersubaccount/account/save"/>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+    <fieldset name="sub_account">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Sub Account</item>
+            </item>
+        </argument>
+        <field name="entity_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="visible" xsi:type="boolean">false</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                </item>
+            </argument>
+        </field>
+        <container name="seller_id_container" >
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+            <htmlContent name="html_content">
+                <argument name="block" xsi:type="object">Webkul\SellerSubAccount\Block\Adminhtml\Account\Edit\FormTemplate</argument>
+            </htmlContent>
+        </container>
+         <field name="prefix" sortOrder="1" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">customer</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Name Prefix</label>
+            </settings>
+        </field>
+   
+        <field name="firstname">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">First Name</item>
+                    <item name="componentType" xsi:type="string">field</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="dataScope" xsi:type="string">firstname</item>
+                    <item name="dataType" xsi:type="string">string</item>
+                    <item name="sortOrder" xsi:type="number">2</item>
+                    <item name="required" xsi:type="boolean">true</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+         <field name="middlename" sortOrder="3" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">customer</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                
+                <label translate="true">Middle Name/Initial</label>
+            </settings>
+        </field>
+        <field name="lastname">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Last Name</item>
+                    <item name="componentType" xsi:type="string">field</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="dataScope" xsi:type="string">lastname</item>
+                    <item name="dataType" xsi:type="string">string</item>
+                    <item name="sortOrder" xsi:type="number">4</item>
+                    <item name="required" xsi:type="boolean">true</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="suffix" sortOrder="5" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">customer</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Name Suffix</label>
+            </settings>
+        </field>
+        <field name="email">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Email</item>
+                    <item name="componentType" xsi:type="string">field</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="dataScope" xsi:type="string">email</item>
+                    <item name="dataType" xsi:type="string">string</item>
+                    <item name="sortOrder" xsi:type="number">6</item>
+                    <item name="required" xsi:type="boolean">true</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="validate-email" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="dob" sortOrder="7" formElement="date">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">customer</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="validate-date" xsi:type="boolean">true</rule>
+                    <rule name="validate-dob" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>text</dataType>
+             
+                <label translate="true">Date of Birth</label>
+            </settings>
+            <formElements>
+                <date>
+                    <settings>
+                        <options>
+                            <option name="maxDate" xsi:type="string">-1d</option>
+                        </options>
+                    </settings>
+                </date>
+            </formElements>
+        </field>
+        <field name="taxvat" sortOrder="8" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">customer</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+               
+                 <label translate="true">Taxvat</label>
+            </settings>
+        </field>
+        <field name="gender" sortOrder="9" formElement="select">
+            <argument name="data" xsi:type="array">
+             <item name="options" xsi:type="object">Webkul\SellerSubAccount\Model\SubAccount\Source\Gender</item>
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">customer</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+              
+                 <label translate="true">Gender</label>
+            </settings>
+        </field>
+
+        <field name="permission_type">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Webkul\SellerSubAccount\Model\SubAccount\Source\Permissionsacc</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Allowed Account Permissions</item>
+                    <item name="dataType" xsi:type="string">number</item>
+                    <item name="formElement" xsi:type="string">multiselect</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                    <item name="required" xsi:type="boolean">true</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="status">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magento\Config\Model\Config\Source\Yesno</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Active</item>
+                    <item name="dataType" xsi:type="string">number</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="sortOrder" xsi:type="number">11</item>
+                </item>
+            </argument>
+        </field>
+        <field name="company" sortOrder="20" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+              
+                <label translate="true">Company</label>
+            </settings>
+        </field>
+      <field name="country_id">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magento\Directory\Model\Config\Source\Country</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Country</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">store</item>
+                       <item name="sortOrder" xsi:type="number">21</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/country</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="region">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">State/Region</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">store</item>
+                    <item name="sortOrder" xsi:type="number">24</item>
+                    <item name="visible" xsi:type="boolean">false</item>
+                </item>
+            </argument>
+        </field>
+        <field name="region_id">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magento\Directory\Model\ResourceModel\Region\Collection</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">State/Region</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">store</item>
+                    <item name="sortOrder" xsi:type="number">26</item>
+                    <item name="customEntry" xsi:type="string">region</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                    <item name="filterBy" xsi:type="array">
+                        <item name="target" xsi:type="string">${ $.provider }:${ $.parentScope }.country_id</item>
+                        <item name="field" xsi:type="string">country_id</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="city" sortOrder="100" formElement="input"> 
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">City</label>
+            </settings>
+        </field>
+        <field name="postalcode" component="Magento_Ui/js/form/element/post-code" sortOrder="120" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Zip/Postal Code</label>
+            </settings>
+        </field>
+        <field name="telephone" sortOrder="130" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+              
+                <label translate="true">Phone Number</label>
+            </settings>
+        </field>
+        <field name="fax" sortOrder="140" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Fax</label>
+                <validation>
+                    <rule name="validate-alphanum" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+        <field name="vat_id" sortOrder="150" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">VAT Number</label>
+                <validation>
+                    <rule name="validate-alphanum" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+        
+    </fieldset>
+</form>

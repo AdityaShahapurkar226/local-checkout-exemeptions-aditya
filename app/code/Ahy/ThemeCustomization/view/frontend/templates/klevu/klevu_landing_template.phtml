@@ -1,0 +1,35 @@
+<?php /** @var Klevu\FrontendJs\Block\Template $block */ ?>
+<!-- custom version of the klevuLandingTemplateBase template -->
+<script type="template/klevu" id="ahyKlevuLandingTemplateBase" defer>
+    <div ku-container data-container-id="ku_landing_main_container" data-container-role="main" class="!m-0 !w-full">
+
+        <header ku-container data-container-id="ku_landing_main_header_container" data-container-role="header">
+            <section ku-block data-block-id="ku_landing_main_header_sub_panel"></section>
+            <section ku-block data-block-id="ku_landing_main_header_banner">
+                <%=helper.render('klevuLandingPromotionBanner',scope,data,"top") %>
+                <%=helper.render('klevuLandingPromotionBanner',scope,data,"bottom") %>
+            </section>
+            <section ku-block data-block-id="ku_landing_main_header_site_navigation"></section>
+        </header>
+
+        <div class="!m-0 !w-full !max-w-full !bg-transparent">
+            <% if(!helper.hasResults(data,"productList") && !helper.hasFilters(data,"productList")) { %>
+                <%=helper.render('noResultsFoundLanding',scope) %>
+            <% } else { %>
+                <%= helper.render('klevuLandingTemplateSearchBar', scope) %>
+                <%=helper.render('klevuLandingImageSearchUploadBanner',scope,data) %>
+                <%= helper.render('tab-results', scope) %>
+                <%= helper.render('results',scope) %>
+            <% } %>
+            <div class="kuClearBoth"></div>
+        </div>
+
+        <footer ku-container data-container-id="ku_landing_main_footer_container" data-container-role="footer">
+            <section ku-block data-block-id="ku_landing_main_footer_sub_panel"></section>
+            <section ku-block data-block-id="ku_landing_main_footer_banner">
+
+            </section>
+        </footer>
+
+    </div>
+</script>

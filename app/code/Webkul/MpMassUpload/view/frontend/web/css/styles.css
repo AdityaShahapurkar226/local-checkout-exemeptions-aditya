@@ -1,0 +1,204 @@
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+.wk-mu-sample-files {
+    display: inline-block;
+    font-size: 12px;
+    margin-bottom: 25px;
+    width: 100%;
+}
+.wk-mu-sample-files > a {
+    margin-right: 15px;
+}
+.wk-mu-progress-bar {
+    border: 1px solid #28cb6e;
+    display: inline-block;
+    height: 15px;
+    margin-top: 5px;
+    width: 100%;
+    margin-bottom: 30px;
+}
+.wk-mu-progress-bar-current {
+    background: none repeat scroll 0 0 #61d896;
+    display: inline-block;
+    height: 15px;
+    width: 0px;
+    float: left;
+}
+.wk-mu-info-bar {
+    color: #3c763d;
+    font-weight: bold;
+    margin-top: 30px;
+    position: relative;
+    padding-left: 25px;
+}
+.wk-mu-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+.wk-mu-note {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+.wk-mu-notice {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
+.wk-mu-error {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+.wk-mu-box {
+    margin-bottom: 10px;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.wk-mu-info-container {
+    margin-top: 20px;
+    position: relative;
+}
+
+.wk-mu-sa-overlay {
+    background: none repeat scroll 0 0 rgba(255, 255, 255, 0.62);
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+}
+
+.wk-mu-sa-loader {
+    background: url("../images/ajax-loader.gif") repeat scroll 0 0 rgba(0, 0, 0, 0);
+    height: 32px;
+    left: 50%;
+    margin-left: -16px;
+    margin-top: -16px;
+    position: absolute;
+    top: 50%;
+    width: 32px;
+}
+.wk-mu-importing-loader {
+    background: rgba(0, 0, 0, 0) url("../images/ajax-loader.gif") no-repeat scroll 0 0 / 20px 20px;
+    height: 20px;
+    left: 0;
+    margin-left: 0;
+    margin-top: 0;
+    position: absolute;
+    top: 0;
+    width: 20px;
+}
+.wk-massupload-container {
+    margin-top: 50px;
+}
+.wk-display-none {
+    display: none;
+}
+.wk-field {
+    position: relative;
+}
+.wk-mu-content {
+    padding: 10px 5px;
+}
+.wk-mu-label {
+    border-bottom: 1px solid #ccc;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 10px 0;
+}
+.wk-mu-options {
+    padding: 0 10px;
+}
+.wk-mu-options-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.wk-mu-options-content {
+    padding: 0 10px;
+}
+.wk-no-padding {
+    padding: 0px !important;
+}
+.wk-warning-content {
+    padding: 20px 0;
+}
+.mpmassupload-product-view .fieldset .legend {
+    border-bottom: 1px solid #ccc;
+    margin-left: 0;
+    padding-bottom: 10px;
+    width: 100%;
+}
+
+.mpmassupload-product-view #downloadable {
+    vertical-align: middle;
+    margin-top: 0px;
+}
+
+.mpmassupload-product-view .fieldset > .field:not(.choice) > .label {
+    float: left;
+    margin-bottom: 8px;
+    padding: 0;
+    text-align: left;
+    width: 100%;
+}
+.mpmassupload-product-view .fieldset > .field:not(.choice) > .control {
+    width: 100%;
+}
+
+
+.wk-tier-price-content {
+    margin-bottom: 15px;
+    padding: 0 20px;
+}
+
+.wk-tier-price-row.wk-tier-price-head {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.wk-tier-price-row {
+    display: inline-block;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.wk-tier-price-col {
+    display: inline-block;
+    min-width: 150px;
+}
+
+.wk-tier-price-span {
+    display: inline-block;
+    margin-bottom: 5px;
+    padding: 5px;
+    width: 100%;
+}
+.wk-mu-mapping-wrapper {
+    overflow:auto;
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+}
+/*Updated for issue #140*/
+@media screen and (max-width: 401px) and (max-width: 767px) {
+    .page-title-wrapper {
+        margin-top: 20px;
+    }
+    .page .messages {
+        margin-top: 20px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    tr.dataflow-profile-row, td.dataflow-profile-col {
+        display: block;
+    }
+}

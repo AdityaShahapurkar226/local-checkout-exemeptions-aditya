@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_AdminLoginAsVendor
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */ 
+ -->
+
+ <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="adminloginasvendor_login_attempts" resource="default" engine="innodb" comment="AdminLoginAsVendor">
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Customer/Seller ID"/>
+    <column xsi:type="text" name="email" nullable="true" comment="Customer/Seller Email"/>
+    <column xsi:type="text" name="name" nullable="true" comment="Customer/Seller Name"/>
+    <column xsi:type="text" name="admin_id" nullable="true" comment="Admin Id"/>
+    <column xsi:type="text" name="admin_name" nullable="true" comment="Admin Name"/>
+    <column xsi:type="text" name="admin_email" nullable="true" comment="Admin Email"/>
+    <column xsi:type="text" name="website" nullable="true" comment="Website"/>
+    <column xsi:type="text" name="logged_in_at" nullable="true" comment="Logged In At"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="entity_id"/>
+    </constraint>
+  </table>
+  </schema>

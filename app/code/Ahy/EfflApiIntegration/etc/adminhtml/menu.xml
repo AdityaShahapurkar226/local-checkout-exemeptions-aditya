@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!-- Top level menu -->
+        <add id="Ahy_EfflApiIntegration::top_level" 
+             title="Ahy Effl API" 
+             module="Ahy_EfflApiIntegration" 
+             sortOrder="10" 
+             resource="Magento_Backend::content"/>
+
+        <!-- Dealers sub menu -->
+        <add id="Ahy_EfflApiIntegration::orchid_ffl_dealers" 
+             title="Orchid FFL Dealers" 
+             module="Ahy_EfflApiIntegration" 
+             sortOrder="10" 
+             parent="Ahy_EfflApiIntegration::top_level" 
+             action="ahy_efflapiintegration/orchid/dealerslist" 
+             resource="Ahy_EfflApiIntegration::orchid_ffl_dealers"/>
+    </menu>
+</config>

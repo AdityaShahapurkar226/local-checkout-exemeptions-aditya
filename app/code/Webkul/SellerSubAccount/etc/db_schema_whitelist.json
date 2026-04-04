@@ -1,0 +1,26 @@
+{
+    "marketplace_sub_accounts": {
+        "column": {
+            "entity_id": true,
+            "customer_id": true,
+            "permission_type": true,
+            "status": true,
+            "seller_id": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "MARKETPLACE_SUB_ACCOUNTS_SELLER_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MARKETPLACE_SUB_ACCOUNTS_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true,
+            "MARKETPLACE_SUB_ACCOUNTS_SELLER_ID_CUSTOMER_ENTITY_ENTITY_ID": true
+        }
+    },
+    "marketplace_userdata": {
+        "column": {
+            "sub_account_permission": true
+        }
+    }
+}

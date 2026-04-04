@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMultiShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Quote\Model\ShippingMethodManagement" type="Webkul\MpMultiShipping\Model\ShippingMethodManagement" />
+    <type name="Magento\Checkout\Model\ShippingInformationManagement">
+        <plugin name="seller_method_in_checkout" type="Webkul\MpMultiShipping\Plugin\Checkout\Model\ShippingInformationManagement" sortOrder="1"/>
+    </type>
+    <type name="Webkul\Marketplace\Block\Account\Navigation\ShippingMenu">
+        <plugin name="multiship_shipping_avl" type="Webkul\MpMultiShipping\Plugin\Seller\AllowedShipping" sortOrder="1"/>
+    </type>
+</config>

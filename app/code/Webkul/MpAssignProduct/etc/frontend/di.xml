@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul Software Private Limited
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Magento\Elasticsearch7\SearchAdapter\Adapter">
+        <plugin name="Webkul_MpAssignProduct::aroundAdapterQuery" type="Webkul\MpAssignProduct\Plugin\Elasticsearch7\SearchAdapter\Adapter" sortOrder="0" />
+    </type>
+
+    <type name="Webkul\Marketplace\Block\Profile">
+        <plugin name="Webkul_MpAssignProduct::aroundBestSellCollection" type="Webkul\MpAssignProduct\Plugin\Marketplace\Block\Profile" sortOrder="0" />
+    </type>
+    <preference for="Webkul\Marketplace\Block\Collection" type ="Webkul\MpAssignProduct\Plugin\Marketplace\Block\Collection"/>
+    <type name="Webkul\Marketplace\Controller\Product\Ui\MassDelete">
+        <plugin name="Webkul_MpAssignProduct::beforeMassDelete" type="Webkul\MpAssignProduct\Plugin\Marketplace\Controller\Product\MassDelete" sortOrder="0" />
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="assigned_product_list_data_source" xsi:type="string">Webkul\MpAssignProduct\Model\ResourceModel\Items\FrontGrid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

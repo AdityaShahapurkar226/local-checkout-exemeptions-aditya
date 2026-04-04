@@ -1,0 +1,38 @@
+<?php
+$order = $block->getOrder();
+$restriction = $order->getOrchidRestrictionLevel();
+// $isOnHold = ($order->getStatus() === \Magento\Sales\Model\Order::STATE_HOLDED);
+?>
+
+<?php if ($restriction): ?>
+    <section class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= __('Restriction Information') ?></span>
+        </div>
+
+        <div class="admin__page-section-content">
+            <div class="admin__page-section-item">
+                <strong><?= __('Restriction Level:') ?></strong>
+                <?= $block->escapeHtml($restriction) ?>
+            </div>
+
+            <div class="admin__page-section-item">
+                <strong><?= __('Order Hold Reason:') ?></strong>
+                <?= __('Order placed on hold due to product restriction.') ?>
+            </div>
+
+            <div class="admin__page-section-item">
+                <strong><?= __('Restricted Products:') ?></strong><br />
+
+                <?php foreach ($order->getAllVisibleItems() as $item): ?>
+                    <?php if ($item->getData('orchid_restriction_reason')): ?>
+                        <div style="margin-left:15px; margin-top:5px;">
+                            • <strong><?= $block->escapeHtml($item->getName()) ?></strong><br />
+                            Reason: <?= $block->escapeHtml($item->getData('orchid_restriction_reason')) ?>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+<?php endif; ?>

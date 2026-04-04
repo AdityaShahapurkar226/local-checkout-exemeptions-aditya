@@ -1,0 +1,354 @@
+<section
+    class="mykel-hawke h-full text-black container relative text-black before:bg-[#ABAA88] before:absolute before:-inset-1 before:left-1/2 before:z-[-1] before:-translate-x-1/2 before:w-screen h-full">
+    <div class="hero-section text-center  sm:text-left flex flex-col md:flex-row md:mb-6 md:items-start items-center justify-center gap-3 max-md:py-8 relative w-full h-full md:h-[510px] lg:h-[38rem] xl:h-[45rem] 2xl:h-[52rem] ">
+        <div class="hero-section text-center text-black sm:text-left flex flex-col mb-6 md:items-start items-center justify-center gap-3 md:h-full relative w-full ">
+            <img src="/media/wysiwyg/creators/Mykel/logo.png" class=" h-[79.69px] w-[100.38px] md:hidden relative md:absolute " alt="Mykel Hawke Logo" />
+            <h1 class="text-[44px]  sm:text-5xl md:text-[2.2rem] text-center md:text-left leading-none sm:leading-none lg:text-[3.2rem] lg:max-w-[34rem] font-bold uppercase md:max-w-[28rem] 2xl:text-[82px] xl:max-w-[30rem] xl:text-[4.4rem] 2xl:max-w-[35rem]">Special Operations Caliber Gear</h1>
+            <div class="flex justify-center items-center pt-2"><span class="border border-[#354932] w-44 lg:w-72"></span></div>
+            <p class="text-center pt-2 md:pt-0 sm:pt-6 text-sm md:text-[0.7rem] lg:text-[0.88rem] xl:text-lg md:max-w-full md:text-left 2xl:text-[1.425rem] 2xl:max-w-[32rem]">Mykel Knows What It Takes To Make Getting Outdoors a Success - Dial Up Success with Hawke's Top Picks!</p>
+        </div>
+        <div class="flex flex-col justify-center items-center gap-0">
+            <div class="images">	
+                <img src="/media/wysiwyg/creators/Mykel/hero_image_dekstop.png" alt="Mykel Hawke image" class="hidden md:block xl:max-w-[669.92px] h-auto">
+                <img src="/media/wysiwyg/creators/Mykel/hero_image_mobile.png" alt="Mykel Hwake image" class="block md:hidden ">
+            </div>
+            <div x-data="scrollSmoothOnClick()" id="tab_wrapper" class="relative  w-full">
+                <div class="tab-bg-line-desktop relative pb-4 flex justify-center">
+                    <div class="bg-black tab-bg-mobile relative flex shadow-[4px_4px_40px_0px_rgba(0,0,0,0.5)] justify-center w-full md:max-w-[30rem] rounded-full">
+                        <button	
+                            @click.prevent="scrollToRecommendation()"
+                            class="mx-2 sm:mx-4 text-white uppercase h-16 text-xs sm:text-sm flex items-center hover:underline hover:decoration-2 hover:underline-offset-6 font-bold"
+                        >
+                            My Picks
+                        </button>
+                        <button
+                            @click.prevent="scrollToAboutUs()"
+                            class="mx-2 sm:mx-4 text-white uppercase h-16 text-xs sm:text-sm flex items-center hover:underline hover:decoration-2 hover:underline-offset-6 font-bold"
+                        >
+                            About
+                        </button>
+
+
+                        <button
+                            @click.prevent="scrollToFeatured()"
+                            class="mx-2 sm:mx-4 text-white uppercase h-16 text-xs sm:text-sm flex items-center hover:underline hover:decoration-2 hover:underline-offset-6 font-bold"
+                        >
+                            gear up
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="curated-just-for-you flex flex-col lg:flex-row gap-6 pb-12 mb-12 justify-between relative">
+        <div class="absolute -translate-x-1/2 top-[-16%] left-[-9%]">
+            <!-- <img src="/media/wysiwyg/creators/Ryan/background_element_left_desktop.png" alt="Mykel Hawke Curated Just For You" class="w-full" /> -->
+        </div>
+        <div class="curated-products flex flex-col lg:flex-row gap-6 lg:gap-4 lg:w-[55%] order-2 lg:order-1 py-4">
+            <a href="https://www.everest.com/readywise-ultimate-3-day-emergency-survival-backpack.html"
+                class="curated-main-product flex flex-col w-full lg:w-8/12 text-ahy-blue">
+                <div class="w-full flex justify-center items-center bg-white py-6">
+                    <img src="/media/wysiwyg/creators/Mykel/Curated-Just-For-You/HawkeMAIN.jpg"
+                        alt="Curated Main Product"
+                        class="w-full max-w-[400px] max-h-[400px] aspect-3/3 object-contain" />
+                </div>
+                <div class="flex justify-center items-center py-4 bg-white px-6"><span
+                        class="border-2 border-ahy-blue w-full px-6"></span></div>
+                <div class="curated-main-product-text bg-white px-6 pb-6 xl:pb-11">
+                    <h1 class="font-bold pt-4 line-clamp-2 overflow-hidden h-16 xl:h-24">Readywise Ultimate 3 Day Emergency Survival Backpack</h1>
+                    <!-- <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p> -->
+                </div>
+            </a>
+            <div
+                class="curated-thumb-product flex lg:flex-col gap-6 w-full lg:w-[30%] justify-between lg:justify-start lg:justify-start items-center overflow-scroll lg:overflow-auto">
+                <a href="https://www.everest.com/farson-blade-survival-tool.html">
+                    <img src="/media/wysiwyg/creators/Mykel/Curated-Just-For-You/HawkeTop.png"
+                        class="aspect-3/3 bg-white object-contain" width="192" height="192"
+                        alt="Curated Thumb Product" />
+                </a>
+                <a href="https://www.everest.com/alps-outdoorz-vantage-bino-harness.html">
+                    <img src="/media/wysiwyg/creators/Mykel/Curated-Just-For-You/HawkeMIDDLE.jpeg"
+                        class="aspect-3/3 bg-white object-contain" width="192" height="192"
+                        alt="Curated Thumb Product" />
+                </a>
+                <a href="https://www.everest.com/survivor-filtertm-active-filtration-bottle-900ml-package-of-2.html">
+                    <img src="/media/wysiwyg/creators/Mykel/Curated-Just-For-You/HawkeBottom.jpeg"
+                        class="aspect-3/3 bg-white object-contain" width="192" height="192"
+                        alt="Curated Thumb Product" />
+                </a>
+            </div>
+        </div>
+        <div class="curated-content lg:w-2/5 order-1 lg:order-2 py-4">
+            <div class="flex flex-row items-center justify-start gap-6 pb-6">
+                <img src="/media/wysiwyg/creators/Mykel/logo.png" alt="Mykel Hawke Logo" height="87"
+                    width="87" class="" />
+                <div class="font-bold text-4xl">X</div>
+                <div class="font-bold text-3xl">everest</div>
+            </div>
+            <h1 class="text-3xl lg:4xl xl:text-5xl lg:max-w-[400px] font-extrabold">CURATED JUST <br> FOR YOU.</h1>
+            <div class="flex justify-start items-center py-4"><span class="border border-black w-32 lg:w-44"></span>
+            </div>
+            <p class="text-sm lg:max-w-[420px]">
+                We understand that every adventure is unique, and so is every adventurer. That's why we've chosen to
+                partner with a creator that truly understands the outdoors. We have worked closely with Mykel Hawke
+                to curate a selection of gear tailored specifically for your next adventure, ensuring you're
+                well-equipped for whatever challenges you face. Our experts have handpicked items based on Mykel's
+                preferences for durability, adaptibility, and efficiency. From the latest in ultralight gear to
+                weather-resistant apparel and high-tech gadgets, each piece is chosen to enhance your experience and
+                performance. Our goal is to help you elevate your next journey with gear that's as ready as you are to
+                explore the great outdoors, so you can forget the rest and focus on your next adventure.
+            </p>
+            <div class="hidden lg:flex mt-6 pt-6" x-data="scrollSmoothOnClick()">
+                <button class="rounded-full bg-white h-16 w-full lg:w-52 text-ahy-blue font-extrabold hover:bg-ahy-blue-light hover:text-white duration-300 transition ease-in-out"	@click.prevent="scrollToRecommendation()">
+                    Shop Now
+                </button>
+            </div>
+        </div>
+        <div class="lg:hidden order-3 w-full py-4" x-data="scrollSmoothOnClick()">
+            <button
+                class="rounded-full bg-white h-16 w-full lg:w-52 text-ahy-blue font-extrabold hover:bg-ahy-blue-light hover:text-white duration-300 transition ease-in-out"	@click.prevent="scrollToRecommendation()">
+                Shop Now
+            </button>
+        </div>
+    </div>
+    <div class="about-mykel flex flex-col lg:flex-row gap-[3rem] lg:gap-4 lg:justify-between pb-12 mb-12" id="about-us">
+        <div class="about-content order-2 lg:order-1 w-full lg:w-[55.3%] xl:w-[43.8%] 2xl:w-[36.3%]">
+            <h1 class="text-3xl lg:4xl xl:text-[2.9rem] max-w-[500px] uppercase font-extrabold">ABOUT MYKEL HAWKE.</h1>
+            <div class="flex justify-start items-center py-4"><span class="border border-black w-32 lg:w-44"></span>
+            </div>
+            <p class="text-sm 2xl:max-w-[31rem]">
+              Mykel Hawke, a combat veteran, has left an indelible mark on both military service and the world of survival. Enlisting in the U.S. Army in 1982, he served actively for 12 years, later continuing his service in the Reserves and Guard for an additional 12 years. Rising to the rank of Captain in the 1st Special Forces Command (Airborne) at Fort Bragg, North Carolina, he held three Enlisted, Special Forces Military Occupational Skills (MOS) - Special Forces Medic (18D), Special Forces Communicator (18E), and Special Forces Intelligence Operations (18F). Apart from his military achievements, Mykel is a highly educated individual, holding a Bachelor of Science in Biology from the University of New York and a Master of Science degree in Family Counseling from the University of California. Complementing his linguistic prowess, he was rated in seven languages during his Army career, documented in his published language book, "The Quick and Dirty Guide to Learning Languages Fast" - Mykel Hawke is not just a military professional but also a prolific author, contributing to numerous books and penning works like "Hawke's Green Beret Survival Manual" and "Family Survival Guide." His diverse expertise extends to television, where he has appeared in over 50 shows, showcasing his survival skills and combat knowledge. In his personal life, Mykel married Ruth England in 2005, and they currently reside in Miami, Florida, with their son. Beyond his public life, Hawke's commitment to sharing knowledge is evident in his establishment of a combat medic school in Azerbaijan, showcasing his dedication to both education and survival.
+            </p>
+        </div>
+        <div class="mykel-hawke-image order-1 lg:order-2 w-full lg:w-5/12 flex justify-center lg:justify-end">
+            <img src="/media/wysiwyg/creators/Mykel/secondary_image.png" alt="Mykel Hawke" height="610" width="610"
+                class="" />
+        </div>
+    </div>
+    <div class="featured-product pb-8 md:pb-12 relative" id="featured">
+        <!-- <div class="absolute top-[-16%] right-0">
+			<img src="/media/wysiwyg/creators/Ryan/background_element_right_desktop.png" alt="Ryan Alberston Curated Just For You" class="w-full" />
+		</div> -->
+        <div class="featured-product-heading flex gap-6 items-center justify-between">
+            <div class="flex justify-center hidden lg:block">
+                <img src="/media/wysiwyg/creators/Mykel/logo.png" alt="Mykel Hawke Logo" height="192"
+                    width="192" class="" />
+            </div>
+            <div class="lg:w-1/2 xl:w-3/5 2xl:w-8/12 hidden lg:block">
+                <div class="flex justify-start items-center py-4"><span class="border border-black w-full"></span>
+                </div>
+            </div>
+            <div class="flex justify-end">
+                <h1 class="font-bold text-lg uppercase">
+                    featured products
+                </h1>
+            </div>
+        </div>
+        <div class="featured-products-klevu">
+            <!-- Klevu Smart Recommendation products -->
+            <!-- <div class="klevu-recs h-[610px] klevuTarget" id="k-c4e4fe37-883e-4318-aad0-11efa4333d80" x-data="{ shown: false }" x-intersect="shown = true"></div> -->
+            <div class="klevu-recs h-[610px] klevuTarget" id="k-67e33d2e-7b92-4787-b630-a44e1e773eab" x-data="{ shown: false }" x-intersect="shown = true"></div>
+            <!-- initialization code for the swiper JS -->
+            <?php
+				echo $this->getLayout()
+				->createBlock('Magento\Cms\Block\Block')
+				->setBlockId('swiperjs-init-code')
+				->toHtml();
+			?>
+            <!-- get product swatches for configurable products in lightbox  -->
+            <?php
+				echo $this->getLayout()
+				->createBlock('Magento\Cms\Block\Block')
+				->setBlockId('get_product_swatches')
+				->toHtml();
+			?>
+        </div>
+    </div>
+    <div class="quote md:py-12 mb-12 flex flex-col items-center justify-center gap-8">
+        <div class="">
+            <h1
+                class="font-league-gothic text-center pb-5 w-full md:w-[72%] lg:w-full xl:w-4/5 2xl:w-[74%] m-auto leading-none text-[42px] uppercase lg:text-[88px] 2xl:max-w-[93rem]">
+                "Just carry a lighter! But, when you lack, if you have cordage, Bow Drills are the best friction fire starting method."</h1>
+            <h3 class="text-center ">- Mykel Hawke</h3>
+        </div>
+		<div class="relative w-full h-full flex items-center justify-center">
+            <div class="absolute -left-1/4 top-[-15%] sm:top-[-10%] sm:left-[-10%] xl:left-0 2xl:left-[10%] 2xl:top-[-10%] z-[-1]">
+                <img src="/media/wysiwyg/creators/Mykel/plant_1.png" alt="" srcset="" height="250" width="250">
+            </div>
+            <div class="max-lg:hidden absolute md:right-[-6%] xl:right-0 2xl:right-[8%] bottom-[-20%] z-[-1]">
+                <img src="/media/wysiwyg/creators/Mykel/plant_2.png" alt="" srcset="" height="250" width="250">
+            </div>
+            <iframe
+                width="1027"
+                height="578"
+                class="max-w-[1027px] w-full shadow-[4px_4px_40px_0px_rgba(0,0,0,0.5)] "
+                src="https://www.youtube.com/embed/GK-GC83CZMs?si=waFDdQN9Ldwd1VM9"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen
+            >
+            </iframe>
+        </div>
+    </div>
+    <div
+        class="complete-the-situation flex flex-col lg:flex-row justify-between items-start gap-8 pb-12 mb-12 relative">
+        <div class="complete-the-situation-heading lg:w-3/5">
+            <div class="flex gap-6 items-center py-6 lg:pt-12 lg:pb-8">
+                <h1 class="font-extrabold text-lg md:text-xl uppercase w-full">
+                    Complete The Situation
+                </h1>
+                <div class="lg:w-8/12 xl:w-full 2xl:w-[160%] hidden lg:block">
+                    <div class="flex justify-start items-center py-4"><span
+                            class="border border-black w-full"></span></div>
+                </div>
+            </div>
+            <p class="text-sm pb-6 mb-6 md:pb-8 md:mb-8 lg:w-4/6">
+                Check out these top picks curated just for you to help complete the situation. These picks will help you
+                conquer your goals and make getting outdoors more exciting!
+            </p>
+            <div
+                class="thumb-products flex gap-6 w-full items-start overflow-scroll md:overflow-auto  ">
+                <a href="https://www.everest.com/squatch-rope-hemp-fire-starter-wind-proof-water-proof.html"
+                    class="flex flex-col gap-8 w-1/3 items-center justify-center">
+                    <div class="flex justify-center items-center bg-white w-full">
+                        <img
+                            src="/media/wysiwyg/creators/Mykel/Complete-The-Sitaution/HawkeeCompleteLeft.png"
+                            class="aspect-3/3 bg-white object-contain" width="225" height="225"
+                            alt="Curated Thumb Product" />
+                    </div>
+                    <div class="font-bold line-clamp-2 max-sm:hidden overflow-hidden h-12 ">Squatch Rope Hemp Fire Starter | Wind Proof & Water Proof</div>
+                </a>
+                <a href="https://www.everest.com/the-fremont-knives-farson-blade-sweetwater-folder-bundle.html"
+                    class="flex flex-col gap-8 w-1/3 items-center justify-center">
+                    <div class="flex justify-center items-center bg-white w-full">
+                        <img
+                            src="/media/wysiwyg/creators/Mykel/Complete-The-Sitaution/HwkeeComleteMiddle.png"
+                            class="aspect-3/3 bg-white object-contain" width="225" height="225"
+                            alt="Curated Thumb Product" />
+                    </div>
+                    <div class="font-bold line-clamp-2 max-sm:hidden overflow-hidden h-12">The Fremont Knives Farson Blade & Sweetwater Folder Bundle</div>
+                </a>
+                <a href="https://www.everest.com/hard-times-create-strong-men-everest-decal.html"
+                    class="flex flex-col gap-8 w-1/3 items-center justify-center">
+                    <div class="flex justify-center items-center bg-white w-full">
+                        <img
+                            src="/media/wysiwyg/creators/Mykel/Complete-The-Sitaution/HwkeeCompleteRight.png"
+                            class="aspect-3/3 bg-white object-contain" width="225" height="225"
+                            alt="Curated Thumb Product" />
+                    </div>
+                    <div class="font-bold line-clamp-2 max-sm:hidden overflow-hidden h-12">Hard Times Create Strong Men 4" Decal</div>
+                </a>
+            </div>
+        </div>
+        <div class="w-full lg:w-2/5 flex justify-end">
+            <div class="complete-the-situation-main-product flex flex-col w-full lg:w-10/12 text-ahy-blue">
+                <div class="w-full flex justify-center items-center bg-white py-6">
+                    <img src="/media/wysiwyg/creators/Mykel/Complete-The-Sitaution/HawkeeCompleteMain.png"
+                        alt="complete-the-situation Main Product"
+                        class="w-full max-w-[400px] max-h-[400px] aspect-3/3 object-contain" />
+                </div>
+                <div class="flex justify-center items-center py-4 bg-white px-6"><span
+                        class="border-2 border-ahy-blue w-full px-6"></span></div>
+                <div class="complete-the-situation-main-product-text bg-white px-6 pb-11">
+                    <h1 class="font-bold py-4">Flexit Pocket Light 6.5 - 650 LM Light</h1>
+                    <a href="https://www.everest.com/flexit-pocket-light-6-5-650-lm-light.html"><button
+                            class="rounded-full bg-black h-16 w-full lg:w-52 text-white font-extrabold hover:bg-ahy-blue-light hover:text-white duration-300 transition ease-in-out">
+                            Explore
+                        </button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+    <div class="other-recommendations pb-48 md:pb-56 lg:pb-60 relative">
+        <div class="other-recommendations-heading flex gap-6 items-center justify-between">
+            <div class="w-full lg:w-1/2 xl:w-3/5 2xl:w-8/12">
+                <div class="flex justify-start items-center py-4"><span class="border border-black w-full"></span>
+                </div>
+            </div>
+            <div class="flex justify-center">
+                <img src="/media/wysiwyg/creators/Mykel/avatar.png" alt="Mykel Hawke Logo" height="192" width="192"
+                    class="" />
+            </div>
+            <div class="w-full lg:w-1/2 xl:w-3/5 2xl:w-8/12">
+                <div class="flex justify-start items-center py-4"><span class="border border-black w-full"></span>
+                </div>
+            </div>
+        </div>
+        <div class="py-8" id="recommendation">
+            <h1 class="text-center pb-5 w-full lg:w-3/5 m-auto text-[26px] font-extrabold md:text-[38px]">
+                OTHER RECOMMENDATIONS FROM HAWKE
+            </h1>
+            <p class="m-auto text-sm text-black text-center lg:w-[58%]  2xl:w-[45%] md:w-[69%] xl:w-[47%] w-[88%] m-auto">
+                Gear specifically chosen so you can meet your potential in your passion outdoors. The below handpicked
+                gear will help you find your Everest.
+            </p>
+        </div>
+		
+        <div class="other-recommendations-klevu relative" >
+            <div class="absolute top-1/2 md:top-[-20%] lg:top-[-10%] w-full h-[60rem] sm:h-[54rem] md:h-[54rem] lg:h-[52rem] xl:h-[52rem] 2xl:h-[52rem] before:bg-[url(/media/wysiwyg/creators/Mykel/mountains_background.png)] before:bg-no-repeat before:bg-left-top before:md:bg-[bottom_center] before:bg-contain before:absolute before:-inset-1 before:left-1/2 before:z-[-1] before:-translate-x-1/2 before:w-screen before:h-full"></div>
+            <!-- Klevu Smart Recommendation products -->
+            <!-- <div class="klevu-recs h-[610px] klevuTarget" id="k-c4e4fe37-883e-4318-aad0-11efa4333d80" x-data="{ shown: false }" x-intersect="shown = true"> -->
+            <div class="klevu-recs h-[610px] klevuTarget" id="k-439e352c-ae40-41bd-8b9d-320d6cfac154" x-data="{ shown: false }" x-intersect="shown = true">
+                <!-- initialization code for the swiper JS -->
+                <?php
+                    echo $this->getLayout()
+                    ->createBlock('Magento\Cms\Block\Block')
+                    ->setBlockId('swiperjs-init-code')
+                    ->toHtml();
+                ?>
+                <!-- get product swatches for configurable products in lightbox  -->
+                <?php
+                    echo $this->getLayout()
+                    ->createBlock('Magento\Cms\Block\Block')
+                    ->setBlockId('get_product_swatches')
+                    ->toHtml();
+                ?>
+			</div>
+        </div>
+    </div>
+</section>
+<script id="smooth-scroll">
+    function scrollSmoothOnClick() {
+        return {
+            scrollToAboutUs() {
+                const aboutUsEl = document.getElementById("about-us");
+                if (aboutUsEl) {
+                    aboutUsEl.scrollIntoView({
+                        behavior: "smooth",
+                    });
+                }
+            },
+            scrollToFeatured() {
+                const featuredEl = document.getElementById("featured");
+                if (featuredEl) {
+                    featuredEl.scrollIntoView({
+                        behavior: "smooth",
+                    });
+                }
+            },
+            scrollToRecommendation() {
+                const recommendationEl = document.getElementById("recommendation");
+                if (recommendationEl) {
+                    recommendationEl.scrollIntoView({
+                        behavior: "smooth",
+                    });
+                }
+            },
+        };
+    }
+</script>
+<style>
+    .featured-products-klevu h3.kuRECSTitle.uppercase.text-ahy-blue,
+    .other-recommendations-klevu h3.kuRECSTitle.uppercase.text-ahy-blue {
+        display: none;
+    }
+
+    [data-pb-style="BK5BJWO"]>div,
+    [data-pb-style="DRI0V0M"],
+    [data-pb-style="OIXNYXR"] {
+        padding: 0 !important;
+    }
+</style>

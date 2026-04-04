@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpSellerBuyerCommunication
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="styles"/>
+    <head>
+        <css src="Webkul_MpSellerBuyerCommunication::css/mpsellerbuyercomm.css"/>
+        <css src="Webkul_Marketplace::css/style.css"/>
+    </head>
+    <body>
+        <referenceContainer name="left">
+           
+            <block class="Webkul\MpSellerBuyerCommunication\Block\Adminhtml\Seller" before="order_info" name="seller.comm" template="Webkul_MpSellerBuyerCommunication::order/contact.phtml" />
+           
+        </referenceContainer>
+        
+    </body>
+</page>

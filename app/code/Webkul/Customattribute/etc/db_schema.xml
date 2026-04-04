@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Customattribute
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="marketplace_custom_attribute" resource="default" engine="innodb">
+    <column xsi:type="int" name="entity_id" padding="11" unsigned="false" nullable="false" identity="true"/>
+    <column xsi:type="int" name="attribute_id" padding="11" unsigned="false" nullable="false" identity="false" default="0"/>
+    <column xsi:type="int" name="status" padding="11" unsigned="false" nullable="false" identity="false" default="0"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="entity_id"/>
+    </constraint>
+  </table>
+</schema>

@@ -1,0 +1,847 @@
+<?php
+
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+?>
+<script>
+    function initBraintreeApplePayExpress() {
+        return {
+            buttonApi: {},
+
+            /**
+             * Initialise Apple Pay.
+             */
+            init() {
+                if (!this.deviceSupported()) {
+                    return;
+                }
+
+                this.loadScript('https://js.braintreegateway.com/web/3.92.2/js/client.min.js', function() {
+                    this.setupButton(this.$root);
+                }.bind(this));
+            },
+
+            /**
+             * Dynamically load a script from a given url.
+             *
+             * @param {String} url
+             * @param callback
+             * @return void
+             */
+            loadScript(url, callback) {
+                const script = document.createElement('script');
+
+                script.type = 'text/javascript';
+                script.src = url;
+                script.addEventListener('load', callback);
+
+                document.head.appendChild(script);
+            },
+
+            /**
+             * Fetch the countries via the Magento API.
+             *
+             * @return void
+             */
+            setupCountryDirectory() {
+                if (!this.countryDirectory) {
+                    fetch(
+                        BASE_URL + 'rest/V1/directory/countries', {
+                            method: 'GET',
+                        }
+                    ).then(function(response) {
+                        return response.json();
+                    }).then(function(response) {
+                        this.countryDirectory = {};
+
+                        for (let i = 0; i < response.length; i++) {
+                            let data = response[i];
+                            this.countryDirectory[data.two_letter_abbreviation] = {};
+
+                            if (typeof data.available_regions !== 'undefined') {
+                                for (let x = 0; x < data.available_regions.length; x++) {
+                                    let region = data.available_regions[x];
+                                    let regionName = region.name.toLowerCase().replace(/[^A-Z0-9]/ig, '');
+
+                                    this.countryDirectory[data.two_letter_abbreviation][regionName] = region.id;
+                                }
+                            }
+                        }
+                    }.bind(this));
+                }
+            },
+
+            logFrontendMessage(message, level = 'info') {
+                fetch(
+                    'https://dev1.everest.com/rest/V1/applepay/frontend/log', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            level: level
+                        })
+                    }
+                ).then(function(response) {
+                    return response.json();
+                }).then(function(result) {
+                    console.log('Frontend Log Response:', result);
+                }).catch(function(error) {
+                    console.error('Frontend Log Error:', error);
+                });
+            },
+
+
+            /**
+             * Get the API URL based on whether the customer is logged in or not.
+             *
+             * @param {String} uri
+             * @return {String}
+             */
+            getApiUrl(uri) {
+                const baseUrl = BASE_URL + 'rest/' + this.storeCode + '/V1/';
+
+                if (this.isLoggedIn) {
+                    return baseUrl + 'carts/mine/' + uri;
+                } else {
+                    return baseUrl + 'guest-carts/' + this.quoteId + '/' + uri;
+                }
+            },
+
+            /**
+             * Get the region ID given a country code and region name combination.
+             *
+             * @param {String} countryCode
+             * @param {String} regionName
+             * @return {String|Number}
+             */
+            getRegionId(countryCode, regionName) {
+                if (typeof regionName !== 'string') {
+                    return null;
+                }
+
+                regionName = regionName.toLowerCase().replace(/[^A-Z0-9]/ig, '');
+
+                if (typeof this.countryDirectory[countryCode] !== 'undefined' &&
+                    typeof this.countryDirectory[countryCode][regionName] !== 'undefined'
+                ) {
+                    return this.countryDirectory[countryCode][regionName];
+                }
+
+                return 0;
+            },
+
+            /**
+             * Check the site is using HTTPS & Apple Pay is supported on the device.
+             *
+             * @return boolean
+             */
+            deviceSupported() {
+                return true;
+                
+                if (location.protocol !== 'https:') {
+                    console.warn('<?= $escaper->escapeJs(__('Braintree Apple Pay requires your checkout be served over HTTPS')); ?>');
+
+                    return false;
+                }
+
+                if (!(window.ApplePaySession && ApplePaySession.canMakePayments())) {
+                    console.warn('<?= $escaper->escapeJs(__('Braintree Apple Pay is not supported on this device/browser')); ?>');
+
+                    return false;
+                }
+
+                return true;
+            },
+
+            /**
+             * Retrieve shipping methods based on address.
+             *
+             * @param {Object} event
+             * @param {Object} session
+             * @return false on error
+             */
+            onShippingContactSelect(event, session) {
+                // get the address
+                let address = event.shippingContact;
+
+                // create a payload
+                let payload = {
+                    address: {
+                        city: address.locality,
+                        region: address.administrativeArea,
+                        country_id: address.countryCode.toUpperCase(),
+                        postcode: address.postalCode,
+                        save_in_address_book: 0,
+                    },
+                };
+
+                this.shippingAddress = payload.address;
+
+                // POST to endpoint for shipping methods
+                fetch(
+                    this.getApiUrl('estimate-shipping-methods'), {
+                        method: 'POST',
+                        body: JSON.stringify(payload),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                    }
+                ).then(function(response) {
+                    return response.json();
+                }).then(function(response) {
+                    // stop if no shipping methods
+                    if (response.length === 0) {
+                        let virtualFlag = false;
+                        let productItems = customerData.get('cart')().items;
+
+                        productItems.forEach((item) => {
+                            virtualFlag = item.product_type === 'virtual';
+                        });
+
+                        if (virtualFlag) {
+                            session.completeShippingContactSelection(
+                                ApplePaySession.STATUS_SUCCESS,
+                                [], {
+                                    label: this.displayName,
+                                    amount: this.grandTotalAmount,
+                                },
+                                [{
+                                    type: 'final',
+                                    label: '<?= $escaper->escapeJs(__('Shipping')); ?>',
+                                    amount: 0,
+                                }, ]
+                            );
+                        } else {
+                            session.abort();
+                            alert('<?= $escaper->escapeJs(__(
+                                        'There are no shipping methods available for you right now. Please try again or use an alternative payment method.'
+                                    )); ?>');
+
+                            return false;
+                        }
+                    }
+
+                    let shippingMethods = [];
+                    this.shippingMethods = {};
+
+                    // format shipping methods array
+                    for (let i = 0; i < response.length; i++) {
+                        const rate = response[i];
+
+                        if (typeof rate.method_code !== 'string') {
+                            continue;
+                        }
+
+                        // 🚫 filter out Magento multishipping placeholder
+                        if (
+                            rate.carrier_code === 'mpmultishipping' ||
+                            rate.method_code === 'mpmultishipping'
+                        ) {
+                            continue;
+                        }
+
+                        let method = {
+                            identifier: rate.method_code,
+                            label: rate.method_title,
+                            detail: rate.carrier_title ? rate.carrier_title : '',
+                            amount: parseFloat(rate.amount).toFixed(2),
+                        };
+
+                        // add method object to array
+                        shippingMethods.push(method);
+                        this.shippingMethods[rate.method_code] = rate;
+
+                        if (!this.shippingMethod) {
+                            this.shippingMethod = rate.method_code;
+                        }
+                    }
+
+                    if (shippingMethods.length === 0) {
+                        session.abort();
+                        alert(
+                            '<?= $escaper->escapeJs(__('No valid shipping methods are available for Apple Pay. Please use another payment method.')); ?>'
+                        );
+
+                        // TODO: Move to a separate function:
+
+                        fetch(
+                            '/rest/V1/applepay/frontend/log', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    message: 'No valid shipping method available', // TODO: Add this.quoteId along with testing this particular case.
+                                    level: 'error'
+                                })
+                            }
+                        ).then(function(response) {
+                            return response.json();
+                        }).then(function(result) {
+                            console.log('Frontend Log Response:', result);
+                        }).catch(function(error) {
+                            console.error('Frontend Log Error:', error);
+                        });
+
+                        return false;
+                    }
+
+                    // create payload to get totals
+                    let totalsPayload = {
+                        'addressInformation': {
+                            'address': {
+                                'countryId': this.shippingAddress.country_id,
+                                'region': this.shippingAddress.region,
+                                'regionId': this.getRegionId(
+                                    this.shippingAddress.country_id,
+                                    this.shippingAddress.region
+                                ),
+                                'postcode': this.shippingAddress.postcode
+                            },
+                            'shipping_method_code': this.shippingMethods[shippingMethods[0].identifier].method_code,
+                            'shipping_carrier_code': this.shippingMethods[shippingMethods[0].identifier].carrier_code,
+                        },
+                    };
+
+
+                    // POST to endpoint to get totals, using first shipping method
+                    fetch(
+                        this.getApiUrl('totals-information'), {
+                            method: 'POST',
+                            body: JSON.stringify(totalsPayload),
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                        }
+                    ).then(function(response) {
+                        return response.json();
+                    }).then(function(response) {
+                        // set total
+                        this.grandTotalAmount = response.base_grand_total;
+
+                        // pass shipping methods back
+                        session.completeShippingContactSelection(
+                            ApplePaySession.STATUS_SUCCESS,
+                            shippingMethods, {
+                                label: this.displayName,
+                                amount: this.grandTotalAmount,
+                            },
+                            [{
+                                type: 'final',
+                                label: '<?= $escaper->escapeJs(__('Shipping')); ?>',
+                                amount: shippingMethods[0].amount,
+                            }, ]
+                        );
+                    }.bind(this)).catch(function(response) {
+                        session.abort();
+                        alert('<?= $escaper->escapeJs(__(
+                                    'We are unable to fetch the cart totals for you. Please try an alternative payment method.'
+                                )); ?>');
+                        console.error(
+                            '<?= $escaper->escapeJs(__('Braintree ApplePay: Unable to get totals')); ?>',
+                            response
+                        );
+
+                        return false;
+                    });
+                }.bind(this)).catch(function(response) {
+                    session.abort();
+                    alert('<?= $escaper->escapeJs(__(
+                                'We are unable to find any shipping methods for you. Please try an alternative payment method.'
+                            )); ?>');
+                    console.error(
+                        '<?= $escaper->escapeJs(__('Braintree ApplePay: Unable to find shipping methods for estimate-shipping-methods')); ?>',
+                        response
+                    );
+
+                    // TODO: Test this: 
+                    fetch('/rest/V1/applepay/frontend/log', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            message: {
+                                event: 'estimate_shipping_methods_failed',
+                                quoteId: this.quoteId,
+                                error: response
+                            },
+                            level: 'error'
+                        })
+                    });
+
+                    return false;
+                });
+            },
+
+            /**
+             * Record which shipping method has been selected and update totals.
+             *
+             * @param {Object} event
+             * @param {Object} session
+             * @return void
+             */
+            onShippingMethodSelect(event, session) {
+                let shippingMethod = event.shippingMethod;
+                this.shippingMethod = shippingMethod.identifier;
+
+                let payload = {
+                    'addressInformation': {
+                        'address': {
+                            'countryId': this.shippingAddress.country_id,
+                            'region': this.shippingAddress.region,
+                            'regionId': this.getRegionId(this.shippingAddress.country_id, this.shippingAddress.region),
+                            'postcode': this.shippingAddress.postcode,
+                        },
+                        'shipping_method_code': this.shippingMethods[this.shippingMethod].method_code,
+                        'shipping_carrier_code': this.shippingMethods[this.shippingMethod].carrier_code,
+                    },
+                };
+
+                fetch(
+                    this.getApiUrl('totals-information'), {
+                        method: 'POST',
+                        body: JSON.stringify(payload),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                    }
+                ).then(function(response) {
+                    return response.json();
+                }).then(function(response) {
+                    this.grandTotalAmount = response.base_grand_total;
+
+                    session.completeShippingMethodSelection(
+                        ApplePaySession.STATUS_SUCCESS, {
+                            label: this.displayName,
+                            amount: this.grandTotalAmount,
+                        },
+                        [{
+                            type: 'final',
+                            label: '<?= $escaper->escapeJs(__('Shipping')); ?>',
+                            amount: shippingMethod.amount,
+                        }, ]
+                    );
+                }.bind(this));
+            },
+
+            /**
+             * Get the payment request.
+             *
+             * @return {Object}
+             */
+            getPaymentRequest() {
+                return {
+                    total: {
+                        label: this.displayName,
+                        amount: this.grandTotalAmount,
+                    },
+                    requiredShippingContactFields: ['postalAddress', 'name', 'email', 'phone'],
+                    requiredBillingContactFields: ['postalAddress', 'name'],
+                };
+            },
+
+            /**
+             * Initiate the order placement process.
+             *
+             * @param {String} nonce
+             * @param {Object} event
+             * @param {Object} session
+             */
+            startPlaceOrder(nonce, event, session) {
+                // TODO: Check if this really is needed:
+
+                /* if (
+                    this.shippingMethod &&
+                    this.shippingMethods[this.shippingMethod] &&
+                    this.shippingMethods[this.shippingMethod].carrier_code === 'mpmultishipping'
+                ) {
+                    session.abort();
+                    alert('Invalid shipping method selected.');
+                    return;
+                } */
+
+                let shippingContact = event.payment.shippingContact;
+                let billingContact = event.payment.billingContact;
+                let payload = {
+                    'addressInformation': {
+                        'shipping_address': {
+                            'email': shippingContact.emailAddress,
+                            'telephone': shippingContact.phoneNumber,
+                            'firstname': shippingContact.givenName,
+                            'lastname': shippingContact.familyName,
+                            'street': shippingContact.addressLines,
+                            'city': shippingContact.locality,
+                            'region': shippingContact.administrativeArea,
+                            'region_id': this.getRegionId(
+                                shippingContact.countryCode.toUpperCase(),
+                                shippingContact.administrativeArea
+                            ),
+                            'region_code': null,
+                            'country_id': shippingContact.countryCode.toUpperCase(),
+                            'postcode': shippingContact.postalCode,
+                            'same_as_billing': 0,
+                            'customer_address_id': 0,
+                            'save_in_address_book': 0,
+                        },
+                        'billing_address': {
+                            'email': shippingContact.emailAddress,
+                            'telephone': '0000000000',
+                            'firstname': billingContact.givenName,
+                            'lastname': billingContact.familyName,
+                            'street': billingContact.addressLines,
+                            'city': billingContact.locality,
+                            'region': billingContact.administrativeArea,
+                            'region_id': this.getRegionId(
+                                billingContact.countryCode.toUpperCase(),
+                                billingContact.administrativeArea
+                            ),
+                            'region_code': null,
+                            'country_id': billingContact.countryCode.toUpperCase(),
+                            'postcode': billingContact.postalCode,
+                            'same_as_billing': 0,
+                            'customer_address_id': 0,
+                            'save_in_address_book': 0,
+                        },
+                        'shipping_method_code': this.shippingMethod ?
+                            this.shippingMethods[this.shippingMethod].method_code : '',
+                        'shipping_carrier_code': this.shippingMethod ?
+                            this.shippingMethods[this.shippingMethod].carrier_code : '',
+                        'extension_attributes': {
+                            selected_shipping: JSON.stringify([]),
+                            multi_customship: '0'
+                        }
+                    },
+                };
+
+
+                // set addresses
+                fetch(
+                    this.getApiUrl('shipping-information'), {
+                        method: 'POST',
+                        body: JSON.stringify(payload),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                    }
+                ).then(function() {
+
+                    // submit payment information
+                    fetch(
+                        this.getApiUrl('payment-information'), {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                'email': shippingContact.emailAddress,
+                                'paymentMethod': {
+                                    'method': 'braintree_applepay',
+                                    'additional_data': {
+                                        'payment_method_nonce': nonce,
+                                        'applepay_shipping_method': payload.addressInformation.shipping_carrier_code + '_' + payload.addressInformation.shipping_method_code
+                                    },
+                                    'extension_attributes': {
+                                        'agreement_ids': [1],
+                                    },
+                                },
+                                'billing_address': payload.addressInformation.billing_address,
+                                'shipping_address': payload.addressInformation.shipping_address,
+                                'shipping_method_code': payload.addressInformation.shipping_method_code,
+                                'shipping_carrier_code': payload.addressInformation.shipping_carrier_code,
+                            }),
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                        }
+                    ).then(function(response) {
+                        document.location = this.actionSuccess;
+                        session.completePayment(ApplePaySession.STATUS_SUCCESS);
+
+                        // TODO: Move to a separate function:
+
+                        fetch(
+                            '/rest/V1/applepay/frontend/log', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    message: (payload),
+                                    level: 'info'
+                                })
+                            }
+                        ).then(function(response) {
+                            return response.json();
+                        }).then(function(result) {
+                            console.log('Frontend Log Response:', result);
+                        }).catch(function(error) {
+                            console.error('Frontend Log Error:', error);
+                        });
+
+                    }.bind(this)).catch(function(response) {
+                        session.completePayment(ApplePaySession.STATUS_FAILURE);
+                        session.abort();
+                        alert('<?= $escaper->escapeJs(__(
+                                    'We are unable to take your payment through Apple Pay. Please try an again or use an alternative payment method.'
+                                )); ?>');
+                        console.error(
+                            '<?= $escaper->escapeJs(__('Braintree ApplePay: Unable to take payment')); ?>',
+                            response
+                        );
+
+                        // TODO: Test this:
+                        fetch('/rest/V1/applepay/frontend/log', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                message: {
+                                    event: 'payment_information_failed',
+                                    quoteId: this.quoteId,
+                                    shippingMethod: payload.addressInformation.shipping_carrier_code + '_' + payload.addressInformation.shipping_method_code,
+                                    error: response
+                                },
+                                level: 'error'
+                            })
+                        });
+
+                        return false;
+                    });
+                }.bind(this)).catch(function(response) {
+                    console.error(
+                        '<?= $escaper->escapeJs(__('Braintree ApplePay Unable to set shipping information')); ?>',
+                        response
+                    );
+                    session.completePayment(ApplePaySession.STATUS_INVALID_BILLING_POSTAL_ADDRESS);
+                });
+            },
+
+            /**
+             * Initialise the Apple Pay button.
+             *
+             * @param {HTMLElement} button
+             * @param {Object} context = this.buttonApi
+             */
+            initButton(button, context) {
+                // no element or context
+                if (!button || !context) {
+                    return;
+                }
+
+                // context must implement these methods/have this data
+                if (!context.clientToken) {
+                    console.error(
+                        '<?= $escaper->escapeJs(__('Braintree ApplePay Context passed does not provide a client token')); ?>',
+                        context
+                    );
+
+                    return;
+                }
+
+                if (typeof context.getPaymentRequest !== 'function') {
+                    console.error(
+                        '<?= $escaper->escapeJs(__('Braintree ApplePay Context passed does not provide a getPaymentRequest method')); ?>',
+                        context
+                    );
+
+                    return;
+                }
+
+                if (typeof context.startPlaceOrder !== 'function') {
+                    console.error(
+                        '<?= $escaper->escapeJs(__('Braintree ApplePay Context passed does not provide a startPlaceOrder method')); ?>',
+                        context
+                    );
+
+                    return;
+                }
+
+                if (this.deviceSupported() === false) {
+                    return;
+                }
+
+                this.loadScript('https://js.braintreegateway.com/web/3.92.2/js/apple-pay.min.js', () => {
+                    // init braintree api
+                    braintree.client.create({
+                        authorization: context.clientToken
+                    }, function(clientErr, clientInstance) {
+                        if (clientErr) {
+                            console.error('<?= $escaper->escapeJs(__('Error creating client:')); ?>', clientErr);
+
+                            return;
+                        }
+
+                        braintree.applePay.create({
+                            client: clientInstance
+                        }, function(applePayErr, applePayInstance) {
+                            // no instance
+                            if (applePayErr) {
+                                console.error(
+                                    '<?= $escaper->escapeJs(__('Braintree ApplePay Error creating applePayInstance:')); ?>',
+                                    applePayErr
+                                );
+
+                                return;
+                            }
+
+                            var el = document.createElement('div');
+
+                            el.className = 'braintree-apple-pay-button';
+                            el.title = '<?= $escaper->escapeJs(__('Pay with Apple Pay')); ?>';
+                            el.alt = '<?= $escaper->escapeJs(__('Pay with Apple Pay')); ?>';
+
+                            el.addEventListener('click', function(e) {
+                                e.preventDefault();
+
+                                // payment request object
+                                var paymentRequest = applePayInstance.createPaymentRequest(context.getPaymentRequest());
+
+                                if (!paymentRequest) {
+                                    alert('<?= $escaper->escapeJs(__(
+                                                'We are unable to take payments through Apple Pay at the moment. Please try an alternative payment method.'
+                                            )); ?>');
+                                    console.error(
+                                        '<?= $escaper->escapeJs(__('Braintree ApplePay Unable to create paymentRequest')); ?>',
+                                        paymentRequest
+                                    );
+
+                                    return;
+                                }
+
+                                // init Apple Pay session
+                                try {
+                                    var session = new ApplePaySession(1, paymentRequest);
+                                } catch (err) {
+                                    console.error(
+                                        '<?= $escaper->escapeJs(__('Braintree ApplePay Unable to create ApplePaySession')); ?>',
+                                        err
+                                    );
+                                    alert('<?= $escaper->escapeJs(__(
+                                                'We are unable to take payments through Apple Pay at the moment. Please try an alternative payment method.'
+                                            )); ?>');
+
+                                    return false;
+                                }
+
+                                // handle invalid merchant
+                                session.onvalidatemerchant = function(event) {
+                                    applePayInstance.performValidation({
+                                        validationURL: event.validationURL,
+                                        displayName: context.displayName,
+                                    }, function(validationErr, merchantSession) {
+                                        if (validationErr) {
+                                            session.abort();
+                                            console.error(
+                                                '<?= $escaper->escapeJs(__('Braintree ApplePay Error validating merchant:')); ?>',
+                                                validationErr
+                                            );
+                                            alert('<?= $escaper->escapeJs(__(
+                                                        'We are unable to take payments through Apple Pay at the moment. Please try an alternative payment method.'
+                                                    )); ?>');
+
+                                            return;
+                                        }
+
+                                        session.completeMerchantValidation(merchantSession);
+                                    });
+                                };
+
+                                // attach payment auth event
+                                session.onpaymentauthorized = function(event) {
+                                    applePayInstance.tokenize({
+                                        token: event.payment.token
+                                    }, function(tokenizeErr, payload) {
+                                        if (tokenizeErr) {
+                                            console.error(
+                                                '<?= $escaper->escapeJs(__('Error tokenizing Apple Pay:')); ?>',
+                                                tokenizeErr
+                                            );
+                                            session.completePayment(ApplePaySession.STATUS_FAILURE);
+
+                                            return;
+                                        }
+
+                                        // pass the nonce back to the payment method
+                                        context.startPlaceOrder(payload.nonce, event, session);
+                                    });
+                                };
+
+                                // attach onShippingContactSelect method
+                                if (typeof context.onShippingContactSelect === 'function') {
+                                    session.onshippingcontactselected = function(event) {
+                                        return context.onShippingContactSelect(event, session);
+                                    };
+                                }
+
+                                // attach onShippingMethodSelect method
+                                if (typeof context.onShippingMethodSelect === 'function') {
+                                    session.onshippingmethodselected = function(event) {
+                                        return context.onShippingMethodSelect(event, session);
+                                    };
+                                }
+
+                                // hook
+                                if (typeof context.onButtonClick === 'function') {
+                                    context.onButtonClick(session, this, e);
+                                } else {
+                                    session.begin();
+                                }
+                            });
+
+                            button.appendChild(el);
+                        });
+                    });
+                });
+            },
+
+            /**
+             * Perform Apple Pay button setup.
+             *
+             * @param {HTMLElement} button
+             * @returns {*}
+             */
+            setupButton(button) {
+                this.buttonApi = {
+                    actionSuccess: button.getAttribute('data-success'),
+                    clientToken: button.getAttribute('data-client-token'),
+                    countryDirectory: this.setupCountryDirectory,
+                    displayName: button.getAttribute('data-display-name'),
+                    getApiUrl: this.getApiUrl,
+                    getPaymentRequest: this.getPaymentRequest,
+                    getRegionId: this.getRegionId,
+                    grandTotalAmount: parseFloat(button.getAttribute('data-amount')),
+                    isLoggedIn: (button.getAttribute('data-is-logged-in') === 'true'),
+                    onShippingContactSelect: this.onShippingContactSelect,
+                    onShippingMethodSelect: this.onShippingMethodSelect,
+                    quoteId: button.getAttribute('data-quote-id'),
+                    shippingAddress: {},
+                    shippingMethods: {},
+                    startPlaceOrder: this.startPlaceOrder,
+                    storeCode: button.getAttribute('data-store-code'),
+                };
+
+                // attach the button
+                this.initButton(
+                    button,
+                    this.buttonApi
+                );
+
+                return this;
+            },
+        }
+    }
+</script>

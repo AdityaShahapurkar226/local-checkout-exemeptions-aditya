@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Webkul_MpSellerBuyerCommunication::sellerbuyercommunication_menu" title="Seller Buyer Communication" 
+            module="Webkul_MpSellerBuyerCommunication" sortOrder="10" resource="Webkul_MpSellerBuyerCommunication::sellerbuyercommunication_menu" parent="Webkul_Marketplace::marketplace" translate="title" />
+
+        <add id="Webkul_MpSellerBuyerCommunication::query" title="Seller Buyer Communication Query List"
+            module="Webkul_MpSellerBuyerCommunication" sortOrder="1" parent="Webkul_MpSellerBuyerCommunication::sellerbuyercommunication_menu" action="mpsellerbuyercommunication/query" resource="Webkul_MpSellerBuyerCommunication::query"/>
+    </menu>
+</config>

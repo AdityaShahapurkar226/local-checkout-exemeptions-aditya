@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <ammostviewed>
+            <general>
+                <period>30</period>
+                <order_status>0</order_status>
+                <limit>1000</limit>
+            </general>
+            <bundle_packs>
+                <position>below</position>
+                <tab_title>Bundle Packs</tab_title>
+                <menu_item_label>Bundle Packs</menu_item_label>
+                <confirmation_title>Bundle Pack</confirmation_title>
+                <display_options>0</display_options>
+                <apply_for_separately>1</apply_for_separately>
+                <apply_cart_rule>0</apply_cart_rule>
+                <product_description_embedding><![CDATA[{{widget type="Amasty\Mostviewed\Block\Product\BundlePackCustom"}}]]></product_description_embedding>
+                <template_embedding><![CDATA[<?= $this->helper("Amasty\Mostviewed\Helper\Render")->renderCurrentPack() ?>]]></template_embedding>
+                <layout_embedding><![CDATA[<referenceContainer name="content">
+            <block class="Amasty\Mostviewed\Block\Product\BundlePackCustom" name="amasty.mostviewed.bundle.custom" />
+        </referenceContainer>]]></layout_embedding>
+            </bundle_packs>
+        </ammostviewed>
+    </default>
+</config>

@@ -1,0 +1,76 @@
+//
+//  Configurable Products in Bundles
+//  _____________________________________________
+
+//
+//  Variables
+//  ---------------------------------------------
+
+//  Item Image
+@bundle-item-image__display: table;
+@bundle-item-image-child__display: table-cell;
+@bundle-item-image-child__vertical-align: middle;
+@bundle-item-image-image__padding: 0 0 0 10px;
+@bundle-img__display: none;
+@bundle-img__margin: 0 0 10px;
+@bundle-img__active__display: inline-block;
+
+//  Configurable Wrapper
+@bundle-configurable__margin: false;
+@bundle-configurable__padding: false;
+
+//  FieldSet
+@bundle-configurable-fieldset__margin: 15px 0 15px 15px;
+
+@bundle-configurable-fieldset-field__padding: 0;
+@bundle-configurable-fieldset-field__border: 0;
+
+//
+//  Common
+//  ---------------------------------------------
+
+& when (@media-common = true) {
+    .bundle-item {
+        &.-image {
+            .lib-css(display, @bundle-item-image__display);
+        }
+
+        &.-image > .image,
+        &.-image > .content {
+            .lib-css(display, @bundle-item-image-child__display);
+            .lib-css(vertical-align, @bundle-item-image-child__vertical-align);
+        }
+
+        &.-image > .image {
+            .lib-css(padding, @bundle-item-image-image__padding);
+        }
+    }
+
+    .bundle-img {
+        & {
+            .lib-css(display, @bundle-img__display);
+            .lib-css(margin, @bundle-img__margin);
+        }
+
+        &.-active {
+            .lib-css(display, @bundle-img__active__display);
+        }
+    }
+
+    .bundle-configurable {
+        & {
+            .lib-css(margin, @bundle-configurable__margin);
+            .lib-css(padding, @bundle-configurable__padding);
+        }
+        &.fieldset {
+            .lib-css(margin, @bundle-configurable-fieldset__margin);
+        }
+    }
+
+    .bundle-options-container {
+        .product-options-wrapper .bundle-configurable.fieldset > .field {
+            .lib-css(padding, @bundle-configurable-fieldset-field__padding);
+            .lib-css(border, @bundle-configurable-fieldset-field__border);
+        }
+    }
+}

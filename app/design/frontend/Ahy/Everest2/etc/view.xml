@@ -1,0 +1,36 @@
+<view xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Config/etc/view.xsd">
+    <media>
+        <images module="Magento_Catalog">
+            <image id="product_page_image_large" type="image"/>
+            <image id="product_page_image_medium" type="image">
+                <width>500</width>
+                <height>500</height>
+            </image>
+            <image id="product_page_main_image" type="image">
+                <width>500</width>
+                <height>500</height>
+            </image>
+            <image id="product_page_main_image_default" type="image">
+                <width>500</width>
+                <height>500</height>
+            </image>
+
+            <!-- Fix for broken product images in Google payment review page: -->
+            <image id="cart_page_product_thumbnail" type="thumbnail">
+                <width>165</width>
+                <height>165</height>
+            </image>
+        </images>
+    </media>
+
+    <vars module="Magento_Catalog">
+        <var name="gallery">
+            <!-- Add the options here -->
+            <var name="navdir">vertical</var>            <!-- Direction of the thumbnails (horizontal/vertical) -->
+            <var name="navarrows">true</var>            <!-- Turn on/off the thumbnail arrows (true/false) -->
+            <!-- Hyva Only options -->
+            <var name="navoverflow">true</var>            <!-- Turn on/off overflow style (true/false) -->
+            <var name="autoplay">true</var>            <!-- Turn on/off autoplay for videos (true/false) -->
+        </var>
+    </vars>
+</view>

@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+  <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+    <arguments>
+      <argument name="collections" xsi:type="array">
+        <item name="mpassignproduct_products_list_data_source" xsi:type="string">Webkul\MpAssignProduct\Model\ResourceModel\Items\Grid\Collection</item>
+      </argument>
+    </arguments>
+  </type>
+  <type name="Webkul\MpAssignProduct\Model\ResourceModel\Items\Grid\Collection">
+    <arguments>
+      <argument name="mainTable" xsi:type="string">marketplace_assignproduct_items</argument>
+      <argument name="eventPrefix" xsi:type="string">mpassignproduct_items_grid_collection</argument>
+      <argument name="eventObject" xsi:type="string">items_grid_collection</argument>
+      <argument name="resourceModel" xsi:type="string">Webkul\MpAssignProduct\Model\ResourceModel\Items</argument>
+    </arguments>
+  </type>
+  <virtualType name="MpAssignProductGirdFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+    <arguments>
+      <argument name="appliers" xsi:type="array">
+        <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+        <item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+      </argument>
+    </arguments>
+  </virtualType>
+  <virtualType name="ProductGirdFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+    <arguments>
+      <argument name="collection" xsi:type="object" shared="false">Webkul\MpAssignProduct\Model\ResourceModel\Items\Collection</argument>
+      <argument name="filterPool" xsi:type="object" shared="false">MpAssignProductGirdFilterPool</argument>
+    </arguments>
+  </virtualType>
+  <type name="Webkul\Marketplace\Helper\Data">
+    <plugin name="Webkul_MpAssignProduct::getSellerProductDataByProductId" type="Webkul\MpAssignProduct\Plugin\Helper\Data" sortOrder="1"/>
+  </type>
+  <type name="Magento\Catalog\Helper\Product\View">
+    <plugin name="Webkul_MpAssignProduct::prepareAndRender" type="Webkul\MpAssignProduct\Plugin\Catalog\Helper\Product\View" sortOrder="1"/>
+  </type>
+  <!-- Plugin to hide assign products in admin -->
+  <type name="Magento\Catalog\Model\ResourceModel\Product\Collection">
+    <plugin name="Webkul_MpAssignProduct::arroundProductCollection" type="Webkul\MpAssignProduct\Plugin\Catalog\Model\ResourceModel\Product\Collection" sortOrder="1"/>
+  </type>
+  <!-- Plugin to hide assign products from category & serach page -->
+  <type name="Magento\Catalog\Model\Layer">
+    <plugin name="Webkul_MpAssignProduct::hideAsssignProducts" type="Webkul\MpAssignProduct\Plugin\Catalog\Model\Layer"/>
+  </type>
+  <!-- Plugin to add the assign product id in the cart item-->
+  <type name="Magento\Checkout\Model\Cart">
+    <plugin name="Webkul_MpAssignProduct::addAsssignItemOption" type="Webkul\MpAssignProduct\Plugin\Checkout\Model\Cart"/>
+  </type>
+  <preference for="Webkul\MpAssignProduct\Api\Data\ProfileInterface" type="Webkul\MpAssignProduct\Model\Profile"/>
+  <preference for="Webkul\MpAssignProduct\Api\ProfileRepositoryInterface" type="Webkul\MpAssignProduct\Model\ProfileRepository"/>
+  <type name="Webkul\MpAssignProduct\Logger\Handler">
+    <arguments>
+      <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+    </arguments>
+  </type>
+  <type name="Webkul\MpAssignProduct\Logger\Logger">
+    <arguments>
+      <argument name="name" xsi:type="string">webkulMpAssignProductLogHandler</argument>
+      <argument name="handlers" xsi:type="array">
+        <item name="system" xsi:type="object">Webkul\MpAssignProduct\Logger\Handler</item>
+      </argument>
+    </arguments>
+  </type>
+</config>

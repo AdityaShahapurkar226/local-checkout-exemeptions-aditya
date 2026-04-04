@@ -1,0 +1,56 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$viewModel = $block->getViewModel();
+$helper = $viewModel->getHelper();
+$partner=$block->getProfileDetail();
+
+if (!empty($partner['shop_url'])) { ?>
+    <div class="description-tab-content">
+        <div class="description-left-container">
+            <div class="descrition-heading">
+                <?= $escaper->escapeHtml(__('About Us'))?>
+            </div>
+            <div class="wk-mp-description-order-count-container ">
+                <div class="wk-order-count">
+                    <div class="wk-mp--count-txt order-count">
+                        <?php $sellerId =  $partner->getSellerId();?>
+                        <?=  $escaper->escapeHtml($viewModel->getOrderHelper()->getSellerOrders($sellerId))?>
+                    </div>
+                    <div class="wk-mp-collection-header-bottom wk-mp-collection-header-bottom-txt">
+                        <?= $escaper->escapeHtml(__('Orders'))?>
+                    </div>
+                </div> 
+                <div class="wk-review-count"> 
+                    <div class="wk-mp--count-txt rating-count">
+                        <i class="fa fa-star"></i> 
+                        <?php $sellerId =  $partner->getSellerId();
+                            $feedTotal  = $helper->getFeedTotal($sellerId);
+                        ?>
+                        <?= $escaper->escapeHtml($feedTotal['feedcount'])?>
+                    </div>
+                    <div class="wk-mp-collection-header-bottom wk-mp-collection-header-bottom-txt">
+                        <?= $escaper->escapeHtml(__('Review'))?>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="description-right-container">
+            <?php if ($partner->getCompanyDescription()!= ''):?>
+                <?= /* @noEscape */($partner->getCompanyDescription())?>
+            <?php else:?>
+                <?= $escaper->escapeHtml(__('No Descrition Provided by Seller.'))?>
+            <?php endif?>
+        </div>
+        
+    </div>
+    <?php
+} ?>

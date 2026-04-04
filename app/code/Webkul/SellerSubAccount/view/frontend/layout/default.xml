@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_SellerSubAccount
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="header.links">
+            <block class="Webkul\SellerSubAccount\Block\View\Html\SwitchLink" name="marketplace-account-switch-link">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Vendor Dashboard</argument>
+                    <argument name="path" xsi:type="string">marketplace\account\dashboard</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+        <referenceBlock name="layout2_seller_account_navigation">
+            <block class="Webkul\SellerSubAccount\Block\Link"  name="seller_sub_account_link_layout2" before="-" template="Webkul_SellerSubAccount::layout2/account/navigation.phtml" />
+        </referenceBlock>
+        <referenceBlock name="layout2_seller_account_navigation_settings_menu">
+            <action method="setTemplate" ifconfig="sellersubaccount/general_settings/manage_sub_accounts">
+                <argument name="template" xsi:type="string">Webkul_SellerSubAccount::layout2/account/navigation/settings_menu.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

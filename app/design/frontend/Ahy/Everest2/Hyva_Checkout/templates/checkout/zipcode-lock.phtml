@@ -1,0 +1,27 @@
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const zip = sessionStorage.getItem('ahy_user_zip');
+        if (zip) {
+            const zipInputs = document.querySelectorAll('input[name$="[postcode]"], input[name="postcode"]');
+
+            zipInputs.forEach(input => {
+                input.value = zip;
+                input.readOnly = true;
+                input.classList.add('bg-gray-100', 'cursor-not-allowed');
+                input.setAttribute('title', 'ZIP code is locked as per your previous input.');
+
+                // Optional: Add a lock icon
+                const checkmark = input.parentElement.querySelector('img');
+                if (checkmark) {
+                    checkmark.style.display = 'block';
+                }
+            });
+
+            // Hide change ZIP or re-enable actions if present
+            const secondZipField = document.getElementById('second-street-toggle-button');
+            if (secondZipField) {
+                secondZipField.style.display = 'none';
+            }
+        }
+    });
+</script>

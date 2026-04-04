@@ -1,0 +1,81 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var Template $block */
+/** @var EntityFieldInterface $field */
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+/** @var MagewireFormComponent $magewire */
+
+use Hyva\Checkout\Model\Form\EntityFieldInterface;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Magewirephp\Magewire\Component\Form as MagewireFormComponent;
+
+$field = $block->getData('field');
+$form = $block->getData('form_name');
+?>
+<div class="block text-sm font-medium text-gray-700 <?= $field->isRequired() ? 'required' : 'not-required' ?>">
+    <?php if (! $field->hasAncestor() && $field->getName()): ?>
+        <label for="<?= $escaper->escapeHtmlAttr($field->getName()) ?>">
+            <span class=" text-ahy-blue font-bold">
+                <?= $escaper->escapeHtml(__($field->getLabel())) ?>
+            </span>
+        </label>
+    <?php endif ?>
+
+    <?= /* @noEscape */ $field->getRenderer()->renderBefore($field, $form) ?>
+
+    <div class="flex items-center gap-4 relative">
+        <select class="focus:ring-transparent h-16 text-sm md:text-base ahy-checkout-shipping-input !border border-ahy-gray focus:border-ahy-blue <?= $escaper->escapeHtmlAttr($field->getClass(['block w-full form-input'])) ?>"
+            <?php if ($field->hasAttributes()): ?>
+                <?= /* @noEscape */ $field->renderAttributes() ?>
+            <?php endif ?>
+        >
+            <?php foreach ($field->getOptions() as $option): ?>
+                <?php if (is_object($option)): ?>
+                    <option value="<?= $escaper->escapeHtmlAttr($option->getValue()) ?>">
+                        <?= $escaper->escapeHtml(__($option->getLabel())) ?>
+                    </option>
+                <?php elseif (is_array($option)): ?>
+                    <?php if($option['value'] == null): ?>
+                        <option value="<?= $escaper->escapeHtmlAttr($option['value']) ?>">
+                            <?= 'Please select your location' ?>
+                        </option>
+                    <?php elseif($option['value'] !== null):?>
+                        <option value="<?= $escaper->escapeHtmlAttr($option['value']) ?>">
+                            <?= $escaper->escapeHtml(__($option['label'])) ?>
+                        </option>
+                    <?php endif; ?>
+                <?php elseif (is_string($option)): ?>
+                    <option value="<?= $escaper->escapeHtmlAttr($option) ?>">
+                        <?= $escaper->escapeHtml(__($option)) ?>
+                    </option>
+                <?php endif ?>
+            <?php endforeach ?>
+        </select>
+        <div class="cursor-pointer px-4 absolute right-5" id="input-checkmark-<?= $field->getId() ?>" style="display: none">
+            <img src="/media/icons/checkmark.svg" alt="checked" class="w-4" />
+        </div>
+
+        <?php if ($field->hasTooltip()): ?>
+            <?= /* @noEscape */ $field->getRenderer()->renderTooltip($field) ?>
+        <?php endif ?>
+    </div>
+
+    <?php if ($field->hasRelatives()): ?>
+        <?php foreach ($field->getRelatives() as $child): ?>
+            <?= /* @noEscape */ $child->render($form, $field) ?>
+        <?php endforeach ?>
+    <?php endif ?>
+
+    <?= /* @noEscape */ $field->getRenderer()->renderAfter($field, $form) ?>
+</div>

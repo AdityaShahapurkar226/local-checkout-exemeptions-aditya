@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <update handle="marketplace_styles"/>
+    <body>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">Marketplace Dashboard</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block class="Webkul\Marketplace\Block\Account\Dashboard" name="marketplace_account_dashboard" template="Webkul_Marketplace::account/dashboard.phtml" cacheable="false">
+            <arguments>
+                    <argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <referenceContainer name="marketplace_account_dashboard">
+            <block class="Webkul\Marketplace\Block\Account\Dashboard\Diagrams" name="diagrams" template="Webkul_Marketplace::account/diagrams.phtml" cacheable="false"/>
+            <block class="Webkul\Marketplace\Block\Account\Dashboard\LocationChart" name="locationChart" template="Webkul_Marketplace::account/locationChart.phtml" cacheable="false"/>
+            <block class="Webkul\Marketplace\Block\Account\Dashboard\CategoryChart" name="categoryChart" template="Webkul_Marketplace::account/categoryChart.phtml" cacheable="false"/>
+            <block class="Webkul\Marketplace\Block\Account\Dashboard" name="dashboard_additional_chart_block" template="Webkul_Marketplace::account/dashboard/additional_chart.phtml" cacheable="false"/>
+            <block class="Webkul\Marketplace\Block\Account\Dashboard" name="dashboard_additional_total_block" template="Webkul_Marketplace::account/dashboard/additional_total.phtml" cacheable="false"/>
+            <block class="Webkul\Marketplace\Block\Account\Dashboard" name="dashboard_additional_content_block" template="Webkul_Marketplace::account/dashboard/additional_content.phtml" cacheable="false"/>
+        </referenceContainer>
+
+        <referenceBlock name="marketplace_account_dashboard">
+            <arguments>
+                <argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

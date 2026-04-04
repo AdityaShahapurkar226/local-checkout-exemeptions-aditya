@@ -1,0 +1,83 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Catalog\Helper\Output as CatalogOutputHelper;
+use Magento\Catalog\Block\Product\View\Attributes;
+use Magento\Catalog\Model\Product;
+
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundHelper
+
+/** @var Escaper $escaper */
+/** @var CatalogOutputHelper $output */
+/** @var Attributes $block */
+
+
+/** @var CatalogOutputHelper $catalogOutputHelper */
+$catalogOutputHelper = $this->helper(CatalogOutputHelper::class);
+
+/** @var Product $product */
+$product = $block->getProduct();
+
+?>
+
+<?php if ($attributes = $block->getAdditionalData()): ?>
+    <?php
+        $barcodeDescriptionValue = null;
+        $hasBarcodeDescription = false;
+        $filteredAttributes = [];
+
+        // Loop through attributes to find barcode_description and optionally keep the rest
+        foreach ($attributes as $attribute) {
+            if ($attribute['code'] === 'barcode_description') {
+                $barcodeDescriptionValue = trim($attribute['value']);
+                $hasBarcodeDescription = !empty($barcodeDescriptionValue);
+            }
+            $filteredAttributes[] = $attribute;
+        }
+    ?>
+    <div id="product-attributes">
+        <ul class="space-y-4 text-ahy-blue text-base max-w-[612px]">
+            <?php foreach ($filteredAttributes as $attribute): ?>
+                <?php
+                    // Skip Caliber Eligible
+                    if ($attribute['label'] === 'Caliber Eligible') {
+                        continue;
+                    }
+
+                    // Logic to show only barcode_description if it's set, otherwise show description
+                    if ($attribute['code'] === 'description' && $hasBarcodeDescription) {
+                        continue;
+                    }
+
+                    if ($attribute['code'] === 'barcode_description' && !$hasBarcodeDescription) {
+                        continue; // Skip barcode_description if it's empty
+                    }
+                ?>
+                
+                <li class="border-b border-gray-300 pb-4 last:border-b-0">
+                    <span class="font-semibold"><?= $escaper->escapeHtml($attribute['label']) ?></span>: 
+                    <span class="pl-1 prose">
+                        <?= /* @noEscape */ html_entity_decode($catalogOutputHelper->productAttribute($product, $attribute['value'], $attribute['code'])) ?>
+                    </span>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif;?>
+<style>
+    li.list-before-icon:before {
+        content: '\22C5';
+        font-size: 2.5rem;
+        height: 27px;
+        width: 15px;
+        padding-right: 5px;
+    }
+</style>

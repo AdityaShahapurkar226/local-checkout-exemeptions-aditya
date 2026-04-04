@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Ahy_ApplePay" setup_version="1.0.0">
+        <sequence>
+            <module name="Webkul_MpMultiShipping"/>
+            <module name="Hyva_CompatModuleFallback"/>
+            <module name="Magento_Checkout"/>
+            <module name="PayPal_Braintree"/>
+        </sequence>
+    </module>
+</config>

@@ -1,0 +1,166 @@
+<?php
+
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+use Magento\Checkout\Block\Onepage\Link;
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var Link $block */
+
+/** @var \Magento\Framework\View\Element\Template $block */
+$interceptor = $block->getLayout()->getBlock('ahy.estateapi.cart.interceptor');
+$productIds = $interceptor ? $interceptor->getCartProductIds() : [];
+$zip = $interceptor ? $interceptor->getZipCode() : '';
+
+?>
+<div x-data="checkoutInterceptor()" x-init="init()" x-id="['checkout']" x-ref="checkoutRoot">
+    <?php if ($block->isPossibleOnepageCheckout()): ?>
+        <a
+            href="<?= $escaper->escapeHtmlAttr($escaper->escapeUrl($block->getCheckoutUrl())) ?>"
+            title="<?= $escaper->escapeHtmlAttr(__('Continue to Checkout')) ?>"
+            class="btn bg-ahy-red hover:bg-ahy-red-light w-full relative ahy-custom-btn mb-6"
+            id="checkout-link-button"
+            x-on:click.prevent="!isChecking && handleCheckout('<?= $block->escapeUrl($block->getCheckoutUrl()) ?>')"
+            :class="{ 'opacity-50 cursor-not-allowed pointer-events-none': isChecking }">
+            <img src="/media/icons/lock.svg" alt="lock icon" class="w-4 h-4">
+            <span class="w-full font-bold py-2 text-center"><?= $escaper->escapeHtml(__('Continue to Checkout')) ?></span>
+        </a>
+    <?php endif ?>
+</div>
+
+
+<script>
+    function checkoutInterceptor() {
+        return {
+            productId: <?= json_encode($productIds) ?>,
+            zip: <?= json_encode($zip) ?>,
+            isChecking: false,
+
+            init() {
+                // this.validateWithEstate();
+            },
+
+            async handleCheckout(url) {
+                if (this.isChecking) return; // block multiple clicks
+                this.isChecking = true;
+
+                try {
+                    const valid = await this.validateWithEstate();
+
+                    if (valid) {
+                        // Allow navigation after validation succeeds
+                        window.location.href = url;
+                    } else {
+                        // Re-enable button if blocked
+                        this.isChecking = false;
+                    }
+                } catch (e) {
+                    console.error("[handleCheckout] Error:", e);
+                    this.showToast("Checkout validation failed. Please try again.", "error");
+                    this.isChecking = false;
+                }
+            },
+
+            async validateWithEstate() {
+                let firstRestrictedProductId = null;
+                let allAllowed = true;
+
+                // Disable clicks while validating
+                for (const productId of this.productId) {
+                    try {
+                        const resultRaw = await Alpine.store('estateApi').checkProductRestriction(productId, null);
+                        const result = Number(resultRaw);
+
+                        console.log(`[Estate Check] Product ${productId}: Result =`, result);
+
+                        if ([2, 3, 5].includes(result)) {
+                            allAllowed = false;
+
+                            if (!firstRestrictedProductId) {
+                                firstRestrictedProductId = productId;
+                            }
+
+                            let reason = '';
+                            switch (result) {
+                                case 2:
+                                    reason = 'Restricted product';
+                                    break;
+                                case 3:
+                                    reason = 'Cannot ship to your area';
+                                    break;
+                                case 5:
+                                    reason = 'Product is not valid for your area';
+                                    break;
+                            }
+
+                            this.showToast(`Product ${productId}: ${reason}`, 'error');
+                            this.highlightRestrictedProduct(productId, reason);
+                        }
+
+                    } catch (e) {
+                        console.error(`[validateWithEstate] Error validating product ${productId}:`, e);
+                        allAllowed = false;
+
+                        if (!firstRestrictedProductId) {
+                            firstRestrictedProductId = productId;
+                        }
+
+                        this.showToast(`Product ${productId}: Validation failed.`, 'error');
+                        this.highlightRestrictedProduct(productId, 'Validation error');
+                    }
+                }
+
+                if (!allAllowed && firstRestrictedProductId) {
+                    this.scrollToRestrictedProduct(firstRestrictedProductId);
+                }
+
+                return allAllowed;
+            },
+
+            highlightRestrictedProduct(productId, reason) {
+                console.log(`[highlightRestrictedProduct] Called for product ${productId}:`, reason);
+                const row = document.querySelector(`[data-product-id="${productId}"]`);
+                if (row) {
+                    row.classList.add('border-2', 'border-red-700', 'p-2', 'rounded-lg', 'shadow-md');
+                    const oldMsg = row.querySelector('.ahy-zip-restriction-message');
+                    if (oldMsg) oldMsg.remove();
+
+                    const msg = document.createElement('div');
+                    msg.className = 'ahy-zip-restriction-message bg-red-100 text-red-800 mt-2 p-2 rounded text-sm';
+                    msg.innerHTML = `<strong>${reason}. Please remove this product to continue checkout.</strong>`;
+                    row.appendChild(msg);
+                }
+            },
+            showToast(msg, type = 'error') {
+                const toast = document.createElement('div');
+                toast.innerText = msg;
+                toast.className = `fixed top-10 left-1/2 -translate-x-1/2 px-6 py-4 rounded-xl text-white shadow-xl z-50
+                ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 4000);
+            },
+
+            showNotification(msg, type = 'success') {
+                this.showToast(msg, type);
+            },
+            scrollToRestrictedProduct(productId) {
+                const row = document.querySelector(`[data-product-id="${productId}"]`);
+                if (row) {
+                    row.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                    // row.classList.add('ring-4', 'ring-red-500');
+                    setTimeout(() => row.classList.remove('ring-4', 'ring-red-500'), 3000);
+                }
+            }
+
+        }
+    }
+</script>

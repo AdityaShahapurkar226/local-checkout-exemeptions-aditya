@@ -1,0 +1,31 @@
+<script>
+    "use strict";
+    function initComponent() {
+        return {
+            cart: false,
+            cartItemsCount: null,
+            cartHeadingCountText: '',
+            receiveCustomerData(data) {
+                if (data.cart && data.cart.items) {
+                    this.cart = data.cart;
+                    this.cartItemsCount = this.cart.summary_count;
+                    if(this.cartItemsCount > 1 && this.cartItemsCount){
+                        var returnString = `(${this.cartItemsCount} items)`;
+                        this.cartHeadingCountText = returnString;
+                    }else {
+                        var returnString = `(${this.cartItemsCount} item)`;
+                        this.cartHeadingCountText = returnString;
+                    }
+                    
+                }
+            }
+        }
+    }
+</script>
+
+<div x-data="initComponent()"
+    @private-content-loaded.window="receiveCustomerData($event.detail.data)"
+    class="text-ahy-blue page-title title-font p-2 font-normal text-lg flex items-center"
+>
+    <span x-html="cartHeadingCountText"></span>
+</div>

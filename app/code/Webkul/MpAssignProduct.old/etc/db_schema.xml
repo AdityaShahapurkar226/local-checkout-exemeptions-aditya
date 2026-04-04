@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!-- /**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */ -->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="marketplace_assignproduct_items" resource="default" engine="innodb">
+    <column xsi:type="int" name="id" padding="11" unsigned="false" nullable="false" identity="true"/>
+    <column xsi:type="int" name="product_id" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="owner_id" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="seller_id" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="qty" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="decimal" name="price" scale="4" precision="12" unsigned="false" nullable="false" default="0"/>
+    <column xsi:type="mediumtext" name="description" nullable="false"/>
+    <column xsi:type="mediumtext" name="options" nullable="false"/>
+    <column xsi:type="varchar" name="image" nullable="false" length="255"/>
+    <column xsi:type="int" name="condition" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="varchar" name="type" nullable="false" length="255"/>
+    <column xsi:type="datetime" name="created_at" on_update="false" nullable="true"/>
+    <column xsi:type="int" name="status" padding="11" unsigned="false" nullable="false" identity="false" default="0"/>
+    <column xsi:type="varchar" name="shipping_country_charge" nullable="true" length="255"/>
+    <column xsi:type="int" name="assign_product_id" unsigned="true" nullable="false" default="0" identity="false" padding="10" comment="Assign Product Id"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="MARKETPLACE_ASSIGN_ITMS_ASSPRO_ID_CAT_PRD_ENTT_ENTT_ID" table="marketplace_assignproduct_items" column="assign_product_id" referenceTable="catalog_product_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+    <index referenceId="MARKETPLACE_ASSIGN_ITMS_ASSPRO_ID_CAT_PRD_ENTT_ENTT_ID" indexType="btree">
+        <column name="assign_product_id"/>
+    </index>
+  </table>
+  <table name="marketplace_assignproduct_quote" resource="default" engine="innodb">
+    <column xsi:type="int" name="id" padding="11" unsigned="false" nullable="false" identity="true"/>
+    <column xsi:type="int" name="item_id" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="owner_id" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="seller_id" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="qty" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="product_id" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="quote_id" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="assign_id" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="child_assign_id" padding="10" unsigned="true" nullable="false" identity="false"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+  <table name="marketplace_assignproduct_associated_products" resource="default" engine="innodb">
+    <column xsi:type="int" name="id" padding="11" unsigned="false" nullable="false" identity="true"/>
+    <column xsi:type="int" name="product_id" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="parent_id" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="parent_product_id" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="qty" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="decimal" name="price" scale="4" precision="12" unsigned="false" nullable="false" default="0"/>
+    <column xsi:type="mediumtext" name="options" nullable="false"/>    
+    <column xsi:type="int" name="assign_product_id" unsigned="true" nullable="false" default="0" identity="false" padding="10" comment="Assign Product Id"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+  <table name="marketplace_assignproduct_data" resource="default" engine="innodb">
+    <column xsi:type="int" name="id" padding="11" unsigned="false" nullable="false" identity="true"/>
+    <column xsi:type="int" name="type" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="assign_id" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="varchar" name="value" nullable="false" length="255"/>
+    <column xsi:type="datetime" name="date" on_update="false" nullable="true"/>
+    <column xsi:type="int" name="is_default" padding="11" unsigned="false" nullable="false" identity="false"/>
+    <column xsi:type="int" name="status" padding="11" unsigned="false" nullable="false" identity="false" default="0"/>
+    <column xsi:type="int" name="store_view" padding="11" unsigned="false" nullable="false" identity="false" default="0"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+  <table name="marketplace_assignupload_profile" resource="default" engine="innodb" comment="Assign Product Mass Upload Profile Table">
+      <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" padding="11" identity="true" comment="Entity Id"/>
+      <column xsi:type="int" name="seller_id" nullable="false" padding="11" comment="Seller Id"/>
+      <column xsi:type="varchar" name="profile_name" length="255" nullable="false" comment="Profile Name"/>
+      <column xsi:type="text" name="csv_file" nullable="false"  disabled="true" comment="Csv File"/>
+      <column xsi:type="varchar" name="product_type" length="255" nullable="false" comment="Product Type"/>
+      <column xsi:type="text" name="time" nullable="false" disabled="true" comment="Time"/>
+      <column xsi:type="int" name="status" nullable="false" padding="11"  disabled="true" comment="Status"/>
+      <column xsi:type="timestamp" name="created_date" nullable="false" comment="Created Date"/>
+      <column xsi:type="text" name="image_file" nullable="false" comment="Image Folder Name"/>
+      <column xsi:type="longblob" name="data_row" nullable="false" comment="Uploaded File Whole Row Serialed Data"/>
+      <column xsi:type="text" name="file_type" nullable="false" comment="File Type"/>
+      <constraint xsi:type="primary" referenceId="PRIMARY">
+          <column name="entity_id"/>
+      </constraint>
+  </table>
+</schema>

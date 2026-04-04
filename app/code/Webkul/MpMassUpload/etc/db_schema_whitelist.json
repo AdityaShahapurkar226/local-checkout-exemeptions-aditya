@@ -1,0 +1,50 @@
+{
+    "marketplace_massupload_profile": {
+        "column": {
+            "id": true,
+            "customer_id": true,
+            "attribute_set_id": true,
+            "csv_file": true,
+            "profile_name": true,
+            "product_type": true,
+            "time": true,
+            "status": true,
+            "created_date": true,
+            "image_file": true,
+            "link_file": true,
+            "sample_file": true,
+            "data_row": true,
+            "file_type": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "marketplace_massupload_attribute_profile": {
+        "column": {
+            "entity_id": true,
+            "seller_id": true,
+            "profile_name": true,
+            "attribute_set_id": true,
+            "created_date": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "marketplace_massupload_attribute_mapping": {
+        "column": {
+            "entity_id": true,
+            "profile_id": true,
+            "file_attribute": true,
+            "mage_attribute": true
+        },
+        "index": {
+            "MARKETPLACE_MASSUPLOAD_ATTRIBUTE_MAPPING_PROFILE_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_EEE413D3D89F45B903F7EA7021E21D4E": true
+        }
+    }
+}

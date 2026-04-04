@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+<group>
+    <status>0</status>
+    <priority>10</priority>
+    <name>Who Bought This Also Bought</name>
+    <block_title>Who Bought This Also Bought</block_title>
+    <block_position>category_sidebar_bottom</block_position>
+    <customer_group_ids>0,1,2,3</customer_group_ids>
+    <stores>0,1</stores>
+    <add_to_cart>1</add_to_cart>
+    <max_products>5</max_products>
+    <where_conditions_serialized><![CDATA[{"type":"Magento\\CatalogRule\\Model\\Rule\\Condition\\Combine","attribute":null,"operator":null,"value":"1","is_value_processed":null,"aggregator":"all"}]]></where_conditions_serialized>
+    <conditions_serialized><![CDATA[{"type":"Magento\\CatalogRule\\Model\\Rule\\Condition\\Combine","attribute":null,"operator":null,"value":"1","is_value_processed":null,"aggregator":"all"}]]></conditions_serialized>
+</group>

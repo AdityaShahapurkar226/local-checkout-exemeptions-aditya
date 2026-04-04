@@ -1,0 +1,394 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<div class="wk-loading-mask wk-display-none">
+    <div class="wk-loader"></div>
+</div>
+<?php
+$productList = $block->getLayout()->createBlock(\Webkul\MpAssignProduct\Block\Product\ProductList::class);
+$itemWidth = 95.6;
+$productId = $block->getProduct()->getId();
+$helper = $productList->getHelperObject();
+$product = $helper->getProduct($productId);
+$cartHelper = $productList->getHelperObject('checkoutHelper');
+$url = $cartHelper->getAddUrl($product);
+$sortOrders = ["price" => "Price",  "rating" => "Rating"];
+$sortOrder = $block->getSortOrder();
+$dir = $block->getDirection();
+$defaultUrl = $block->getDefaultUrl();
+$helper = $productList->getHelperObject();
+$marketplaceHelper = $productList->getHelperObject('marketplaceHelper');
+$cartHelper = $productList->getHelperObject('checkoutHelper');
+$allProducts = $block->getAssignedProducts();
+$formKey = $helper->getFormKey();
+$totalSellers = count($allProducts);
+$assignProducts = $block->getProductsArray();
+$totalSellersHtml = "<span>$totalSellers</span>";
+$productType = $product->getTypeId();
+$singleMinPriceConfigProduct = [];
+$mainConfigChilds = '';
+if ($productType == "configurable") {
+    $isConfig = 1;
+    $singleMinPriceConfigProduct = $helper->getMinimumPriceConfigProductDetails($productId);
+    $mainConfigChilds = $helper->getConfigProductChildrens($productId);
+} else {
+    $isConfig = 0;
+}
+$jsonResult = [0];
+$symbol = $helper->getCurrentCurrencySymbol();
+$customOptions = $helper->getCustomOptions($product)->getData();
+$customOptionsAvail = 0;
+if (count($customOptions) > 0) {
+    $customOptionsAvail = 1;
+}
+$btnHtml = "";
+?>
+<?php if (count($allProducts) > 0):?>
+<div class="wk-ap-list-header" id="wk_list_header">
+    <?php if ($totalSellers): ?>
+        <?= /* @noEscape */ __("Sold by %1 more Seller(s)", $totalSellersHtml); ?>
+    <?php endif; ?>
+  <div class="toolbar-sorter sorter">
+      <label class="sorter-label" for="sorter">Sort By</label>
+      <select id="list_sorter" class="sorter-options">
+          <?php foreach ($sortOrders as $code => $sOrder):?>
+                <?php if ($sortOrder == $code): ?>
+                  <option selected value="<?= /* @noEscape */ $code?>"><?= /* @noEscape */ __($sOrder); ?></option>
+                <?php else:?>
+                  <option value="<?= /* @noEscape */ $code?>"><?= /* @noEscape */ __($sOrder); ?></option>
+                <?php endif; ?>
+            <?php endforeach; ?>
+      </select>
+      <?php if ($dir == "asc"): ?>
+          <a id="list_dir_desc" title="<?= /* @noEscape */ __('Set Descending Direction'); ?>"
+           href="#" class="action sorter-action sort-asc">
+              <span><?= /* @noEscape */ __('Set Descending Direction'); ?></span>
+          </a>
+        <?php else: ?>
+          <a id="list_dir_asc" title="<?= /* @noEscape */ __('Set Ascending Direction'); ?>" 
+          href="#" class="action sorter-action sort-desc">
+              <span><?= /* @noEscape */ __('Set Ascending Direction'); ?></span>
+          </a>
+        <?php endif; ?>
+  </div>
+</div>
+<div id="product_list" class="wk-ap-product-list wk-ap-fieldset">
+  <table class="data table wk-table-product-list">
+      <thead>
+          <?php
+            if (isset($assignProducts['headings'])) {
+                foreach ($assignProducts['headings'] as $heading) {
+                    ?>
+                      <th><?= /* @noEscape */ $heading ?></th>
+            <?php   }
+            }
+            ?>
+      </thead>
+      <?php
+          $assignProductData = [];
+        if (isset($assignProducts['data'])) {
+            $assignProductData = $assignProducts['data'];
+        }
+        foreach ($assignProductData as $product):
+            $assignId = (isset($product['assignId'])) ? $product['assignId'] : '';
+            $mainProduct = (isset($product['mainproduct'])) ? $product['mainproduct'] : 0;
+            if ($mainProduct) {
+                $assignId = 0;
+            }
+            $price = (isset($product['price'])) ? $product['price'] : '';
+            $assignProductId = (isset($product['assign_product_id'])) ? $product['assign_product_id'] : '';
+            $newProduct = $helper->getProduct($assignProductId);
+            $productUrl = $cartHelper->getAddUrl($newProduct);
+            $sellerId = (isset($product['sellerId'])) ? $product['sellerId'] : '';
+            $shopTitle = (isset($product['shopTitle'])) ? $product['shopTitle'] : '';
+            $logo = (isset($product['logo'])) ? $product['logo'] : '';
+            $baseImage = (isset($product['baseImage'])) ? $product['baseImage'] : '';
+            $description = (isset($product['description'])) ? $product['description'] : '';
+            $showProfile = (isset($product['showProfile'])) ? $product['showProfile'] : '';
+            $shopUrl = (isset($product['shopUrl'])) ? $product['shopUrl'] : '';
+            $shopName = (isset($product['shopName'])) ? $product['shopName'] : '';
+            if ($sellerId) {
+                $sellerRating = $marketplaceHelper->getFeedTotal($sellerId);
+                $totalCount = $sellerRating['feedcount'];
+                $percent = $sellerRating['totalfeed'];
+                $rate = (isset($product['rate'])) ? $product['rate'] : '';
+                if ($showProfile) {
+                    if ($totalCount > 0) {
+                        $reviewHtml = '<div class="rating-summary">';
+                        $reviewHtml .= '<div class="rating-result">';
+                        $reviewHtml .= '<span style="width:'.$percent.'%"></span>';
+                        $reviewHtml .= '</div>';
+                        $reviewHtml .= '</div>';
+                        $reviewHtml .= '<div class="wk-ap-rating-info">';
+                        $reviewHtml .= '(<span>'.$rate.'</span> based on <span>'.$totalCount.' ratings</span>)';
+                        $reviewHtml .= '</div>';
+                    } else {
+                        $msg = __("Be the first to review");
+                        $reviewHtml = '<div class="wk-ap-no-review">
+                        <a target="_blank" href="
+                        '.$marketplaceHelper->getRewriteUrl('marketplace/seller/feedback/shop/'.$shopName).'">'.$msg.'
+                        </a></div>';
+                    }
+                }
+            } else {
+                $assignId = 0;
+                $reviewUrl = $newProduct->getProductUrl().'#review-form';
+                $reviewHtml = '<a class="action add" href='.$reviewUrl.'>';
+                $reviewHtml .= __("Be the first to review");
+                $reviewHtml .= "</a>";
+            }
+            $availability = (isset($product['availability'])) ? $product['availability'] : '';
+            $availabilityClass = (isset($product['availabilityClass'])) ? $product['availabilityClass'] : '';
+            $displyAddToCart = (isset($product['displyAddToCart'])) ? $product['displyAddToCart'] : '';
+            $productType = (isset($product['productType'])) ? $product['productType'] : '';
+            if ($productType == "configurable") {
+                $btnLabel = __('Add to Cart');
+                $btnHtml = '<input type="number" class="wk-ap-qty input-text qty" 
+                title="'.__("Qty").'" value="1" maxlength="12" id="qty" name="qty">';
+                $btnHtml .= '<button data-id=
+                "'.$assignId.'" class="wk-ap-add-to-cart action primary tocart" addtocart-url="'.$productUrl.'
+                " title="'.$btnLabel.'" type="button">';
+                $btnHtml .= '<span>'.$btnLabel.'</span>';
+                $btnHtml .= '</button>';
+                $jsonResult = (isset($product['jsonResult'])) ? $product['jsonResult'] : '';
+                $associatedOptions = $jsonResult;
+            }
+            $collectionUrl = (isset($product['collectionUrl'])) ? $product['collectionUrl'] : '';
+            $images = (isset($product['images'])) ? $product['images'] : [];
+            $condition = (isset($product['condition'])) ? $product['condition'] : '';
+            $mainHtml = "";
+            $galleryHtml = "";
+            $galleryCount = 0;
+            $activeGallery = 0;
+            $tmpHtml = "";
+            foreach ($images as $image) {
+                $galleryCount++;
+                $class = "";
+                if ($galleryCount == 1) {
+                    $class = "firstItem";
+                    $tmpHtml .= "<img src='".$image."'>";
+                }
+                if ($image == $product['baseImage']) {
+                    $mainHtml .= "<img src='".$image."'>";
+                    $galleryHtml .= "<div data-id=
+                    '".$galleryCount."' class='wk-ap-product-showcase-gallery-item wk-ap-active ".$class."'>
+                    <img src='".$image."'></div>";
+                    $activeGallery = $galleryCount;
+                } else {
+                    $galleryHtml .= "<div data-id=
+                    '".$galleryCount."' class='wk-ap-product-showcase-gallery-item ".$class."'>
+                    <img src='".$image."'>
+                    </div>";
+                }
+            }
+            if ($mainHtml == "") {
+                $mainHtml = $tmpHtml;
+                $galleryHtml = str_replace("firstItem", "wk-ap-active", $galleryHtml);
+            } else {
+                $galleryHtml = str_replace("firstItem", "", $galleryHtml);
+            }
+            $width = $galleryCount*$itemWidth;
+            if ($activeGallery > 5) {
+                $left = $activeGallery - 5;
+                $left = $left*$itemWidth;
+            } else {
+                $left = 0;
+            }
+            $showNavigation = false;
+            if ($galleryCount > 5) {
+                $showNavigation = true;
+            }
+            ?>
+          <tr style="display:table-row" data-id="<?= /* @noEscape */ $assignId; ?>"
+           product-url="<?= /* @noEscape */$productUrl?>">
+              <td class="col wk-ap-img-col3">
+                  <div class="wk-ap-seller-info">
+                  <?php if ($showProfile && $sellerId): ?>
+                          <a class="wk-ap-shop-link" title="<?= /* @noEscape */ $shopTitle; ?>"
+                           target="_blank" href="<?= /* @noEscape */ $shopUrl; ?>">
+                              <img src="<?= /* @noEscape */ $logo; ?>" />
+                          </a>
+                        <?php else: ?>
+                          <img src="<?= /* @noEscape */ $logo; ?>" />
+                        <?php endif; ?>
+                  </div>
+              </td>
+              <td class="col col wk-ap-img-col2">
+              <?php if ($showProfile): ?>
+                      <?php if ($sellerId): ?>
+                        <span class="wk-ap-shop-title">
+                            <a class="wk-ap-shop-link" title="<?= /* @noEscape */ $shopTitle; ?>"
+                             target="_blank" href="<?= /* @noEscape */ $shopUrl; ?>">
+                                <?= /* @noEscape */ $shopTitle; ?>
+                            </a>
+                        </span>
+                        <span class="wk-ap-shop-products">
+                            <a class="wk-ap-shop-link" target="_blank" href="<?= /* @noEscape */ $collectionUrl; ?>">
+                                <?= /* @noEscape */ __("View Products"); ?>
+                            </a>
+                        </span>
+                    <?php else: ?>
+                      <span class="wk-ap-shop-title">
+                          <span class="wk-ap-shop-link" title="<?= /* @noEscape */ __('Admin'); ?>">
+                              <?= /* @noEscape */ __('Admin'); ?>
+                          </a>
+                      </span>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </td>
+            <?php if ($showProfile): ?>
+                  <td class="col">
+                      <?= /* @noEscape */ $reviewHtml; ?>
+                  </td>
+                <?php endif; ?>
+              <td class="col wk-ap-product-avl"><?= /* @noEscape */ $availability; ?></td>
+              <td class="col wk-ap-info-wrap">
+                  <div class="wk-ap-condition-label <?= /* @noEscape */ "wk-ap-".$condition.$availabilityClass; ?>">
+                  <?= /* @noEscape */ __($condition); ?>
+                  </div>
+                  <div class="wk-ap-product-info">
+                      &#8505;
+                      <div class="wk-ap-product-info-content">
+                      <?= $block->escapeHtml($description); ?>
+                      </div>
+                  </div>
+              <?php if ($galleryCount > 0): ?>
+                      <div class="wk-ap-product-image-panel">
+                          <div class="wk-ap-product-image">
+                              <div class="wk-ap-product-image-inner"></div>
+                          </div>
+                          <div class="wk-ap-product-image-content">
+                              <div class="wk-close mp-assign">
+                                  <span>X</span>
+                              </div>
+                              <div class="wk-ap-product-showcase">
+                                  <div class="wk-ap-product-showcase-main">
+                                      <?= /* @noEscape */ $mainHtml; ?>
+                                  </div>
+                                  <?php if ($galleryCount > 1): ?>
+                                      <div class="wk-ap-product-showcase-gallery">
+                                          <?php if ($showNavigation): ?>
+                                              <div class="wk-ap-gallery-navigation wk-gallery-left">
+                                                  <div class="wk-ap-gallery-navigation-left"></div>
+                                              </div>
+                                            <?php endif; ?>
+                                          <div class="wk-ap-product-showcase-gallery-viewport">
+                                              <div data-count="<?= /* @noEscape */ $galleryCount; ?>" 
+                                              class="wk-ap-product-showcase-gallery-wrap" 
+                                              style="width:<?= /* @noEscape */ $width; ?>px; 
+                                              left:-<?= /* @noEscape */ $left; ?>px;"
+                                              >
+                                                  <?= /* @noEscape */ $galleryHtml; ?>
+                                              </div>
+                                          </div>
+                                          <?php if ($showNavigation): ?>
+                                              <div class="wk-ap-gallery-navigation wk-gallery-right">
+                                                  <div class="wk-ap-gallery-navigation-right"></div>
+                                              </div>
+                                            <?php endif; ?>
+                                      </div>
+                                    <?php endif; ?>
+                              </div>
+                          </div>
+                      </div>
+                    <?php endif; ?>
+              </td>
+              <td class="col">
+                  <span class="wk-ap-product-price"><?= /* @noEscape */ $price; ?></span>
+              </td>
+              <td class="col wk-ap-action-col">
+              <?php if ($displyAddToCart): ?>
+                      <input type="number" class="wk-ap-qty input-text qty" 
+                      title="<?= /* @noEscape */ __('Qty'); ?>" value="1" maxlength="12" 
+                      id="qty" name="qty">
+                      <button data-id="<?= /* @noEscape */ $assignId ?>" 
+                      assign-product-id="<?= /* @noEscape */ $assignProductId?>" 
+                      addtocart-url="<?= /* @noEscape */ $productUrl?>" 
+                      class="wk-ap-add-to-cart action primary tocart" 
+                      title="<?= /* @noEscape */ __('Add to Cart'); ?>" 
+                      type="button">
+                          <span><?= /* @noEscape */ __('Add to Cart'); ?></span>
+                      </button>
+                    <?php endif; ?>
+              </td>
+            <?php if (isset($product['additionalColumnInfo']) && $product['additionalColumnInfo'] != '') { ?>
+                      <td class="col additional-info">
+                          <?= /* @noEscape */ $block->escapeHtml($product['additionalColumnInfo']); ?>
+                      </td>
+                <?php } ?>
+          </tr>
+        <?php endforeach; ?>
+  </table>
+</div>
+    <?php
+    $min = [];
+    $qty = [];
+    if ($productType == "configurable") {
+        foreach ($associatedOptions as $key => $value) {
+            foreach ($value as $id => $options) {
+                if (isset($min[$id])) {
+                    if ($min[$id]>$associatedOptions[$key][$id]['price']) {
+                        $min[$id] = $associatedOptions[$key][$id]['price'];
+                        $qty[$id] = $associatedOptions[$key][$id]['qty'];
+                    }
+                } else {
+                    $min[$id] = $associatedOptions[$key][$id]['price'];
+                    $qty[$id] = $associatedOptions[$key][$id]['qty'];
+                }
+            }
+        }
+    }
+    if ($mainConfigChilds) {
+        foreach ($mainConfigChilds as $key => $value) {
+            $price = $productList->getHelperObject('pricingHelper')
+            ->currency($value['price'], false, false);
+            $mainConfigChilds[$key]['price'] = sprintf('%01.2f', $price);
+            ;
+        }
+    }
+    if ($singleMinPriceConfigProduct) {
+        foreach ($singleMinPriceConfigProduct as $key => $value) {
+            $price = $productList->getHelperObject('pricingHelper')
+            ->currency($value['price'], false, false);
+            $singleMinPriceConfigProduct[$key]['price'] = sprintf('%01.2f', $price);
+        }
+    }
+    ?>
+    <?php
+    $data = [];
+    $data["isConfig"] = $isConfig;
+    $data["productId"] = $productId;
+    $data["formKey"] = $formKey;
+    $data["url"] = $url;
+    $data["dir"] = $dir;
+    $data["defaultUrl"] = $defaultUrl;
+    $data["sortOrder"] = $sortOrder;
+    $data["btnHtml"] = $btnHtml;
+    $data["jsonResult"] = $jsonResult;
+    $data["symbol"] = $symbol;
+    $data["itemWidth"] = $itemWidth;
+    $data['min'] = $min;
+    $data['qty'] = $qty;
+    $data['mainConfigChilds'] = $mainConfigChilds;
+    $data['singleMinPriceConfigProduct'] = $singleMinPriceConfigProduct;
+    $data['customOptionsAvail'] = $customOptionsAvail;
+   
+    $data = json_encode($data);
+    
+    ?>
+  <script type="text/x-magento-init">
+  {
+      "body": {
+          "Webkul_MpAssignProduct/js/assignproduct": <?= /* @noEscape */ $data ?>
+      }
+  }
+  </script>
+<?php endif; ?>

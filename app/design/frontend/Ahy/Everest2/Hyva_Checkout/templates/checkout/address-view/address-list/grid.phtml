@@ -1,0 +1,142 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var Magewire $magewire */
+/** @var AddressSearchResultsInterface $shippingAddressList */
+/** @var AddressInterface $address */
+/** @var HeroiconsOutline $iconsViewModel */
+/** @var Escaper $escaper */
+/** @var AbstractAddressList $addressList */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Customer\Api\Data\AddressInterface;
+use Magento\Customer\Api\Data\AddressSearchResultsInterface;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Hyva\Checkout\Magewire\Checkout\AddressView\ShippingDetails\AddressList as Magewire;
+use Hyva\Checkout\ViewModel\Checkout\AddressView\AbstractAddressList;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+$iconsViewModel = $viewModels->require(HeroiconsOutline::class);
+$addressList = $block->getData('address_list');
+$addressListItems = $addressList->getAddressListItems();
+?>
+
+<?php if ($addressListItems): ?>
+
+
+
+   <div x-data="zipSyncComponent()" x-init="init()"></div>
+
+
+    <div class="address-grid flex grid grid-cols-1 gap-4 lg:grid-cols-2" data-view="grid">
+        <?php foreach ($addressListItems as $address): ?>
+            <div class="address-item group relative rounded-lg bg-gray-100 hover:bg-gray-200"
+                 wire:key="address-<?= /* @noEscape */ $address->getId() ?>"
+                 x-data="{
+                     id: '<?= /* @noEscape */ $address->getId() ?>',
+                     zip: '<?= /* @noEscape */ $address->getPostcode() ?>'
+                 }"
+                 x-bind:class="{ active: id === <?= /* @noEscape */ (int) $magewire->activeAddressEntity ?> }"
+            >
+                <input type="radio"
+                       wire:model="activeAddressEntity"
+                       value="<?=  /* @noEscape */ $address->getId() ?? 0 ?>"
+                       name="<?= $escaper->escapeHtmlAttr('address_' . $addressList->getTypeNamespace()) ?>"
+                       id="<?= $escaper->escapeHtmlAttr($addressList->renderEntityName($address)) ?>"
+                       class="absolute right-4 top-4 w-5 h-5 peer"
+                       data-zip="<?= /* @noEscape */ $address->getPostcode() ?>"
+                       data-region-code="<?= /* @noEscape */ $address->getRegion()?->getRegionCode() ?>"
+
+                       @change="
+                            $dispatch('address-selected', { zip: $el.dataset.zip })
+                        "
+                />
+
+                <label for="<?= $escaper->escapeHtmlAttr($addressList->renderEntityName($address)) ?>"
+                       class="block
+                              h-full
+                              p-4 px-5
+                              space-y-4
+                              cursor-pointer
+                              leading-normal
+                              flex flex-col"
+                >
+                    <span class="h-full">
+                        <?= /* @noEscape */ $addressList->renderAddress($address) ?>
+                    </span>
+
+                    <?php if (!is_numeric($address->getId())): ?>
+                        <div class="toolbar block flex gap-x-4">
+                            <button wire:click="$emitTo('<?= /* @noEscape */ $addressList->getModalAddressFormBlockName() ?>', 'edit')"
+                                    class="rounded-full
+                                           w-9 h-9
+                                           bg-gray-200
+                                           border-0
+                                           flex-shrink-0
+                                           group-hover:bg-gray-300 group-hover:text-gray-600"
+                                    title="<?= $escaper->escapeHtml(__('Edit Address')) ?>"
+                            >
+                                <span class="w-full h-full
+                                             rounded-full
+                                             inline-flex
+                                             items-center justify-center
+                                             hover:text-green-700"
+                                >
+                                    <?= $iconsViewModel->pencilAltHtml('w-5 h-5') ?>
+                                </span>
+                            </button>
+                        </div>
+                    <?php endif ?>
+                </label>
+            </div>
+        <?php endforeach ?>
+    </div>
+<?php endif ?>
+
+
+
+
+<div x-data="zipSyncComponent()" x-init="init()"></div>
+
+<script>
+    function zipSyncComponent() {
+        return {
+            init() {
+                Magewire.hook('element.updated', ({ el }) => {
+                    // Wait for Magewire to fully update DOM
+                    this.updateZip();
+                });
+            },
+
+            updateZip() {
+                // Slight delay to ensure DOM is ready
+                setTimeout(() => {
+                    const selectedRadio = document.querySelector('input[type="radio"][name^="address_"]:checked');
+                    const zip = selectedRadio?.getAttribute('data-zip') || '';
+
+                    const postcodeInput = document.getElementById('input-checkmark-postcode');
+                    if (postcodeInput && postcodeInput.previousElementSibling) {
+                        postcodeInput.previousElementSibling.value = zip;
+                        console.log('%c[Magewire ZIP Sync] Updated ZIP to:', 'color: orange;', zip);
+                    }
+                }, 100); // Delay ensures Magewire DOM updates are complete
+            }
+        }
+    }
+</script>
+
+
+
+
+
+

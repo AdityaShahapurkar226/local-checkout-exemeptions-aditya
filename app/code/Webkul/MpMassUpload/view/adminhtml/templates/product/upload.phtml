@@ -1,0 +1,212 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+    $sampleCsv = $block->getSampleCsv();
+    $sampleXml = $block->getSampleXml();
+    $sampleXls = $block->getSampleXls();
+    /* Get allowed product status */
+    $isSimpleAllowed = $block->isProductTypeAllowed('simple');
+    $isVirtualAllowed = $block->isProductTypeAllowed('virtual');
+    $isDownloadableAllowed = $block->isProductTypeAllowed('downloadable');
+    $isConfigurableAllowed = $block->isProductTypeAllowed('configurable');
+
+    $attributeProfilesCollection = $block->getAttributeProfiles($flag = 1);
+    $noMatchingProfileMsg = __('No matching Profile Found');
+?>
+<div class="wk-mu-sample-files">
+    <table style="width: 100%;">
+        <tr>
+            <?php if ($isSimpleAllowed) { ?>
+                <td style="padding: 5px;">
+                    <a href="<?= $block->escapeHtml($sampleCsv[0]); ?>">
+                        <?= $block->escapeHtml(__("Sample Simple Type Csv File")); ?>
+                    </a>
+                </td>
+            <?php } ?>
+            <?php if ($isDownloadableAllowed) { ?>
+                <td style="padding: 5px;">
+                    <a href="<?= $block->escapeHtml($sampleCsv[1]); ?>">
+                        <?= $block->escapeHtml(__("Sample Downloadable Type Csv File")); ?>
+                    </a>
+                </td>
+            <?php } ?>
+            <?php if ($isConfigurableAllowed) { ?>
+                <td style="padding: 5px;">
+                    <a href="<?= $block->escapeHtml($sampleCsv[2]); ?>">
+                        <?= $block->escapeHtml(__("Sample Configurable Type Csv File")); ?>
+                    </a>
+                </td>
+            <?php } ?>
+            <?php if ($isVirtualAllowed) { ?>
+                <td style="padding: 5px;">
+                    <a href="<?= $block->escapeHtml($sampleCsv[3]); ?>">
+                        <?= $block->escapeHtml(__("Sample Virtual Type Csv File")); ?>
+                    </a>
+                </td>
+            <?php } ?>
+        </tr>
+        <tr>
+            <?php if ($isSimpleAllowed) { ?>
+                <td style="padding: 5px;">
+                    <a href="<?= $block->escapeHtml($sampleXml[0]); ?>">
+                        <?= $block->escapeHtml(__("Sample Simple Type XML File")); ?>
+                    </a>
+                </td>
+            <?php } ?>
+            <?php if ($isDownloadableAllowed) { ?>
+                <td style="padding: 5px;">
+                    <a href="<?= $block->escapeHtml($sampleXml[1]); ?>">
+                        <?= $block->escapeHtml(__("Sample Downloadable Type XML File")); ?>
+                    </a>
+                </td>
+            <?php } ?>
+            <?php if ($isConfigurableAllowed) { ?>
+                <td style="padding: 5px;">
+                    <a href="<?= $block->escapeHtml($sampleXml[2]); ?>">
+                        <?= $block->escapeHtml(__("Sample Configurable Type XML File")); ?>
+                    </a>
+                </td>
+            <?php } ?>
+            <?php if ($isVirtualAllowed) { ?>
+                <td style="padding: 5px;">
+                    <a href="<?= $block->escapeHtml($sampleXml[3]); ?>">
+                        <?= $block->escapeHtml(__("Sample Virtual Type XML File")); ?>
+                    </a>
+                </td>
+            <?php } ?>
+        </tr>
+        <tr>
+            <?php if ($isSimpleAllowed) { ?>
+                <td style="padding: 5px;">
+                    <a href="<?= $block->escapeHtml($sampleXls[0]); ?>">
+                        <?= $block->escapeHtml(__("Sample Simple Type XLS File")); ?>
+                    </a>
+                </td>
+            <?php } ?>
+            <?php if ($isDownloadableAllowed) { ?>
+                <td style="padding: 5px;">
+                    <a href="<?= $block->escapeHtml($sampleXls[1]); ?>">
+                        <?= $block->escapeHtml(__("Sample Downloadable Type XLS File")); ?>
+                    </a>
+                </td>
+            <?php } ?>
+            <?php if ($isConfigurableAllowed) { ?>
+                <td style="padding: 5px;">
+                    <a href="<?= $block->escapeHtml($sampleXls[2]); ?>">
+                        <?= $block->escapeHtml(__("Sample Configurable Type XLS File")); ?>
+                    </a>
+                </td>
+            <?php } ?>
+            <?php if ($isVirtualAllowed) { ?>
+                <td style="padding: 5px;">
+                    <a href="<?= $block->escapeHtml($sampleXls[3]); ?>">
+                        <?= $block->escapeHtml(__("Sample Virtual Type XLS File")); ?>
+                    </a>
+                </td>
+            <?php } ?>
+        </tr>
+    </table>
+</div>
+<?php if ($isDownloadableAllowed) {
+    $row = "<div
+        id='link_file'
+        class='admin__field field field-link_file  required _required' 
+        data-ui-id='adminhtml-upload-upload-0-form-fieldset-element-form-field-link-file'
+        >
+        <label
+        for='link_files'
+        class='label admin__field-label'
+        data-ui-id='adminhtml-upload-upload-0-form-fieldset-element-file-link-file-label'>
+        <span>";
+    $row .= __("Upload Link Files zip");
+    $row .="</span></label>
+        <div class='admin__field-control control'>
+            <input type='file' data-validate='{required:true}'
+            class='input-text required-entry _required'
+            title='Upload Link Files'
+            name='link_files'
+            id='link_files'
+            aria-required='true'
+            data-ui-id='adminhtml-upload-upload-0-form-fieldset-element-file-link-file'>
+        </div></div>";
+
+    $row .= "<div id='is_link_sample'class='admin__field field field-is_link_samples'>
+        <label
+        for='is_link_samples'
+        class='label admin__field-label'
+        data-ui-id='adminhtml-upload-upload-0-form-fieldset-element-file-is-link-samples-label'>
+        <span>";
+    $row .= __("Is Links have samples");
+    $row .="</span></label><div class='admin__field-control control'>
+        <input type='checkbox'
+        class='input-text'
+        name='is_link_samples'
+        id='is_link_samples'
+        data-ui-id='adminhtml-upload-upload-0-form-fieldset-element-file-is-samples'>
+        </div></div>";
+    $row .= "<div id='is_sample' class='admin__field field field-is_samples'>
+        <label for='is_samples'
+        class='label admin__field-label'
+        data-ui-id='adminhtml-upload-upload-0-form-fieldset-element-file-is-samples-label'>
+        <span>";
+    $row .= __("Is Samples Available");
+    $row .="</span></label><div class='admin__field-control control'>
+    <input type='checkbox'
+    class='input-text'
+    name='is_samples'
+    id='is_samples' 
+    data-ui-id='adminhtml-upload-upload-0-form-fieldset-element-file-is-samples'>
+    </div></div>";
+
+    $linkSampleRow = "<div id='link_sample_file' class='admin__field field field-link_sample_file  required _required'>
+        <label for='link_sample_files' class='label admin__field-label'>
+        <span>";
+    $linkSampleRow .= __("Upload Link Sample Files zip");
+    $linkSampleRow .="</span></label><div class='admin__field-control control'>
+        <input type='file'
+        data-validate='{required:true}'
+        class='input-text required-entry'
+        title='Upload Link Files'
+        name='link_sample_files'
+        id='link_sample_files'
+        aria-required='true' 
+        data-ui-id='adminhtml-upload-upload-0-form-fieldset-element-file-link-sample-files'>
+        </div></div>";
+
+    $sampleRow = "<div id='sample_file' class='admin__field field field-sample_file  required _required'>
+        <label for='sample_files' class='label admin__field-label'><span>";
+    $sampleRow .= __("Upload Sample Files zip");
+    $sampleRow .="</span></label><div class='admin__field-control control'>
+    <input type='file'
+    data-validate='{required:true}'
+    class='input-text required-entry'
+    title='Upload Link Files'
+    name='sample_files'
+    id='sample_files' aria-required='true'></div></div>";
+    $data = [
+        "row" => $row,
+        "linkSampleRow" => $linkSampleRow,
+        "sampleRow" => $sampleRow,
+        "attributeProfilesCollection" => $attributeProfilesCollection->getData(),
+        "noMatchingProfileMsg" => $noMatchingProfileMsg
+    ];
+    $data = $block->jsonEncode($data);
+    ?>
+    <script type="text/x-magento-init">
+        {
+            "body": {
+                "Webkul_MpMassUpload/js/upload": <?= /* @noEscape */ $data ?>
+            }
+        }
+    </script>
+    <?php
+} ?>

@@ -1,0 +1,288 @@
+<?php
+declare(strict_types=1);
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Hyva_BssProductStockAlert
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2022 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+
+use Bss\ProductStockAlert\Block\Product\View\Stock;
+use Magento\Framework\Escaper;
+
+/** @var $escaper Escaper */
+/** @var $block Stock */
+$productId = $block->getProductId();
+?>
+<script type="text/javascript">
+    'use strict';
+
+    function validateEmail (email) {
+        let value = email,
+            isNotEmpty = !(value === '' || value == null || value.length === 0 || /^\s+$/.test(value));
+
+        if (!isNotEmpty) {
+            throw new Error("<?= $escaper->escapeJs(__("Email is required!")) ?>");
+        }
+        let isValidEmail = /^([a-z0-9,!\#\$%&'\*\+\/=\?\^_`\{\|\}~-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z0-9,!\#\$%&'\*\+\/=\?\^_`\{\|\}~-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*@([a-z0-9-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z0-9-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*\.(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]){2,})$/i.test(value);
+        if (!isValidEmail) {
+            throw new Error("<?= $escaper->escapeJs(__("Email is not valid!")) ?>");
+        }
+    }
+
+    function stockAlertSubmit(elem) {
+        let button;
+        if (elem.tagName !== 'BUTTON') {
+            button = elem.closest('button');
+        } else {
+            button = elem;
+        }
+        let form = button.closest('form.stockalert-form'),
+            messageDiv = form.parentElement.querySelector('#stock-alert-validate-message'),
+            emailInput = button.closest('.bss_productstockalert').querySelector('input'),
+            emailValue = emailInput.value;
+        try {
+            emailInput.setCustomValidity('');
+            validateEmail(emailValue);
+        } catch (e) {
+            messageDiv.innerHTML = e.message;
+            return false;
+        }
+        form.submit();
+    }
+
+    function initStockAlert<?= $escaper->escapeJs($productId) ?>() {
+        return {
+            hasEmail: false,
+            formData: [],
+            mergeObject(obj1, obj2) {
+                let objClone = JSON.parse(JSON.stringify(obj1));
+                for (let value in obj2) {
+                    objClone[value] =  obj2[value];
+                }
+                return objClone;
+            },
+            renderStockAlert() {
+                let formDataActionUrl = '<?php echo $block->getFormDataActionUrl() ?>';
+                fetch(formDataActionUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                }).then((response) => responseSerialize(response))
+                    .then(response => {
+                        this.formData = this.processFormDataResponse(response);
+                    })
+                    .catch(error => {
+                        console.log('Error:', error);
+                    });
+            },
+            processFormDataResponse (res) {
+                this.productType = res.type;
+                const productData = res.product_data, dataRender = [];
+                // Simple product
+                // Has only 1 sub array, so get first item for data
+                if (this.productType === 'simple') {
+                    let cleanDataResponse = {...res},
+                        firstKey = Object.keys(productData)[0];
+                    delete cleanDataResponse['product_data'];
+                    dataRender.push(this.mergeObject(cleanDataResponse, productData[firstKey]));
+                    this.hasEmail = dataRender[0].has_email;
+                    return dataRender;
+                } else {
+                    let cleanDataResponse = {...res};
+                    delete cleanDataResponse['product_data'];
+                    for (const key in productData) {
+                        dataRender.push(this.mergeObject(cleanDataResponse, productData[key]));
+                    }
+                    return dataRender;
+                }
+            },
+            selectionChange(productId) {
+                let buttonAddToCart = document.querySelector('button[form]'),
+                    buyNowButton = document.getElementById('ahy-buy-now-button'),
+                    paypalButton = document.getElementsByClassName('paypalInContextPDP-ahy')[0],
+                    status = document.querySelector('[title="Availability"] span'),
+                    statusText = document.querySelectorAll('[title="Availability"] span')[1];
+                    if (document.querySelector('[data-product="' + productId + '"]')) {
+                    document.querySelectorAll('.block-stockalert').forEach(function (e) {
+                        if (e.getAttribute('data-product') === productId) {
+                            document.querySelector('[data-product="' + productId + '"]').classList.remove('hidden');
+                            buttonAddToCart.disabled = true;
+                            buttonAddToCart.classList.add('pointer-events-none', 'opacity-50');
+                            buyNowButton.disabled = true;
+                            paypalButton.disabled = true;
+                            buyNowButton.classList.add('pointer-events-none', 'opacity-50');
+                            paypalButton.classList.add('pointer-events-none', 'opacity-50');
+                            status.classList.remove('bg-green-500');
+                            status.classList.add('bg-red-500');
+                            statusText.innerHTML = '<?= $block->escapeJs(__('Out of stock')) ?>';
+                        } else {
+                            e.classList.add('hidden');
+                        }
+                    });
+                } else {
+                    buttonAddToCart.disabled = false;
+                    buyNowButton.disabled = false;
+                    paypalButton.disabled = false;
+                    buttonAddToCart.classList.remove('pointer-events-none', 'opacity-50');
+                    buyNowButton.classList.remove('pointer-events-none', 'opacity-50');
+                    paypalButton.classList.remove('pointer-events-none', 'opacity-50');
+                    status.classList.remove('bg-red-500');
+                    status.classList.add('bg-green-500');
+                    statusText.innerHTML = '<?= $block->escapeJs(__('In stock')) ?>';
+                    document.querySelectorAll('.block-stockalert').forEach(e => e.classList.add('hidden'));
+                }
+            },
+            moveElement(elem) {
+                if (this.productType !== 'grouped' && this.productType !== 'bundle') {
+                    return;
+                }
+                let elemType = elem.getAttribute('data-option-type');
+                let cloneElem = elem.cloneNode(true);
+                this.removeAttrClone(cloneElem);
+                if (this.productType === 'bundle') {
+                    if (elemType !== 'multi' && elemType !== 'select') {
+                        let prodId = elem.getAttribute('data-product'),
+                            destination = document.querySelector('#stock-notice-elem-bundle-' + prodId);
+                        destination.appendChild(cloneElem);
+                        cloneElem.classList.remove('hidden');
+                        destination.previousElementSibling.querySelector('input').classList.add('opacity-30');
+                    } else if (elemType === 'select') {
+                        let prodId = elem.getAttribute('data-option');
+                        document.querySelector('#stock-notice-elem-bundle-select-' + prodId).appendChild(cloneElem);
+                    } else {
+                        return;
+                    }
+                }
+                if (this.productType === 'grouped') {
+                    cloneElem.classList.remove('hidden');
+                    let prodId = elem.getAttribute('data-product');
+                    document.querySelector('#stock-notice-elem-grouped-' + prodId).appendChild(cloneElem);
+                }
+            },
+            removeAttributes(element, ...attrs) {
+                attrs.forEach(attr => element.removeAttribute(attr))
+            },
+            removeAttrClone(element) {
+                this.removeAttributes(element, ':class', ':data-product', ':data-option', ':data-option-type');
+                this.removeAttributes(element.querySelector('strong'), 'x-text');
+                this.removeAttributes(element.querySelector('form'), ':action');
+                this.removeAttributes(element.querySelector('button'), ':disabled', ':style');
+                this.removeAttributes(element.querySelector('span'), 'x-text', ':style');
+                if (element.querySelector('label')) {
+                    this.removeAttributes(element.querySelector('label'), 'x-text');
+                };
+                element.querySelectorAll('input').forEach(e => this.removeAttributes(e, ':value', 'x-ref', ':id'));
+                element.querySelectorAll('template').forEach(e => this.removeAttributes(e, 'x-if'));
+                element.querySelectorAll('div').forEach(e => this.removeAttributes(e, 'x-ref', 'x-show', 'x-bind', ':class', ':data-product', ':data-option-type', ':data-option'));
+            },
+            bindDocumentEvent() {
+                if (this.productType === 'bundle') {
+                    var bundleSelect = document.querySelectorAll('.bundle-option-select');
+                    if (bundleSelect.length) {
+                        bundleSelect.forEach(function (e) {
+                            e.addEventListener('change', function () {
+                                var selectedOption = e.querySelector('[value="' + e.value + '"]');
+                                var titleDiv = e.parentElement.querySelector('[title]').childNodes;
+                                if (titleDiv.length !== 0) {
+                                    for (let i = 0; i < titleDiv.length; ++i) {
+                                        if (titleDiv[i].getAttribute('data-product') === selectedOption.getAttribute('data-product')) {
+                                            titleDiv[i].classList.remove('hidden');
+                                        } else {
+                                            titleDiv[i].classList.add('hidden');
+                                        }
+                                    }
+                                }
+                            })
+                        })
+                    }
+                }
+            }
+        }
+    }
+</script>
+<div id="product_stock_alert_container"
+     x-data="initStockAlert<?= $escaper->escapeJs($productId) ?>()"
+     x-init="renderStockAlert()"
+     class=""
+     @configurable-selection-changed.window="selectionChange($event.detail.productIndex)"
+>
+    <template x-if="formData !== undefined && !window.isObjectEmpty(formData)">
+        <div>
+            <template x-for="item in formData">
+                <div class="stockalert block-stockalert w-full mb-4 mt-6 pb-4"
+                     x-ref="moveElem"
+                     :class="productType !== 'simple' ? 'hidden' : ''"
+                     :data-product="item.product_id" :data-option="item.option_id"
+                     :data-option-type="item.option_type"
+                >
+                    <!-- <div class="title" data-role="title">
+                        <strong class="block-stockalert-heading" role="heading" aria-level="2"
+                                x-text="item.title"></strong>
+                    </div> -->
+
+                    <div class="content form-container" data-role="content" aria-labelledby="block-stockalert-heading">
+                        <template x-if="!item.has_email">
+                            <form class="stockalert-form" :action="item.form_action" method="post" x-ref="form">
+                                <input type="hidden" name="product" :value="item.product_id">
+                                <input type="hidden" name="form_key" :value="item.form_key">
+                                <input type="hidden" name="parent_id" :value="item.parent_id">
+                                <div class="bss_productstockalert applied flex gap-4 flex-col">
+                                    <div class="w-full">
+                                        <label x-text="item.label" class="mb-0"></label>
+                                        <div class="control">
+                                            <input type="text"
+                                                   required
+                                                   :id="'email-' + item.product_id"
+                                                   class="stockalert_email border border-[#d1d1d1] focus:border-ahy-blue rounded-none p-4 w-full text-base"
+                                                   name="stockalert_email"
+                                                   placeholder="<?= $escaper->escapeHtml(__('Enter Your Email Address')); ?>">
+                                        </div>
+                                    </div>
+                                    <button class="w-full action btn hover:!bg-ahy-blue-light notify add-notice-email focus:ring-transparent  gap-2 justify-center md:px-3 rounded-full p-4 text-base"
+                                            type="button" value="<?= $escaper->escapeHtml(__('Notify me')); ?>"
+                                            :style="`background-color: ${item.button_style}`" @click="stockAlertSubmit($event.target)">
+                                        <span :style="`color:${item.button_text_color}`" x-text="item.button_text"
+                                              class="button-text font-bold md:text-sm lg:text-base"></span>
+                                    </button>
+                                </div>
+                            </form>
+                        </template>
+                        <template x-if="item.has_email">
+                            <form class="stockalert-form" :action="item.form_action_cancel" method="post">
+                                <input type="hidden" name="product" :value="item.product_id">
+                                <input type="hidden" name="form_key" :value="item.form_key">
+                                <input type="hidden" name="parent_id" :value="item.parent_id">
+                                <div class="bss_productstockaler">
+                                    <button type="submit"
+                                            class="action cancel btn btn-primary w-full lg:w-[25rem] p-4 focus:ring-transparent justify-center gap-2"
+                                            value="<?= $escaper->escapeHtmlAttr(__('Stop notify')) ?>"
+                                            :style="`background-color: ${item.button_style}`">
+                                        <span :style="`color: ${item.button_text_color}`"
+                                              class="button-text uppercase font-bold md:text-sm lg:text-normal"
+                                              x-text="item.button_text_cancel"></span>
+                                    </button>
+                                </div>
+                            </form>
+                        </template>
+                        <div id="stock-alert-validate-message" class="text-red-500 font-bold"></div>
+                    </div>
+                    <div x-bind="$nextTick(() => bindDocumentEvent()), moveElement($refs.moveElem) "></div>
+                </div>
+            </template>
+        </div>
+    </template>
+</div>
+

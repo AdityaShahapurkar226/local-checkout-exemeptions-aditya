@@ -1,0 +1,110 @@
+<?php /** @var Klevu\FrontendJs\Block\Template $block */ ?>
+<!-- custom version of the klevuLandingTemplatePagination template -->
+<script type="template/klevu" id="ahyKlevuLandingTemplatePagination">
+    <% if(data.query[dataLocal].result.length > 0 ) { %>
+        <%
+            var productListLimit = data.query[dataLocal].meta.noOfResults;
+            var productListTotal = data.query[dataLocal].meta.totalResultsFound - 1;
+            var totalPages;
+            if (productListTotal === 0) {
+                totalPages = 1;
+            } else {
+                totalPages = Math.ceil(productListTotal / productListLimit);
+            }
+            var kuCurrentPageNumber = Math.ceil(data.query[dataLocal].meta.offset/productListLimit)+1;
+            var options = '';
+            for (var i = 1; i <= totalPages; i++) {
+                if (i === kuCurrentPageNumber) {
+                    options += `<div class="flex pagination-number-ui py-3 border-b "><a href="javascript:void(0)" class="kuCurrent !text-ahy-blue">Page ${i}</a></div>`;
+                } else {
+                    options += `<div class="flex pagination-number-ui py-3 border-b "><a target="_self" href="javascript:void(0)" class="!text-ahy-blue klevuPaginate" data-offset="${(productListLimit)*(i-1)}">Page ${i}</a></div>`;
+                }
+            };
+        %>
+
+        <div class="kuPagination flex justify-center items-center gap-8 sm:gap-12 !pt-8 !mt-8">
+
+            <!-- // Code for left arrow cirlce -->
+            <a target="_self" href="javascript:void(0)" class="klevuPaginate"
+                <% if(kuCurrentPageNumber == 1) { %>
+                    disabled="disabled"
+                <% } else { %>
+                    data-offset="<%=(data.query[dataLocal].meta.offset-productListLimit)%>"
+                <% } %>
+            >
+                <button aria-label="Previous" tabindex="-1" class="bg-white pointer-events-none shadow-xl rounded-full flex items-center justify-center h-12 w-12">
+                    <img src="/media/icons/arrow-nav.svg" class="w-6 rotate-90 mr-1" alt="Scroll Previous" >
+                </button>
+            </a>
+
+            <div x-data="{ open: false }" class="relative inline-block !leading-none">
+            	<a href="javascript:void(0)"
+            		class="block hover:text-black flex items-center transition duration-300 ease-in-out"
+            		@click.prevent="open = true; console.log('clicked on the pagination toggle btn')"
+                    @change="console.log('clicked on the pagination toggle btn')"
+            		:aria-expanded="open ? 'true' : 'false'"
+            		aria-label="pagination"
+            	>
+            		<div class="contact-us-header-content text-ahy-blue">
+            			<button class="flex w-full font-bold justify-center items-center leading-none transition duration-300 ease-in-out">
+            				<span>Page <%=kuCurrentPageNumber %> of <%=totalPages %></span> <span class="transition duration-300 ease-in-out p-1 pr-2 pl-2 ml-2 bg-[url('/media/icons/arrow-nav.svg')] bg-contain bg-no-repeat bg-center" :class="{ 'rotate-180': open }"></span>
+            			</button>
+            		</div>
+            	</a>
+                <svg class="transition text-ahy-blue duration-300 mt-3 translate-x-8 transform ease-in-out absolute z-10 w-10 h-6 fill-current stroke-current" x-show="open" width="8" height="8">
+                    <rect x="14" y="-10" width="35" height="35" transform="rotate(45)" />
+                </svg>
+            	<nav
+            		class="transition duration-300 ease-in-out absolute right-0 z-20 w-40 ahy-swipeable max-h-52 border-t-2 border-ahy-blue left-[-30px] top-5 pt-4 px-4 overflow-auto origin-top-right rounded-sm shadow-lg mt-6 bg-white"
+            		x-show="open"
+            		@click.outside="open = false"
+            		aria-labelledby="panigination-number"
+            	>
+                    <%=options%>
+            	</nav>
+            </div>
+
+            <!-- // Code for Right arrow cirlce -->
+
+            <a target="_self" href="javascript:void(0)" class="klevuPaginate"
+                <% if(kuCurrentPageNumber == totalPages) { %>
+                    disabled="disabled"
+                <% } else { %>
+                    data-offset="<%=(data.query[dataLocal].meta.offset+productListLimit)%>"
+                <% } %>
+            >
+                <button aria-label="Next" tabindex="-1" class="bg-white pointer-events-none shadow-xl rounded-full flex items-center justify-center h-12 w-12">
+                    <img src="/media/icons/arrow-nav.svg" class="w-6 rotate-[270deg] ml-1" alt="Scroll Next">
+                </button>
+            </a>
+        </div>
+    <% } %>
+</script>
+<style media="screen">
+    .ahy-swipeable {
+        scrollbar-width: thin;
+        scrollbar-color: #0d2f47 #efeadd;
+    }
+
+    .ahy-swipeable::-webkit-scrollbar {
+        width: 5px;
+        background-color: #efeadd;
+        border-radius: 17px;
+    }
+
+    .ahy-swipeable::-webkit-scrollbar-thumb {
+        background-color: #0d2f47;
+        border-radius: 17px;
+    }
+
+    .ahy-swipeable{
+        filter: drop-shadow(0px 0 11px rgba(13, 47, 71, 0.5));
+    }
+    @media screen and (max-width: 767px){
+        .catalog-category-view .columns,
+        .search-index-index .columns{
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+    }
+</style>

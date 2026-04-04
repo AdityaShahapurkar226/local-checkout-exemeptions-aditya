@@ -1,0 +1,113 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Magento\Catalog\Block\Product\View as ProductView;
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var ProductView $block */
+
+$product = $block->getProduct();
+?>
+<?php if ($product->isSaleable() && $block->hasOptions()): ?>
+<div id="bundleSummary"
+     class="w-full block-bundle-summary card">
+    <div class="mb-2 title">
+        <h3 class="w-full text-2xl leading-relaxed text-left text-gray-900 border-b title-font font-base
+                   border-container">
+            <?= $escaper->escapeHtml(__('Your Customization')) ?>
+        </h3>
+    </div>
+    <div class="content">
+        <div class="bundle-info">
+            <div class="product-details">
+                <h3 class="text-lg font-semibold product-name">
+                    <?= $escaper->escapeHtml($product->getName()) ?>
+                </h3>
+
+                <?= $block->getChildHtml('product.info.form') ?>
+
+                <?= $block->getChildHtml("product.info.bundle.price") ?>
+
+                <?php if ($product->isSaleable()): ?>
+                    <div class="flex flex-col md:flex-row justify-between my-4 sm:mt-0 lg:justify-start">
+                        <?= $block->getChildHtml("product.info.quantity") ?>
+                        <?= $block->getChildHtml("product.info.addtocart") ?>
+                    </div>
+                    <div class="flex my-4 sm:mt-0">
+                        <?= $block->getChildHtml("addtocart.shortcut.buttons") ?>
+                    </div>
+                <?php endif; ?>
+
+            </div>
+
+            <div class="py-4 my-2 tier-price-container">
+                <?= $block->getChildHtml("product.price.tier") ?>
+            </div>
+
+        </div>
+        <div x-data="initBundleSummary()"
+             x-bind="eventListeners"
+             class="bundle-summary"
+        >
+            
+            <div x-show="isProductSelected">
+                <div class="mb-2 w-full text-2xl leading-relaxed text-left text-gray-900 border-b subtitle title-font
+                            font-base border-container">
+                    <?= $escaper->escapeHtml(__('Your Customized Collection')) ?>
+                </div>
+                <div>
+                    <ul class="bundle items">
+                        <template x-for="option in selectedOptions">
+                            <li class="mb-2" x-show="option.products.length">
+                                <span class="text-base font-semibold" x-html="option.label"></span>
+                                <template x-for="product in option.products">
+                                    <div>
+                                        <span x-html="product.qty"></span> x <span x-html="product.name"></span>
+                                    </div>
+                                </template>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <script>
+            function initBundleSummary() {
+                return {
+                    selectedOptions: [],
+                    isProductSelected: false,
+                    eventListeners: {
+                        ['@update-bundle-option-selection.window'](event) {
+                            this.selectedOptions = event.detail;
+                            this.showSelectedProduct();
+                        }
+                    },
+                    showSelectedProduct() {
+                        selectedProductLength = [];
+                        let result = 0;
+                        this.selectedOptions.forEach((item, index) => {
+                            const productLength = item.products.length;
+                            selectedProductLength[index] = productLength;
+                            if (productLength > 0 && result === 0) {
+                                result = productLength;
+                            }
+                        });
+                        this.isProductSelected = (result > 0) ? true : false;
+
+                        return this.isProductSelected;
+                    }
+
+                }
+            }
+        </script>
+    </div>
+</div>
+<?php endif; ?>

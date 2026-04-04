@@ -1,0 +1,650 @@
+<?php
+/**
+ * PDP Cart Carousel
+ * Horizontal scrollable cart items strip.
+ * - Appears whenever cart has items (persists on reload)
+ * - Drag to scroll (pointer events)
+ * - Shift + scroll wheel
+ * - Prev / Next arrow buttons
+ * - Stepper per card (same logic as cart drawer)
+ * - Delete item from carousel removes from cart
+ */
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+$galleryMap = $block->getGalleryMap();
+?>
+
+<div
+    x-data="pdpCartCarousel()"
+    x-init="init()"
+    @private-content-loaded.window="onSectionLoad($event.detail.data)"
+    x-show="cartItems.length > 0"
+    class="pdp-cc-root w-full py-4"
+>
+    <!-- Header -->
+    <div class="flex items-center justify-center ml-2 mb-3 px-2">
+        <div class="flex items-center gap-2">
+                <span class="block text-ahy-blue page-title !font-extrabold title-font uppercase text-3xl lg:text-3xl">
+                    <?= $escaper->escapeHtml(__('Your Cart is waiting')) ?>
+                </span>
+        </div>
+    </div>
+
+    <!-- Scroll track -->
+    <div
+        class="pdp-cc-track"
+        x-ref="track"
+        @wheel="onWheel($event)"
+        @pointerdown="dragStart($event)"
+        @pointermove="dragMove($event)"
+        @pointerup="dragEnd($event)"
+
+        @scroll="onScroll()"
+    >   
+        <template x-for="(item, index) in cartItems" :key="item.item_id">
+            <a
+        :href="item.product_url"
+                class="pdp-cc-card"
+                @click="onCardClick($event)"
+                draggable="false"
+            >
+                <!-- Image area -->
+                <div class="pdp-cc-img-wrap">
+                    <img
+                        :src="getProductImage(item)"
+                        :alt="item.product_name"
+                        class="pdp-cc-img"
+                        width="160"
+                        height="160"
+                        loading="lazy"
+                        draggable="false"
+                    />
+                </div>
+
+                <!-- Info area -->
+                <div class="pdp-cc-info">
+                    <!-- Name -->
+                    <p class="pdp-cc-name" x-html="item.product_name"></p>
+                         <span class="pdp-cc-qty py-1" x-text="'Qty : ' + item.qty"></span>
+                    <!-- Price -->
+                    <div class="pdp-cc-price-row">
+                        <span class="pdp-cc-price"
+                              x-text="formatPrice(item.product_price_value * item.qty)">
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </template>
+    </div>
+
+    <!-- Scrollbar -->
+    <div class="pdp-cc-progress-wrap" x-show="cartItems.length > 1">
+        <div class="pdp-cc-progress-bar" :style="'width:' + progressPct + '%'"></div>
+    </div>
+
+    <!-- Checkout CTA -->
+   <div class="mt-5 px-1 flex items-center justify-center">
+        <a
+        href="<?= $escaper->escapeUrl($block->getUrl('checkout')) ?>"
+            class="pdp-cc-checkout-btn"
+        >
+            <?= $escaper->escapeHtml(__('Checkout Now')) ?>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+        </a>
+    </div>
+</div>
+
+<style>
+    [x-cloak] { display: none !important; }
+
+    .pdp-cc-root {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .pdp-cc-root .page-title {
+    font-size: clamp(1.2rem, 4vw, 1.875rem);
+    white-space: nowrap;
+    }
+    /* Arrow buttons */
+    .pdp-cc-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        border: 1.5px solid #0d2f47;
+        color: #0d2f47;
+        background: transparent;
+        transition: background 0.15s, color 0.15s, border-color 0.15s;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+
+    .pdp-cc-top-row {
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+    }
+
+    .pdp-cc-delete-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 1.5px solid #e5e7eb;
+        background: transparent;
+        color: #9ca3af;
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s, border-color 0.15s;
+        padding: 0;
+        flex-shrink: 0;
+    }
+    
+    .pdp-cc-delete-btn:hover {
+        background: #fee2e2;
+        color: #dc2626;
+        border-color: #dc2626;
+    }
+        .    {
+        font-size: 10px;
+        font-weight: 600;
+        color: #9ca3af;
+        line-height: 1;
+        align-self: flex-start;
+        padding-bottom: 1px;
+    }
+
+    /* Scroll track */
+    .pdp-cc-track {
+        display: flex;
+        gap: 4px;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: thin;
+        scrollbar-color: #0d2f47 #e5e7eb;
+        cursor: default;
+        user-select: none;
+        -webkit-overflow-scrolling: touch;
+        padding: 0px 0px 8px;
+    }
+
+    .pdp-cc-track::before,
+    .pdp-cc-track::after {
+        content: '';
+        margin: auto;
+    }
+    .pdp-cc-track.is-centered {
+        justify-content: center;
+        gap: 24px; 
+        padding: 0px 24px 8px; 
+    }
+
+    .pdp-cc-track.is-dragging,
+    .pdp-cc-track.is-dragging .pdp-cc-card,
+    .pdp-cc-track.is-dragging .pdp-cc-img-wrap img {
+        cursor: grabbing;
+    }
+    .pdp-cc-track::-webkit-scrollbar {
+        height: 4px;
+    }
+    .pdp-cc-track::-webkit-scrollbar-track {
+        background: #e5e7eb;
+        border-radius: 4px;
+    }
+    .pdp-cc-track::-webkit-scrollbar-thumb {
+        background: #0d2f47;
+        border-radius: 4px;
+    }
+    .pdp-cc-track.is-dragging { cursor: grabbing; scroll-behavior: auto; }
+
+    /* Card */
+    .pdp-cc-card {
+        flex: 0 0 180px;
+        min-width: 200px;
+        min-height: auto;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        cursor: default;  
+        background: #fff; 
+        text-decoration: none;
+        color: inherit;
+        transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    /* Image */
+    .pdp-cc-img-wrap {
+        width: 97%;
+        height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex-shrink: 0;
+        padding-left: 10px;
+        cursor: pointer;
+    }
+
+    .pdp-cc-img-wrap img { cursor: pointer; }
+
+    .pdp-cc-img {
+        width: 200px;
+        height: 200px;
+        object-fit: contain;
+        padding: 8px;
+        /* pointer-events: none; */
+        user-select: none;
+        -webkit-user-drag: none;
+    }
+
+    /* Info */
+    .pdp-cc-info {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        padding: 8px 8px 10px;
+        flex: 1;
+        /* min-height: 0; */
+         justify-content: center;
+    }
+
+    .pdp-cc-options {
+        font-size: 10px;
+        color: #9ca3af;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0;
+        padding: 0;
+    }
+
+    .pdp-cc-name {
+        font-size: 14px;
+        font-weight: 700;
+        color: #0d2f47;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        white-space: normal; /* ← was nowrap, must change to normal for multiline */
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        /* min-height: calc(14px * 1.4 * 2); 2 lines × font-size × line-height */
+        line-height: 1.4;
+    }
+
+    .pdp-cc-qty {
+    font-size: 12px;
+    font-weight: 600;
+    color: #9ca3af;
+    line-height: 1;
+    align-self: flex-start;
+    padding-bottom: 1px;
+    }       
+
+    .pdp-cc-price-row {
+        display: flex;
+        align-items: baseline;
+        gap: 3px;
+        margin-top: 8px;
+    }
+
+    .pdp-cc-price {
+        font-size: 14px;
+        font-weight: 800;
+        color: #0d2f47;
+        line-height: 1;
+    }
+
+    /* Stepper */
+    .pdp-cc-stepper-wrap {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1.5px solid #0d2f47;
+        border-radius: 999px;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .pdp-cc-stepper-btn {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: #0d2f47;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s;
+        flex-shrink: 0;
+    }
+    .pdp-cc-stepper-btn:hover {
+        background: #0d2f47;
+        color: #fff;
+    }
+    .pdp-cc-stepper-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    .pdp-cc-stepper-qty {
+        flex: 1;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 700;
+        color: #0d2f47;
+        min-width: 24px;
+    }
+
+    /* Progress / scrollbar track */
+    .pdp-cc-progress-wrap {
+        display: none;
+    }
+    .pdp-cc-progress-bar {
+        display: none;
+    }
+
+    /* Checkout button */
+    .pdp-cc-checkout-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 60%;
+        height: 44px;
+        background: #0d2f47;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        border-radius: 999px;
+        text-decoration: none;
+        transition: background 0.15s;
+        border: none;
+        cursor: pointer;
+    }
+    .pdp-cc-checkout-btn:hover {
+        background: #0095ff;
+    }
+</style>
+
+<script>
+    function pdpCartCarousel() {
+        return {
+            cartItems:   [],
+            isLoading:   false,
+            atStart:     true,
+            atEnd:       false,
+            progressPct: 0,
+
+            /* --- drag state --- */
+            _dragging:    false,
+            _dragStartX:  0,
+            _scrollStart: 0,
+            _moved:       false,
+            _lastX:      0,
+            _lastTime:   0,
+            _velocity:   0,
+            _rafId:      null,
+
+            /* =================== lifecycle =================== */
+                init() {
+                    const loadFromCache = () => {
+                        try {
+                            const cache = JSON.parse(localStorage.getItem('mage-cache-storage') || '{}');
+                            if (cache && cache.cart && cache.cart.items && cache.cart.items.length > 0) {
+                                this.cartItems = this._sorted(cache.cart.items);
+                                // this.$nextTick(() => this.onScroll());
+                                this.$nextTick(() => { this.onScroll(); this.updateLayout(); });
+                                return true;
+                            }
+                        } catch(e) {}
+                        return false;
+                    };
+                    document.addEventListener('pointerup', (e) => {
+                        if (this._dragging) this.dragEnd(e);
+                    });
+
+                    if (!loadFromCache()) {
+                        setTimeout(() => {
+                            loadFromCache();
+                        }, 500);
+                    }
+
+                    window.addEventListener('reload-customer-section-data', () => {
+                            this.isLoading = false;
+                        });
+                    window.addEventListener('private-content-loaded', (e) => {
+                        if (!e.detail || !e.detail.data || !e.detail.data.cart) return;
+
+                        // 1. Merge hover map FIRST
+                        window.addEventListener('private-content-loaded', (e) => {
+                            if (!e.detail || !e.detail.data || !e.detail.data.cart) return;
+                            this.cartItems = this._sorted(e.detail.data.cart.items || []);
+                            this.isLoading = false;
+                            this.$nextTick(() => { this.onScroll(); this.updateLayout(); });
+                        });
+                            // 3. cartItems AFTER map is ready
+                            this.cartItems = this._sorted(e.detail.data.cart.items || []);
+                            this.isLoading = false;
+                            this.$nextTick(() => { this.onScroll(); this.updateLayout(); });
+                        });
+
+                },  
+
+                onSectionLoad(data) {
+                    if (!data || !data.cart) return;
+
+                    this.cartItems = this._sorted(data.cart.items || []);
+                    this.$nextTick(() => { this.onScroll(); this.updateLayout(); });
+                    console.log('section load done')
+                },
+
+            /* =================== helpers =================== */
+
+            _sorted(items) {
+                return items
+                    .filter(item => parseFloat(item.product_price_value) > 0)
+                    .slice()
+                    .sort((a, b) => Number(a.item_id) - Number(b.item_id));
+            },
+
+            formatPrice(value) {
+                if (value === undefined || value === null) return '';
+                return '$' + parseFloat(value).toFixed(2);
+            },
+
+            getProductImage(item) {
+                if (!item.product_image || !item.product_image.src) return '';
+                return item.product_image.src
+                    .replace(/\/cache\/[a-f0-9]+\//, '/');
+            },
+
+            /* =================== stepper =================== */
+
+            updateItemQty(itemId, newQty) {
+                if (newQty < 1) {
+                    this.deleteItemFromCart(itemId);
+                    return;
+                }
+                this.isLoading = true;
+                const formKey = hyva.getFormKey();
+                const postUrl = BASE_URL + 'checkout/sidebar/updateItemQty/';
+                fetch(postUrl, {
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    },
+                    body: 'form_key=' + formKey + '&item_id=' + itemId + '&item_qty=' + newQty,
+                    method: 'POST',
+                    mode: 'cors',
+                    credentials: 'include'
+                }).then(response => {
+                    if (response.ok) return response.json();
+                    this.isLoading = false;
+                }).then(result => {
+                        if (result && result.success) {
+                            window.dispatchEvent(new CustomEvent('reload-customer-section-data'));
+                        } else {
+                            this.isLoading = false;
+                        }
+                    });
+                                },
+
+            deleteItemFromCart(itemId) {
+                this.isLoading = true;
+                const formKey = hyva.getFormKey();
+                const postUrl = BASE_URL + 'checkout/sidebar/removeItem/';
+                fetch(postUrl, {
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    },
+                    body: 'form_key=' + formKey + '&item_id=' + itemId,
+                    method: 'POST',
+                    mode: 'cors',
+                    credentials: 'include'
+                }).then(response => {
+                    if (response.ok) return response.json();
+                    this.isLoading = false;
+                }).then(result => {
+                    if (result && result.success) {
+                        window.dispatchEvent(new CustomEvent('reload-customer-section-data'));
+                    } else {
+                        this.isLoading = false;
+                    }
+                });
+            },
+
+            /* =================== scroll state =================== */
+
+            onScroll() {
+                const t = this.$refs.track;
+                if (!t) return;
+                const max        = t.scrollWidth - t.clientWidth;
+                this.atStart     = t.scrollLeft <= 2;
+                this.atEnd       = t.scrollLeft >= max - 2;
+                this.progressPct = max > 0 ? Math.round((t.scrollLeft / max) * 100) : 0;
+            },
+
+            updateLayout() {
+                const t = this.$refs.track;
+                if (!t) return;
+                const isOverflowing = t.scrollWidth > t.clientWidth;
+                t.classList.toggle('is-centered', !isOverflowing);
+            },
+
+            scrollBy(direction) {
+                const t = this.$refs.track;
+                if (!t) return;
+                t.scrollLeft += direction * 150;
+            },
+
+            /* =================== shift + scroll =================== */
+
+                onWheel(e) {
+                    const t = this.$refs.track;
+                    if (!t) return;
+                    if (e.shiftKey) {
+                        e.preventDefault();
+                        t.scrollLeft += e.deltaY || e.deltaX;
+                    }
+                },
+
+            dragStart(e) {
+                if (e.button !== 0 && e.pointerType === 'mouse') return;
+                if (e.target.closest('button')) return;
+                const t = this.$refs.track;
+                if (!t) return;
+
+                if (this._rafId) { cancelAnimationFrame(this._rafId); this._rafId = null; }
+
+                this._dragging   = true;
+                this._moved      = false;
+                this._dragStartX = e.clientX;
+                this._lastX      = e.clientX;
+                this._lastTime   = performance.now();
+                this._velocity   = 0;
+                this._scrollStart = t.scrollLeft;
+
+
+                t.classList.add('is-dragging');
+                t.style.scrollBehavior = 'auto';
+            },
+
+
+            dragMove(e) {
+                if (!this._dragging) return;
+                const t = this.$refs.track;
+                if (!t) return;
+
+                const now = performance.now();
+                const dt  = now - this._lastTime;
+                const dx  = e.clientX - this._dragStartX;
+
+                if (dt > 0) this._velocity = (e.clientX - this._lastX) / dt;
+
+                this._lastX    = e.clientX;
+                this._lastTime = now;
+
+                if (Math.abs(dx) > 4) this._moved = true;
+
+                t.scrollLeft = this._scrollStart - dx;
+            },
+
+
+
+            dragEnd(e) {
+                if (!this._dragging) return;
+                this._dragging = false;
+                const t = this.$refs.track;
+                t.classList.remove('is-dragging');
+                t.style.scrollBehavior = 'auto';
+
+                if (!this._moved) {
+                    t.style.scrollBehavior = 'smooth';
+                    return;
+                }
+
+                let velocity = this._velocity * 18;
+
+                const glide = () => {
+                    if (Math.abs(velocity) < 0.5) {
+                        t.style.scrollBehavior = 'smooth';
+                        this._moved = false;
+                        return;
+                    }
+                    t.scrollLeft -= velocity;
+                    velocity *= 0.88;
+                    this._rafId = requestAnimationFrame(glide);
+                };
+
+                this._rafId = requestAnimationFrame(glide);
+            },
+
+
+            onCardClick(e) {
+                if (this._moved) {
+                    e.preventDefault();
+                    return;
+                }
+               
+            },
+        }
+    }
+</script>

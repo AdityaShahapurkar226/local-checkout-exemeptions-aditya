@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMultiShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <mpmultishipping>
+                <active>0</active>
+                <sallowspecific>0</sallowspecific>
+                <model>Webkul\MpMultiShipping\Model\Carrier</model>
+                <title>Webkul Multishipping</title>
+                <method_title>Multishipping</method_title>
+                <is_online>1</is_online>
+                <shipping_mode>1</shipping_mode>
+            </mpmultishipping>
+        </carriers>
+    </default>
+</config>

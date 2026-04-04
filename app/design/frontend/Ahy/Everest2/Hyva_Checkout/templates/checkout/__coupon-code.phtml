@@ -1,0 +1,146 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var Template $block */
+/** @var HeroiconsOutline $heroiconsViewModel */
+/** @var Magewire $magewire */
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Checkout\Magewire\Checkout\CouponCode as Magewire;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+$heroiconsViewModel = $viewModels->require(HeroiconsOutline::class);
+$classCouponAvailability = $magewire->couponCode ? 'available' : 'not-available';
+$saveAction = $magewire->couponCode ? 'revokeCouponCode' : 'applyCouponCode';
+?>
+
+<div class="coupon-code <?= $escaper->escapeHtmlAttr($classCouponAvailability) ?> flex flex-col mt-2 items-stretch" x-data="{
+         couponCode: $wire.entangle('couponCode'),
+         couponHits: $wire.entangle('couponHits')
+     }">
+    <div class="page messages">
+        <script>
+            function initMessages() {
+                "use strict";
+                return {
+                    message: null,
+                    showMessage(message) {
+                        this.message = message;
+                        this.renderMessage();
+                    },
+                    hideMessage() {
+                        this.message = null;
+                        this.renderMessage();
+                    },
+                    renderMessage() {
+                        const messagesContainer = document.getElementById('messages');
+                        messagesContainer.innerHTML = '';
+
+                        if (this.message) {
+                            const messageDiv = document.createElement('div');
+                            messageDiv.classList.add('message');
+                            messageDiv.classList.add(this.message.type);
+                            messageDiv.setAttribute('ui-id', 'message-' + this.message.type);
+
+                            const messageText = document.createElement('span');
+                            messageText.innerHTML = this.message.text;
+
+                            const closeButton = document.createElement('a');
+                            closeButton.href = '#';
+                            closeButton.classList.add('close');
+                            closeButton.classList.add('cursor-pointer');
+                            closeButton.title = 'close';
+                            closeButton.addEventListener('click', (event) => {
+                                event.preventDefault();
+                                this.hideMessage();
+                            });
+
+                            const closeIcon = document.createElement('svg');
+                            closeIcon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                            closeIcon.setAttribute('fill', 'none');
+                            closeIcon.setAttribute('viewBox', '0 0 24 24');
+                            closeIcon.setAttribute('stroke', 'currentColor');
+                            closeIcon.classList.add('text-white');
+                            closeIcon.setAttribute('width', '18');
+                            closeIcon.setAttribute('height', '18');
+
+                            const closePath = document.createElement('path');
+                            closePath.setAttribute('stroke-linecap', 'round');
+                            closePath.setAttribute('stroke-linejoin', 'round');
+                            closePath.setAttribute('stroke-width', '2');
+                            closePath.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+
+                            closeIcon.appendChild(closePath);
+                            closeButton.appendChild(closeIcon);
+
+                            messageDiv.appendChild(messageText);
+                            messageDiv.appendChild(closeButton);
+                            messagesContainer.appendChild(messageDiv);
+                        }
+                    },
+                    eventListeners: {
+                        ['@messages-loaded.window']() {
+                            const messages = event.detail.messages;
+                            const latestMessage = messages[messages.length - 1];
+                            this.showMessage(latestMessage);
+                        },
+                        ['@private-content-loaded.window'](event) {
+                            const data = event.detail.data;
+                            if (
+                                data.messages &&
+                                data.messages.messages &&
+                                data.messages.messages.length
+                            ) {
+                                const messages = data.messages.messages;
+                                const latestMessage = messages[messages.length - 1];
+                                this.showMessage(latestMessage);
+                            }
+                        },
+                        ['@clear-messages.window']() {
+                            this.hideMessage();
+                        }
+                    }
+                };
+            }
+        </script>
+        <section id="messages" x-data="initMessages()" x-bind="eventListeners"></section>
+    </div>
+
+    <div class="flex">
+        <input type="text" class="form-input rounded-none rounded-l-md border-r-0 text-sm w-1/2 focus:ring-0" placeholder="<?= $escaper->escapeHtmlAttr(__('Enter discount code')) ?>"
+            wire:model.defer="couponCode" wire:loading.attr="disabled" wire:keydown.enter="<?= /* @noEscape */ $saveAction ?>"
+            x-bind:class="{ 'has-coupon': couponCode, 'disabled': couponCode, 'invalid': couponHits !== 0 }" x-bind:disabled="couponCode" />
+        <button type="button" class="btn btn-secondary justify-center w-1/2 rounded-none rounded-r-md bottom-0"
+            wire:click="<?= /* @noEscape */ $saveAction ?>"
+            wire:loading.attr="disabled"
+            wire:loading.class="disabled"
+            x-bind:class="{ 'has-coupon': couponCode, 'disabled': ! couponCode, 'invalid': couponHits !== 0 }"
+            x-cloak
+        >
+            <span wire:loading.block class="hidden">
+                <?= $escaper->escapeHtml(__('Processing...')) ?>
+            </span>
+            <?php if ($magewire->couponCode): ?>
+            <span wire:loading.remove>
+                <?= $escaper->escapeHtml(__('Cancel coupon')) ?>
+            </span>
+            <?php else: ?>
+            <span wire:loading.remove>
+                <?= $escaper->escapeHtml(__('Apply Discount')) ?>
+            </span>
+            <?php endif ?>
+        </button>
+    </div>
+</div>
+

@@ -1,0 +1,178 @@
+<?php
+
+/** @var \Ahy\Authorizenet\ViewModel\CustomerVaultCards $vaultCards */
+/** @var Magento\Framework\View\Element\Template $block */
+
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+$escaper = $escaper ?? new Escaper();
+$vaultCards = $block->getData('vault_cards');
+$tokens = $vaultCards->getCustomerTokens();
+$addCardUrl = $block->getUrl('customer/account');
+$formKey = $block->getFormKey();
+
+/**
+ * Normalize card type
+ */
+function normalizeCardType(string $rawType): string
+{
+    $map = [
+        'VISA' => 'Visa',
+        'MASTERCARD' => 'Mastercard',
+        'AMEX' => 'American Express',
+        'AMERICAN EXPRESS' => 'American Express',
+        'DISCOVER' => 'Discover',
+        'JCB' => 'JCB',
+        'DINERS CLUB' => 'Diners Club/ Carte Blanche',
+        'DINERS CLUB/ CARTE BLANCHE' => 'Diners Club/ Carte Blanche',
+    ];
+    return $map[strtoupper(trim($rawType))] ?? 'Unknown';
+}
+
+/**
+ * Map normalized card type to SVG URL
+ */
+function getCardImageUrl(string $type): string
+{
+    $map = [
+        'Visa' => '/media/icons/visa.svg',
+        'Mastercard' => '/media/icons/mastercard.svg',
+        'American Express' => '/media/icons/amex.svg',
+        'Discover' => '/media/icons/discover.svg',
+        'JCB' => '/media/icons/jcb.svg',
+        'Diners Club/ Carte Blanche' => '/media/icons/diners.svg',
+        'Unknown' => '/media/icons/unknown-code.svg',
+    ];
+    return $map[$type] ?? $map['Unknown'];
+}
+?>
+
+<?php if (empty($tokens)): ?>
+    <div class="p-4 text-gray-600 text-center border rounded bg-yellow-50 space-y-4">
+        <p><?= $escaper->escapeHtml(__('No saved cards found.')) ?></p>
+        <a href="<?= $escaper->escapeUrl($addCardUrl) ?>"
+            class="inline-flex items-center text-ahy-blue hover:text-ahy-blue-light transition-colors text-sm font-medium">
+            <?= $escaper->escapeHtml(__('Add New Card From Your Account Dashboard')) ?>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="ml-2" width="16" height="16">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14 5 7 7m0 0-7 7m7-7H3"></path>
+            </svg>
+        </a>
+    </div>
+<?php else: ?>
+
+<script>
+    window.vaultCardSelector = function() {
+        return {
+            selectedHash: '',
+            customerProfileId: '',
+            customerPaymentProfileId: '',
+            selectCard(hash) {
+                this.selectedHash = hash;
+                console.log("[VaultCheckout] Selected public_hash:", hash);
+
+                // Fetch profile info from backend
+                fetch('<?= $block->getUrl("authorizenet/vault/cardinfo") ?>?public_hash=' + encodeURIComponent(hash), {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.customerProfileId = data.customerProfileId;
+                        this.customerPaymentProfileId = data.customerPaymentProfileId;
+                        console.log("[VaultCheckout] Retrieved profile info:", data);
+
+                        // POST to store session with form key for CSRF protection
+                        const formData = new FormData();
+                        formData.append('public_hash', hash);
+                        formData.append('customer_profile_id', this.customerProfileId);
+                        formData.append('customer_payment_profile_id', this.customerPaymentProfileId);
+                        formData.append('form_key', '<?= $formKey ?>');
+
+                        fetch('<?= $block->getUrl("authorizenet/vault/storeselected") ?>', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(storeData => {
+                            if(storeData.success) {
+                                console.log("[VaultCheckout] Stored selected card in session successfully");
+                            } else {
+                                console.error("[VaultCheckout] Failed to store card in session:", storeData.message);
+                            }
+                        })
+                        .catch(err => {
+                            console.error("[VaultCheckout] Error storing selected card:", err);
+                        });
+
+                    } else {
+                        console.error("[VaultCheckout] Failed to retrieve card info:", data.message);
+                    }
+                })
+                .catch(err => {
+                    console.error("[VaultCheckout] Error fetching card info:", err);
+                });
+            }
+        }
+    }
+</script>
+
+<div
+    x-data="vaultCardSelector()"
+    class="space-y-6"
+>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <?php foreach ($tokens as $token): ?>
+            <?php
+            $card = $vaultCards->getCardDetails($token);
+            $radioId = 'stored_card_' . $card['entityId'];
+
+            $normalizedType = normalizeCardType($card['type'] ?? 'Unknown');
+            $cardImage = getCardImageUrl($normalizedType);
+            $publicHash = $token->getPublicHash();
+            ?>
+            <label
+                for="<?= $escaper->escapeHtmlAttr($radioId) ?>"
+                class="group relative block border-2 rounded-2xl p-5 bg-white shadow-sm hover:shadow-md transition-all cursor-pointer"
+                :class="{ 'border-blue-600 ring-2 ring-blue-300': selectedHash === '<?= $publicHash ?>' }"
+            >
+                <div class="absolute top-4 right-4">
+                    <img src="<?= $escaper->escapeUrl($cardImage) ?>"
+                        alt="<?= $escaper->escapeHtmlAttr($normalizedType) ?>"
+                        class="w-8 h-8" />
+                </div>
+
+                <div class="flex items-start gap-4">
+                    <input
+                        type="radio"
+                        id="<?= $escaper->escapeHtmlAttr($radioId) ?>"
+                        name="stored_card"
+                        value="<?= $escaper->escapeHtmlAttr($publicHash) ?>"
+                        @change="selectCard('<?= $publicHash ?>')"
+                        class="mt-1 h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    >
+
+                    <div class="flex-1 space-y-1">
+                        <p class="text-sm font-medium text-gray-900">
+                            <?= $escaper->escapeHtml($card['type'] ?? 'Unknown') ?>
+                        </p>
+                        <p class="text-sm text-ahy-blue">
+                            <?= $escaper->escapeHtml(__('Card Ending in ****')) ?>
+                            <strong><?= $escaper->escapeHtml($card['maskedCC']) ?></strong>
+                        </p>
+                        <p class="text-sm text-ahy-blue">
+                            <?= $escaper->escapeHtml(__('EXP:')) ?>
+                            <?= $escaper->escapeHtml($card['expirationDate']) ?>
+                        </p>
+                    </div>
+                </div>
+            </label>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<?php endif; ?>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <!-- ADD THIS TAB DEFINITION -->
+        <tab id="ahy" translate="label" sortOrder="400">
+            <label>Ahy</label>
+        </tab>
+        
+        <section id="ahy_estateapi" translate="label" sortOrder="900" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Estate API</label>
+            <tab>ahy</tab>
+            <resource>Ahy_EstateApiIntegration::config</resource>
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+                <field id="zip_retry_limit" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>ZIP Retry Limit</label>
+                    <comment>Number of retry attempts for ZIP</comment>
+                </field>
+
+                 <!-- NEW FIELD: Enable Product Restriction -->
+                <field id="enable_restriction" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Product Restriction Check</label>
+                    <comment>Turn on/off the Estate API product restriction check</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+
+        </section>
+    </system>
+</config>

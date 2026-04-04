@@ -1,0 +1,38 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+?>
+
+<button type="submit"
+        form="product_addtocart_form"
+        title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>" 
+        class="btn bg-ahy-red hover:bg-ahy-red-light rounded-full w-full focus:ring-transparent h-16"
+        id="product-addtocart-button"
+        x-on:click.prevent="$event.preventDefault();"
+        x-on:click="ajaxAddToCart()"
+        :disabled="submitting"
+        x-transition
+>
+    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 ml-4 md:ml-0 lg:ml-2 hover:text-black" viewBox="0 0 30.61 25.71"><defs><style>.stroke-2{stroke-width: 2!important;} .cls-1,.cls-2{fill:none !important;stroke:#0d2f47;}.cls-1{stroke-linecap:round;stroke-linejoin:round;}.cls-2{stroke-miterlimit:10;}</style></defs><polyline class="cls-1 stroke-2" points="0.75 0.75 5.51 0.75 10.82 15.88 25.24 15.88 29.86 3.3 10.84 3.3"></polyline><circle class="cls-2 stroke-2" cx="11.98" cy="22.46" r="2.5"></circle><circle class="cls-2 stroke-2" cx="24.48" cy="22.46" r="2.5"></circle></svg>
+    <span class="w-full font-bold py-3 md:py-0 relative -left-2.5 lg:left-0 add-to-cart-text"><?= $block->getData('is_cart_configure') ? $escaper->escapeHtml(__('Update item')) :  $escaper->escapeHtml(__('Add to Cart')) ?> </span>
+</button>
+
+<?= $block->getChildHtml('', true) ?>

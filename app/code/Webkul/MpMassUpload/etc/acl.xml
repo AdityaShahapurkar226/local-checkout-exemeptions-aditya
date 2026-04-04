@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Webkul_Marketplace::marketplace" title="Marketplace Management" sortOrder="10" >
+                    <resource id="Webkul_Marketplace::menu" title="Menu" sortOrder="10">
+                        <resource id="Webkul_MpMassUpload::menu" title="Mass Upload Manager" sortOrder="10">
+                            <resource id="Webkul_MpMassUpload::dataflow_profile" title="Mass Upload Dataflow Profile" sortOrder="20" />
+                            <resource id="Webkul_MpMassUpload::upload" title="Mass Upload Product" sortOrder="21" />
+                            <resource id="Webkul_MpMassUpload::run" title="Run Mass Upload Profile" sortOrder="22" />
+                            <resource id="Webkul_MpMassUpload::profileListing" title="Mass Upload Profile Listing" sortOrder="23" />
+                            <resource id="Webkul_MpMassUpload::export" title="Mass Upload Product Export" sortOrder="24" />
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul Software Private Limited
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="seller-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="marketplace_styles"/>
+    <head>
+        <css src="Webkul_MpAssignProduct::css/styles.css"/>
+    </head>
+    <body>
+        <referenceBlock name="seller.page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">Marketplace Assigned Product List</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="seller.content">
+            <block class="Magento\Framework\View\Element\Template" name="assignproduct_list" template="Webkul_MpAssignProduct::list.phtml" before="-" cacheable="false" />
+              
+            <uiComponent name="assigned_product_list"/>
+           
+        </referenceContainer>
+    </body>
+</page>

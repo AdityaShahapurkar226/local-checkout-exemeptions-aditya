@@ -1,0 +1,86 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Bss_ProductStockAlert
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2015-2017 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+// @codingStandardsIgnoreFile
+/* @var $block \Bss\ProductStockAlert\Block\Product\View */
+?>
+<div id="product_stock_alert_container"></div>
+<input type="hidden" name="parent_id" value="<?php echo $block->getProductId(); ?>" id="bss_productstockalert_parent_id">
+<script type="text/x-magento-init">
+    {
+        "#product_stock_alert_container": {
+            "bssProductStockAlertProcessor": {
+                "formDataActionUrl": "<?php /* @escapeNotVerified */ echo $block->getFormDataActionUrl(); ?>",
+                "actionViewController": "<?php /* @escapeNotVerified */ echo $block->getActionController(); ?>",
+                "productType": "<?php /* @escapeNotVerified */ echo $block->getProductType(); ?>",
+                "buttonAddNotice": "button.add-notice-email"
+            }
+        }
+    }
+</script>
+<script id="bss-stock-notice-form" type="text/x-magento-template">
+    <div class="stockalert block-stockalert" style="<%- data.form_custom_style %>" data-product="<%- data.product_id %>" data-option="<%- data.option_id %>" data-option-type="<%- data.option_type %>">
+        <% if (data.show_title != 0) { %>
+        <div class="title" data-role="title">
+            <strong class="block-stockalert-heading" role="heading" aria-level="2"><%- data.title %></strong>
+        </div>
+        <% } %>
+        <div class="content form-container" data-role="content" aria-labelledby="block-stockalert-heading">
+            <form class="stockalert-form" action="<%- data.form_action %>" method="post">
+                <input type="hidden" name="product" value="<%- data.product_id %>">
+                <input type="hidden" name="form_key" value="<%- data.form_key %>">
+                <input type="hidden" name="parent_id" value="<%- data.parent_id %>">
+                <div class="bss_productstockaler applied">
+                    <div class="field">
+                        <label><%- data.label %></label>
+                        <div class="control">
+                            <input type="text" class="input-text stockalert_email validate-email required-entry" name="stockalert_email" value="<?php echo $block->escapeHtml($block->getCustomerEmail()) ?>" placeholder="<?php echo $block->escapeHtml(__('Your Email'));?>">
+                        </div>
+                    </div>
+                    <div class="actions-toolbar padding">
+                        <div>
+                            <button class="action notify primary add-notice-email" type="button" value="<?php echo $block->escapeHtml(__('Notify me'));?>" style="background-color: <%- data.button_style %>">
+                                <span style="color: <%- data.button_text_color %>"><%- data.button_text %></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</script>
+<script id="bss-stock-notice-cancel-form" type="text/x-magento-template">
+    <div class="stockalert block-stockalert" style="<%- data.form_custom_style %>" data-product="<%- data.product_id %>" data-option="<%- data.option_id %>" data-option-type="<%- data.option_type %>">
+        <% if (data.show_title != 0) { %>
+        <div class="title" data-role="title">
+            <strong class="block-stockalert-heading" role="heading" aria-level="2"><%- data.title_cancel %></strong>
+        </div>
+        <% } %>
+        <div class="content form-container" data-role="content" aria-labelledby="block-stockalert-heading">
+            <form class="stockalert-form" action="<%- data.form_action_cancel %>" method="post">
+                <input type="hidden" name="product" value="<%- data.product_id %>">
+                <input type="hidden" name="form_key" value="<%- data.form_key %>">
+                <input type="hidden" name="parent_id" value="<%- data.parent_id %>">
+                <div class="bss_productstockaler">
+                    <button type="submit" class="action cancel primary" value="Stop notify" style="background-color: <%- data.button_style %>">
+                        <span style="color: <%- data.button_text_color %>"><%- data.button_text_cancel %></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</script>

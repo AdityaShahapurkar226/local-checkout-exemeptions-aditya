@@ -1,0 +1,121 @@
+<!--
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+-->
+<?php
+
+$helperBlock = $block->getLayout()->createBlock(\Webkul\MpSellerBuyerCommunication\Block\Helper::class);
+$helper = $helperBlock->getMpHelper();
+$captchenable = $helper->getCaptchaEnable();
+$_helper = $helperBlock->getCommHelper();
+$orderId = $block->getRequest()->getParam('order_id');
+$sellerId = $helper->getCustomerId();
+$orderDetails = $block->getOrderInfo($orderId);
+$customerEmail = $orderDetails->getCustomerEmail();
+$config = $block->getWysiwygConfig()->getFilesBrowserWindowUrl();
+$customerName = $orderDetails->getCustomerFirstName().' '.$orderDetails->getCustomerLastName();
+?>
+<div class="wk-mp-seller-profile-box wk-mp-collection-header-bottom-txt">
+    
+</div>
+<div class="ask-que">
+        <div id="wk-mp-ask-data" style="display:none">       
+            <form id="ask-form" method="post" action="#" class="fieldset" 
+            data-mage-init='{"validation":{}}' enctype="multipart/form-data">
+            <?= $block->getBlockHtml('formkey')?>
+                <div class="form-list field required">
+                    <label class="label admin__field-label"><?= $block->escapeHtml(__('Support Type')) ?> :</label>
+                    <select name="support_type" class="validate-select required-entry">
+                        <?php foreach ($_helper->getSupportTypes() as $key => $value) { ?>
+                            <option value=<?= $block->escapeHtml($key); ?>><?= $block->escapeHtml($value); ?></option>
+                        <?php } ?>
+                    </select>
+                    <label class="label"><?= $block->escapeHtml(__('Customer Name')) ?> :</label>
+                    <input type="text" name="name" class="queryemail wk-contact_input_fields validate-no-html-tags
+                     required-entry" value="<?= $block->escapeHtml($customerName)?>" readonly />
+                    <label class="label"><?= $block->escapeHtml(__('Customer Email')) ?> :</label>
+                    <input type="email" name="email" class="queryemail required-entry validate-email 
+                    validate-no-html-tags wk-contact_input_fields" readonly
+                     value="<?= $block->escapeHtml($customerEmail)?>" 
+                    />
+                    <label class="label"><?= $block->escapeHtml(__('Subject')) ?> :</label>
+                    <input type="text" name="subject" class="wk-contact_input_fields validate-no-html-tags 
+                     required-entry"/>
+                    <label class="label"><?= $block->escapeHtml(__('Your Query')) ?> :</label>
+                    <textarea  name="ask" id="queryquestion" class="queryquestion wk-contact_input_fields 
+                    required-entry" style="width:100%;"></textarea>
+                    <input type="hidden" name="seller-id" value="<?= $block->escapeHtml($sellerId);?>"/>
+                    <input type="hidden" name="order-id" value="<?= $block->escapeHtml($orderId);?>"/>
+                    
+                    <?php if ($captchenable) { ?>
+                        <div>
+                            <span>
+                                <label for="wk-mp-captcha">
+                                    <span id="wk-mp-captchalable1"><?= $block->escapeHtml(rand(1, 20))?></span> 
+                                    + <span id="wk-mp-captchalable2"><?= $block->escapeHtml(rand(1, 20))?></span>
+                                = </label>
+                            </span>
+                            <input type="text" class="required-entry wk-contact_input_fields" name="wk-mp-captcha" 
+                            id="wk-mp-captcha" />
+                        </div>
+                    <?php } ?>
+                    <label class="file" class=""><?= $block->escapeHtml(__('Add Image/File')) ?> :</label>
+                    <div class="input-box">
+                        <div class="image-con">
+                            <input type="file" name="img_attachment[]" class="wk_imagevalidate"/>
+                            <a href="javascript:void(0)" class="remove_attch" style="display:none">
+                                <?= $block->escapeHtml(__('Remove')); ?>
+                            </a>
+                        </div>
+                        <div id="otherimages" class="image-con"></div>
+                        <a href="javascript:void(0)" class="product_images">
+                            <?= $block->escapeHtml(__("Add More")); ?>
+                        </a><br />
+                    </div>
+                </div>
+            </form>        
+        </div>
+    </div> 
+</div>
+<script id="attachment-template" type="text/x-magento-template">
+        <div id='childDiv<%- fields.index %>' class="image-con">
+            <input type='file' name='img_attachment[]' class='wk_imagevalidate'/>
+            <a href="javascript:void(0)" class="remove_attch"><?= $block->escapeHtml(__('Remove')); ?></a>
+        </div>
+</script>
+<?php
+    $releventFormData = [
+        'targetAjaxUrl' => $block->getUrl(
+            "mpsellerbuyercommunication/query/sendordermail",
+            ["_secure" => $block->getRequest()->isSecure()]
+        ),
+        'captchenable'  => $captchenable,
+        'varificationMsg' => __(' enable to varifiy captcha'),
+        'formValidator' => '#ask-form',
+        'attachmentTemplate' => '#attachment-template',
+        'saveAjaxFileUrl' => $block->getUrl(
+            "mpsellerbuyercommunication/query/saveFiles",
+            ["_secure" => $block->getRequest()->isSecure()]
+        ),
+        'seller_id'=>$sellerId,
+        'wysiwygConfig' => $config,
+
+    ];
+
+    $serializedData = $helperBlock->getJsonHelper()->jsonEncode($releventFormData);
+    ?>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "wkAdminOrderViewPage": <?= $block->escapeJsQuote($serializedData); ?>
+        }
+    }
+</script>

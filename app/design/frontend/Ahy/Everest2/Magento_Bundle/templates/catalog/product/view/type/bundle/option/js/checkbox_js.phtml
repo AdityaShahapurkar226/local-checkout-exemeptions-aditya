@@ -1,0 +1,200 @@
+<?php
+
+?>
+
+<script id="checkbox-bundle-js">
+    function getConfigurableSimpleProduct(){
+        return {
+            showConfigurableProductDetails(productId, productType, selectionId){
+                if(productType === 'configurable'){
+                    const checkboxEl = document.getElementById('bundle-option-4-' + selectionId);
+                    
+                    if(checkboxEl){
+                        // Check if the checkbox is checked
+                        if (checkboxEl.checked) {
+                            // Do something if the checkbox is checked
+                            this.getConfigurableProductSwatches(productId);
+                        } else {
+                            // Do something if the checkbox is not checked
+                            const swatchHtmlEl = document.getElementById('swatch-html-' + productId);
+                            swatchHtmlEl.innerHTML = '';
+                            const productPriceSwatch = document.getElementById('product-price-ahy-' + productId);
+                            productPriceSwatch.innerHTML = '';
+                            this.removeConfigurableProductSwathesStyle(productId);
+                        }
+                    }
+                }
+            },
+            addConfigurableProductSwathesStyle(configurableProductId){
+                const bundleConfigurableProductSwatchEl = document.querySelector('.configurable-bundle-product-'  + configurableProductId);
+                if(bundleConfigurableProductSwatchEl){
+                    bundleConfigurableProductSwatchEl.style.border = '2px dashed grey';
+                    bundleConfigurableProductSwatchEl.style.borderRadius = '10px';
+                    bundleConfigurableProductSwatchEl.style.padding = '30px 30px 0 30px';
+                    bundleConfigurableProductSwatchEl.style.margin = '0 30px';
+                    bundleConfigurableProductSwatchEl.style.transform = 'scale(.9)';
+
+                    // Select the node that will be observed for changes
+                    const targetBodyNode = document.body;
+
+                    // Create a new instance of MutationObserver
+                    const bundleProductSwatchObserver = new MutationObserver((mutationsList, bundleProductSwatchObserver) => {
+                        // Check if bundleProductSwatchesPriceEl is present in the DOM
+                        const bundleProductSwatchesPriceEl = document.querySelector(`.configurable-bundle-product-${configurableProductId} #product-price-${configurableProductId}`);
+                            if (bundleProductSwatchesPriceEl) {
+                                document.documentElement.classList.add('bundle-product-swatches-present');
+                                console.log('bundleProductSwatchesPriceEl is now present in the DOM');
+                                // Stop observing the target node
+                                bundleProductSwatchObserver.disconnect();
+                            }
+                        const bundleProductSwatchesHeadingEl = document.querySelector(`.configurable-bundle-product-${configurableProductId} #swatch-html-${configurableProductId}`);
+                        if(bundleProductSwatchesHeadingEl){
+                            const productOptionsHeadingEl = bundleProductSwatchesHeadingEl.querySelector('.mb-4.text-xl.font-medium.text-gray-900.title-font');
+                            if (productOptionsHeadingEl) {
+                                productOptionsHeadingEl.remove();
+                            }
+                        }
+                    });
+
+                    // Configuration of the bundleProductSwatchObserver:
+                    const bundleProductSwatchObserverConfig = { subtree: true, childList: true };
+
+                    // Start observing the target node for configured mutations
+                    bundleProductSwatchObserver.observe(targetBodyNode, bundleProductSwatchObserverConfig);
+
+                }
+            },
+            removeConfigurableProductSwathesStyle(configurableProductId){
+                const bundleConfigurableProductSwatchEl = document.querySelector('.configurable-bundle-product-'  + configurableProductId);
+                if(bundleConfigurableProductSwatchEl){
+                    bundleConfigurableProductSwatchEl.style.border = '';
+                    bundleConfigurableProductSwatchEl.style.borderRadius = '';
+                    bundleConfigurableProductSwatchEl.style.padding = '';
+                    bundleConfigurableProductSwatchEl.style.margin = '';
+                }
+            },
+
+            async getConfigurableProductSwatches(configurableProductId){
+                //Use this function to get swatches of a configurable product   
+                const swatchHtmlEl = document.getElementById('swatch-html-' + configurableProductId);
+                this.addConfigurableProductSwathesStyle(configurableProductId);
+                swatchHtmlEl.innerHTML = `
+                    <div>
+                        <span class="block h-[26px] w-[50px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                        <span class="block h-[40px] w-[100px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                    </div>
+                    <div class="border-container flex flex-col border-b border-t">
+                        <h2 class="title-font mb-4 mt-5 block h-[25px] w-[180px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></h2>
+                        <div class="flex gap-4">
+                            <div class="flex flex-col items-center gap-2 py-2">
+                                <label
+                                    class="ring-offset-3 relative h-10 w-10 animate-[ahy-pulse_3s_linear_infinite] cursor-pointer rounded-full bg-gray-300 shadow-sm ring-1 ring-offset-white dark:bg-gray-700 sm:ring-2 sm:hover:ring">
+                                </label>
+                                <div class="swatches-price-ahy flex flex-col items-center">
+                                    <span class="block h-[26px] w-[40px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 py-2">
+                                <label
+                                    class="ring-offset-3 relative h-10 w-10 animate-[ahy-pulse_3s_linear_infinite] cursor-pointer rounded-full bg-gray-300 shadow-sm ring-1 ring-offset-white dark:bg-gray-700 sm:ring-2 sm:hover:ring">
+                                </label>
+                                <div class="swatches-price-ahy flex flex-col items-center">
+                                    <span class="block h-[26px] w-[40px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 py-2">
+                                <label
+                                    class="ring-offset-3 relative h-10 w-10 animate-[ahy-pulse_3s_linear_infinite] cursor-pointer rounded-full bg-gray-300 shadow-sm ring-1 ring-offset-white dark:bg-gray-700 sm:ring-2 sm:hover:ring">
+                                </label>
+                                <div class="swatches-price-ahy flex flex-col items-center">
+                                    <span class="block h-[26px] w-[40px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 py-2">
+                                <label
+                                    class="ring-offset-3 relative h-10 w-10 animate-[ahy-pulse_3s_linear_infinite] cursor-pointer rounded-full bg-gray-300 shadow-sm ring-1 ring-offset-white dark:bg-gray-700 sm:ring-2 sm:hover:ring">
+                                </label>
+                                <div class="swatches-price-ahy flex flex-col items-center">
+                                    <span class="block h-[26px] w-[40px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-container flex flex-col border-b border-t">
+                        <h2 class="title-font mb-4 mt-5 block h-[25px] w-[180px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></h2>
+                        <div class="flex gap-4">
+                            <div class="flex flex-col items-center gap-2 py-2">
+                                <div class="swatches-price-ahy flex flex-col items-center">
+                                    <span class="block h-[40px] w-[80px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 py-2">
+                                <div class="swatches-price-ahy flex flex-col items-center">
+                                    <span class="block h-[40px] w-[80px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 py-2">
+                                <div class="swatches-price-ahy flex flex-col items-center">
+                                    <span class="block h-[40px] w-[80px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                try {
+                    const response = await fetch(`${BASE_URL}ahy_themecustomization/index/GetProductSwatchesDetails?product_id=` + configurableProductId);
+                    const data = await response.json();
+
+                    if (data.success === true) {
+                        
+                        const oldScriptElem = document.getElementById('swatchesScriptContentDynamic-' + configurableProductId);
+
+                        if (!oldScriptElem) {
+                            const scriptElem = document.createElement('script');
+                            scriptElem.type = 'text/javascript';
+                            scriptElem.id = 'swatchesScriptContentDynamic-' + configurableProductId;
+                            scriptElem.innerHTML = data.swatch_script;
+                            document.body.appendChild(scriptElem);
+                        }
+
+                        const oldPriceScriptElem = document.getElementById('swatchesPriceScript-' + configurableProductId);
+                        if (!oldPriceScriptElem) {                            
+                            const scriptPriceElem = document.createElement('script');
+                            scriptPriceElem.type = 'text/javascript';
+                            scriptPriceElem.id = 'swatchesPriceScript-' + configurableProductId;
+                            scriptPriceElem.innerHTML = data.product_price_script;
+                            document.body.appendChild(scriptPriceElem);
+                        }
+
+                        
+                        swatchHtmlEl.innerHTML = data.swatch_html;
+
+                        const productPriceSwatch = document.getElementById('product-price-ahy-' + configurableProductId);
+                        productPriceSwatch.innerHTML = data.product_price_html;
+
+                    }
+
+                } catch (error) {
+                    console.error('Error fetching swatches:', error);
+                }
+            },
+        }
+    }
+</script>
+
+<style>
+@media (min-width: 640px) {
+    .bundle-product-swatches-present .sm\:text-4xl {
+        font-size: 1.5rem;
+        line-height: 2.5rem;
+    }
+}
+@keyframes ahy-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .5;
+    }
+}
+</style>

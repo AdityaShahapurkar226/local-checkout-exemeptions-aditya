@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_layout.xsd">
+    <body>
+        <block class="Magento\Framework\View\Element\Template" name="amasty.mostviewed.confirm" template="Amasty_Mostviewed::cart/confirm.phtml">
+            <arguments>
+                <argument name="confirmViewModel" xsi:type="object">Amasty\Mostviewed\ViewModel\ConfirmPopup</argument>
+            </arguments>
+        </block>
+    </body>
+</layout>

@@ -1,0 +1,60 @@
+<?php
+/** @var \Amasty\Promo\Block\Popup $block */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\ViewModel\Modal;
+use Hyva\AmastyPromo\ViewModel\Promo;
+
+$countersMode = $block->getCountersMode();
+$promoAddBlock = $block->getPromoAddBlock();
+
+/** @var ViewModelRegistry $viewModels */
+/** @var Modal $modalViewModel */
+$modalViewModel = $viewModels->require(Modal::class);
+/** @var Promo $promoViewModel */
+$promoViewModel = $viewModels->require(Promo::class);
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+?>
+
+<?php if ($block->hasQuoteItems() && $block->getItemsCount() > 0): ?>
+    <script>
+        function initPopin() {
+            return {
+                isOpenAutomatically: "<?php echo $promoViewModel->isOpenAutomatically(); ?>",
+                init() {
+                    if (this.isOpenAutomatically) {
+                        this.show();
+                    }
+                },
+                promoPopinLink(event) {
+                    if (event.target.hasAttribute('href')) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    this.show();
+                }
+            }
+        }
+    </script>
+    <div x-data="{...hyva.modal(), ...initPopin()}" x-init="init()">
+        <?php
+        /** @var string $modalCloseBtn */
+        $modalCloseBtn = '<button @click="hide" class="absolute top-0 right-0 m-2">' . $heroicons->xHtml('w-8 h-8 m-2', 24, 24) . '</button>';
+        /** @var string $modalTitle */
+        $modalTitle = $block->escapeHtml($block->getPopupName());
+        /** @var string $modalHtml */
+        $modalHtml = $modalCloseBtn . '<h2 class="my-6 text-2xl font-light">'. $modalTitle . '</h2>' . $block->getChildHtml('items');
+        ?>
+        <div>
+            <p @click="promoPopinLink($event, $dispatch)"><?= $promoViewModel->getPopupLinkHtml(); ?></p>
+        </div>
+        <?= $block->getChildHtml('items') ?>
+        <?= $modalViewModel->createModal()
+            ->removeOverlayClass('z-10')
+            ->addOverlayClass('z-30')
+            ->addDialogClass('m-2 max-w-screen-2xl relative')
+            ->withContent($modalHtml) ?>
+    </div>
+<?php endif; ?>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Webkul_MpAssignProduct::css/style.css"/>
+    </head>
+    <body>
+        <referenceBlock name="product_form">
+            <block class="Webkul\MpAssignProduct\Block\Adminhtml\Catalog\Product\Edit\Tab\AssignProduct" name="assignproduct.tab">
+                <arguments>
+                    <argument name="config" xsi:type="array">
+                        <item name="label" xsi:type="string" translate="true">Assigned Product Information</item>
+                        <item name="collapsible" xsi:type="boolean">true</item>
+                        <item name="opened" xsi:type="boolean">true</item>
+                        <item name="sortOrder" xsi:type="string">2</item>
+                        <item name="canShow" xsi:type="boolean">true</item>
+                        <item name="componentType" xsi:type="string">fieldset</item>
+                    </argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

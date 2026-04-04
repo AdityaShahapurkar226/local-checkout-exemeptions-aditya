@@ -1,0 +1,111 @@
+<?php /** @var Klevu\FrontendJs\Block\Template $block */ ?>
+<!-- custom version of the klevuLandingTemplateFilters template -->
+<script type="template/klevu" id="ahyKlevuLandingTemplateFilters">
+    <% if(data.query[dataLocal].filters.length > 0 ) { %>
+        <div class="kuFilters" role="navigation" data-position="left" aria-label="Product Filters" tabindex="0">
+            <% helper.each(data.query[dataLocal].filters,function(key,filter){ %>
+                <% if(filter.type == "OPTIONS"){ %>
+                    <div class="kuFilterBox klevuFilter <%=(filter.multiselect)?'kuMulticheck':''%>" data-filter="<%=filter.key%>" <% if(filter.multiselect){ %> data-singleselect="false" <% } else { %> data-singleselect="true"<% } %>>
+                        <div class="kuFilterHead capitalize <%=(filter.isCollapsed) ? 'kuExpand' : 'kuCollapse'%>">
+                            <% var filter_label = (filter.label=="klevu_price") ? "price" : filter.label; %>
+                            <div class="!text-lg capitalize !font-semibold text-ahy-blue pt-4 border-t-2 border-white w-full flex justify-between">
+                                <span><%=helper.translate(filter_label)%></span>
+                                <div class="arrow-nav-collapse pr-2 pl-2 bg-[url('/media/icons/arrow-nav.svg')] bg-contain bg-no-repeat bg-center"></div>
+                            </div>
+                        </div>
+                        <div data-optionCount="<%= filter.options.length %>" class="kuFilterNames <%= (filter.options.length <= 5 ) ? 'kuFilterShowAll': '' %> <%=(filter.isCollapsed) ? 'kuFilterCollapse' : ''%>">
+                            <ul>
+                                <% helper.each(filter.options,function(key,filterOption){ %>
+                                    <li <% if(filterOption.selected ==true) { %> class="kuSelected"<% } %>>
+                                        <a
+                                            target="_self"
+                                            href="#"
+                                            title="<%=helper.escapeHTML(filterOption.name)%>"
+                                            class="klevuFilterOption<% if(filterOption.selected ==true) { %> klevuFilterOptionActive<% } %>"
+                                            data-value="<%=helper.escapeHTML(filterOption.value)%>"
+                                            data-name="<%=helper.escapeHTML(filterOption.name)%>"
+                                        >
+                                            <span class="kuFilterIcon white-check"></span>
+                                            <% if (filter.key.toLowerCase() === 'price range') { %>
+                                                <% const newString = filterOption.name.split('-').map(i => "$" + i.trim()).join(' - '); %>
+                                                <span class="kufacet-text"><%=newString%></span>
+                                            <% } else { %>
+                                                <span class="kufacet-text"><%=filterOption.name%></span>
+                                            <% } %>
+                                            <span class="kuFilterTotal">(<%=filterOption.count%>)</span>
+                                        </a>
+                                    </li>
+
+                                <%  }); %>
+                            </ul>
+                            <% if(filter.options.length > 5 ) { %>
+                                <div class="kuShowOpt !font-bold" tabindex="-1">
+                                    <span class="capitalize text-ahy-blue-light show-more-ahy">see more + </span>
+                                    <span class="capitalize text-ahy-blue-light show-less-ahy">see less - </span>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                <% } else if(filter.type == "SLIDER")  { %>
+                    <div class="kuFilterBox klevuFilter" data-filter="<%=filter.key%>">
+                        <div class="kuFilterHead capitalize  <%=(filter.isCollapsed) ? 'kuExpand' : 'kuCollapse'%>">
+                            <% var filter_label = (filter.label=="klevu_price") ? "price" : filter.label; %>
+                            <div class="!text-lg capitalize !font-semibold text-ahy-blue pt-4 border-t-2 border-white w-full flex justify-between">
+                                <span><%=helper.translate(filter_label)%></span>
+                                <div class="arrow-nav-collapse pr-2 pl-2 bg-[url('/media/icons/arrow-nav.svg')] bg-contain bg-no-repeat bg-center"></div>
+                            </div>
+                        </div>
+                        <div class="kuFilterNames sliderFilterNames <%=(filter.isCollapsed) ? 'kuFilterCollapse' : ''%>">
+                        <div class="kuPriceSlider klevuSliderFilter" data-query = "<%=dataLocal%>">
+                            <div data-querykey = "<%=dataLocal%>" class="noUi-target noUi-ltr noUi-horizontal noUi-background kuSliderFilter kuPriceRangeSliderFilter<%=dataLocal%>"></div>
+                        </div>
+                        </div>
+                    </div>
+                <% } else if (filter.type == "RATING")  { %>
+                    <div class="kuFilterBox klevuFilter <%=(filter.multiselect)?'kuMulticheck':''%>" data-filter="<%=filter.key%>" <% if(filter.multiselect){ %> data-singleselect="false" <% } else { %> data-singleselect="true"<% } %>>
+                        <div class="kuFilterHead capitalize <%=(filter.isCollapsed) ? 'kuExpand' : 'kuCollapse'%>">
+                            <div class="!text-lg capitalize !font-semibold text-ahy-blue pt-4 border-t-2 border-white w-full flex justify-between">
+                                <span><%=helper.translate(filter.label)%></span>
+                                <div class="arrow-nav-collapse pr-2 pl-2 bg-[url('/media/icons/arrow-nav.svg')] bg-contain bg-no-repeat bg-center"></div>
+                            </div>
+                        </div>
+                        <div data-optionCount="<%= filter.options.length %>" class="kuFilterNames <%= (filter.options.length <= 5 ) ? 'kuFilterShowAll': '' %> <%=(filter.isCollapsed) ? 'kuFilterCollapse' : ''%>">
+                            <ul>
+                                <% helper.each(filter.options,function(key,filterOption){ %>
+                                    <li <% if(filterOption.selected ==true) { %> class="kuSelected"<% } %>>
+                                        <a
+                                            target="_self"
+                                            href="#"
+                                            title="<%=helper.escapeHTML(filterOption.name)%>"
+                                            class="klevuFilterOption<% if(filterOption.selected ==true) { %> klevuFilterOptionActive<% } %>"
+                                            data-value="<%=helper.escapeHTML(filterOption.value)%>"
+                                            data-name="<%=helper.escapeHTML(filterOption.name)%>"
+                                        >
+                                            <span class="kuFilterIcon white-check rating"></span>
+                                            <span class="kufacet-text !flex items-center gap-2">
+                                                <div class="klevuFacetStars">
+                                                    <div class="klevuFacetRating" style="width:<%=(20*Number(filterOption.name))%>%;"></div>
+                                                </div> <span class="!hidden xl:!inline-block">& up</span>
+                                            </span>
+                                            <span class="w-1/2 xl:!hidden">& up</span>
+                                            <span class="kuFilterTotal">(<%=filterOption.count%>)</span>
+                                        </a>
+                                    </li>
+
+                                <%  }); %>
+                            </ul>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <!-- Other Facets -->
+                <% } %>
+            <% }); %>
+
+            <!-- <div class="kuFiltersFooter">
+                <a target="_self" href="javascript:void(0)" class="kuBtn kuFacetsSlideOut kuMobileFilterCloseBtn" role="button" tabindex="0" area-label=""><%=helper.translate("Close")%></a>
+        </div> -->
+
+
+        </div>
+    <% } %>
+</script>

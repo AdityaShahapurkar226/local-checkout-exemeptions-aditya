@@ -1,0 +1,520 @@
+<?php
+
+/**
+ * @var \Magento\Sales\Block\Adminhtml\Order\View\Info $block
+ */
+$order = $block->getOrder();
+
+$baseCurrencyCode = (string)$order->getBaseCurrencyCode();
+$globalCurrencyCode = (string)$order->getGlobalCurrencyCode();
+$orderCurrencyCode = (string)$order->getOrderCurrencyCode();
+$restriction = $order->getOrchidRestrictionLevel();
+
+
+$orderRestrictionCode = null;
+$shippingCode = null;
+$ageCode = null;
+
+// Decode order-level restriction JSON
+if (is_string($restriction)) {
+    $decodedRestriction = json_decode($restriction, true);
+    if (json_last_error() === JSON_ERROR_NONE) {
+        $orderRestrictionCode = $decodedRestriction['restriction'] ?? null;
+        $shippingCode         = $decodedRestriction['shipping_restriction'] ?? null;
+        $ageCode              = $decodedRestriction['age_restriction'] ?? null;
+    }
+}
+$orderAdminDate = $block->formatDate(
+    $block->getOrderAdminDate($order->getCreatedAt()),
+    \IntlDateFormatter::MEDIUM,
+    true
+);
+
+$orderStoreDate = $block->formatDate(
+    $order->getCreatedAt(),
+    \IntlDateFormatter::MEDIUM,
+    true,
+    $block->getTimezoneForStore($order->getStore())
+);
+
+$dealerName  = $order->getFflDealer();
+$dealerId    = $order->getSelectedFflDealerId();
+$hasDealer   = $dealerId ? true : false;
+$hasNormalProduct = false;
+$hasFflProduct    = false;
+$restrictedProducts = [];
+
+foreach ($order->getAllVisibleItems() as $item) { // Use getAllVisibleItems to prevent duplicates
+    
+    // Skip free gifts
+    $sku = (string)$item->getSku();
+    $price = (float)$item->getPrice();
+    $isFreeGift = ($price <= 0) || stripos($sku, 'FREE') !== false;
+    if ($isFreeGift) {
+        continue;
+    }
+
+    // Load product safely
+    $product = null;
+    try {
+        $product = $this->productRepository->getById($item->getProductId());
+    } catch (\Exception $e) {}
+
+    // Determine FFL vs normal
+    if ($product && $product->getData('ffl_selection_required')) {
+        $hasFflProduct = true;
+    } else {
+        $hasNormalProduct = true;
+    }
+
+    // Restriction data
+    $restrictionJson = $item->getData('orchid_restriction_level');
+
+    if ($restrictionJson === null || $restrictionJson === '' || (string)$restrictionJson === '1') {
+        continue;
+    }
+
+    $decoded = json_decode($restrictionJson, true);
+
+    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+        $restrictedProducts[] = [
+            'name'     => $item->getName(),
+            'level'    => isset($decoded['restriction']) ? (string)$decoded['restriction'] : (string)$restrictionJson,
+            'shipping' => isset($decoded['shipping_restriction']) ? (string)$decoded['shipping_restriction'] : null,
+            'age'      => isset($decoded['age_restriction']) ? (string)$decoded['age_restriction'] : null,
+        ];
+    } else {
+        // Handle non-JSON values (like 3 or 5)
+        $restrictedProducts[] = [
+            'name'     => $item->getName(),
+            'level'    => (string)$restrictionJson,
+            'shipping' => null,
+            'age'      => null,
+        ];
+    }
+}
+
+
+$shippingMessages = [
+    'AA'  => 'Ship to Consumer Permitted',
+    'BB'  => 'Ship to Consumer Pending License and/or Permit Verification',
+    'CC'  => 'Ship to FFL Dealer Only',
+    'FF'  => 'Restricted (Product Cannot Be Purchased)',
+    'SHI' => 'Ship to Consumer Pending Required Age Verification',
+    'SNJ' => 'Shotgun Ammo Ship to Consumer Permitted. Handgun & Rifle Ammo Ship to Consumer Pending License and/or Permit Verification',
+];
+
+$ageMessages = [
+    'AAA' => '18+ long gun / 21+ other firearms',
+    'BBB' => '21+ all ammo',
+    'FFF' => 'Restricted',
+    'ADE' => '21+ OR 18+ if purchaser: (a) holds license to carry concealed (b) is US Armed Forces (c) is National Guard (d) is a law enforcement officer',
+    'AMD' => '18+ OR 21+ if the ammo is “solely designed for” either: handguns OR the list of firearms identified at MD Public Safety Article 5-101(r)(2)',
+    'ANJ' => '18+ for shotgun ammo & rifle ammo for which no handgun exists; 21+ for handgun ammo & rifle ammo that may be used in a handgun',
+];
+$restrictionMessages = [
+    '0' => 'API key fail',
+    '3' => 'Roster state',
+    '4' => 'Orchid fail',
+    '5' => 'UPC not in the Orchid Database',
+    'B' => 'Not Restricted product'
+];
+$onlyFfl     = $hasFflProduct && !$hasNormalProduct;
+$onlyNormal  = $hasNormalProduct && !$hasFflProduct;
+$isCombo     = $hasFflProduct && $hasNormalProduct;
+
+
+$customerUrl = $block->getCustomerViewUrl();
+$allowedAddressHtmlTags = ['b', 'br', 'em', 'i', 'li', 'ol', 'p', 'strong', 'sub', 'sup', 'ul'];
+?>
+
+<!-- Order & Account Info -->
+<section class="admin__page-section order-view-account-information">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $block->escapeHtml(__('Order & Account Information')) ?></span>
+    </div>
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-item order-information">
+            <?php $confirmationEmailStatusMessage = $order->getEmailSent()
+                ? __('The order confirmation email was sent')
+                : __('The order confirmation email is not sent'); ?>
+            <div class="admin__page-section-item-title">
+                <span class="title">
+                    <?php if ($block->getNoUseOrderLink()) : ?>
+                        <?= $block->escapeHtml(__('Order # %1', $order->getRealOrderId())) ?>
+                        (<span><?= $block->escapeHtml($confirmationEmailStatusMessage) ?></span>)
+                    <?php else : ?>
+                        <a href="<?= $block->escapeUrl($block->getViewUrl($order->getId())) ?>">
+                            <?= $block->escapeHtml(__('Order # %1', $order->getRealOrderId())) ?>
+                        </a>
+                        <span>(<?= $block->escapeHtml($confirmationEmailStatusMessage) ?>)</span>
+                    <?php endif; ?>
+                </span>
+            </div>
+            <div class="admin__page-section-item-content">
+                <table class="admin__table-secondary order-information-table">
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Order Date')) ?></th>
+                        <td><?= $block->escapeHtml($orderAdminDate) ?></td>
+                    </tr>
+                    <?php if ($orderAdminDate != $orderStoreDate) : ?>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Order Date (%1)', $block->getTimezoneForStore($order->getStore()))) ?></th>
+                            <td><?= $block->escapeHtml($orderStoreDate) ?></td>
+                        </tr>
+                    <?php endif; ?>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Order Status')) ?></th>
+                        <td><span id="order_status"><?= $block->escapeHtml($order->getStatusLabel()) ?></span></td>
+                    </tr>
+                    <?= $block->getChildHtml() ?>
+                    <?php if (!$block->isSingleStoreMode()) : ?>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Purchased From')) ?></th>
+                            <td><?= $block->escapeHtml($block->getOrderStoreName(), ['br']) ?></td>
+                        </tr>
+                    <?php endif; ?>
+                    <?php if ($order->getRelationChildId()) : ?>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Link to the New Order')) ?></th>
+                            <td>
+                                <a href="<?= $block->escapeUrl($block->getViewUrl($order->getRelationChildId())) ?>">
+                                    <?= $block->escapeHtml($order->getRelationChildRealId()) ?>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    <?php if ($order->getRelationParentId()) : ?>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Link to the Previous Order')) ?></th>
+                            <td>
+                                <a href="<?= $block->escapeUrl($block->getViewUrl($order->getRelationParentId())) ?>">
+                                    <?= $block->escapeHtml($order->getRelationParentRealId()) ?>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    <?php if ($order->getRemoteIp() && $block->shouldDisplayCustomerIp()) : ?>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Placed from IP')) ?></th>
+                            <td>
+                                <?= $block->escapeHtml($order->getRemoteIp()); ?>
+                                <?= $order->getXForwardedFor() ? ' (' . $block->escapeHtml($order->getXForwardedFor()) . ')' : ''; ?>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    <?php if ($globalCurrencyCode !== $baseCurrencyCode) : ?>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('%1 / %2 rate:', $globalCurrencyCode, $baseCurrencyCode)) ?></th>
+                            <td><?= $block->escapeHtml($order->getBaseToGlobalRate()) ?></td>
+                        </tr>
+                    <?php endif; ?>
+                    <?php if ($baseCurrencyCode !== $orderCurrencyCode && $globalCurrencyCode !== $orderCurrencyCode) : ?>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('%1 / %2 rate:', $orderCurrencyCode, $baseCurrencyCode)) ?></th>
+                            <td><?= $block->escapeHtml($order->getBaseToOrderRate()) ?></td>
+                        </tr>
+                    <?php endif; ?>
+                </table>
+            </div>
+        </div>
+
+        <div class="admin__page-section-item order-account-information">
+            <div class="admin__page-section-item-title">
+                <span class="title"><?= $block->escapeHtml(__('Account Information')) ?></span>
+                <div class="actions">
+                    <?php if ($customerUrl) : ?>
+                        <a href="<?= $block->escapeUrl($customerUrl) ?>" target="_blank">
+                            <?= $block->escapeHtml(__('Edit Customer')) ?>
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="admin__page-section-item-content">
+                <table class="admin__table-secondary order-account-information-table">
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Customer Name')) ?></th>
+                        <td>
+                            <?php if ($customerUrl) : ?>
+                                <a href="<?= $block->escapeUrl($customerUrl) ?>" target="_blank">
+                                    <span><?= $block->escapeHtml($order->getCustomerName()) ?></span>
+                                </a>
+                            <?php else : ?>
+                                <?= $block->escapeHtml($order->getCustomerName()) ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Email')) ?></th>
+                        <td>
+                            <a href="mailto:<?= $block->escapeHtmlAttr($order->getCustomerEmail()) ?>">
+                                <?= $block->escapeHtml($order->getCustomerEmail()) ?>
+                            </a>
+                        </td>
+                    </tr>
+                    <?php if ($groupName = $block->getCustomerGroupName()) : ?>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Customer Group')) ?></th>
+                            <td><?= $block->escapeHtml($groupName) ?></td>
+                        </tr>
+                    <?php endif; ?>
+                    <?php foreach ($block->getCustomerAccountData() as $data) : ?>
+                        <tr>
+                            <th><?= $block->escapeHtml($data['label']) ?></th>
+                            <td><?= $block->escapeHtml($data['value'], ['br']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <?= $block->getChildHtml('extra_customer_info') ?>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Adresss information  -->
+<section class="admin__page-section order-addresses">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $block->escapeHtml(__('Address Information')) ?></span>
+    </div>
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-content-row">
+
+            <!-- Billing Address -->
+            <div class="admin__page-section-item order-billing-address">
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?= $block->escapeHtml(__('Billing Address')) ?></span>
+                    <div class="actions">
+                        <?= $block->getAddressEditLink($order->getBillingAddress()) ?>
+                    </div>
+                </div>
+                <address class="admin__page-section-item-content">
+                    <?= $block->escapeHtml(
+                        $block->getFormattedAddress($order->getBillingAddress()),
+                        $allowedAddressHtmlTags
+                    ); ?>
+                </address>
+            </div>
+
+            <?php if (!$order->getIsVirtual()) : ?>
+
+                <?php if ($onlyNormal) : ?>
+                    <!-- Normal Shipping Address -->
+                    <div class="admin__page-section-item order-shipping-address">
+                        <div class="admin__page-section-item-title">
+                            <span class="title"><?= $block->escapeHtml(__('Shipping Address')) ?></span>
+                            <div class="actions">
+                                <?= $block->getAddressEditLink($order->getShippingAddress()) ?>
+                            </div>
+                        </div>
+                        <address class="admin__page-section-item-content">
+                            <?= $block->escapeHtml(
+                                $block->getFormattedAddress($order->getShippingAddress()),
+                                $allowedAddressHtmlTags
+                            ); ?>
+                        </address>
+                    </div>
+
+                <?php elseif ($onlyFfl) : ?>
+                    <!-- FFL Dealer Address -->
+                    <div class="admin__page-section-item order-ffl-address">
+                        <div class="admin__page-section-item-title">
+                            <span class="title"><?= $block->escapeHtml(__('FFL Shipping Address')) ?></span>
+                        </div>
+                        <address class="admin__page-section-item-content">
+                            <?= $block->escapeHtml($dealerName ?: 'N/A', $allowedAddressHtmlTags); ?>
+                        </address>
+                    </div>
+                <?php elseif ($isCombo) : ?>
+                    <!-- Combination: show all 3 in columns -->
+                    <div class="admin__page-section-item order-shipping-address">
+                        <div class="admin__page-section-item-title">
+                            <span class="title"><?= $block->escapeHtml(__('Shipping Address')) ?></span>
+                            <div class="actions">
+                                <?= $block->getAddressEditLink($order->getShippingAddress()) ?>
+                            </div>
+                        </div>
+                        <address class="admin__page-section-item-content">
+                            <?= $block->escapeHtml(
+                                $block->getFormattedAddress($order->getShippingAddress()),
+                                $allowedAddressHtmlTags
+                            ); ?>
+                        </address>
+                    </div>
+
+                    <div class="admin__page-section-item order-shipping-address mt-3" style="margin-top:20px">
+                        <div class="admin__page-section-item-title">
+                            <span class="title"><?= $block->escapeHtml(__('FFL Shipping Address')) ?></span>
+                        </div>
+                        <address class="admin__page-section-item-content">
+                            <?= $block->escapeHtml($dealerName ?: 'N/A', $allowedAddressHtmlTags); ?>
+                        </address>
+                    </div>
+                <?php endif; ?>
+
+            <?php endif; ?>
+
+        </div>
+    </div>
+</section>
+
+<!-- FFL Information -->
+<section class="admin__page-section order-ffl-information">
+    <div class="admin__page-section-title">
+        <span class="title">
+            <?= $block->escapeHtml(__('FFL Information')) ?>
+        </span>
+    </div>
+
+    <div class="admin__page-section-content">
+
+        <!-- FFL Dealer Name -->
+        <div class="admin__page-section-item-content">
+            <strong><?= $block->escapeHtml(__('FFL Dealer')) ?>:</strong>
+            <?= $block->escapeHtml($order->getFflDealer() ?: 'N/A') ?>
+        </div>
+
+        <!-- FFL Dealer ID -->
+        <div class="admin__page-section-item-content">
+            <strong><?= $block->escapeHtml(__('FFL Dealer ID')) ?>:</strong>
+            <?= $block->escapeHtml($order->getSelectedFflDealerId() ?: 'N/A') ?>
+        </div>
+
+        <!-- Allow child block injection -->
+        <?= $block->getChildHtml('ahy_ffl_info') ?>
+
+    </div>
+</section>
+
+
+<?php if ($order->getEstateDocument()): ?>
+    <?php
+    $document = $order->getEstateDocument();
+    $mediaUrl = $block->getBaseUrl() . 'media/';
+    $fullDocumentUrl = $mediaUrl . ltrim($document, '/');
+
+    $extension = strtolower(pathinfo($document, PATHINFO_EXTENSION));
+    $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf'];
+    ?>
+    <section class="admin__page-section order-document-information">
+        <div class="admin__page-section-title">
+            <span class="title"><?= $block->escapeHtml(__('Document Information')) ?></span>
+        </div>
+        <div class="admin__page-section-content">
+            <div class="admin__page-section-item-content">
+                <strong><?= __('Uploaded Document') ?>:</strong>
+                <div style="margin-top: 10px;">
+                    <?php if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])): ?>
+                        <a href="<?= $block->escapeUrl($fullDocumentUrl) ?>" target="_blank">
+                            <img
+                                src="<?= $block->escapeUrl($fullDocumentUrl) ?>"
+                                alt="<?= $block->escapeHtml(__('Uploaded Document')) ?>"
+                                style="max-width:250px; max-height:250px; border:1px solid #d6d6d6; padding:6px; background:#fff; display: block;" />
+                        </a>
+                    <?php else: ?>
+                        <a href="<?= $block->escapeUrl($fullDocumentUrl) ?>" target="_blank" class="action-secondary">
+                            <span><?= $block->escapeHtml(__('View Document (%1)', strtoupper($extension))) ?></span>
+                        </a>
+                    <?php endif; ?>
+                </div>
+                <!-- ================= APPROVAL UI ================= -->
+
+                <?php if (!$order->getEstateDocumentApproved()): ?>
+                    <div style="margin-top:15px;">
+                        <button
+                            class="action-primary"
+                            onclick="setLocation('<?= $block->escapeUrl(
+                                                        $block->getUrl(
+                                                            'estateadmin/document/approve',
+                                                            ['order_id' => $order->getId()]
+                                                        )
+                                                    ) ?>')">
+                            <?= __('Approve Document') ?>
+                        </button>
+
+                    </div>
+                <?php else: ?>
+                    <div class="message message-success" style="margin-top:15px;">
+                        <?= __('This document has been approved.') ?>
+                    </div>
+                <?php endif; ?>
+
+                <!-- ================================================= -->
+            </div>
+        </div>
+    </section>
+<?php endif; ?>
+
+<?php if ($order->getAgeOfPurchaser()): ?>
+    <section class="admin__page-section order-age-information">
+        <div class="admin__page-section-title"> <span class="title"><?= $block->escapeHtml(__('Age Information')) ?></span> </div>
+        <div class="admin__page-section-content">
+            <div class="admin__page-section-item-content"> <strong><?= __('Age of Purchaser') ?>:</strong> <?= (int)$order->getAgeOfPurchaser() ?> </div>
+        </div>
+    </section>
+<?php endif; ?>
+
+<?php if (!empty($restrictedProducts)): ?>
+    <section class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= __('Restriction Information') ?></span>
+        </div>
+
+        <div class="admin__page-section-content">
+            <div class="admin__page-section-item">
+                <strong><?= __('Order Hold Reason:') ?></strong>
+                <?= __('This order contains restricted item(s) and has been placed on hold for additional verification.') ?>
+            </div>
+
+            <div class="admin__page-section-item">
+                <strong><?= __('Restricted Item(s):') ?></strong><br />
+
+                <?php foreach ($restrictedProducts as $product): ?>
+
+                    <?php
+                    $levelCode = $product['level'];
+                    $levelMsg  = $restrictionMessages[$levelCode] ?? '';
+
+                    $shipCode  = $product['shipping'] ?? null;
+                    $shipMsg   = $shippingMessages[$shipCode] ?? '';
+
+                    $ageCodeIt = $product['age'] ?? null;
+                    $ageMsg    = $ageMessages[$ageCodeIt] ?? '';
+                    ?>
+
+                    <div style="margin-left:15px; margin-top:8px;">
+
+                        <strong><?= $block->escapeHtml($product['name']) ?></strong><br />
+
+                        <!-- Restriction Level -->
+                        <?php if ($levelCode): ?>
+                            <span style="margin-left:15px;">
+                                <?= $block->escapeHtml($levelCode) ?>
+                                - <?= $block->escapeHtml($levelMsg) ?>
+                            </span>
+                        <?php endif; ?>
+
+                        <!-- Shipping Restriction -->
+                        <?php if ($shipCode): ?>
+                            <br />
+                            <span style="margin-left:15px;">
+                                <?= $block->escapeHtml($shipCode) ?>
+                                - <?= $block->escapeHtml($shipMsg) ?>
+                            </span>
+                        <?php endif; ?>
+
+                        <!-- Age Restriction -->
+                        <?php if ($ageCodeIt): ?>
+                            <br />
+                            <span style="margin-left:15px;">
+                                <?= $block->escapeHtml($ageCodeIt) ?>
+                                - <?= $block->escapeHtml($ageMsg) ?>
+                            </span>
+                        <?php endif; ?>
+
+                    </div>
+
+                <?php endforeach; ?>
+
+            </div>
+        </div>
+    </section>
+<?php endif; ?>

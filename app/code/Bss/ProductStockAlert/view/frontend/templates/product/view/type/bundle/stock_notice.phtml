@@ -1,0 +1,40 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Bss_ProductStockAlert
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2015-2017 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+// @codingStandardsIgnoreFile
+?>
+
+<?php
+/**
+ * @var $block Bss\ProductStockAlert\Block\Catalog\Product\View\Type\Bundle
+ */
+$helper = $block->getHelper();
+?>
+<?php if ($helper->isStockAlertAllowed()): ?>
+    <script type="text/x-magento-init">
+    {
+    "*":
+        {
+            "bssProductStockAlertProcessor": {
+                "formDataActionUrl": "<?php /* @escapeNotVerified */ echo $block->getFormDataActionUrl(); ?>",
+                "actionViewController": "<?php /* @escapeNotVerified */ echo $block->getActionController(); ?>",
+                "productType": "<?php /* @escapeNotVerified */ echo $block->getProductType(); ?>"
+            }
+        }
+    }
+</script>
+<?php endif ?>

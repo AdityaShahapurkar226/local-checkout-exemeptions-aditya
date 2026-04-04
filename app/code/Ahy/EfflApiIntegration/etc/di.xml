@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<!-- Bind Interface to Implementation -->
+	<preference for="Ahy\EfflApiIntegration\Api\FflDealerInterface" type="Ahy\EfflApiIntegration\Model\FflDealer" />
+
+	 <preference for="Magento\Sales\Block\Adminhtml\Order\View\Info"
+                type="Ahy\EfflApiIntegration\Block\Adminhtml\Order\View\Info" />
+	<!-- Logger Configuration -->
+	<type name="Ahy\EfflApiIntegration\Logger\Logger">
+		<arguments>
+			<argument name="name" xsi:type="string">
+				EfflApiIntegration
+			</argument>
+			<argument name="handlers" xsi:type="array">
+				<item name="system" xsi:type="object">
+					Ahy\EfflApiIntegration\Logger\Handler
+				</item>
+			</argument>
+		</arguments>
+	</type>
+	<!-- Virtual type for Dealers grid data source -->
+	<virtualType name="orchid_ffl_dealers_listing_data_source" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">
+				ahy_orchid_ffl_dealers
+			</argument>
+			<argument name="resourceModel" xsi:type="string">
+				Ahy\EfflApiIntegration\Model\ResourceModel\Dealer
+			</argument>
+		</arguments>
+	</virtualType>
+	<!-- Register the collection handle with CollectionFactory -->
+	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+		<arguments>
+			<argument name="collections" xsi:type="array">
+				<item name="orchid_ffl_dealers_listing_data_source" xsi:type="string">
+					orchid_ffl_dealers_listing_data_source
+				</item>
+			</argument>
+		</arguments>
+	</type>
+</config>

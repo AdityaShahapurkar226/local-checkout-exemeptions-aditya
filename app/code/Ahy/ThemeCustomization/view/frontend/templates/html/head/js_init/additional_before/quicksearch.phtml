@@ -1,0 +1,61 @@
+<?php /** @var Magento\Framework\View\Element\Template $block */ ?>
+// Register event to attach
+klevu.coreEvent.build({
+    name: "setRemoteConfigQuickOverride",
+    fire: function () {
+        if (klevu.getSetting(klevu,"settings.flags.setRemoteConfigQuick.build", false)) {
+            return true;
+        }
+        return false;
+    },
+    maxCount: 150,
+    delay: 100
+});
+
+// Attach event containing custom methods to trigger after initiating request
+klevu.coreEvent.attach("setRemoteConfigQuickOverride", {
+    name: "attachRemoteConfigQuickOverride",
+    fire: function () {
+        // Modify the number of suggestions returned
+        klevu.search.quick.getScope().chains.request.control.addAfter("initRequest", {
+            name: "modifyQuickQuery",
+            fire: function (data, scope) {
+                klevu.search.modules.overrideSearchTerm(data, scope);
+            }
+        });
+
+        // Override the klevuQuickProductBlock template with our own
+        klevu.each(klevu.search.extraSearchBox, function (key, box) {
+            // quick product block 
+            //box.getScope().template.setTemplate(klevu.dom.helpers.getHTML("#ahyKlevuQuickProductBlock"), "klevuQuickProductBlock", true);
+            
+            // quick auto suggestions
+            box.getScope().template.setTemplate(klevu.dom.helpers.getHTML("#ahyKlevuQuickAutoSuggestions"), "klevuQuickAutoSuggestions", true);
+            
+            // quick page suggestions
+            box.getScope().template.setTemplate(klevu.dom.helpers.getHTML("#ahyKlevuQuickPageSuggestions"), "klevuQuickPageSuggestions", true);
+        });
+
+        // Power up the quick search functionality
+        klevu({
+            powerUp: {
+                quick: true
+            }
+        });
+    }
+});
+
+// Add methods used in custom event
+(function (klevu) {
+    klevu.extend(true, klevu.search.modules, {
+        overrideSearchTerm: function (data, scope) {
+            klevu.each(data.request.current.recordQueries,function(key, query) {
+                klevu.setObjectPath(
+                    data,
+                    "localOverrides.query." + query.id + ".settings.limit",
+                    3 // The maximum number of suggestions to be returned
+                );
+            });
+        }
+    });
+})(klevu);

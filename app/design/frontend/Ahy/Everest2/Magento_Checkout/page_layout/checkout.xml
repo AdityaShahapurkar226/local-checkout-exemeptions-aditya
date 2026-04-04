@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_layout.xsd">
+    <update handle="empty"/>
+    <referenceContainer name="checkout.header.wrapper" remove="true"/>
+
+    <referenceContainer name="page.wrapper">
+        <container name="checkout.header.container" as="checkout_header_container" label="Checkout Page Header Container" htmlTag="header" htmlClass="page-header" before="main.content">
+            <container name="ahy.checkout.header.wrapper" label="ahy.Checkout Page Header" as="ahy_checkout_header_wrapper" htmlTag="div" htmlClass="header content ahy-checkout1">
+                <block name="ahy-checkout-logo" template="Ahy_ThemeCustomization::checkout/checkoutHeader.phtml" />
+            </container>
+        </container>
+    </referenceContainer>
+    <move element="ahy-checkout-logo" destination="ahy.checkout.header.wrapper"/>
+</layout>

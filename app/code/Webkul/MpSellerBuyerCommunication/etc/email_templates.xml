@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="mpsellerbuyercommunication_email_askproductquery_customer_template" label="Ask Query Mail Notification to Customer Regarding Product" file="ask_product_query_notify_to_customer.html" type="html" module="Webkul_MpSellerBuyerCommunication" area="frontend"/>
+
+    <template id="mpsellerbuyercommunication_email_askproductquery_admin_template" label="Ask Query Mail Notification to Admin Regarding Product" file="ask_product_query_notify_to_admin.html" type="html" module="Webkul_MpSellerBuyerCommunication" area="frontend"/>
+
+    <template id="mpsellerbuyercommunication_email_conversation_admin_template" label="Communication Mail Notification to Admin" file="conversation_notify_to_admin.html" type="html" module="Webkul_MpSellerBuyerCommunication" area="frontend"/>
+
+    <template id="mpsellerbuyercommunication_email_conversation_template" label="Communication Mail Notification to Customer" file="conversation_mail_between_customer_seller.html" type="html" module="Webkul_MpSellerBuyerCommunication" area="frontend"/>
+    <template id="mpsellerbuyercommunication_email_askorderquery_fromseller_template" label="Order Query Communication Mail Notification to Customer From Seller" file="order_query_from_seller.html" type="html" module="Webkul_MpSellerBuyerCommunication" area="frontend"/>
+    <template id="mpsellerbuyercommunication_email_askorderquery_fromseller_template_toadmin" label="Order Query Communication Mail Notification to Admin From Seller" file="order_query_from_seller_to_admin.html" type="html" module="Webkul_MpSellerBuyerCommunication" area="frontend"/>
+    <template id ="mpsellerbuyercommunication_email_askorderquery_fromcustomer_template_toadmin" label="Order Query Communication Mail Notification to Admin From Customer" file="order_query_from_customer_to_admin.html" type="html" module="Webkul_MpSellerBuyerCommunication" area="frontend"/>
+    <template id ="mpsellerbuyercommunication_email_askorderquery_fromadmin_template" label="Order Query Communication Mail Notification From Admin To Customer" file="order_query_from_admin.html" type="html" module="Webkul_MpSellerBuyerCommunication" area="frontend"/>
+</config>

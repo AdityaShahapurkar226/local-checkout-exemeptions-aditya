@@ -1,0 +1,38 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_SellerSubAccount
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$helper = $block->getLayout()->createBlock(
+    \Webkul\SellerSubAccount\Block\SubAccount::class
+)->getSubAccountHelper();
+if ($helper->manageSubAccounts()) {
+    $marketplaceHelper = $block->getLayout()->createBlock(
+        \Webkul\SellerSubAccount\Block\SubAccount::class
+    )->getMarketplaceHelperInstance();
+    $isPartner= $marketplaceHelper->isSeller();
+    $magentoCurrentUrl = $block->getCurrentUrl();
+    $isSellerGroup = $marketplaceHelper->isSellerGroupModuleInstalled();
+    if ($isPartner) {
+        if (($isSellerGroup &&
+        $marketplaceHelper->isAllowedAction('sellersubaccount/account/')) ||
+         !$isSellerGroup) { ?>
+            <li id="wk-mp-menu-sellersubaccount" 
+            class="wk-mp-menu-sellersubaccount level-0 
+            <?=strpos($magentoCurrentUrl, 'sellersubaccount/account/')? "current active":"";?>">
+                <a href="<?=$block->escapeUrl($block->getUrl(
+                    'sellersubaccount/account/manage',
+                    ['_secure' => $block->getRequest()->isSecure()]
+                )); ?>"
+                    class="<?=strpos($magentoCurrentUrl, 'sellersubaccount/account/')? "active":"";?>">
+                    <span><?=$block->escapeHtml(__('Manage Sub-Accounts')); ?></span>
+                </a>
+            </li>
+        <?php }
+    }
+} ?>

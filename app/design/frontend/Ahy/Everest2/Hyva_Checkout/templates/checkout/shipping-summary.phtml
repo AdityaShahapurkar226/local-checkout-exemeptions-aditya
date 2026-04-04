@@ -1,0 +1,114 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Hyva\Checkout\ViewModel\Checkout\ShippingSummary;
+use Hyva\Checkout\ViewModel\Checkout\AddressRenderer;
+
+
+$viewModel = $viewModels->require(ShippingSummary::class);
+$addressRenderer = $viewModels->require(AddressRenderer::class);
+$address = $viewModel->getShippingAddress();
+$carrier = $viewModel->getShippingCarrier();
+?>
+<div class="p-6">
+    <?php
+        /**
+         ** removed the shipping address from the shipping summary
+         */
+    ?>
+    <!-- <?php if ($address->getFirstname() || $address->getLastname()): ?>
+        <div class="pb-6">
+            <header class="section-title border-b border-gray-400 pb-1 mb-6">
+                <h2 class="text-gray-800 text-xl font-medium">
+                    <?= $escaper->escapeHtml((__('Ship To'))) ?>
+                </h2>
+            </header>
+
+            <address class="address">
+                <?= /* @noEscape */ $addressRenderer->renderCustomerAddress($address) ?>
+            </address>
+        </div>
+    <?php else: ?>
+        <p>
+            <?= $escaper->escapeHtml(__('No shipping address set.')) ?>
+        </p>
+    <?php endif ?> -->
+    
+    <?php
+        /**
+         ** add the FFL centre address to the shipping summary
+         */
+    ?>
+    <div class="pb-6" 
+        x-data="{
+            selectedFflCentreId: null,
+            fflCentreJson: {},
+            fflCentreAddress: '',
+            showFflCentreAddress: false,
+            listenForFflCentreIdSelectedEvent: function() {
+                const self = this;
+
+                window.addEventListener('fflCentreId-selected', function(event) {
+                    self.showFflCentreAddress = true;
+                    self.selectedFflCentreId = event.detail.fflCentreId;
+                    self.fflCentreJson = event.detail.fflCentreAddress;
+                    self.fflCentreAddress = self.fflCentreJson['CentreName'] + ', ' +  self.fflCentreJson['AddressLine1']  + ', ' +  self.fflCentreJson['City']  + ', ' +  self.fflCentreJson['region_id']  + ', ' +  self.fflCentreJson['zipcode']  + ', US. Phone Number: ' +  self.fflCentreJson['phone_no'];
+                    console.log('Selected FFL Centre ID:', self.fflCentreJson);
+                });
+            }
+        }" 
+        x-init="listenForFflCentreIdSelectedEvent()"
+    >
+        <template x-if="showFflCentreAddress">
+            <div>
+                <header class="section-title border-b border-gray-400 pb-1 mb-6">
+                    <h2 class="text-gray-800 text-xl font-medium">
+                        <?= $escaper->escapeHtml((__('FFL Centre '))) ?>
+                    </h2>
+                </header>
+                <div>
+                    <!-- Display the selectedFflCentreId value -->
+                    <strong>Selected FFL Centre: </strong>
+                    <address x-text="fflCentreAddress"></address>
+                </div>
+            </div>
+        </template>
+    </div>
+    
+    <?php
+        /**
+         ** removed the shipping method from the shipping summary
+         */
+    ?>
+    <!-- <?php if ($carrier): ?>
+        <div>
+            <header class="section-title border-b border-gray-400 pb-1 mb-6">
+                <h2 class="text-gray-800 text-xl font-medium">
+                    <?= $escaper->escapeHtml((__('Shipping Method'))) ?>
+                </h2>
+            </header>
+
+            <p class="break-all">
+                <?= $escaper->escapeHtml($carrier) ?>
+            </p>
+        </div>
+    <?php else: ?>
+        <p>
+            <?= $escaper->escapeHtml(__('No shipping address set.')) ?>
+        </p>
+    <?php endif ?> -->
+</div>

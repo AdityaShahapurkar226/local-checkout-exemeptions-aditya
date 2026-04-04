@@ -1,0 +1,38 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+<?php
+/** @var \Amasty\Mostviewed\ViewModel\ConfirmPopup $confirmViewModel */
+$confirmViewModel = $block->getData('confirmViewModel');
+/** @var array $products */
+$products = $block->getData('products') ?? [];
+?>
+
+<h3 class="amrelated-confirm-header added-item">
+    <?= $escaper->escapeHtml($confirmViewModel->getHeader()) ?>
+</h3>
+<p class="text"><?= $escaper->escapeHtml(__('has been added to your cart')) ?></p>
+<section class="amrelated-products-block">
+    <?php foreach ($products as $productId => $options): ?>
+        <?php if ($productName = $confirmViewModel->getProductName($productId)): ?>
+            <div class="amrelated-product">
+                <figure class="amrelated-image-wrapper">
+                    <?= /* @noEscape */ $confirmViewModel->getProductImage($options['child'] ?? $productId) ?>
+                </figure>
+                <div class="amrelated-content">
+                    <div class="amrelated-name"><?= $escaper->escapeHtml($productName) ?></div>
+                    <dl class="amrelated-qty">
+                        <dd class="amrelated-title"><?= $escaper->escapeHtml(__('Qty')) ?>:</dd>
+                        <dd class="amrelated-value"><?= $escaper->escapeHtml($options['qty'] ?? 1) ?></dd>
+                    </dl>
+                </div>
+            </div>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</section>

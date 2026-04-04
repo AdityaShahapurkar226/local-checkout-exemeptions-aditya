@@ -1,0 +1,93 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+    $mpAssignBlock = $block->getLayout()->createBlock(\Webkul\MpAssignProduct\Block\Link::class);
+    $_helper = $mpAssignBlock->getHelperObject("marketplaceHelper");
+    $isPartner= $_helper->isSeller();
+    $magentoCurrentUrl = $block->getCurrentUrl();
+    $allow_pro_type=$_helper->getAllowedProductType();
+    $isSellerGroup = $_helper->isSellerGroupModuleInstalled();
+    $productListUrl = $block->getUrl(
+        'mpassignproduct/product/productlist',
+        ['_secure' => $block->getRequest()->isSecure()]
+    );
+    $productViewUrl = $block->getUrl(
+        'mpassignproduct/product/view',
+        ['_secure' => $block->getRequest()->isSecure()]
+    );
+    $productUploadUrl = $block->getUrl(
+        'mpassignproduct/upload/view',
+        ['_secure' => $block->getRequest()->isSecure()]
+    );
+    if ($isPartner) { ?>
+    <style type="text/css">
+        @media only screen and (max-width: 767px){
+
+            .block-collapsible-nav.wk-mp-main{
+                top: 20px;
+            }
+        }
+    </style>
+    <li class="level-0 
+        <?= strpos($magentoCurrentUrl, 'mpassignproduct/product/')? "current active":"";?>">
+        <a href="#">
+            <span><?= /* @noEscape */ __('Manage Assign Product')?></span>
+        </a>
+        <div class="wk-mp-submenu">
+            <a href="#" class="action-close _close" data-role="wk-mp-close-submenu"></a>
+            <ul>
+                <li data-ui-id="menu-webkul-marketplace-menu" class="item-menu  parent  level-1">
+                    <strong class="wk-mp-submenu-group-title">
+                        <span><?= /* @noEscape */ __('Menu')?></span>
+                    </strong>
+                    <div class="wk-mp-submenu">
+                        <ul>
+                            <?php if ((
+                                $isSellerGroup &&
+                                $_helper->isAllowedAction('mpassignproduct/product/view'))
+                                || !$isSellerGroup
+                                ): ?>
+                                <li class="level-2">
+                                    <a href="<?= $block->escapeUrl($productViewUrl); ?>">
+                                        <span><?= /* @noEscape */ __('Assign Product') ?></span>
+                                    </a>
+                                </li>
+                            <?php endif;?>
+                                <?php if ((
+                                $isSellerGroup &&
+                                $_helper->isAllowedAction('mpassignproduct/product/productlist'))
+                                || !$isSellerGroup
+                                ): ?>
+                                <li class="level-2">
+                                    <a href="<?= $block->escapeUrl($productListUrl); ?>">
+                                        <span><?= /* @noEscape */ __('Assigned Product List') ?></span>
+                                    </a>
+                                </li>
+                            <?php endif;?>
+                                <?php if ((
+                                $isSellerGroup &&
+                                $_helper->isAllowedAction('mpassignproduct/upload/view'))
+                                || !$isSellerGroup
+                                ): ?>
+                                <li class="level-3">
+                                    <a href="<?= $block->escapeUrl($productUploadUrl); ?>">
+                                        <span><?= /* @noEscape */ __('Mass Assigned Product Upload') ?></span>
+                                    </a>
+                                </li>
+                            <?php endif;?>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </li>
+    <?php } ?>

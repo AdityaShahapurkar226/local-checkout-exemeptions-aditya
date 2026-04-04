@@ -1,0 +1,50 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Framework\Escaper;
+use Magento\Sales\Block\Order\Info\Buttons;
+
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundHelper
+
+/** @var Escaper $escaper */
+/** @var Buttons $block */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+?>
+<div class="flex justify-start md:justify-end my-4 md:my-0">
+    <?php $order = $block->getOrder() ?>
+    <?php if ($this->helper(\Magento\Sales\Helper\Reorder::class)->canReorder($order->getEntityId())): ?>
+        <?php $formData = json_decode(
+            $this->helper(\Magento\Framework\Data\Helper\PostHelper::class)->getPostData(
+                $block->getReorderUrl($order)
+            ),
+            true
+        ) ?>
+        <form action="<?= $escaper->escapeUrl($formData['action']) ?>" method="post" class="inline-flex">
+            <?= $block->getBlockHtml('formkey'); ?>
+            <input type="hidden" name="data" value='<?= /** @noEscape */ json_encode($formData['data']) ?>'/>
+            <button type="submit" class="border-3 border-ahy-blue rounded-full font-bold text-sm w-32 h-10 hover:shadow-[#0d2f47_0px_0px_0px_1px_inset] ">
+                <span><?= $escaper->escapeHtml(__('Reorder')) ?></span>
+            </button>
+        </form>
+    <?php endif ?>
+    <a href="<?= $escaper->escapeUrl($block->getPrintUrl($order)) ?>"
+       class=""
+       target="_blank"
+       rel="noopener">
+        <button class="ml-2 border-3 border-ahy-blue rounded-full font-bold text-sm w-32 h-10 hover:shadow-[#0d2f47_0px_0px_0px_1px_inset] "><?= $escaper->escapeHtml(__('Print Order')) ?></button>
+    </a>
+    <?= $block->getChildHtml() ?>
+</div>

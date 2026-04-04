@@ -1,0 +1,55 @@
+{
+    "extensions": [
+        {
+            "src": "vendor\/bsscommerce\/hyva-compat-base\/src"
+        },
+        {
+            "src": "vendor\/hyva-themes\/magento2-theme-module\/src"
+        },
+        {
+            "src": "vendor\/amasty\/module-free-gift-hyva"
+        },
+        {
+            "src": "vendor\/hyva-themes\/magento2-amasty-promo\/src"
+        },
+        {
+            "src": "vendor\/hyva-themes\/magento2-amasty-faq-product-questions\/src"
+        },
+        {
+            "src": "vendor\/hyva-themes\/magento2-bsscommerce-product-stock-alert\/src"
+        },
+        {
+            "src": "vendor\/hyva-themes\/magento2-graphql-cart\/src"
+        },
+        {
+            "src": "vendor\/hyva-themes\/magento2-mageplaza-social-login\/src"
+        },
+        {
+            "src": "vendor\/amasty\/module-banners-lite-hyva-compatibility"
+        },
+        {
+            "src": "vendor\/hyva-themes\/magento2-klaviyo-reclaim\/src"
+        },
+        {
+            "src": "vendor\/hyva-themes\/magento2-klevu-search\/src"
+        },
+        {
+            "src": "vendor\/hyva-themes\/magento2-magecomp-discountpercentage\/src"
+        },
+        {
+            "src": "vendor\/hyva-themes\/magento2-yotpo-loyalty\/src"
+        },
+        {
+            "src": "vendor\/magewirephp\/magewire\/src"
+        },
+        {
+            "src": "vendor\/hyva-themes\/magento2-hyva-checkout\/src"
+        },
+        {
+            "src": "vendor\/hyva-themes\/magento2-hyva-checkout-paypal\/src"
+        },
+        {
+            "src": "vendor\/monsoonconsulting\/magento2-hyva-ajax-add-to-cart"
+        }
+    ]
+}

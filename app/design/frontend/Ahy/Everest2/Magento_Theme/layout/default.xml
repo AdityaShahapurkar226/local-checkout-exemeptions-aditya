@@ -1,0 +1,23 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <meta http-equiv="Content-Security-Policy" content="
+                default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; 
+                style-src   'self' https://fonts.googleapis.com;
+                font-src    'self' data: https://fonts.gstatic.com;
+                img-src     'self' data: content:;
+                media-src   *;
+            " />
+
+    </head>
+    <body>
+        <referenceBlock name="header-content">
+            <block name="topmenu_generic" as="topmenu" template="Magento_Theme::html/header/topmenu.phtml">
+                <block name="topmenu_mobile" as="topmenu.mobile" template="Magento_Theme::html/header/menu/mobile.phtml"></block>
+                <block name="topmenu_desktop" as="topmenu.desktop" template="Magento_Theme::html/header/menu/desktop.phtml"></block>
+            </block>
+        </referenceBlock>
+        <referenceBlock name="cart-drawer">
+            <block class="Ahy\ThemeCustomization\Block\Paypal\ShowPaypal" name="paypal.show" template="Ahy_ThemeCustomization::paypal/show-paypal-in-minicart.phtml"/>
+        </referenceBlock>
+    </body>
+</page>

@@ -1,0 +1,595 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\ViewModel\Navigation;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\Escaper;
+use Ahy\ThemeCustomization\Helper\Session;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var Session $_helper */
+$_helper = $this->helper('Ahy\ThemeCustomization\Helper\Session');
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+/** @var Navigation $viewModelNavigation */
+$viewModelNavigation = $viewModels->require(Navigation::class);
+
+$uniqueId = '_' . uniqid();
+
+// Order is important here: 1. build the menu data, 2. then set the cache tags from the view model identities
+$menuItems = $viewModelNavigation->getNavigation(4);
+$block->setData('cache_tags', $viewModelNavigation->getIdentities());
+
+?>
+<div x-data="initMenuMobile<?= $escaper->escapeHtml($uniqueId) ?>()" x-init="init()"
+     class="order-1 lg:order-4 navigation lg:pr-1 xl:-ml-0 w-[40px] lg:w-[130px] text-ahy-blue xl:w-[146px]"
+>
+    <!-- mobile -->
+    <template x-if="open">
+        <div class="backdrop z-20"
+            class="ease-in-out duration-500 transition"
+            x-transition:enter="ease-in-out duration-500"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="ease-in-out duration-500"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            @click="open=false"
+            aria-label="Close panel"
+        ></div>
+    </template>
+    <div @load.window="setActiveMenu($root)"
+        class="bg-ahy-bg"
+        :class="{'h-screen z-20 overflow-x-hidden overflow-y-auto fixed top-0 left-0 w-[85%] sm:w-[55%] md:w-[45%] lg:w-[35%] xl:w-[30%] 2xl:w-[24%]' : open}"
+        @toggle-mobile-menu.window="open = !open"
+        @keydown.window.escape="open=false"
+    >
+        <div class="flex items-baseline justify-between menu-icon">
+            <div class="flex justify-between w-full">
+                <div class="bg-[url('/media/icons/everest-icon-blue.svg')] bg-contain bg-no-repeat bg-center p-6 ml-8 mt-4 -z-10 relative" :class = "{ 'hidden' : !open, 'block': open }"></div>
+                <a @click="$dispatch('toggle-mobile-menu')"
+                    class="flex items-center justify-center cursor-pointer bg-ahy-bg"
+                    :class="{ 'ml-auto': open }"
+                    >
+                    <?php // $heroicons->xHtml('hidden w-10 h-10 p-1 mr-8 mt-4 bg-white rounded-full', 64, 64, [":class" => "{ 'hidden' : !open, 'block': open }"]); ?>
+                    <svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9.71 9.71"
+                        class="shadow-lg hidden w-10 h-10 p-2 mr-8 mt-4 bg-white rounded-full"
+                        :class="{'hidden' : !open, 'block': open }">
+                        <defs><style>.cls-1{fill:none;stroke:#0d2f47;stroke-miterlimit:10;}</style></defs>
+                        <line class="cls-1" x1="0.35" y1="0.35" x2="9.36" y2="9.36"/><line class="cls-1" x1="9.36" y1="0.35" x2="0.35" y2="9.36"/>
+                    </svg>
+                    <span class="bg-[url('/media/icons/hamburger.svg')] bg-contain bg-no-repeat bg-center p-4 mr-2 bg-ahy-bg ahy-hamburger-icon-mobile"
+                    :class="{ 'hidden' : open, 'block': !open }" ></span>
+                    <span class="font-bold px-2 lg:p-0 xl:px-2 text-ahy-blue hidden" :class="{'lg:block': !open }"><?= $escaper->escapeHtml(__('Explore All')); ?></span>
+                </a>
+            </div>
+        </div>
+
+        <template x-if="open">
+        <nav
+            class="hidden w-full duration-150 ease-in-out transform transition-display"
+            :class="{ 'hidden' : !open }"
+        >
+        <div class="px-8 py-2 pb-0 logged-in-status-menu">
+            <div x-show="loggedIn">
+                <p class="font-bold"><?= $escaper->escapeHtml(__('Howdy ')); ?><span x-text="firstName"></span>!</p>
+                <hr class="p-px border-none bg-white mt-4">
+            </div>
+            <div x-show="!loggedIn">
+                <div class="flex justify-center">
+                    <button class="rounded-full p-3 px-10 border-ahy-blue border-3 text-ahy-blue w-full hover:shadow-[#0d2f47_0px_0px_0px_1px_inset]">
+                        <a class="block font-bold text-ahy-blue" href="<?php echo $block->getUrl('customer/account/login'); ?>">
+                            <?= $escaper->escapeHtml(__('Sign in')); ?>
+                        </a>
+                    </button>
+                </div>
+                <a class="block px-4 py-2 lg:px-2 lg:py-4 text-xs justify-center flex mb-3 underline underline-offset-3"
+                    href="<?= $escaper->escapeUrl($block->getUrl('customer/account/create')) ?>"
+                >
+                    <?= $escaper->escapeHtml(__('Create account')); ?>
+                </a>
+                <hr class="p-px border-none bg-white mt-4">
+            </div>
+        </div>
+        <!-- !removed child menu/categories -->
+        <!-- custom menu content start -->
+            <div class="px-8 py-2 pb-0 font-bold shop-by-brand-menu">
+                <a class="block px-0.5 py-1 mt-2 font-bold hover:underline underline-offset-4 " href="<?= $escaper->escapeUrl($block->getUrl('customer/account')) ?>">
+                    <?= $escaper->escapeHtml(__('My Account')); ?>
+                </a>
+                <a class="block px-0.5 py-1 mt-2 font-bold hover:underline underline-offset-4 " href="<?= $escaper->escapeUrl($block->getUrl('sales/order/history')) ?>">
+                    <?= $escaper->escapeHtml(__('My Orders')); ?>
+                </a>
+                <hr class="p-px border-none bg-white mt-4">
+            </div>
+            <div class="level-0">
+                <span class="flex py-4 items-center transition-transform duration-150 cursor-pointer ease-in-out transform translate-x-0 font-bold" 
+                    :class="{'-translate-x-full' : mobilePanelActiveId,
+                            'translate-x-0' : !mobilePanelActiveId
+                        }" 
+                    @click="mobilePanelActiveId = mobilePanelActiveId === 'category-node-20' ? 0 : 'category-node-20'"
+                >
+                    <div class="px-8 font-bold shop-by-brand-menu">
+                        <a href="javascript:void()" class="no-underline">
+                            <span class="flex items-center w-full cursor-pointer"><?= $escaper->escapeHtml(__('Shop All Categories')); ?></span>
+                        </a>
+                    </div>
+                    <a class="absolute right-0 flex w-8 h-8 mr-8 rounded cursor-pointer bg-ahy-bg" >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full p-1" width="24" height="24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </span>
+                <div class="absolute top-0 right-0 z-10 w-full h-full transition-transform duration-200 ease-in-out transform bg-ahy-bg translate-x-full" 
+                    :class="{
+                        'translate-x-full' : mobilePanelActiveId !== 'category-node-20',
+                        'translate-x-0' : mobilePanelActiveId === 'category-node-20',
+                    }"
+                >
+                    <a class="flex items-center px-8 py-4  cursor-pointer bg-ahy-bg border-container" @click="mobilePanelActiveId = 0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        <span class="ml-4 font-normal text-sm"> <?= $escaper->escapeHtml(__('Back to Main Menu')); ?> </span>
+                    </a>
+
+                    <div class="px-8 py-4 pb-0 font-bold all-categories-menu">
+                        <span class="text-xl"> <?= $escaper->escapeHtml(__('All Categories')); ?> </span>
+                        <hr class="p-px bg-white mt-8">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0">
+                        <a href="/all-passions" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('All Categories')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('See All Categories')); ?></span>
+                        </a>
+
+                        <hr class="p-px bg-white mt-4" />
+                    </div>
+
+                    <div class="px-8 py-4 pb-0">
+                        <a href="/outdoor-gear.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Outdoor Gear')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Outdoor Gear')); ?></span>
+                        </a>
+
+                        <hr class="p-px bg-white mt-4" />
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/hunting-gear.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Hunting Gear')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Hunting Gear')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/survival-gear.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Survival Gear')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Survival Gear')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <!-- <div class="px-8 py-4 pb-0 ">
+                        <a href="/shooting-sports.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Shooting Sports')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Shooting Sports')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div> -->
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/boating-gear.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Boating Gear')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Boating Gear')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/fishing-gear.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Fishing Gear')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Fishing Gear')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/archery.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Archery Gear')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Archery Gear')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/camping-gear.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Camping & Hiking Gear')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Camping & Hiking Gear')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/knives.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Knives, Blades, & Axes')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Knives, Blades, & Axes')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/apparel.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Apparel')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Apparel')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/footwear.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Footwear')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Footwear')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/home-decor-toys-and-gifts.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Home Decor & Gifts')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Home Decor & Gifts')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/watersports.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('WaterSports')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('WaterSports')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/snow-sports.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Snow Sports')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Snow Sports')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/golf.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Golf')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Golf')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/auto-rv-atv.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Auto/RV/ATV')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Auto/RV/ATV')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/sports-equipment.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Sports Equipment')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Sports Equipment')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/pet-supplies.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Pet Supplies')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Pet Supplies')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/optics.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Optics')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Optics')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/more-products/backpacks-bag-accessories.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Backpacks, Bags and Packs')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Backpacks, Bags and Packs')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/personal-defense.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Personal Defense')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Personal Defense')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/more-products/food-and-cooking-supplies.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 "
+                            title="<?= $escaper->escapeHtml(__('Food & Cooking Supplies')); ?>" 
+                        >
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Food & Cooking Supplies')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/more-products/electronics.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Electronics')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Electronics')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                    <div class="px-8 py-4 pb-0 ">
+                        <a href="/bicycles-gear.html" class="flex items-center w-full cursor-pointer bg-ahy-bg border-container hover:underline underline-offset-4 " title="<?= $escaper->escapeHtml(__('Bicycles & Gear')); ?>">
+                            <span class="ml-4 text-base text-gray-700 lg:ml-0"><?= $escaper->escapeHtml(__('Bicycles & Gear')); ?></span>
+                        </a>
+
+                        <hr class="p-px border-none bg-white mt-4">
+                    </div>
+
+                </div>
+            </div>
+            <div class="px-8 py-4 pb-0 font-normal category-images-menu">
+                <ul class="flex justify-between items-start">
+                    <li class="cursor-pointer">
+                        <a title="optics" href="/optics.html" class="flex justify-center items-center flex-col">
+                            <img src="/media/icons/nav-mobile-icon-optics.png" alt="" width="80" height="80" class="rounded-full w-20 h-20" /><span class="text-sm py-2 text-center">Optics</span></a>
+                    </li>
+                    <li class="cursor-pointer">
+                        <a title="Archery Gear" href="/archery.html" class="flex justify-center items-center flex-col">
+                            <img src="/media/icons/nav-mobile-icon-archery.png" alt="" width="80" height="80" class="rounded-full w-20 h-20" /><span class="text-sm py-2 text-center">Archery Gear</span></a>
+                    </li>
+                    <li class="cursor-pointer">
+                        <a title="hunting gear" href="/hunting-gear.html" class="flex justify-center items-center flex-col">
+                            <img src="/media/icons/nav-mobile-icon-hunting-gear.png" alt="" width="80" height="80" class="rounded-full w-20 h-20" /><span class="text-sm py-2 text-center">Hunting</span></a>
+                    </li>
+                </ul>
+                <ul class="flex justify-between mt-8">
+                    <li class="cursor-pointer">
+                        <a title="boating gear" href="/boating-gear.html" class="flex justify-center items-center flex-col">
+                            <img src="/media/icons/nav-mobile-icon-boating-gear.png" alt="" width="80" height="80" class="rounded-full w-20 h-20" /><span class="text-sm py-2 text-center">Boating</span></a>
+                    </li>
+                    <li class="cursor-pointer">
+                        <a title="The-Everest-Collections" href="/The-Everest-Collection" class="flex justify-center items-center flex-col">
+                            <img src="/media/icons/peaks_not_people_black_transparent3.png" alt="" width="80" height="80" class="rounded-full w-20 h-20 bg-[#dfb897]" /><span class="text-sm py-2 text-center">Everest Collection</span></a>
+                    </li>
+                    <li class="cursor-pointer w-20" x-data="{ text: window.innerWidth <= 768 ? 'Explore All' : 'Explore All Passions' }" x-on:resize.window="text = window.innerWidth <= 768 ? 'Explore All' : 'Explore All Passions'">
+                        <a :title="text" href="/all-passions" class="flex justify-center items-center flex-col">
+                            <img src="/media/icons/nav-mobile-icon-shop-all.png" alt="" width="80" height="80" class="rounded-full w-20 h-20" /><span class="text-sm py-2 text-center" x-text="text"></span></a>
+                    </li>
+                </ul>
+
+                <hr class="p-px border-none bg-white mt-4">
+            </div>
+            <div class="px-8 py-4 pb-0 font-bold brands-menu">
+                <a href="/creator-store" title="creator-store" class="no-underline  hover:underline underline-offset-4 ">
+                    <span class="flex items-center w-full cursor-pointer"><?= $escaper->escapeHtml(__('Shop By Creator')); ?></span>
+                </a>
+                <hr class="p-px border-none bg-white mt-4">
+            </div>
+            <div class="px-8 py-4 pb-0 font-bold brands-menu">
+                <a href="/brands" class="no-underline  hover:underline underline-offset-4 ">
+                    <span class="flex items-center w-full cursor-pointer"><?= $escaper->escapeHtml(__('Shop By Brand')); ?></span>
+                </a>
+                <hr class="p-px border-none bg-white mt-4">
+            </div>
+            <div class="px-8 py-4 pb-0 font-bold about-us-menu">
+                <a href="/about-us" class="no-underline  hover:underline underline-offset-4 ">
+                    <span class="flex items-center w-full cursor-pointer"><?= $escaper->escapeHtml(__('About Us')); ?></span>
+                </a>
+                <hr class="p-px border-none bg-white mt-4">
+            </div>
+            <div class="px-8 py-4 pb-0 font-bold give-back-fund-menu">
+                <a href="/give-back-fund" class="no-underline  hover:underline underline-offset-4 ">
+                    <span class="flex items-center w-full cursor-pointer"><?= $escaper->escapeHtml(__('Give Back Fund')); ?></span>
+                </a>
+                <hr class="p-px border-none bg-white mt-4">
+            </div>
+            <div class="px-8 py-4 pb-0 font-bold become-a-seller-menu">
+                <a href="/storefront" class="no-underline  hover:underline underline-offset-4 ">
+                    <span class="flex items-center w-full cursor-pointer"><?= $escaper->escapeHtml(__("Become a Seller  ")); ?></span>
+                </a>
+                <hr class="p-px border-none bg-white mt-4">
+            </div>
+            <div class="px-8 py-4 pb-0 font-bold outdoor-content-menu">
+                <a href="/everestdigest" title = "Everest Digest" target="_blank" rel="noopener noreferrer" class="no-underline  hover:underline underline-offset-4 ">
+                    <span class="flex items-center w-full cursor-pointer"><?= $escaper->escapeHtml(__('Everest Digest')); ?></span>
+                </a>
+                <hr class="p-px border-none bg-white mt-4">
+            </div>
+            <div class="px-8 py-4 pb-0 font-bold privacy-policy-menu">
+                <a href="/privacy-policy" class="no-underline  hover:underline underline-offset-4 ">
+                    <span class="flex items-center w-full cursor-pointer"><?= $escaper->escapeHtml(__('Privacy Policy')); ?></span>
+                </a>
+                <hr class="p-px border-none bg-white mt-4">
+            </div>
+            <div class="px-8 py-4 pb-0 font-bold terms-and-conditions-menu">
+                <a href="/terms-and-conditions" class="no-underline  hover:underline underline-offset-4 ">
+                    <span class="flex items-center w-full cursor-pointer"><?= $escaper->escapeHtml(__('Terms & Conditions')); ?></span>
+                </a>
+                <hr class="p-px border-none bg-white mt-4">
+            </div>
+            <div class="px-8 py-4 pb-0 font-bold caliber-nation-menu hidden">
+                <a href="#" class="no-underline  hover:underline underline-offset-4 ">
+                    <div class="flex items-baseline flex-col w-full  cursor-pointer">
+                        <div class="flex items-center">
+                            <div class="text-2xl"><?= $escaper->escapeHtml(__('Caliber Nation')); ?></div>
+                            <div><span class="pr-1.5 pl-3 ml-2 bg-[url('/media/icons/caliber-nation-icon.svg')] bg-contain bg-no-repeat bg-center"></span></div>
+                        </div>
+                        <div class="font-normal text-sm "><p><?= $escaper->escapeHtml(__('Save $3,000 per year on outdoor gear, gas and more')); ?></p></div>
+                    </div>
+                </a>
+                <hr class="p-px border-none bg-white mt-4">
+            </div>
+            <div class="px-8 py-4 pb-0 font-bold contact-us-menu">
+                <a href="/contact" class="no-underline  hover:underline underline-offset-4 "><span class="flex items-center w-full cursor-pointer"><?= $escaper->escapeHtml(__('Contact Us')); ?></span></a>
+                <hr class="p-px border-none bg-white mt-4">
+            </div>
+
+            <?php if($_helper->isLoggedIn()): ?>
+                <div class="px-8 py-8 social-media-menu h-[6rem]">
+                    <div class="flex justify-evenly flex-wrap gap-y-2 space-x-2 text-ahy-blue">
+                        <!-- Linkedin -->
+                        <span class="rounded-full bg-white p-2 hover:bg-sky-400 hover:text-white">
+                            <a href="https://www.linkedin.com/company/everest-com/" class="cursor-pointer" target="_blank" rel="noopener noreferrer">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-5 h-5 sm:w-7 sm:h-7"><path fill="currentColor" d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg>
+                            </a>
+                        </span>
+
+                        <!-- Facebook -->
+                        <span class="rounded-full bg-white p-2 hover:bg-blue-800 hover:text-white">
+                            <a href="https://www.facebook.com/everesttradingpost" class="cursor-pointer" target="_blank" rel="noopener noreferrer">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-5 h-5 sm:w-7 sm:h-7"><path fill="currentColor" d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+                            </a>
+                        </span>
+
+                        <!-- Twitter -->
+                        <span class="rounded-full bg-white p-2 hover:bg-black hover:text-white">
+                            <a href="https://twitter.com/_everest_com" class="cursor-pointer" target="_blank" rel="noopener noreferrer">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" class="w-5 h-5 sm:w-7 sm:h-7" fill="currentColor"  width="50px" height="50px">
+                                    <path
+                                        d="M 6.9199219 6 L 21.136719 26.726562 L 6.2285156 44 L 9.40625 44 L 22.544922 28.777344 L 32.986328 44 L 43 44 L 28.123047 22.3125 L 42.203125 6 L 39.027344 6 L 26.716797 20.261719 L 16.933594 6 L 6.9199219 6 z" />
+                                </svg>
+                            </a>
+                        </span>
+
+                        <!-- Pinterest -->
+                        <span class="rounded-full bg-white p-2 hover:bg-red-700 hover:text-white">
+                            <a href="https://www.pinterest.com/everest_com/" class="cursor-pointer" target="_blank" rel="noopener noreferrer">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="w-5 h-5 sm:w-7 sm:h-7"><path fill="currentColor" d="M204 6.5C101.4 6.5 0 74.9 0 185.6 0 256 39.6 296 63.6 296c9.9 0 15.6-27.6 15.6-35.4 0-9.3-23.7-29.1-23.7-67.8 0-80.4 61.2-137.4 140.4-137.4 68.1 0 118.5 38.7 118.5 109.8 0 53.1-21.3 152.7-90.3 152.7-24.9 0-46.2-18-46.2-43.8 0-37.8 26.4-74.4 26.4-113.4 0-66.2-93.9-54.2-93.9 25.8 0 16.8 2.1 35.4 9.6 50.7-13.8 59.4-42 147.9-42 209.1 0 18.9 2.7 37.5 4.5 56.4 3.4 3.8 1.7 3.4 6.9 1.5 50.4-69 48.6-82.5 71.4-172.8 12.3 23.4 44.1 36 69.3 36 106.2 0 153.9-103.5 153.9-196.8C384 71.3 298.2 6.5 204 6.5z"/></svg>
+                            </a>
+                        </span>
+
+                        <!-- Instagram -->
+                        <span class="rounded-full bg-white p-2 hover:bg-pink-400 hover:text-white">
+                            <a href="https://www.instagram.com/everesttradingpost/" class="cursor-pointer" target="_blank" rel="noopener noreferrer">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-5 h-5 sm:w-7 sm:h-7"><path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
+                            </a>
+                        </span>
+
+                        <!-- Youtube -->
+                        <span class="rounded-full bg-white p-2 hover:bg-red-600 hover:text-white">
+                            <a href="https://www.youtube.com/channel/UCLAhYLTwdoyjQEFxKL3zsBQ" class="cursor-pointer" target="_blank" rel="noopener noreferrer">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-5 h-5 sm:w-7 sm:h-7"><path fill="currentColor" d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+                <a class="block px-4 lg:px-5 text-xs justify-center flex underline underline-offset-8 text-ahy-blue h-[7rem] sm:h-auto sm:pb-4 sm:mb-4"
+                    href="<?= $escaper->escapeUrl($block->getUrl('customer/account/logout')) ?>">
+                    <?= $escaper->escapeHtml(__('Sign Out')); ?>
+                </a>
+            <?php else: ?>
+                <div class="px-8 py-8 social-media-menu h-[10rem]">
+                    <div class="flex justify-evenly flex-wrap gap-y-2 space-x-2 text-ahy-blue">
+                        <!-- Linkedin -->
+                        <span class="rounded-full bg-white p-2 hover:bg-sky-400 hover:text-white">
+                            <a href="https://www.linkedin.com/company/everest-com/" class="cursor-pointer" target="_blank" rel="noopener noreferrer">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-5 h-5 sm:w-7 sm:h-7"><path fill="currentColor" d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg>
+                            </a>
+                        </span>
+
+                        <!-- Facebook -->
+                        <span class="rounded-full bg-white p-2 hover:bg-blue-800 hover:text-white">
+                            <a href="https://www.facebook.com/everesttradingpost" class="cursor-pointer" target="_blank" rel="noopener noreferrer">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-5 h-5 sm:w-7 sm:h-7"><path fill="currentColor" d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+                            </a>
+                        </span>
+
+                        <!-- Twitter -->
+                        <span class="rounded-full bg-white p-2 hover:bg-black hover:text-white">
+                            <a href="https://twitter.com/_everest_com" class="cursor-pointer" target="_blank" rel="noopener noreferrer">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" class="w-5 h-5 sm:w-7 sm:h-7" fill="currentColor" width="50px" height="50px">
+                                    <path
+                                        d="M 6.9199219 6 L 21.136719 26.726562 L 6.2285156 44 L 9.40625 44 L 22.544922 28.777344 L 32.986328 44 L 43 44 L 28.123047 22.3125 L 42.203125 6 L 39.027344 6 L 26.716797 20.261719 L 16.933594 6 L 6.9199219 6 z" />
+                                </svg>
+                            </a>
+                        </span>
+
+                        <!-- Pinterest -->
+                        <span class="rounded-full bg-white p-2 hover:bg-red-700 hover:text-white">
+                            <a href="https://www.pinterest.com/everest_com/" class="cursor-pointer" target="_blank" rel="noopener noreferrer">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="w-5 h-5 sm:w-7 sm:h-7"><path fill="currentColor" d="M204 6.5C101.4 6.5 0 74.9 0 185.6 0 256 39.6 296 63.6 296c9.9 0 15.6-27.6 15.6-35.4 0-9.3-23.7-29.1-23.7-67.8 0-80.4 61.2-137.4 140.4-137.4 68.1 0 118.5 38.7 118.5 109.8 0 53.1-21.3 152.7-90.3 152.7-24.9 0-46.2-18-46.2-43.8 0-37.8 26.4-74.4 26.4-113.4 0-66.2-93.9-54.2-93.9 25.8 0 16.8 2.1 35.4 9.6 50.7-13.8 59.4-42 147.9-42 209.1 0 18.9 2.7 37.5 4.5 56.4 3.4 3.8 1.7 3.4 6.9 1.5 50.4-69 48.6-82.5 71.4-172.8 12.3 23.4 44.1 36 69.3 36 106.2 0 153.9-103.5 153.9-196.8C384 71.3 298.2 6.5 204 6.5z"/></svg>
+                            </a>
+                        </span>
+
+                        <!-- Instagram -->
+                        <span class="rounded-full bg-white p-2 hover:bg-pink-400 hover:text-white">
+                            <a href="https://www.instagram.com/everesttradingpost/" class="cursor-pointer" target="_blank" rel="noopener noreferrer">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-5 h-5 sm:w-7 sm:h-7"><path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
+                            </a>
+                        </span>
+
+                        <!-- Youtube -->
+                        <span class="rounded-full bg-white p-2 hover:bg-red-600 hover:text-white">
+                            <a href="https://www.youtube.com/channel/UCLAhYLTwdoyjQEFxKL3zsBQ" class="cursor-pointer" target="_blank" rel="noopener noreferrer">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-5 h-5 sm:w-7 sm:h-7"><path fill="currentColor" d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            <?php endif; ?>
+            <!-- custom menu content end -->
+        </nav>
+        </template>
+    </div>
+</div>
+<script>
+    'use strict';
+
+    const initMenuMobile<?= $escaper->escapeHtml($uniqueId) ?> = () => {
+        return {
+            mobilePanelActiveId: null,
+            open: false,
+            loggedIn: false,
+            firstName: '',
+            init(){
+                window.addEventListener('private-content-loaded', (event) => {
+                    const sectionData = event.detail.data;
+                    this.loggedIn = sectionData.customer && !!sectionData.customer.firstname;
+                    this.firstName = this.loggedIn ? sectionData.customer.firstname : '';
+                }, { once: true });
+            },
+            setActiveMenu(menuNode) {
+                Array.from(menuNode.querySelectorAll('a')).filter(link => {
+                    return link.href === window.location.href.split('?')[0];
+                }).map(item => {
+                    item.classList.add('underline');
+                    item.closest('div.level-0') &&
+                    item.closest('div.level-0').querySelector('a.level-0').classList.add('underline');
+                });
+            }
+        }
+    }
+</script>
+<style>
+    .category-images-menu li.cursor-pointer:hover img {
+        filter: brightness(1.1);
+        -webkit-filter: brightness(1.1);
+    }
+</style>

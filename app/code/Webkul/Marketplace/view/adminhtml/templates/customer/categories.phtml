@@ -1,0 +1,212 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+?>
+<div class="admin__fieldset-wrapper opened" id="seller-category-tree">
+    <div class="admin__fieldset-wrapper-content">
+        <fieldset class="admin__fieldset">
+            <div class="field">
+<?php $_divId = "tree-div_" . time() ?>
+<div id="<?= $escaper->escapeHtml($_divId) ?>" class="tree"></div>
+<input type="hidden" name="seller_category_ids" id="category_id" data-form-part="customer_form" value=""/>
+<!-- <script id="ie-deferred-loader" defer="defer" src="//:"></script> -->
+<style type="text/css">
+    .admin__scope-old input[type="radio"], .admin__scope-old input[type="checkbox"] {
+        margin: 0 5px 3px 3px !important;
+    }
+</style>
+<script type="text/x-magento-init">
+    {
+        "#seller-category-tree": {
+            "sellerCheckboxTree" : {}
+        }
+    }
+</script>
+<script>
+    require([
+        "jquery",
+        "extjs/ext-tree-checkbox",
+    ], function(jQuery)  {
+        jQuery("#seller-category-tree").trigger('contentUpdated');
+        setTimeout(() => {
+            var fromDb = "<?= $escaper->escapeHtml($block->getSellerAllowedCategory()); ?>";
+            var categories = [];
+            if (fromDb)  {
+                categories = fromDb.split(",");
+            }
+            console.log(categories)
+            jQuery("#category_id").val(categories.join(","));
+            jQuery("body").on("change", ".categories", function () {
+                if (jQuery(this).is(":checked"))  {
+                    categories.push(jQuery(this).val());
+                } else  {
+                    categories.splice(categories.indexOf(jQuery(this).val()), 1);
+                }
+                
+                jQuery("#category_id").val(categories.join(","));
+            });
+            console.log('ds')
+            var tree;
+
+            Ext.lib.Event.getTarget = function(e) {
+                var ee = e.browserEvent || e;
+                return ee.target ? Event.element(ee) : null;
+            };
+
+            Ext.tree.TreePanel.Enhanced = function(el, config)  {
+                Ext.tree.TreePanel.Enhanced.superclass.constructor.call(this, el, config);
+            };
+            console.log('dss')
+            Ext.extend(Ext.tree.TreePanel.Enhanced, Ext.tree.TreePanel, {
+                loadTree : function(config, firstLoad)  {
+                    var parameters = config["parameters"];
+                    var data = config["data"];
+                    var root = new Ext.tree.TreeNode(parameters);
+                    this.nodeHash = {};
+                    this.setRootNode(root);
+                    if (firstLoad) {
+                        this.addListener("click", this.categoryClick.createDelegate(this));
+                    }
+                    this.loader.buildCategoryTree(root, data);
+                    this.el.dom.innerHTML = "";
+                    this.render();
+                },
+
+                categoryClick : function(node, e)   {
+                    console.log(node)
+                    node.getUI().check(!node.getUI().checked());
+                }
+            });
+
+            jQuery(function()   {
+                var categoryLoader = new Ext.tree.TreeLoader({
+                    dataUrl: "<?= $escaper->escapeUrl($block->getLoadTreeUrl(false)) ?>"
+                });
+
+                categoryLoader.createNode = function(config) {
+                    config.uiProvider = Ext.tree.CheckboxNodeUI;
+                    var node;
+                    var _node = Object.clone(config);
+                    if (config.children && !config.children.length) {
+                        delete(config.children);
+                        node = new Ext.tree.AsyncTreeNode(config);
+                    } else {
+                        node = new Ext.tree.TreeNode(config);
+                    }
+                    return node;
+                };
+                console.log('dsdss')
+                categoryLoader.processResponse = function (response, parent, callback) {
+                    var config = JSON.parse(response.responseText);
+
+                    this.buildCategoryTree(parent, config);
+
+                    if (typeof callback == "function") {
+                        callback(this, parent);
+                    }
+                };
+                categoryLoader.buildCategoryTree = function(parent, config)     {
+                    if (!config) return null;
+                    if (parent && config && config.length){
+                        console.log(config)
+                        for (var i = 0; i < config.length; i++) {
+                            config[i].uiProvider = Ext.tree.CheckboxNodeUI;
+                            var node;
+                            var _node = Object.clone(config[i]);
+                            console.log(_node);
+                            
+                            if (_node.children && !_node.children.length) {
+                                delete(_node.children);
+                                node = new Ext.tree.AsyncTreeNode(_node);
+                            } else {
+                                node = new Ext.tree.TreeNode(config[i]);
+                            }
+                            parent.appendChild(node);
+                            node.loader = node.getOwnerTree().loader;
+                            if (_node.children) {
+                                this.buildCategoryTree(node, _node.children);
+                            }
+                        }
+                    }
+                };
+
+                categoryLoader.buildHash = function(node)   {
+                    var hash = {};
+                    hash = this.toArray(node.attributes);
+                    if (node.childNodes.length>0 || (node.loaded==false && node.loading==false)) {
+                        hash["children"] = new Array;
+                        for (var i = 0, len = node.childNodes.length; i < len; i++) {
+                            if (!hash["children"]) {
+                                hash["children"] = new Array;
+                            }
+                            hash["children"].push(this.buildHash(node.childNodes[i]));
+                        }
+                    }
+                    return hash;
+                };
+
+                categoryLoader.toArray = function(attributes) {
+                    var data = {form_key: FORM_KEY};
+                    
+                    for (var key in attributes) {
+                        var value = attributes[key];
+                        data[key] = value;
+                    }
+                    return data;
+                };
+
+                categoryLoader.on("beforeload", function(treeLoader, node) {
+                    treeLoader.baseParams.id = node.attributes.id;
+                    treeLoader.baseParams.form_key = FORM_KEY;
+                });
+
+                categoryLoader.on("load", function(treeLoader, node, config) {
+                    varienWindowOnload();
+                });
+
+                tree = new Ext.tree.TreePanel.Enhanced("<?= $escaper->escapeHtml($_divId) ?>", {
+                    animate:          false,
+                    loader:           categoryLoader,
+                    enableDD:         false,
+                    containerScroll:  true,
+                    selModel:         new Ext.tree.CheckNodeMultiSelectionModel(),
+                    rootVisible:      "<?= $escaper->escapeHtml($block->getIsRootCatToShow()) ?>",
+                    useAjax:          <?= $escaper->escapeHtml($block->getUseAjax()) ?>,
+                    currentNodeId:    <?= (int) $block->getCategoryId() ?>,
+                    addNodeTo:        false,
+                    rootUIProvider:   Ext.tree.CheckboxNodeUI
+            
+                });
+
+                // set the root node
+                var parameters = {
+                    text:        "<?= $escaper->escapeHtml(($block->getRoot()->getName())) ?>",
+                    draggable:   false,
+                    checked:     "<?= $escaper->escapeHtml($block->getRoot()->getChecked()) ?>",
+                    uiProvider:  Ext.tree.CheckboxNodeUI,
+                    allowDrop:   <?php if ($block->getRoot()->getIsVisible()): ?>true<?php else: ?>false<?php endif; ?>,
+                    id:          <?= $escaper->escapeHtml((int) $block->getRoot()->getId()) ?>,
+                    expanded:    <?= $escaper->escapeHtml((int) $block->getIsWasExpanded()) ?>,
+                    category_id: <?= $escaper->escapeHtml((int) $block->getCategoryId()) ?>
+                };
+                console.log(parameters)
+                tree.loadTree({parameters:parameters, data:<?= /*@noEscape*/ $block->getTreeJson() ?>},true);
+
+            });
+        }, 200);
+
+    });
+</script>
+
+            </div>
+        </fieldset>
+    </div>
+</div>

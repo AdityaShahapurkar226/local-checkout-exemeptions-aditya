@@ -1,0 +1,18 @@
+{
+    "adminloginasvendor_login_attempts": {
+        "column": {
+            "entity_id": true,
+            "id": true,
+            "email": true,
+            "name": true,
+            "admin_id": true,
+            "admin_name": true,
+            "admin_email": true,
+            "website": true,
+            "logged_in_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

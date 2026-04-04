@@ -1,0 +1,189 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+
+use Hyva\Checkout\ViewModel\Navigation;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+$viewModel = $viewModels->require(Navigation::class);
+$config = $viewModel->getConfig();
+
+$helper = $this->helper('Ahy\ThemeCustomization\Helper\Session');
+$loggedIn = $helper->isLoggedIn();
+
+$restrictionViewModel = $viewModels->require(\Ahy\EstateApiIntegration\ViewModel\CheckoutRestrictions::class);
+
+$isAgeReq = $restrictionViewModel->hasAgeRestriction();
+$isDocReq = (
+    $restrictionViewModel->getAgeRestriction() === 'ADE'
+    || $restrictionViewModel->getShippingRestriction() === 'BB'
+    || $restrictionViewModel->getShippingRestriction() === 'SNJ'
+);
+
+$checkoutSession = $helper->getCheckoutSession();
+$paymentToken = $checkoutSession->getData('payment_token');
+?>
+
+<?php if ($config->hasSteps() && $config->isMultiStepper()): ?>
+    <?php $previous = $config->getStepBefore(); ?>
+    <?php $next = $config->getStepAfter(); ?>
+
+    <?php
+    $steps = $config->getSteps();
+    $currentStep = $config->getCurrentStep();
+
+    $currentRoute = is_array($currentStep) ? ($currentStep['route'] ?? '') : '';
+    $currentLabel = is_array($currentStep) ? ($currentStep['label'] ?? '') : '';
+
+    $nextLabel = '';
+    if ($next && is_array($next)) {
+        switch ($next['label']) {
+            case 'SELECT FFL':
+                $nextLabel = 'FFL Selection';
+                break;
+            case 'VERIFY AGE':
+                $nextLabel = 'Age Verification';
+                break;
+            case 'REVIEW & ORDER':
+                $nextLabel = 'Review & Order';
+                break;
+            default:
+                $nextLabel = $next['label'];
+                break;
+        }
+    }
+
+    if ($paymentToken) {
+        $nextLabel = 'Place Order';
+    }
+
+    $currentIndex = null;
+    if (is_array($steps) && is_array($currentStep)) {
+        $i = 1;
+        foreach ($steps as $step) {
+            if (($step['route'] ?? '') === ($currentStep['route'] ?? '')) {
+                $currentIndex = $i;
+                break;
+            }
+            $i++;
+        }
+    }
+    ?>
+
+    <?php if (is_array($previous) && $viewModel->getSystemConfig()->showNavigationBackButton()): ?>
+        <button
+            type="button"
+            rel="prev"
+            class="btn btn-secondary ahy-custom-btn rounded-full w-full text-center flex justify-center"
+            x-spread="buttonPrevious('<?= $escaper->escapeJs($previous['route']) ?>')"
+            x-bind="buttonPrevious('<?= $escaper->escapeJs($previous['route']) ?>')">
+            <?= $escaper->escapeHtml(__('Back to %1', [strtolower((string) __($previous['label'] ?? 'previous step'))])) ?>
+        </button>
+    <?php endif ?>
+
+    <?php if (is_array($next)): ?>
+        <div
+            class="w-full"
+            x-data="{
+                selectedId: null,
+                acceptTerms: false,
+
+                // If restriction exists -> start as NOT verified
+                isAgeVerified: <?= $isAgeReq ? 'false' : 'true' ?>,
+
+                isDocRequired: <?= $isDocReq ? 'true' : 'false' ?>,
+
+                // If doc not required -> treat as already uploaded
+                isDocumentUploaded: <?= $isDocReq ? 'false' : 'true' ?>,
+
+                isLoggedIn: <?= $loggedIn ? 'true' : 'false' ?>,
+
+                currentStepLabel: '<?= $escaper->escapeJs($currentLabel) ?>',
+                currentRoute: '<?= $escaper->escapeJs($currentRoute) ?>',
+                nextStepLabel: '<?= $escaper->escapeJs($next['label'] ?? '') ?>',
+
+                isCheckingRestrictions: false
+            }"
+
+            @compliance-state-updated.window="isAgeVerified = $event.detail.isVerified"
+            @document-uploaded.window="isDocumentUploaded = $event.detail.uploaded"
+            @ffl-state-change.window="selectedId = $event.detail.selectedId; acceptTerms = $event.detail.acceptTerms"
+            x-init="$dispatch('checkout:next-step', { label: nextStepLabel })">
+
+            <?php if ($currentIndex === 2): ?>
+                <div class="ahy-age-verification-text">
+                    <h2 class="text-3xl font-extrabold text-ahy-blue">
+                        <?= $escaper->escapeHtml(__('Age Verification Acknowledgment')) ?>
+                    </h2>
+                    <p>
+                        <?= $escaper->escapeHtml(__('By continuing, you confirm that the age information you provide is true and accurate, and that you are legally eligible to view age-restricted content or purchase restricted products.')) ?>
+                    </p>
+                </div>
+            <?php endif ?>
+
+            <button
+                type="button"
+                rel="next"
+                <?= ($currentIndex === 2) ? 'id="age-verification-btn"' : '' ?>
+                class="ahy-proceed-btn btn bg-ahy-red rounded-full w-full h-14 flex leading-none ahy-custom-btn !border-0 justify-center hover:bg-ahy-red-light focus:ring-transparent p-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                x-spread="buttonNext('<?= $escaper->escapeJs($next['route']) ?>')"
+                @click="buttonNext('<?= $escaper->escapeJs($next['route']) ?>')"
+
+                :disabled="
+                    isCheckingRestrictions
+
+                    /* VERIFY AGE step:
+                       - in 4-step flow next is SELECT FFL
+                       - in 3-step flow next is REVIEW & ORDER
+                    */
+                    || (
+                        currentStepLabel === 'VERIFY AGE'
+                        && (
+                            !isAgeVerified
+                            || (isDocRequired && !isDocumentUploaded)
+                        )
+                    )
+
+                    /* FFL step: require selection + terms */
+                    || (
+                        currentStepLabel === 'SELECT FFL'
+                        && (!selectedId || !acceptTerms)
+                    )
+                ">
+                <?= $escaper->escapeHtml(__('Continue to %1', [(string) __($nextLabel ?? 'next step')])) ?>
+            </button>
+        </div>
+    <?php endif ?>
+<?php endif ?>
+
+<style>
+    .ahy-proceed-btn {
+        box-shadow: #12334b47 0px 0px 14px 2px, #00000024 0px -1px 0px inset !important;
+    }
+
+    .ahy-age-verification-text {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: start;
+        margin-bottom: 3rem;
+        gap: 1.5rem;
+    }
+
+    .ahy-age-verification-text h2 {
+        font-weight: 500;
+        font-size: 1.5rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .ahy-age-verification-text p {
+        font-size: 0.875rem;
+        text-align: left;
+    }
+</style>

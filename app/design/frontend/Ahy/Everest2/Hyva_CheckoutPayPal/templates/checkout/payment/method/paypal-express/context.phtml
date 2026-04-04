@@ -1,0 +1,128 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var Escaper $escaper */
+/** @var PPExpress $magewire */
+/** @var ViewModelRegistry $viewModels */
+
+use Hyva\CheckoutPayPal\Magewire\Payment\Method\PPExpress;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Hyva\CheckoutPayPal\ViewModel\Payment\Method\PPExpress as ViewModel;
+
+$viewModel = $viewModels->require(ViewModel::class);
+?>
+<div id="paypal-button" class="relative z-10">
+    <div id="paypal-button-container" class="paypal checkout paypal-logo">
+        <!-- PayPal button placeholder -->
+    </div>
+
+    <?php if ($viewModel->isPaylaterMessage()): ?>
+        <div id="paypal-messages" class="paypal checkout" data-pp-message>
+            <!-- PayPal messages placeholder -->
+        </div>
+    <?php endif;?>
+
+    <script>
+        (() => {
+            const buttonContainer = document.getElementById('paypal-button-container');
+            const config = <?= /** @noEscape */ $viewModel->getInContextConfig() ?>;
+
+            function createScriptLoadPromise(url) {
+                return new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = url;
+
+                    script.addEventListener('load', function() {
+                        resolve(window.paypal);
+                    }, false);
+
+                    script.addEventListener('error', function(event) {
+                        reject(script);
+                    }, false);
+
+                    document.body.appendChild(script);
+                })
+            }
+
+            function initializeButtons() {
+                let checkoutConfig = config
+
+                if (checkoutConfig.sdkUrl.includes('commit=false')) {
+                    checkoutConfig.sdkUrl = checkoutConfig.sdkUrl.replace('commit=false', 'commit=true');
+                }
+                
+                createScriptLoadPromise(checkoutConfig.sdkUrl)
+                    .then((paypal) => {
+                        paypal.Buttons({
+                            style: checkoutConfig['styles'],
+                            funding: checkoutConfig['funding'],
+
+                            createOrder() {
+                                const params = 'quote_id=' + checkoutConfig['quote_id'] +
+                                    '&customer_id=' + (checkoutConfig['customer_id'] || '') +
+                                    '&form_key=' + (hyva.getFormKey() || '') +
+                                    '&button=' + checkoutConfig['button'];
+
+                                return window.fetch(checkoutConfig['token_url'], {
+                                    'headers': {
+                                        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                                    },
+                                    'body': params,
+                                    'method': 'POST',
+                                    'mode': 'cors',
+                                    'credentials': 'include'
+                                })
+                                    .then(result => {
+                                        return result.json()
+                                    })
+                                    .then((data) => {
+                                        return data.token
+                                    })
+                                    .then((order) => {
+                                        return order;
+                                    })
+                                    .catch((error) => console.log(error))
+                            },
+                            onApprove(data, actions) {
+                                const buttonComponent = Magewire.find('checkout.payment.method.paypal-express')
+                                buttonComponent.authorize(data['orderID'], data['payerID'], data['paymentSource'])
+                            },
+                            onClick(data) {
+                                this.funding = data.fundingSource || 'paypal'
+                            },
+                            onCancel(data, actions) {
+                                hyvaCheckout.payment.dispatchExceptionMessage(
+                                    `<?= $escaper->escapeJs(__('Your payment was cancelled')) ?>`
+                                )
+                            },
+                            onError(message) {
+                                if (typeof message === 'string') {
+                                    return hyvaCheckout.payment.dispatchExceptionMessage(message)
+                                }
+
+                                message = message.message || 'Something went wrong'
+                                hyvaCheckout.message.console(message)
+
+                            }
+                        }).render(buttonContainer)
+                    })
+            }
+
+            window.addEventListener('checkout:payment:method-activate', () => {
+                hyvaCheckout.payment.activate('paypal_express', {
+                    initialize() {
+                        initializeButtons()
+                    }
+                }, buttonContainer)
+            }, { once: true })
+        })()
+    </script>
+</div>

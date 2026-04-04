@@ -1,0 +1,74 @@
+﻿Legend
+
++ Features
+- Bugs
+
+-------------------------------- Version 5.0.2 -------------------------------------
+	+ Optimised code and removed unwanted constructor dependencies.
+	+ Fixed Issues.
+	+ Add Interfaces for POST requests
+	+ Updated Repository and Interfaces
+	+ Mutation Added
+
+-------------------------------- Version 5.0.1 -------------------------------------
+	+ Optimised code and removed unwanted constructor dependencies.
+	+ Added the API to create Seller Product.
+	+ Fixed Issues.
+	- Minor Bugs.
+
+-------------------------------- Version 5.0.0 -------------------------------------
+	+ compatible with Magento 2.4.x CE.
+
+-------------------------------- Version 4.0.2 -------------------------------------
+	+ Optimised code and removed unwanted constructor dependencies.
+	+ Fixed Issues.
+	+ Add Interfaces for POST requests
+	+ Updated Repository and Interfaces
+	+ Mutation Added
+
+-------------------------------- Version 4.0.1 -------------------------------------
+	+ Optimised code and removed unwanted constructor dependencies.
+	+ Added the API to create Seller Product.
+	+ Fixed Issues.
+	- Minor Bugs.
+
+-------------------------------- Version 4.0.0 -------------------------------------
+	+ compatible with Magento 2.4.x EE.
+
+-------------------------------- Version 3.0.1 -------------------------------------
+	+ Optimised code and removed unwanted constructor dependencies.
+	+ Added the API to create Seller Product.
+	+ Fixed Issues.
+	- Minor Bugs.
+		
+-------------------------------- Version 3.0.0 -------------------------------------
+	+ compatible with Marketplace 3.0.x
+	
+-------------------------------- Version 2.1.0 -------------------------------------
+	+ compatible with Magento 2.3.*
+	+ implemented graphql for guest users
+	+ implemented graphql for sellers
+
+-------------------------------- Version 2.0.3 -------------------------------------
+	+ create sellers api from frontend
+
+-------------------------------- Version 2.0.2 --------------------------------------
+	+ seller list api with search criteria from both ends.
+	+ seller's orders api with search criteria from both ends.
+
+-------------------------------- Version 2.0.1 --------------------------------------
+
+	+ compatible with magento ver 2.2.x and marketplace ver 2.1.x
+
+-------------------------------- Version 2.0.0 --------------------------------------
+
+	+ added assign and unassign product to seller by admin api
+	+ added create shipment api.
+	+ this module exposes sevral marketplace resources
+	+ exposes resource to become sellers
+	+ exposes resource to get sellers
+ 	+ exposes resource to invoice, creditmemo, cancel seller orders
+	+ exposes ask admin and contact seller resources.
+	+ exposes marketplace landing page data
+	+ admin and customer level authentication for resorces.
+	+ consumer can authenticate by any of these methods token, oAuth or session.

@@ -1,0 +1,4417 @@
+.wk-mp-page-main,#maincontent{
+  content:'';
+  display: table !important;
+}
+.wk-mp-page-wrapper
+{
+  display:inline-grid !important;
+}
+.wk-ui-component-container .page-actions {
+  float: right;
+}
+.wk-ui-component-container .page-actions-buttons {
+  float: right;
+  justify-content: flex-end;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: block;
+}
+
+.col-xs-1, .col-m-1, .col-l-1, .col-xl-1, .col-xs-2, .col-m-2, .col-l-2, .col-xl-2, .col-xs-3, .col-m-3, .col-l-3, .col-xl-3, .col-xs-4, .col-m-4, .col-l-4, .col-xl-4, .col-xs-5, .col-m-5, .col-l-5, .col-xl-5, .col-xs-6, .col-m-6, .col-l-6, .col-xl-6, .col-xs-7, .col-m-7, .col-l-7, .col-xl-7, .col-xs-8, .col-m-8, .col-l-8, .col-xl-8, .col-xs-9, .col-m-9, .col-l-9, .col-xl-9, .col-xs-10, .col-m-10, .col-l-10, .col-xl-10, .col-xs-11, .col-m-11, .col-l-11, .col-xl-11, .col-xs-12, .col-m-12, .col-l-12, .col-xl-12 {
+  min-height: 1px;
+  padding-left: 0;
+  padding-right: 0;
+  position: relative;
+}
+.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
+  float: left;
+}
+.col-xs-12 {
+  width: 100%;
+}
+.col-xs-11 {
+  width: 91.66666667%;
+}
+.col-xs-10 {
+  width: 83.33333333%;
+}
+.col-xs-9 {
+  width: 75%;
+}
+.col-xs-8 {
+  width: 66.66666667%;
+}
+.col-xs-7 {
+  width: 58.33333333%;
+}
+.col-xs-6 {
+  width: 50%;
+}
+.col-xs-5 {
+  width: 41.66666667%;
+}
+.col-xs-4 {
+  width: 33.33333333%;
+}
+.col-xs-3 {
+  width: 25%;
+}
+.col-xs-2 {
+  width: 16.66666667%;
+}
+.col-xs-1 {
+  width: 8.33333333%;
+}
+.wk-ui-component-container .abs-action-primary,
+.wk-ui-component-container button.primary,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .wk-ui-component-container button.action-primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .wk-ui-component-container button.action-primary,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .wk-ui-component-container button.primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .wk-ui-component-container button.primary,
+.wk-ui-component-container .block-footer .action-add.primary,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .wk-ui-component-container .block-footer .action-add.action-primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .wk-ui-component-container .block-footer .action-add.action-primary,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .wk-ui-component-container .block-footer .action-add.primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .wk-ui-component-container .block-footer .action-add.primary {
+  background-color: #eb5202;
+  border-color: #eb5202;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+}
+/*Ui Component Css End*/
+
+
+.wk-ui-component-container .admin__control-checkbox + label:before,
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-block-wrapper .fieldset-wrapper-title .action-delete:before,
+.wk-ui-component-container .admin__control-table .action-delete:before,
+.wk-ui-component-container .admin__field-fallback-reset:before,
+.wk-ui-component-container .selectmenu .action-save:before,
+.wk-ui-component-container .selectmenu .action-edit:before,
+.wk-ui-component-container .selectmenu .action-delete:before,
+.wk-ui-component-container .admin__action-multiselect-search-label:before,
+.wk-ui-component-container .admin__action-multiselect-dropdown:before,
+.wk-ui-component-container .abs-action-delete,
+.wk-ui-component-container .action-close:before,
+.wk-ui-component-container .timeline-action:before,
+.wk-ui-component-container .admin__menu .level-0 > a:before,
+.wk-ui-component-container .admin-user .admin__action-dropdown:before,
+.wk-ui-component-container .search-global-label:before,
+.wk-ui-component-container .notifications-action:before,
+.wk-ui-component-container .notifications-close:before,
+.wk-ui-component-container .copyright .link-copyright:before,
+.wk-ui-component-container .store-switcher .dropdown-menu .dropdown-toolbar a:before,
+.wk-ui-component-container .tooltip .help span:before,
+.wk-ui-component-container .tooltip .help a:before,
+.wk-ui-component-container .page-actions > button.back:before,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.back:before,
+.wk-ui-component-container .page-actions > button.action-back:before,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-back:before,
+.wk-ui-component-container .admin__page-nav-title._collapsible:after,
+.wk-ui-component-container .admin__page-nav-item-message .admin__page-nav-item-message-icon,
+.wk-ui-component-container .admin__collapsible-block-wrapper .admin__collapsible-title:before,
+.wk-ui-component-container .modal-slide .fieldset-wrapper .admin__collapsible-title:before,
+.wk-ui-component-container .section-config > .wk-ui-component-container .admin__collapsible-block > a:before,
+.wk-ui-component-container .accordion > dt a:before,
+.wk-ui-component-container .accordion .admin__collapsible-block > a:before,
+.wk-ui-component-container .section-config.complex .section-config.with-button.enabled > .wk-ui-component-container .entry-edit-head:before,
+.wk-ui-component-container .section-config .config td.label label.enabled:before,
+.wk-ui-component-container .steps-wizard .attribute-option .action-save:before,
+.wk-ui-component-container .steps-wizard .attribute-option .action-remove:before,
+.wk-ui-component-container .partners-search:before,
+.wk-ui-component-container .order-discounts .admin__field .action-default:before,
+.wk-ui-component-container .order-discounts .action-remove:before,
+.wk-ui-component-container .order-sidebar .admin__table-primary .icon,
+.wk-ui-component-container .order-sidebar .action-refresh,
+.wk-ui-component-container .add-by-sku-wrapper .action-reset,
+.wk-ui-component-container .abs-staging-events-count-icon:before,
+.wk-ui-component-container .data-grid-search-control-wrap .action-submit:before,
+.wk-ui-component-container .data-grid-filters-action-wrap .action-default:before,
+.wk-ui-component-container .admin__current-filters-list .action-remove:before,
+.wk-ui-component-container .action-previous:before,
+.wk-ui-component-container .action-next:before,
+.wk-ui-component-container .admin__data-grid-action-bookmarks .admin__action-dropdown:before,
+.wk-ui-component-container .admin__data-grid-action-bookmarks .action-submit:before,
+.wk-ui-component-container .admin__data-grid-action-bookmarks .action-delete:before,
+.wk-ui-component-container .admin__data-grid-action-bookmarks .action-edit:before,
+.wk-ui-component-container .admin__data-grid-action-columns .admin__action-dropdown:before,
+.wk-ui-component-container .admin__data-grid-action-export .admin__action-dropdown:before,
+.wk-ui-component-container .sticky-header .data-grid-search-control-wrap .data-grid-search-label:before,
+.wk-ui-component-container .data-grid-row-parent > td .data-grid-checkbox-cell-inner:before,
+.wk-ui-component-container .data-grid-row-changed:after,
+.wk-ui-component-container .manage-rules-panel .smart-category-table .action-delete:before,
+.wk-ui-component-container .mass-select-wrap select + label:before,
+.wk-ui-component-container .rma-items .col-actions .action-item-delete-line,
+.wk-ui-component-container .staging-events-campaign-objects-count:before,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.back:before,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.back:before,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-back:before,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-back:before {
+-webkit-font-smoothing: antialiased;
+font-family: 'Admin Icons';
+font-style: normal;
+font-weight: normal;
+line-height: 1;
+speak: none;
+}
+.wk-ui-component-container .ui-widget-overlay,
+.wk-ui-component-container .overlay_magento,
+.wk-ui-component-container .fade,
+.wk-ui-component-container .modals-overlay {
+background: rgba(0, 0, 0, 0.35);
+bottom: 0;
+left: 0;
+position: fixed;
+right: 0;
+top: 0;
+}
+.wk-ui-component-container .admin__field-tooltip .admin__field-tooltip-action span,
+.wk-ui-component-container .admin__control-fields .admin__field:nth-child(n + 2):not(.admin__field-option):not(.admin__field-group-show-label) > .wk-ui-component-container .admin__field-label,
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field:nth-child(n + 2):not(.admin__field-option):not(.admin__field-group-show-label):not(.admin__field-date) > .wk-ui-component-container .admin__field-label,
+.wk-ui-component-container .selectmenu .action-save > span,
+.wk-ui-component-container .selectmenu .action-edit > span,
+.wk-ui-component-container .selectmenu .action-delete > span,
+.wk-ui-component-container .selectmenu-toggle span,
+.wk-ui-component-container .action-multicheck-wrap .action-multicheck-toggle > span,
+.wk-ui-component-container .admin__actions-switch-checkbox,
+.wk-ui-component-container .abs-action-delete > span,
+.wk-ui-component-container .ui-datepicker-prev span,
+.wk-ui-component-container .ui-datepicker-next span,
+.wk-ui-component-container .tooltip .help span span,
+.wk-ui-component-container .tooltip .help a span,
+.wk-ui-component-container .dashboard-diagram-switcher .label,
+.wk-ui-component-container .order-discounts .admin__field .action-default > span,
+.wk-ui-component-container .order-discounts .action-remove > span,
+.wk-ui-component-container .order-sidebar .admin__table-primary .icon > span,
+.wk-ui-component-container .order-sidebar .action-refresh > span,
+.wk-ui-component-container .add-by-sku-wrapper .action-reset > span,
+.wk-ui-component-container .rma-items .col-actions .action-item-delete-line > span {
+border: 0;
+clip: rect(0, 0, 0, 0);
+height: 1px;
+margin: -1px;
+overflow: hidden;
+padding: 0;
+position: absolute;
+width: 1px;
+}
+.wk-ui-component-container .admin__field-group-columns > .wk-ui-component-container .admin__field:nth-child(n + 2):not(.admin__field-option):not(.admin__field-group-show-label):not(.admin__field-date) > .wk-ui-component-container .admin__field-label[class] {
+clip: auto;
+height: auto;
+margin: 0;
+overflow: visible;
+position: static;
+width: auto;
+}
+.wk-ui-component-container .abs-clearfix:before,
+.wk-ui-component-container .abs-clearfix:after,
+.wk-ui-component-container .admin__control-table-pagination:before,
+.wk-ui-component-container .admin__control-table-pagination:after,
+.wk-ui-component-container .admin__field-complex:before,
+.wk-ui-component-container .admin__field-complex:after,
+.wk-ui-component-container .fieldset-wrapper-title:before,
+.wk-ui-component-container .fieldset-wrapper-title:after,
+.wk-ui-component-container .admin__fieldset-wrapper-title:before,
+.wk-ui-component-container .admin__fieldset-wrapper-title:after,
+.wk-ui-component-container .actions-split:before,
+.wk-ui-component-container .actions-split:after,
+.wk-ui-component-container .action-multicheck-wrap:before,
+.wk-ui-component-container .action-multicheck-wrap:after,
+.wk-ui-component-container .tabs-horiz:before,
+.wk-ui-component-container .tabs-horiz:after,
+.wk-ui-component-container .page-content:before,
+.wk-ui-component-container .page-content:after,
+.wk-ui-component-container .ui-dialog .ui-dialog-buttonset:before,
+.wk-ui-component-container .ui-dialog .ui-dialog-buttonset:after,
+.wk-ui-component-container .ui-dialog .main-col .insert-title-inner:before,
+.wk-ui-component-container .ui-dialog .main-col .insert-title-inner:after,
+.wk-ui-component-container .ui-dialog .magento-message .insert-title-inner:before,
+.wk-ui-component-container .ui-dialog .magento-message .insert-title-inner:after,
+.wk-ui-component-container .ui-dialog .main-col #contents-uploader:before,
+.wk-ui-component-container .ui-dialog .main-col #contents-uploader:after,
+.wk-ui-component-container .ui-dialog .magento-message #contents-uploader:before,
+.wk-ui-component-container .ui-dialog .magento-message #contents-uploader:after,
+.wk-ui-component-container .attribute-popup-actions:before,
+.wk-ui-component-container .attribute-popup-actions:after,
+.wk-ui-component-container .popup-window .magento_buttons:before,
+.wk-ui-component-container .popup-window .magento_buttons:after,
+.wk-ui-component-container .fade .popup-content:before,
+.wk-ui-component-container .fade .popup-content:after,
+.wk-ui-component-container .fade .actions:before,
+.wk-ui-component-container .fade .actions:after,
+.wk-ui-component-container .modal-slide .main-col .insert-title-inner:before,
+.wk-ui-component-container .modal-slide .main-col .insert-title-inner:after,
+.wk-ui-component-container .modal-slide .magento-message .insert-title-inner:before,
+.wk-ui-component-container .modal-slide .magento-message .insert-title-inner:after,
+.wk-ui-component-container .gallery:before,
+.wk-ui-component-container .gallery:after,
+.wk-ui-component-container .data-slider:before,
+.wk-ui-component-container .data-slider:after,
+.wk-ui-component-container .message-system-inner:before,
+.wk-ui-component-container .message-system-inner:after,
+.wk-ui-component-container .page-header-actions:before,
+.wk-ui-component-container .page-header-actions:after,
+.wk-ui-component-container .page-main-actions:not(._hidden):before,
+.wk-ui-component-container .page-main-actions:not(._hidden):after,
+.wk-ui-component-container .page-actions._fixed:before,
+.wk-ui-component-container .page-actions._fixed:after,
+.wk-ui-component-container .dashboard-totals-list:before,
+.wk-ui-component-container .dashboard-totals-list:after,
+.wk-ui-component-container .dashboard-store-stats .ui-tabs:before,
+.wk-ui-component-container .dashboard-store-stats .ui-tabs:after,
+.wk-ui-component-container .hosted-date-wrap:before,
+.wk-ui-component-container .hosted-date-wrap:after,
+.wk-ui-component-container .product-create-configuration:before,
+.wk-ui-component-container .product-create-configuration:after,
+.wk-ui-component-container .product-create-configuration .product-create-configuration-actions:before,
+.wk-ui-component-container .product-create-configuration .product-create-configuration-actions:after,
+.wk-ui-component-container .steps-wizard .steps-wizard-navigation:before,
+.wk-ui-component-container .steps-wizard .steps-wizard-navigation:after,
+.wk-ui-component-container .nav:before,
+.wk-ui-component-container .nav:after,
+.wk-ui-component-container .steps-wizard .select-attributes-block:before,
+.wk-ui-component-container .steps-wizard .select-attributes-block:after,
+.wk-ui-component-container .steps-wizard .attribute-entity-top:before,
+.wk-ui-component-container .steps-wizard .attribute-entity-top:after,
+.wk-ui-component-container .form-sharing-info .admin__legend:before,
+.wk-ui-component-container .form-sharing-info .admin__legend:after,
+.wk-ui-component-container .order-create-gift-wrapping .gift-wrapping-design:before,
+.wk-ui-component-container .order-create-gift-wrapping .gift-wrapping-design:after,
+.wk-ui-component-container .order-gift-options .gift-wrapping-design:before,
+.wk-ui-component-container .order-gift-options .gift-wrapping-design:after,
+.wk-ui-component-container .gift-options-popup .gift-wrapping-design:before,
+.wk-ui-component-container .gift-options-popup .gift-wrapping-design:after,
+.wk-ui-component-container .adminhtml-reward-rate-edit .field-rate .admin__field-control:before,
+.wk-ui-component-container .adminhtml-reward-rate-edit .field-rate .admin__field-control:after,
+.wk-ui-component-container .order-discounts:before,
+.wk-ui-component-container .order-discounts:after,
+.wk-ui-component-container .order-gift-options:before,
+.wk-ui-component-container .order-gift-options:after,
+.wk-ui-component-container .abs-order-tables .item-options:before,
+.wk-ui-component-container .abs-order-tables .item-options:after,
+.wk-ui-component-container .order-account-information .admin__fieldset:before,
+.wk-ui-component-container .order-account-information .admin__fieldset:after,
+.wk-ui-component-container .admin__page-section-title:before,
+.wk-ui-component-container .admin__page-section-title:after,
+.wk-ui-component-container .admin__page-section-content:before,
+.wk-ui-component-container .admin__page-section-content:after,
+.wk-ui-component-container .block-schedule .block-title:before,
+.wk-ui-component-container .block-schedule .block-title:after,
+.wk-ui-component-container .staging-preview-options:before,
+.wk-ui-component-container .staging-preview-options:after,
+.wk-ui-component-container .staging-events-summary:before,
+.wk-ui-component-container .staging-events-summary:after,
+.wk-ui-component-container .admin__data-grid-filters:before,
+.wk-ui-component-container .admin__data-grid-filters:after,
+.wk-ui-component-container .admin__data-grid-filters-footer:before,
+.wk-ui-component-container .admin__data-grid-filters-footer:after,
+.wk-ui-component-container .admin__data-grid-action-columns-menu .admin__action-dropdown-menu-content:before,
+.wk-ui-component-container .admin__data-grid-action-columns-menu .admin__action-dropdown-menu-content:after,
+.wk-ui-component-container .admin__data-grid-header-row:before,
+.wk-ui-component-container .admin__data-grid-header-row:after,
+.wk-ui-component-container .cms-hierarchy:before,
+.wk-ui-component-container .cms-hierarchy:after,
+.wk-ui-component-container .merchandiser-app:before,
+.wk-ui-component-container .merchandiser-app:after,
+.wk-ui-component-container .merchandiser-app .tabs:before,
+.wk-ui-component-container .merchandiser-app .tabs:after,
+.wk-ui-component-container .regular-category-settings:before,
+.wk-ui-component-container .regular-category-settings:after,
+.wk-ui-component-container .smart-category-switcher:before,
+.wk-ui-component-container .smart-category-switcher:after,
+.wk-ui-component-container .merchandiser-tabs:before,
+.wk-ui-component-container .merchandiser-tabs:after,
+.wk-ui-component-container .order-creditmemo-tables .item-options:before,
+.wk-ui-component-container .order-creditmemo-tables .item-options:after,
+.wk-ui-component-container .order-tables .item-options:before,
+.wk-ui-component-container .order-tables .item-options:after,
+.wk-ui-component-container .order-invoice-tables .item-options:before,
+.wk-ui-component-container .order-invoice-tables .item-options:after,
+.wk-ui-component-container .edit-order-table .item-options:before,
+.wk-ui-component-container .edit-order-table .item-options:after,
+.wk-ui-component-container .order-shipment-table .item-options:before,
+.wk-ui-component-container .order-shipment-table .item-options:after {
+content: '';
+display: table;
+}
+.wk-ui-component-container .abs-clearfix:after,
+.wk-ui-component-container .admin__control-table-pagination:after,
+.wk-ui-component-container .admin__field-complex:after,
+.wk-ui-component-container .fieldset-wrapper-title:after,
+.wk-ui-component-container .admin__fieldset-wrapper-title:after,
+.wk-ui-component-container .actions-split:after,
+.wk-ui-component-container .action-multicheck-wrap:after,
+.wk-ui-component-container .tabs-horiz:after,
+.wk-ui-component-container .page-content:after,
+.wk-ui-component-container .ui-dialog .ui-dialog-buttonset:after,
+.wk-ui-component-container .ui-dialog .main-col .insert-title-inner:after,
+.wk-ui-component-container .ui-dialog .magento-message .insert-title-inner:after,
+.wk-ui-component-container .ui-dialog .main-col #contents-uploader:after,
+.wk-ui-component-container .ui-dialog .magento-message #contents-uploader:after,
+.wk-ui-component-container .attribute-popup-actions:after,
+.wk-ui-component-container .popup-window .magento_buttons:after,
+.wk-ui-component-container .fade .popup-content:after,
+.wk-ui-component-container .fade .actions:after,
+.wk-ui-component-container .modal-slide .main-col .insert-title-inner:after,
+.wk-ui-component-container .modal-slide .magento-message .insert-title-inner:after,
+.wk-ui-component-container .gallery:after,
+.wk-ui-component-container .data-slider:after,
+.wk-ui-component-container .message-system-inner:after,
+.wk-ui-component-container .page-header-actions:after,
+.wk-ui-component-container .page-main-actions:not(._hidden):after,
+.wk-ui-component-container .page-actions._fixed:after,
+.wk-ui-component-container .dashboard-totals-list:after,
+.wk-ui-component-container .dashboard-store-stats .ui-tabs:after,
+.wk-ui-component-container .hosted-date-wrap:after,
+.wk-ui-component-container .product-create-configuration:after,
+.wk-ui-component-container .product-create-configuration .product-create-configuration-actions:after,
+.wk-ui-component-container .steps-wizard .steps-wizard-navigation:after,
+.wk-ui-component-container .nav:after,
+.wk-ui-component-container .steps-wizard .select-attributes-block:after,
+.wk-ui-component-container .steps-wizard .attribute-entity-top:after,
+.wk-ui-component-container .form-sharing-info .admin__legend:after,
+.wk-ui-component-container .order-create-gift-wrapping .gift-wrapping-design:after,
+.wk-ui-component-container .order-gift-options .gift-wrapping-design:after,
+.wk-ui-component-container .gift-options-popup .gift-wrapping-design:after,
+.wk-ui-component-container .adminhtml-reward-rate-edit .field-rate .admin__field-control:after,
+.wk-ui-component-container .order-discounts:after,
+.wk-ui-component-container .order-gift-options:after,
+.wk-ui-component-container .abs-order-tables .item-options:after,
+.wk-ui-component-container .order-account-information .admin__fieldset:after,
+.wk-ui-component-container .admin__page-section-title:after,
+.wk-ui-component-container .admin__page-section-content:after,
+.wk-ui-component-container .block-schedule .block-title:after,
+.wk-ui-component-container .staging-preview-options:after,
+.wk-ui-component-container .staging-events-summary:after,
+.wk-ui-component-container .admin__data-grid-filters:after,
+.wk-ui-component-container .admin__data-grid-filters-footer:after,
+.wk-ui-component-container .admin__data-grid-action-columns-menu .admin__action-dropdown-menu-content:after,
+.wk-ui-component-container .admin__data-grid-header-row:after,
+.wk-ui-component-container .cms-hierarchy:after,
+.wk-ui-component-container .merchandiser-app:after,
+.wk-ui-component-container .merchandiser-app .tabs:after,
+.wk-ui-component-container .regular-category-settings:after,
+.wk-ui-component-container .smart-category-switcher:after,
+.wk-ui-component-container .merchandiser-tabs:after,
+.wk-ui-component-container .order-creditmemo-tables .item-options:after,
+.wk-ui-component-container .order-tables .item-options:after,
+.wk-ui-component-container .order-invoice-tables .item-options:after,
+.wk-ui-component-container .edit-order-table .item-options:after,
+.wk-ui-component-container .order-shipment-table .item-options:after {
+clear: both;
+}
+.wk-ui-component-container .abs-clearer:after,
+body:after {
+clear: both;
+content: '';
+display: table;
+}
+.wk-ui-component-container .data-tooltip-content .items,
+.wk-ui-component-container .timeline-items,
+.wk-ui-component-container .timeline-units,
+.wk-ui-component-container .dashboard-totals-list,
+.wk-ui-component-container .attributes-summary,
+.wk-ui-component-container .steps-wizard .attribute-options,
+.wk-ui-component-container .steps-wizard .steps-wizard-section-list,
+.wk-ui-component-container .steps-wizard .gallery-image-wrapper .multiselect-alt {
+margin: 0;
+padding: 0;
+list-style: none none;
+}
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-block-wrapper .fieldset-wrapper-title .draggable-handle,
+.wk-ui-component-container .admin__control-table .draggable-handle,
+.wk-ui-component-container .steps-wizard .draggable-handle,
+.wk-ui-component-container .downloadable-form .draggable-handle,
+.wk-ui-component-container .data-grid .data-grid-draggable-row-cell .draggable-handle,
+.wk-ui-component-container .merchandiser-app .draggable-handle {
+cursor: -moz-grab;
+cursor: -webkit-grab;
+cursor: move;
+font-size: 0;
+margin-top: -4px;
+padding: 0 1rem 0 0;
+vertical-align: middle;
+display: inline-block;
+text-decoration: none;
+}
+.wk-ui-component-container .abs-draggable-handle:before,
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-block-wrapper .fieldset-wrapper-title .draggable-handle:before,
+.wk-ui-component-container .admin__control-table .draggable-handle:before,
+.wk-ui-component-container .steps-wizard .draggable-handle:before,
+.wk-ui-component-container .downloadable-form .draggable-handle:before,
+.wk-ui-component-container .data-grid .data-grid-draggable-row-cell .draggable-handle:before,
+.wk-ui-component-container .merchandiser-app .draggable-handle:before {
+-webkit-font-smoothing: antialiased;
+font-size: 1.8rem;
+line-height: inherit;
+color: #9e9e9e;
+content: '\e617';
+font-family: 'Admin Icons';
+vertical-align: middle;
+display: inline-block;
+font-weight: normal;
+overflow: hidden;
+speak: none;
+text-align: center;
+}
+.wk-ui-component-container .abs-draggable-handle:hover:before,
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-block-wrapper .fieldset-wrapper-title .draggable-handle:hover:before,
+.wk-ui-component-container .admin__control-table .draggable-handle:hover:before,
+.wk-ui-component-container .steps-wizard .draggable-handle:hover:before,
+.wk-ui-component-container .downloadable-form .draggable-handle:hover:before,
+.wk-ui-component-container .data-grid .data-grid-draggable-row-cell .draggable-handle:hover:before,
+.wk-ui-component-container .merchandiser-app .draggable-handle:hover:before {
+color: #858585;
+}
+.wk-ui-component-container .admin__field:not(.admin__field-option) > .wk-ui-component-container .admin__field-label span[data-config-scope]:before,
+.wk-ui-component-container .accordion .config .label span[data-config-scope]:before {
+bottom: -1.3rem;
+color: #808080;
+content: attr(data-config-scope);
+font-size: 1.1rem;
+font-weight: 400;
+min-width: 15rem;
+position: absolute;
+right: 0;
+text-transform: lowercase;
+}
+html {
+-ms-text-size-adjust: 100%;
+-webkit-text-size-adjust: 100%;
+box-sizing: border-box;
+}
+* {
+box-sizing: inherit;
+}
+*:before,
+*:after {
+box-sizing: inherit;
+}
+*:focus {
+box-shadow: none;
+outline: 0;
+}
+.wk-ui-component-container ._keyfocus *:focus {
+box-shadow: 0 0 0 1px #008bdb;
+}
+.wk-ui-component-container article,
+.wk-ui-component-container aside,
+.wk-ui-component-container details,
+.wk-ui-component-container figcaption,
+.wk-ui-component-container figure,
+.wk-ui-component-container footer,
+.wk-ui-component-container header,
+.wk-ui-component-container main,
+.wk-ui-component-container menu,
+.wk-ui-component-container nav,
+.wk-ui-component-container section,
+.wk-ui-component-container summary {
+display: block;
+}
+.wk-ui-component-container audio,
+.wk-ui-component-container canvas,
+.wk-ui-component-container progress,
+.wk-ui-component-container video {
+display: inline-block;
+vertical-align: baseline;
+}
+.wk-ui-component-container audio:not([controls]) {
+display: none;
+height: 0;
+}
+.wk-ui-component-container [hidden],
+.wk-ui-component-container template {
+display: none;
+}
+.wk-ui-component-container a {
+background-color: transparent;
+}
+.wk-ui-component-container a:active,
+.wk-ui-component-container a:hover {
+outline: 0;
+}
+.wk-ui-component-container abbr[title] {
+border-bottom: 1px dotted;
+}
+.wk-ui-component-container b,
+.wk-ui-component-container strong {
+font-weight: bold;
+}
+.wk-ui-component-container dfn {
+font-style: italic;
+}
+.wk-ui-component-container mark {
+background: #ffff00;
+color: #000000;
+}
+.wk-ui-component-container sub,
+.wk-ui-component-container sup {
+font-size: 75%;
+line-height: 0;
+position: relative;
+vertical-align: baseline;
+}
+.wk-ui-component-container sup {
+top: -.5em;
+}
+.wk-ui-component-container sub {
+bottom: -.25em;
+}
+.wk-ui-component-container img {
+border: 0;
+}
+.wk-ui-component-container img,
+.wk-ui-component-container video,
+.wk-ui-component-container embed,
+.wk-ui-component-container object {
+max-width: 100%;
+}
+.wk-ui-component-container svg:not(:root) {
+overflow: hidden;
+}
+.wk-ui-component-container figure {
+margin: 1em 40px;
+}
+.wk-ui-component-container hr {
+-moz-box-sizing: content-box;
+box-sizing: content-box;
+height: 0;
+}
+.wk-ui-component-container pre {
+overflow: auto;
+}
+.wk-ui-component-container code,
+.wk-ui-component-container kbd,
+.wk-ui-component-container pre,
+.wk-ui-component-container samp {
+font-family: monospace, monospace;
+font-size: 1em;
+}
+.wk-ui-component-container button,
+.wk-ui-component-container input,
+.wk-ui-component-container optgroup,
+.wk-ui-component-container select,
+.wk-ui-component-container textarea,
+.wk-ui-component-container .block-footer .action-add {
+color: inherit;
+font: inherit;
+margin: 0;
+}
+.wk-ui-component-container button,
+.wk-ui-component-container .block-footer .action-add {
+overflow: visible;
+}
+.wk-ui-component-container button,
+.wk-ui-component-container select,
+.wk-ui-component-container .block-footer .action-add {
+text-transform: none;
+}
+.wk-ui-component-container button,
+.wk-ui-component-container html input[type='button'],
+.wk-ui-component-container input[type='reset'],
+.wk-ui-component-container input[type='submit'],
+.wk-ui-component-container .block-footer .action-add {
+-webkit-appearance: button;
+cursor: pointer;
+}
+.wk-ui-component-container button[disabled],
+.wk-ui-component-container html input[disabled],
+.wk-ui-component-container .block-footer .action-add[disabled] {
+cursor: default;
+}
+.wk-ui-component-container button::-moz-focus-inner,
+.wk-ui-component-container input::-moz-focus-inner,
+.wk-ui-component-container .block-footer .action-add::-moz-focus-inner {
+border: 0;
+padding: 0;
+}
+.wk-ui-component-container input {
+line-height: normal;
+}
+.wk-ui-component-container input[type='checkbox'],
+.wk-ui-component-container input[type='radio'] {
+box-sizing: border-box;
+padding: 0;
+}
+.wk-ui-component-container input[type='number']::-webkit-inner-spin-button,
+.wk-ui-component-container input[type='number']::-webkit-outer-spin-button {
+height: auto;
+}
+.wk-ui-component-container input[type='search'] {
+-webkit-appearance: textfield;
+}
+.wk-ui-component-container input[type='search']::-webkit-search-cancel-button,
+.wk-ui-component-container input[type='search']::-webkit-search-decoration {
+-webkit-appearance: none;
+}
+.wk-ui-component-container legend {
+border: 0;
+padding: 0;
+}
+.wk-ui-component-container textarea {
+overflow: auto;
+}
+.wk-ui-component-container optgroup {
+font-weight: bold;
+}
+.wk-ui-component-container table {
+border-collapse: collapse;
+border-spacing: 0;
+}
+.wk-ui-component-container td,
+.wk-ui-component-container th {
+padding: 0;
+}
+@font-face {
+font-family: 'Open Sans';
+src: url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/light/opensans-300.eot');
+src: url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/light/opensans-300.eot?#iefix') format('embedded-opentype'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/light/opensans-300.woff2') format('woff2'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/light/opensans-300.woff') format('woff'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/light/opensans-300.ttf') format('truetype'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/light/opensans-300.svg#Open Sans') format('svg');
+font-weight: 300;
+font-style: normal;
+}
+@font-face {
+font-family: 'Open Sans';
+src: url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/regular/opensans-400.eot');
+src: url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/regular/opensans-400.eot?#iefix') format('embedded-opentype'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/regular/opensans-400.woff2') format('woff2'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/regular/opensans-400.woff') format('woff'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/regular/opensans-400.ttf') format('truetype'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/regular/opensans-400.svg#Open Sans') format('svg');
+font-weight: 400;
+font-style: normal;
+}
+@font-face {
+font-family: 'Open Sans';
+src: url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/semibold/opensans-600.eot');
+src: url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/semibold/opensans-600.eot?#iefix') format('embedded-opentype'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/semibold/opensans-600.woff2') format('woff2'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/semibold/opensans-600.woff') format('woff'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/semibold/opensans-600.ttf') format('truetype'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/semibold/opensans-600.svg#Open Sans') format('svg');
+font-weight: 600;
+font-style: normal;
+}
+@font-face {
+font-family: 'Open Sans';
+src: url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/bold/opensans-700.eot');
+src: url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/bold/opensans-700.eot?#iefix') format('embedded-opentype'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/bold/opensans-700.woff2') format('woff2'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/bold/opensans-700.woff') format('woff'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/bold/opensans-700.ttf') format('truetype'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/opensans/bold/opensans-700.svg#Open Sans') format('svg');
+font-weight: 700;
+font-style: normal;
+}
+.wk-ui-component-container h1 {
+margin: 0 0 2rem;
+color: #41362f;
+font-weight: 400;
+line-height: 1.2;
+font-size: 2.8rem;
+}
+.wk-ui-component-container h2,
+.wk-ui-component-container .form-sharing-info .admin__legend span,
+.wk-ui-component-container .admin__page-section-title strong,
+.wk-ui-component-container .admin__page-section-title .title {
+margin: 0 0 2rem;
+color: #41362f;
+font-weight: 400;
+line-height: 1.2;
+font-size: 2rem;
+}
+.wk-ui-component-container h3 {
+margin: 0 0 2rem;
+color: #41362f;
+font-weight: 600;
+line-height: 1.2;
+font-size: 1.7rem;
+}
+.wk-ui-component-container h4,
+.wk-ui-component-container h5,
+.wk-ui-component-container h6 {
+font-weight: 600;
+margin-top: 0;
+}
+.wk-ui-component-container p {
+margin: 0 0 0.5em;
+}
+.wk-ui-component-container small {
+font-size: 1.2rem;
+}
+.wk-ui-component-container a {
+color: #007bdb;
+text-decoration: none;
+}
+.wk-ui-component-container a:hover {
+color: #007bdb;
+text-decoration: underline;
+}
+.wk-ui-component-container ul,
+.wk-ui-component-container ol,
+.wk-ui-component-container dl {
+margin-top: 0;
+padding-left: 0;
+}
+.wk-ui-component-container nav ul,
+.wk-ui-component-container nav ol {
+list-style: none none;
+margin: 0;
+padding: 0;
+}
+@font-face {
+font-family: 'Admin Icons';
+src: url('../../../../../../adminhtml/Magento/backend/en_US/fonts/admin-icons/admin-icons.eot');
+src: url('../../../../../../adminhtml/Magento/backend/en_US/fonts/admin-icons/admin-icons.eot?#iefix') format('embedded-opentype'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/admin-icons/admin-icons.woff2') format('woff2'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/admin-icons/admin-icons.woff') format('woff'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/admin-icons/admin-icons.ttf') format('truetype'), url('../../../../../../adminhtml/Magento/backend/en_US/fonts/admin-icons/admin-icons.svg#Admin Icons') format('svg');
+font-weight: normal;
+font-style: normal;
+}
+.wk-ui-component-container .admin__control-text,
+.wk-ui-component-container .admin__control-select,
+.wk-ui-component-container .admin__control-multiselect,
+.wk-ui-component-container .admin__control-file-label:before,
+.wk-ui-component-container .admin__control-textarea,
+.wk-ui-component-container .admin__control-addon [class*='admin__control-'][class] ~ [class*='admin__addon-']:last-child:before,
+/* .wk-ui-component-container .selectmenu, */
+.wk-ui-component-container .ui-datepicker .ui-datepicker-title select {
+-webkit-appearance: none;
+background-color: #ffffff;
+border: 1px solid #adadad;
+border-radius: 1px;
+box-shadow: none;
+color: #303030;
+font-size: 1.4rem;
+font-weight: 400;
+height: auto;
+line-height: 1.36;
+padding: 0.6rem 1rem 0.6rem;
+transition: border-color 0.1s linear;
+vertical-align: baseline;
+width: auto;
+}
+
+.wk-ui-component-container .selectmenu{
+-webkit-appearance: none;
+background-color: #ffffff;
+border: 1px solid #adadad;
+border-radius: 1px;
+box-shadow: none;
+color: #303030;
+font-size: 1.4rem;
+font-weight: 400;
+height: auto;
+line-height: 1.36;
+/* padding: 0.6rem 1rem 0.6rem; */
+transition: border-color 0.1s linear;
+vertical-align: baseline;
+width: auto;
+}
+
+.wk-ui-component-container .admin__control-text:hover,
+.wk-ui-component-container .admin__control-select:hover,
+.wk-ui-component-container .admin__control-multiselect:hover,
+.wk-ui-component-container .admin__control-textarea:hover,
+.wk-ui-component-container .admin__control-addon [class*='admin__control-'][class]:hover ~ [class*='admin__addon-']:last-child:before,
+.wk-ui-component-container .selectmenu:hover,
+.wk-ui-component-container .selectmenu:hover .selectmenu-toggle:before,
+.wk-ui-component-container .ui-datepicker .ui-datepicker-title select:hover {
+border-color: #878787;
+}
+.wk-ui-component-container .admin__control-text:focus,
+.wk-ui-component-container .admin__control-select:focus,
+.wk-ui-component-container .admin__control-multiselect:focus,
+.wk-ui-component-container .admin__control-file:active + .admin__control-file-label:before,
+.wk-ui-component-container .admin__control-file:focus + .admin__control-file-label:before,
+.wk-ui-component-container .admin__control-textarea:focus,
+.wk-ui-component-container .admin__control-addon [class*='admin__control-'][class]:focus ~ [class*='admin__addon-']:last-child:before,
+.wk-ui-component-container .selectmenu._focus,
+.wk-ui-component-container .selectmenu._focus .selectmenu-toggle:before,
+.wk-ui-component-container .ui-datepicker .ui-datepicker-title select:focus {
+border-color: #007bdb;
+box-shadow: none;
+outline: 0;
+}
+.wk-ui-component-container .admin__control-text[disabled],
+.wk-ui-component-container .admin__control-select[disabled],
+.wk-ui-component-container .admin__control-multiselect[disabled],
+.wk-ui-component-container .admin__control-file[disabled] + .admin__control-file-label:before,
+.wk-ui-component-container .admin__control-textarea[disabled],
+.wk-ui-component-container .admin__control-addon [class*='admin__control-'][class][disabled] ~ [class*='admin__addon-']:last-child:before,
+.wk-ui-component-container .ui-datepicker .ui-datepicker-title select[disabled] {
+background-color: #e9e9e9;
+border-color: #adadad;
+color: #303030;
+cursor: not-allowed;
+opacity: 0.5;
+}
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field.admin__field-wide[class] > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .admin__field-row[class] > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .address-item-edit-content .admin__field[class] > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .image-panel .admin__fieldset .admin__field:not(.admin__field-inline)[class] > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .page-layout-admin-login .admin__field[class] > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .affected-attribute-set .admin__fieldset .admin__field[class] > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .gift-options-popup .admin__field[class] > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .admin__page-section .admin__field[class] > .wk-ui-component-container .admin__field-control {
+clear: left;
+float: none;
+text-align: left;
+width: auto;
+}
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field.admin__field-wide[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label,
+.wk-ui-component-container .admin__field-row[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label,
+.wk-ui-component-container .address-item-edit-content .admin__field[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label,
+.wk-ui-component-container .image-panel .admin__fieldset .admin__field:not(.admin__field-inline)[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label,
+.wk-ui-component-container .page-layout-admin-login .admin__field[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label,
+.wk-ui-component-container .affected-attribute-set .admin__fieldset .admin__field[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label,
+.wk-ui-component-container .gift-options-popup .admin__field[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label,
+.wk-ui-component-container .admin__page-section .admin__field[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label {
+display: block;
+line-height: 1.4rem;
+margin-bottom: 0.86rem;
+margin-top: -0.14rem;
+text-align: left;
+width: auto;
+}
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field.admin__field-wide[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label:before,
+.wk-ui-component-container .admin__field-row[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label:before,
+.wk-ui-component-container .address-item-edit-content .admin__field[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label:before,
+.wk-ui-component-container .image-panel .admin__fieldset .admin__field:not(.admin__field-inline)[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label:before,
+.wk-ui-component-container .page-layout-admin-login .admin__field[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label:before,
+.wk-ui-component-container .affected-attribute-set .admin__fieldset .admin__field[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label:before,
+.wk-ui-component-container .gift-options-popup .admin__field[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label:before,
+.wk-ui-component-container .admin__page-section .admin__field[class]:not(.admin__field-option) > .wk-ui-component-container .admin__field-label:before {
+display: none;
+}
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field.admin__field-wide[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span,
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field.admin__field-wide[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span,
+.wk-ui-component-container .admin__field-row[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span,
+.wk-ui-component-container .admin__field-row[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span,
+.wk-ui-component-container .address-item-edit-content .admin__field[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span,
+.wk-ui-component-container .address-item-edit-content .admin__field[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span,
+.wk-ui-component-container .image-panel .admin__fieldset .admin__field:not(.admin__field-inline)[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span,
+.wk-ui-component-container .image-panel .admin__fieldset .admin__field:not(.admin__field-inline)[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span,
+.wk-ui-component-container .page-layout-admin-login .admin__field[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span,
+.wk-ui-component-container .page-layout-admin-login .admin__field[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span,
+.wk-ui-component-container .affected-attribute-set .admin__fieldset .admin__field[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span,
+.wk-ui-component-container .affected-attribute-set .admin__fieldset .admin__field[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span,
+.wk-ui-component-container .gift-options-popup .admin__field[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span,
+.wk-ui-component-container .gift-options-popup .admin__field[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span,
+.wk-ui-component-container .admin__page-section .admin__field[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span,
+.wk-ui-component-container .admin__page-section .admin__field[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span {
+padding-left: 1.5rem;
+}
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field.admin__field-wide[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span:after,
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field.admin__field-wide[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span:after,
+.wk-ui-component-container .admin__field-row[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span:after,
+.wk-ui-component-container .admin__field-row[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span:after,
+.wk-ui-component-container .address-item-edit-content .admin__field[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span:after,
+.wk-ui-component-container .address-item-edit-content .admin__field[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span:after,
+.wk-ui-component-container .image-panel .admin__fieldset .admin__field:not(.admin__field-inline)[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span:after,
+.wk-ui-component-container .image-panel .admin__fieldset .admin__field:not(.admin__field-inline)[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span:after,
+.wk-ui-component-container .page-layout-admin-login .admin__field[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span:after,
+.wk-ui-component-container .page-layout-admin-login .admin__field[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span:after,
+.wk-ui-component-container .affected-attribute-set .admin__fieldset .admin__field[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span:after,
+.wk-ui-component-container .affected-attribute-set .admin__fieldset .admin__field[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span:after,
+.wk-ui-component-container .gift-options-popup .admin__field[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span:after,
+.wk-ui-component-container .gift-options-popup .admin__field[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span:after,
+.wk-ui-component-container .admin__page-section .admin__field[class]:not(.admin__field-option).required > .wk-ui-component-container .admin__field-label span:after,
+.wk-ui-component-container .admin__page-section .admin__field[class]:not(.admin__field-option)._required > .wk-ui-component-container .admin__field-label span:after {
+left: 0;
+margin-left: 30px;
+}
+.wk-ui-component-container .data-grid .col-qty .admin__control-text,
+.wk-ui-component-container .product-composite-configure-inner .admin__control-text.qty,
+.wk-ui-component-container .order-details .order-search-items .col-qty .admin__control-text,
+.wk-ui-component-container .abs-order-tables .col-qty .admin__control-text,
+.wk-ui-component-container .abs-order-tables .col-qty-invoice .admin__control-text,
+.wk-ui-component-container .add-by-sku-wrapper .col-qty .admin__control-text,
+.wk-ui-component-container .order-errors .col-qty .admin__control-text,
+.wk-ui-component-container .order-creditmemo-tables .col-qty .admin__control-text,
+.wk-ui-component-container .order-creditmemo-tables .col-qty-invoice .admin__control-text,
+.wk-ui-component-container .order-tables .col-qty .admin__control-text,
+.wk-ui-component-container .order-tables .col-qty-invoice .admin__control-text,
+.wk-ui-component-container .order-invoice-tables .col-qty .admin__control-text,
+.wk-ui-component-container .order-invoice-tables .col-qty-invoice .admin__control-text,
+.wk-ui-component-container .edit-order-table .col-qty .admin__control-text,
+.wk-ui-component-container .edit-order-table .col-qty-invoice .admin__control-text,
+.wk-ui-component-container .order-shipment-table .col-qty .admin__control-text,
+.wk-ui-component-container .order-shipment-table .col-qty-invoice .admin__control-text {
+min-width: 0;
+width: 5.4rem;
+}
+.wk-ui-component-container .abs-order-tables .custom-price-block + .admin__control-text,
+.wk-ui-component-container .order-creditmemo-tables .custom-price-block + .admin__control-text,
+.wk-ui-component-container .order-tables .custom-price-block + .admin__control-text,
+.wk-ui-component-container .order-invoice-tables .custom-price-block + .admin__control-text,
+.wk-ui-component-container .edit-order-table .custom-price-block + .admin__control-text,
+.wk-ui-component-container .order-shipment-table .custom-price-block + .admin__control-text {
+min-width: 0;
+width: 10rem;
+}
+.wk-ui-component-container .admin__legend,
+.wk-ui-component-container .gift-options-popup .admin__legend,
+.wk-ui-component-container .admin__page-section .admin__legend,
+.wk-ui-component-container .admin__page-section-item-title .title,
+.wk-ui-component-container .admin__page-section-content .admin__page-section-title .title {
+font-size: 1.8rem;
+font-weight: 600;
+margin-bottom: 3rem;
+}
+.wk-ui-component-container .admin__control-radio,
+.wk-ui-component-container .admin__control-checkbox {
+cursor: pointer;
+opacity: .01;
+overflow: hidden;
+position: absolute;
+vertical-align: top;
+}
+.wk-ui-component-container .admin__control-radio:after,
+.wk-ui-component-container .admin__control-checkbox:after {
+display: none;
+}
+.wk-ui-component-container .admin__control-radio + label,
+.wk-ui-component-container .admin__control-checkbox + label {
+cursor: pointer;
+display: inline-block;
+}
+.wk-ui-component-container .admin__control-radio + label:before,
+.wk-ui-component-container .admin__control-checkbox + label:before,
+.wk-ui-component-container .mass-select-wrap select + label:before {
+background-color: #ffffff;
+border: 1px solid #adadad;
+color: transparent;
+float: left;
+height: 1.6rem;
+text-align: center;
+vertical-align: top;
+width: 1.6rem;
+}
+.wk-ui-component-container .admin__control-radio + .admin__field-label,
+.wk-ui-component-container .admin__control-checkbox + .admin__field-label {
+padding-left: 2.6rem;
+}
+.wk-ui-component-container .admin__control-radio + .admin__field-label:before,
+.wk-ui-component-container .admin__control-checkbox + .admin__field-label:before {
+margin: 1px 1rem 0 -2.6rem;
+}
+.wk-ui-component-container .admin__control-radio:checked + label:before,
+.wk-ui-component-container .admin__control-checkbox:checked + label:before,
+.wk-ui-component-container .mass-select-wrap select._checked + label:before {
+color: #514943;
+}
+.wk-ui-component-container .admin__control-radio.disabled + label,
+.wk-ui-component-container .admin__control-checkbox.disabled + label,
+.wk-ui-component-container .admin__control-radio[disabled] + label,
+.wk-ui-component-container .admin__control-checkbox[disabled] + label {
+color: #303030;
+cursor: default;
+opacity: .5;
+}
+.wk-ui-component-container .admin__control-radio.disabled + label:before,
+.wk-ui-component-container .admin__control-checkbox.disabled + label:before,
+.wk-ui-component-container .admin__control-radio[disabled] + label:before,
+.wk-ui-component-container .admin__control-checkbox[disabled] + label:before {
+background-color: #e9e9e9;
+border-color: #adadad;
+cursor: default;
+}
+.wk-ui-component-container ._keyfocus .admin__control-radio:not([disabled]):focus + label:before,
+.wk-ui-component-container ._keyfocus .admin__control-checkbox:not([disabled]):focus + label:before,
+.wk-ui-component-container ._keyfocus .admin__control-radio:not(.disabled):focus + label:before,
+.wk-ui-component-container ._keyfocus .admin__control-checkbox:not(.disabled):focus + label:before {
+border-color: #007bdb;
+}
+.wk-ui-component-container .admin__control-radio:not([disabled]):hover + label:before,
+.wk-ui-component-container .admin__control-checkbox:not([disabled]):hover + label:before,
+.wk-ui-component-container .admin__control-radio:not(.disabled):hover + label:before,
+.wk-ui-component-container .admin__control-checkbox:not(.disabled):hover + label:before {
+border-color: #878787;
+}
+.wk-ui-component-container .admin__control-radio + label:before {
+border-radius: 1.6rem;
+content: '';
+transition: border-color 0.1s linear, color 0.1s ease-in;
+}
+.wk-ui-component-container .admin__control-radio.admin__control-radio + label:before {
+line-height: 140%;
+}
+.wk-ui-component-container .admin__control-radio:checked + label {
+position: relative;
+}
+.wk-ui-component-container .admin__control-radio:checked + label:after {
+background-color: #514943;
+border-radius: 50%;
+content: '';
+height: 10px;
+left: 3px;
+position: absolute;
+top: 4px;
+width: 10px;
+}
+.wk-ui-component-container .admin__control-radio:checked:not([disabled]):hover,
+.wk-ui-component-container .admin__control-radio:checked:not(.disabled):hover {
+cursor: default;
+}
+.wk-ui-component-container .admin__control-radio:checked:not([disabled]):hover + label,
+.wk-ui-component-container .admin__control-radio:checked:not(.disabled):hover + label {
+cursor: default;
+}
+.wk-ui-component-container .admin__control-radio:checked:not([disabled]):hover + label:before,
+.wk-ui-component-container .admin__control-radio:checked:not(.disabled):hover + label:before {
+border-color: #adadad;
+}
+.wk-ui-component-container .admin__control-checkbox + label:before,
+.wk-ui-component-container .mass-select-wrap select + label:before {
+border-radius: 1px;
+content: '';
+font-size: 0;
+transition: font-size 0.1s ease-out, color 0.1s ease-out, border-color 0.1s linear;
+}
+.wk-ui-component-container .admin__control-checkbox:checked + label:before,
+.wk-ui-component-container .mass-select-wrap select._checked + label:before {
+content: '\e62d';
+font-size: 1.1rem;
+line-height: 125%;
+}
+.wk-ui-component-container .admin__control-checkbox:not(:checked)._indeterminate + label:before,
+.wk-ui-component-container .admin__control-checkbox:not(:checked):indeterminate + label:before {
+color: #514943;
+content: '-';
+font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+font-size: 1.4rem;
+font-weight: 700;
+}
+.wk-ui-component-container input[type='checkbox'].admin__control-checkbox,
+.wk-ui-component-container input[type='radio'].admin__control-checkbox {
+margin: 0;
+position: absolute;
+}
+.wk-ui-component-container .admin__control-text {
+min-width: 4rem;
+}
+.wk-ui-component-container .admin__control-select,
+.wk-ui-component-container .ui-datepicker .ui-datepicker-title select {
+-webkit-appearance: none;
+-moz-appearance: none;
+-ms-appearance: none;
+appearance: none;
+background-image: url('../../../../../../adminhtml/Magento/backend/en_US/images/arrows-bg.svg'), linear-gradient(#e3e3e3, #e3e3e3), linear-gradient(#adadad, #adadad);
+background-position: calc(100% - 12px) -34px, 100%, calc(100% - 3.2rem) 0;
+background-size: auto, 3.2rem 100%, 1px 100%;
+background-repeat: no-repeat;
+max-width: 100%;
+min-width: 8.5rem;
+padding-bottom: 0.5rem;
+padding-right: 4.4rem;
+padding-top: 0.5rem;
+transition: border-color 0.1s linear;
+}
+.wk-ui-component-container .admin__control-select:hover,
+.wk-ui-component-container .ui-datepicker .ui-datepicker-title select:hover {
+border-color: #878787;
+cursor: pointer;
+}
+.wk-ui-component-container .admin__control-select:focus,
+.wk-ui-component-container .ui-datepicker .ui-datepicker-title select:focus {
+background-image: url('../../../../../../adminhtml/Magento/backend/en_US/images/arrows-bg.svg'), linear-gradient(#e3e3e3, #e3e3e3), linear-gradient(#007bdb, #007bdb);
+background-position: calc(100% - 12px) 13px, 100%, calc(100% - 3.2rem) 0;
+border-color: #007bdb;
+}
+.wk-ui-component-container .admin__control-select::-ms-expand,
+.wk-ui-component-container .ui-datepicker .ui-datepicker-title select::-ms-expand {
+display: none;
+}
+.wk-ui-component-container .ie9 .admin__control-select,
+.wk-ui-component-container .ie9 .ui-datepicker .ui-datepicker-title select {
+background-image: none;
+padding-right: 1rem;
+}
+.wk-ui-component-container option:empty {
+display: none;
+}
+.wk-ui-component-container .admin__control-multiselect {
+height: auto;
+max-width: 100%;
+min-width: 15rem;
+overflow: auto;
+padding: 0;
+resize: both;
+}
+.wk-ui-component-container .admin__control-multiselect option,
+.wk-ui-component-container .admin__control-multiselect optgroup {
+padding: .5rem 1rem;
+}
+.wk-ui-component-container .admin__control-file-wrapper {
+display: inline-block;
+padding: .5rem 1rem;
+position: relative;
+z-index: 1;
+}
+.wk-ui-component-container .admin__control-file-label:before {
+content: '';
+left: 0;
+position: absolute;
+top: 0;
+width: 100%;
+z-index: 0;
+}
+.wk-ui-component-container .admin__control-file {
+background: transparent;
+border: 0;
+padding-top: .7rem;
+position: relative;
+width: auto;
+z-index: 1;
+}
+.wk-ui-component-container .admin__control-support-text {
+border: 1px solid transparent;
+display: inline-block;
+font-size: 1.4rem;
+line-height: 1.36;
+padding-bottom: 0.6rem;
+padding-top: 0.6rem;
+}
+.wk-ui-component-container .admin__control-support-text + [class*='admin__control-'] {
+margin-left: 0.7rem;
+}
+.wk-ui-component-container [class*='admin__control-'] + .admin__control-support-text {
+margin-left: 0.7rem;
+}
+.wk-ui-component-container .admin__control-service {
+float: left;
+margin: .8rem 0 0 3rem;
+}
+.wk-ui-component-container .admin__control-textarea {
+height: 8.48rem;
+line-height: 1.18;
+padding-top: .8rem;
+resize: vertical;
+}
+.wk-ui-component-container .admin__control-addon {
+display: -webkit-inline-flex;
+display: -ms-inline-flexbox;
+-webkit-flex-direction: row;
+-ms-flex-direction: row;
+flex-direction: row;
+display: inline-flex;
+flex-flow: row nowrap;
+position: relative;
+width: 100%;
+z-index: 1;
+}
+.wk-ui-component-container .admin__control-addon > .wk-ui-component-container [class*='admin__addon-'],
+.wk-ui-component-container .admin__control-addon > .wk-ui-component-container [class*='admin__control-'] {
+-webkit-flex-basis: auto;
+flex-basis: auto;
+-webkit-flex-grow: 0;
+flex-grow: 0;
+-webkit-flex-shrink: 0;
+flex-shrink: 0;
+position: relative;
+z-index: 1;
+}
+.wk-ui-component-container .admin__control-addon .admin__control-select,
+.wk-ui-component-container .admin__control-addon .ui-datepicker .ui-datepicker-title select {
+width: auto;
+}
+.wk-ui-component-container .admin__control-addon .admin__control-text {
+margin: .1rem;
+padding: 0.5rem 0.9rem 0.5rem;
+width: 100%;
+}
+.wk-ui-component-container .admin__control-addon [class*='admin__control-'][class] {
+appearence: none;
+-webkit-flex-grow: 1;
+flex-grow: 1;
+-ms-flex-order: 1;
+-webkit-order: 1;
+order: 1;
+-webkit-flex-shrink: 1;
+flex-shrink: 1;
+background-color: transparent;
+border-color: transparent;
+box-shadow: none;
+vertical-align: top;
+}
+.wk-ui-component-container .admin__control-addon [class*='admin__control-'][class] + [class*='admin__control-'] {
+border-left-color: #adadad;
+}
+.wk-ui-component-container .admin__control-addon [class*='admin__control-'][class] :focus {
+box-shadow: 0;
+}
+.wk-ui-component-container .admin__control-addon [class*='admin__control-'][class] ~ [class*='admin__addon-']:last-child {
+padding-left: 1rem;
+position: static !important;
+z-index: 0;
+}
+.wk-ui-component-container .admin__control-addon [class*='admin__control-'][class] ~ [class*='admin__addon-']:last-child > * {
+position: relative;
+vertical-align: top;
+z-index: 1;
+}
+.wk-ui-component-container .admin__control-addon [class*='admin__control-'][class] ~ [class*='admin__addon-']:last-child:empty {
+padding: 0;
+}
+.wk-ui-component-container .admin__control-addon [class*='admin__control-'][class] ~ [class*='admin__addon-']:last-child:before {
+bottom: 0;
+box-sizing: border-box;
+content: '';
+left: 0;
+position: absolute;
+top: 0;
+width: 100%;
+z-index: -1;
+}
+.wk-ui-component-container .admin__addon-suffix,
+.wk-ui-component-container .admin__addon-prefix {
+border: 0;
+box-sizing: border-box;
+color: #858585;
+display: inline-block;
+font-size: 1.4rem;
+font-weight: 400;
+height: 3.2rem;
+line-height: 3.2rem;
+padding: 0;
+}
+.wk-ui-component-container .admin__addon-suffix {
+-ms-flex-order: 3;
+-webkit-order: 3;
+order: 3;
+}
+.wk-ui-component-container .admin__addon-suffix:last-child {
+padding-right: 1rem;
+}
+.wk-ui-component-container .admin__addon-prefix {
+-ms-flex-order: 0;
+-webkit-order: 0;
+order: 0;
+}
+.wk-ui-component-container .ie9 .admin__control-addon:after {
+clear: both;
+content: '';
+display: block;
+height: 0;
+overflow: hidden;
+}
+.wk-ui-component-container .ie9 .admin__addon {
+min-width: 0;
+overflow: hidden;
+text-align: right;
+white-space: nowrap;
+width: auto;
+}
+.wk-ui-component-container .ie9 .admin__addon [class*='admin__control-'] {
+display: inline;
+}
+.wk-ui-component-container .ie9 .admin__addon-prefix {
+float: left;
+}
+.wk-ui-component-container .ie9 .admin__addon-suffix {
+float: right;
+}
+.wk-ui-component-container .admin__control-collapsible {
+width: 100%;
+}
+.wk-ui-component-container .admin__control-collapsible ._dragged .admin__collapsible-block-wrapper .admin__collapsible-title {
+background: #d0d0d0;
+}
+.wk-ui-component-container .admin__control-collapsible ._dragover-top .admin__collapsible-block-wrapper:before,
+.wk-ui-component-container .admin__control-collapsible ._dragover-bottom .admin__collapsible-block-wrapper:before {
+background: #008bdb;
+content: '';
+display: block;
+height: 3px;
+left: 0;
+position: absolute;
+right: 0;
+}
+.wk-ui-component-container .admin__control-collapsible ._dragover-top .admin__collapsible-block-wrapper:before {
+top: -3px;
+}
+.wk-ui-component-container .admin__control-collapsible ._dragover-bottom .admin__collapsible-block-wrapper:before {
+bottom: -3px;
+}
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-block-wrapper.fieldset-wrapper {
+border: 0;
+margin: 0;
+position: relative;
+}
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-block-wrapper.fieldset-wrapper .fieldset-wrapper-title {
+background: #f8f8f8;
+border: 2px solid #cccccc;
+}
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-block-wrapper .fieldset-wrapper-title .admin__collapsible-title {
+font-size: 1.4rem;
+font-weight: 400;
+line-height: 1;
+padding: 1.6rem 4rem 1.6rem 3.8rem;
+}
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-block-wrapper .fieldset-wrapper-title .admin__collapsible-title:before {
+left: 1rem;
+right: auto;
+top: 1.4rem;
+}
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-block-wrapper .fieldset-wrapper-title .action-delete {
+background-color: transparent;
+border-color: transparent;
+box-shadow: none;
+padding: 0;
+position: absolute;
+right: 1rem;
+top: 1.4rem;
+}
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-block-wrapper .fieldset-wrapper-title .action-delete:hover {
+background-color: transparent;
+border-color: transparent;
+box-shadow: none;
+}
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-block-wrapper .fieldset-wrapper-title .action-delete:before {
+content: '\e630';
+font-size: 2rem;
+}
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-block-wrapper .fieldset-wrapper-title .action-delete > span {
+display: none;
+}
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-content {
+background-color: #ffffff;
+margin-bottom: 1rem;
+}
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-content > .wk-ui-component-container .fieldset-wrapper {
+border: 1px solid #cccccc;
+margin-top: -1px;
+padding: 1rem;
+}
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-content .admin__fieldset {
+padding: 0;
+}
+.wk-ui-component-container .admin__control-collapsible .admin__collapsible-content .admin__field:last-child {
+margin-bottom: 0;
+}
+.wk-ui-component-container .admin__control-table-wrapper {
+max-width: 100%;
+overflow-x: auto;
+overflow-y: hidden;
+}
+.wk-ui-component-container .admin__control-table {
+width: 100%;
+}
+.wk-ui-component-container .admin__control-table thead {
+background-color: transparent;
+}
+.wk-ui-component-container .admin__control-table tbody td {
+vertical-align: top;
+}
+.wk-ui-component-container .admin__control-table tfoot th {
+padding-bottom: 1.3rem;
+}
+.wk-ui-component-container .admin__control-table tfoot th.validation {
+padding-bottom: 0;
+padding-top: 0;
+}
+.wk-ui-component-container .admin__control-table tfoot td {
+border-top: 1px solid #ffffff;
+}
+.wk-ui-component-container .admin__control-table tfoot .admin__control-table-pagination {
+float: right;
+padding-bottom: 0;
+}
+.wk-ui-component-container .admin__control-table tfoot .action-previous {
+margin-right: .5rem;
+}
+.wk-ui-component-container .admin__control-table tfoot .action-next {
+margin-left: .9rem;
+}
+.wk-ui-component-container .admin__control-table tr:last-child td {
+border-bottom: none;
+}
+.wk-ui-component-container .admin__control-table tr._dragover-top td {
+box-shadow: inset 0 3px 0 0 #008bdb;
+}
+.wk-ui-component-container .admin__control-table tr._dragover-bottom td {
+box-shadow: inset 0 -3px 0 0 #008bdb;
+}
+.wk-ui-component-container .admin__control-table tr._dragged td,
+.wk-ui-component-container .admin__control-table tr._dragged th {
+background: #d0d0d0;
+}
+.wk-ui-component-container .admin__control-table td,
+.wk-ui-component-container .admin__control-table th {
+background-color: #efefef;
+border: 0;
+border-bottom: 1px solid #ffffff;
+padding: 1.3rem 1rem 1.3rem 0;
+text-align: left;
+vertical-align: top;
+}
+.wk-ui-component-container .admin__control-table td:first-child,
+.wk-ui-component-container .admin__control-table th:first-child {
+padding-left: 1rem;
+}
+.wk-ui-component-container .admin__control-table td > .wk-ui-component-container .admin__control-select,
+.wk-ui-component-container .admin__control-table th > .wk-ui-component-container .admin__control-select,
+.wk-ui-component-container .admin__control-table td > .wk-ui-component-container .admin__control-text,
+.wk-ui-component-container .admin__control-table th > .wk-ui-component-container .admin__control-text,
+.wk-ui-component-container .admin__control-table td > .wk-ui-component-container .ui-datepicker .ui-datepicker-title select,
+.wk-ui-component-container .admin__control-table th > .wk-ui-component-container .ui-datepicker .ui-datepicker-title select {
+width: 100%;
+}
+.wk-ui-component-container .admin__control-table td._hidden,
+.wk-ui-component-container .admin__control-table th._hidden {
+display: none;
+}
+.wk-ui-component-container .admin__control-table td._fit,
+.wk-ui-component-container .admin__control-table th._fit {
+width: 1px;
+}
+.wk-ui-component-container .admin__control-table th {
+color: #303030;
+font-size: 1.4rem;
+font-weight: 600;
+vertical-align: bottom;
+}
+.wk-ui-component-container .admin__control-table th._required span:after {
+color: #eb5202;
+content: '*';
+}
+.wk-ui-component-container .admin__control-table .control-table-actions-th {
+white-space: nowrap;
+}
+.wk-ui-component-container .admin__control-table .control-table-actions-cell {
+padding-top: 1.8rem;
+text-align: center;
+width: 1%;
+}
+.wk-ui-component-container .admin__control-table .control-table-options-th {
+text-align: center;
+width: 10rem;
+}
+.wk-ui-component-container .admin__control-table .control-table-options-cell {
+text-align: center;
+}
+.wk-ui-component-container .admin__control-table .control-table-text {
+line-height: 3.2rem;
+}
+.wk-ui-component-container .admin__control-table .col-draggable {
+padding-top: 2.2rem;
+width: 1%;
+}
+.wk-ui-component-container .admin__control-table .action-delete {
+background-color: transparent;
+border-color: transparent;
+box-shadow: none;
+padding-left: 0;
+padding-right: 0;
+}
+.wk-ui-component-container .admin__control-table .action-delete:hover {
+background-color: transparent;
+border-color: transparent;
+box-shadow: none;
+}
+.wk-ui-component-container .admin__control-table .action-delete:before {
+content: '\e630';
+font-size: 2rem;
+}
+.wk-ui-component-container .admin__control-table .action-delete > span {
+display: none;
+}
+.wk-ui-component-container .admin__control-table .draggable-handle {
+padding: 0;
+}
+.wk-ui-component-container .admin__control-table._dragged {
+outline: 1px solid #007bdb;
+}
+.wk-ui-component-container .admin__control-table-action {
+background-color: #efefef;
+border-top: 1px solid #ffffff;
+padding: 1.3rem 1rem;
+}
+.wk-ui-component-container .admin__dynamic-rows._dragged {
+opacity: .95;
+position: absolute;
+z-index: 999;
+}
+.wk-ui-component-container .admin__dynamic-rows.admin__control-table .admin__control-fields > .wk-ui-component-container .admin__field {
+border: 0;
+padding: 0;
+}
+.wk-ui-component-container .admin__dynamic-rows td > .wk-ui-component-container .admin__field {
+border: 0;
+margin: 0;
+padding: 0;
+}
+.wk-ui-component-container .admin__control-table-pagination {
+padding-bottom: 1rem;
+}
+.wk-ui-component-container .admin__control-table-pagination .admin__data-grid-pager {
+float: right;
+}
+.wk-ui-component-container .admin__field-tooltip {
+display: inline-block;
+margin-top: 0.5rem;
+max-width: 45px;
+overflow: visible;
+vertical-align: top;
+width: 0;
+}
+.wk-ui-component-container .admin__field-tooltip:hover {
+position: relative;
+z-index: 500;
+}
+.wk-ui-component-container .admin__field-option .admin__field-tooltip {
+margin-top: 0.5rem;
+}
+.wk-ui-component-container .admin__field-tooltip .admin__field-tooltip-action {
+margin-left: 2rem;
+position: relative;
+z-index: 2;
+display: inline-block;
+text-decoration: none;
+}
+.wk-ui-component-container .admin__field-tooltip .admin__field-tooltip-action:before {
+-webkit-font-smoothing: antialiased;
+font-size: 2.2rem;
+line-height: 1;
+color: #514943;
+content: '\e633';
+font-family: 'Admin Icons';
+vertical-align: middle;
+display: inline-block;
+font-weight: normal;
+overflow: hidden;
+speak: none;
+text-align: center;
+}
+.wk-ui-component-container .admin__field-tooltip .admin__control-text:focus + .admin__field-tooltip-content,
+.wk-ui-component-container .admin__field-tooltip:hover .admin__field-tooltip-content {
+display: block;
+}
+.wk-ui-component-container .admin__field-tooltip .admin__field-tooltip-content {
+bottom: 3.8rem;
+display: none;
+right: -2.3rem;
+}
+.wk-ui-component-container .admin__field-tooltip .admin__field-tooltip-content:after,
+.wk-ui-component-container .admin__field-tooltip .admin__field-tooltip-content:before {
+border: 1.6rem solid transparent;
+height: 0;
+width: 0;
+border-top-color: #afadac;
+content: '';
+display: block;
+position: absolute;
+right: 2rem;
+top: 100%;
+z-index: 3;
+}
+.wk-ui-component-container .admin__field-tooltip .admin__field-tooltip-content:after {
+border-top-color: #fffbbb;
+margin-top: -1px;
+z-index: 4;
+}
+.wk-ui-component-container .abs-admin__field-tooltip-content,
+.wk-ui-component-container .admin__field-tooltip .admin__field-tooltip-content,
+.wk-ui-component-container .gift-options-tooltip {
+box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.3);
+background: #fffbbb;
+border: 1px solid #afadac;
+border-radius: 1px;
+padding: 1.5rem 2.5rem;
+position: absolute;
+width: 32rem;
+z-index: 1;
+}
+.wk-ui-component-container .admin__field-fallback-reset {
+font-size: 1.25rem;
+white-space: nowrap;
+width: 30px;
+}
+.wk-ui-component-container .admin__field-fallback-reset > span {
+margin-left: 0.5rem;
+position: relative;
+}
+.wk-ui-component-container .admin__field-fallback-reset:active {
+transform: scale(0.98);
+}
+.wk-ui-component-container .admin__field-fallback-reset:before {
+transition: color 0.1s linear;
+content: '\e642';
+font-size: 1.3rem;
+margin-left: 0.5rem;
+}
+.wk-ui-component-container .admin__field-fallback-reset:hover {
+cursor: pointer;
+text-decoration: none;
+}
+.wk-ui-component-container .admin__field-fallback-reset:focus {
+background: transparent;
+}
+.wk-ui-component-container .abs-field-size-x-small,
+.wk-ui-component-container .abs-field-sizes.admin__field-x-small > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field.admin__field-x-small > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .admin__field.admin__field-x-small > .wk-ui-component-container .admin__field-control,
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field.admin__field-x-small > .wk-ui-component-container .admin__field-control {
+width: 8rem;
+}
+.wk-ui-component-container .abs-field-size-small,
+.wk-ui-component-container .abs-field-sizes.admin__field-small > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .admin__control-grouped-date > .wk-ui-component-container .admin__field-date.admin__field > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field.admin__field-small > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .admin__field.admin__field-small > .wk-ui-component-container .admin__field-control,
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field.admin__field-small > .wk-ui-component-container .admin__field-control {
+width: 15rem;
+}
+.wk-ui-component-container .abs-field-size-medium,
+.wk-ui-component-container .abs-field-sizes.admin__field-medium > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field.admin__field-medium > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .admin__field.admin__field-medium > .wk-ui-component-container .admin__field-control,
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field.admin__field-medium > .wk-ui-component-container .admin__field-control {
+width: 34rem;
+}
+.wk-ui-component-container .abs-field-size-large,
+.wk-ui-component-container .abs-field-sizes.admin__field-large > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field.admin__field-large > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .admin__field.admin__field-large > .wk-ui-component-container .admin__field-control,
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field.admin__field-large > .wk-ui-component-container .admin__field-control {
+width: 64rem;
+}
+.wk-ui-component-container .abs-field-no-label,
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field.admin__field-no-label > .wk-ui-component-container .admin__field-control,
+.wk-ui-component-container .admin__field-no-label,
+.wk-ui-component-container .admin__field-group-additional {
+margin-left: calc( (100%) * 0.25 + 30px );
+}
+.wk-ui-component-container .admin__fieldset {
+border: 0;
+margin: 0;
+min-width: 0;
+padding: 0;
+}
+.wk-ui-component-container .admin__fieldset .fieldset-wrapper.admin__fieldset-section > .wk-ui-component-container .fieldset-wrapper-title {
+padding-left: 1rem;
+}
+.wk-ui-component-container .admin__fieldset .fieldset-wrapper.admin__fieldset-section > .wk-ui-component-container .fieldset-wrapper-title strong {
+font-size: 1.7rem;
+font-weight: 600;
+}
+.wk-ui-component-container .admin__fieldset .fieldset-wrapper.admin__fieldset-section .admin__fieldset-wrapper-content > .wk-ui-component-container .admin__fieldset {
+padding-top: 1rem;
+}
+.wk-ui-component-container .admin__fieldset .fieldset-wrapper.admin__fieldset-section:last-child .admin__fieldset-wrapper-content > .wk-ui-component-container .admin__fieldset {
+padding-bottom: 0;
+}
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field {
+border: 0;
+margin: 0;
+padding: 0;
+margin-left: -30px;
+}
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field:after {
+clear: both;
+content: '';
+display: table;
+}
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field > .wk-ui-component-container .admin__field-control {
+width: calc( (100%) * 0.5 - 30px );
+float: left;
+margin-left: 30px;
+}
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field > .wk-ui-component-container .admin__field-label {
+width: calc( (100%) * 0.25 - 30px );
+float: left;
+margin-left: 30px;
+}
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field.admin__field-no-label > .wk-ui-component-container .admin__field-label {
+display: none;
+}
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field + .admin__field._empty._no-header {
+margin-top: -3rem;
+}
+.wk-ui-component-container .admin__fieldset-product-websites {
+position: relative;
+z-index: 300;
+}
+.wk-ui-component-container .admin__fieldset-note {
+margin-bottom: 2rem;
+}
+.wk-ui-component-container .admin__form-field {
+border: 0;
+margin: 0;
+padding: 0rem 0rem 0rem 2rem;
+}
+.wk-ui-component-container .admin__form-field-control .admin__control-text,
+.wk-ui-component-container .admin__field-control .admin__control-text,
+.wk-ui-component-container .admin__form-field-control .admin__control-textarea,
+.wk-ui-component-container .admin__field-control .admin__control-textarea {
+width: 100%;
+}
+.wk-ui-component-container .admin__field-label {
+color: #303030;
+cursor: pointer;
+margin: 0;
+text-align: right;
+}
+.wk-ui-component-container .admin__field-label + br {
+display: none;
+}
+.wk-ui-component-container .admin__field:not(.admin__field-option) > .wk-ui-component-container .admin__field-label {
+font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+font-size: 1.4rem;
+font-weight: 600;
+line-height: 3.2rem;
+padding: 0;
+white-space: nowrap;
+word-wrap: break-word;
+}
+.wk-ui-component-container .admin__field:not(.admin__field-option) > .wk-ui-component-container .admin__field-label:before {
+opacity: 0;
+visibility: hidden;
+content: '.';
+margin-left: -7px;
+overflow: hidden;
+}
+.wk-ui-component-container .admin__field:not(.admin__field-option) > .wk-ui-component-container .admin__field-label span {
+display: inline-block;
+line-height: 1.2;
+vertical-align: middle;
+white-space: normal;
+}
+.wk-ui-component-container .admin__field:not(.admin__field-option) > .wk-ui-component-container .admin__field-label span[data-config-scope] {
+position: relative;
+}
+.wk-ui-component-container .required > .wk-ui-component-container .admin__field-label > span:after,
+.wk-ui-component-container ._required > .wk-ui-component-container .admin__field-label > span:after {
+color: #eb5202;
+content: '*';
+display: inline-block;
+font-size: 1.6rem;
+font-weight: 500;
+line-height: 1;
+margin-left: 10px;
+margin-top: .2rem;
+position: absolute;
+z-index: 1;
+}
+.wk-ui-component-container ._disabled > .wk-ui-component-container .admin__field-label {
+color: #999999;
+cursor: default;
+}
+.wk-ui-component-container .admin__field {
+margin-bottom: 0;
+}
+.wk-ui-component-container .admin__field + .admin__field {
+margin-top: 1.5rem;
+}
+.wk-ui-component-container .admin__field:not(.admin__field-option) ~ .admin__field-option {
+margin-top: .5rem;
+}
+.wk-ui-component-container .admin__field.admin__field-option ~ .admin__field-option {
+margin-top: .9rem;
+}
+.wk-ui-component-container .admin__field ~ .admin__field-option:last-child {
+margin-bottom: .8rem;
+}
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field {
+margin-bottom: 3rem;
+position: relative;
+}
+.wk-ui-component-container .admin__field legend.admin__field-label {
+opacity: 0;
+}
+.wk-ui-component-container .admin__field[data-config-scope]:before {
+color: #808080;
+content: attr(data-config-scope);
+display: inline-block;
+font-size: 1.2rem;
+left: calc( (100%) * 0.75 - 30px );
+line-height: 3.2rem;
+margin-left: 60px;
+position: absolute;
+width: calc( (100%) * 0.25 - 30px );
+}
+.wk-ui-component-container .admin__field-control .admin__field[data-config-scope]:nth-child(n + 2):before {
+content: '';
+}
+.wk-ui-component-container .admin__field._error .admin__field-control [class*='admin__control-'] [class*='admin__addon-']:before,
+.wk-ui-component-container .admin__field._error .admin__field-control [class*='admin__addon-']:before,
+.wk-ui-component-container .admin__field._error .admin__field-control > [class*='admin__control-'] {
+border-color: #e22626;
+}
+.wk-ui-component-container .admin__field._disabled,
+.wk-ui-component-container .admin__field._disabled:hover {
+box-shadow: inherit;
+cursor: inherit;
+opacity: 1;
+outline: inherit;
+}
+.wk-ui-component-container .admin__field._hidden {
+display: none;
+}
+.wk-ui-component-container .admin__field-control + .admin__field-control {
+margin-top: 1.5rem;
+}
+.wk-ui-component-container .admin__field-control._with-tooltip > .wk-ui-component-container .admin__control-addon,
+.wk-ui-component-container .admin__field-control._with-tooltip > .wk-ui-component-container .admin__field-option,
+.wk-ui-component-container .admin__field-control._with-tooltip > .wk-ui-component-container .admin__control-select,
+.wk-ui-component-container .admin__field-control._with-tooltip > .wk-ui-component-container .admin__control-text,
+.wk-ui-component-container .admin__field-control._with-tooltip > .wk-ui-component-container .admin__control-textarea,
+.wk-ui-component-container .admin__field-control._with-tooltip > .wk-ui-component-container .ui-datepicker .ui-datepicker-title select {
+max-width: calc(100% - 45px - 4px);
+}
+.wk-ui-component-container .admin__field-control._with-tooltip .admin__field-tooltip {
+width: auto;
+}
+.wk-ui-component-container .admin__field-control._with-tooltip .admin__field-option {
+display: inline-block;
+}
+.wk-ui-component-container .admin__field-control._with-reset > .wk-ui-component-container .admin__control-addon,
+.wk-ui-component-container .admin__field-control._with-reset > .wk-ui-component-container .admin__control-text,
+.wk-ui-component-container .admin__field-control._with-reset > .wk-ui-component-container .admin__control-textarea {
+width: calc(100% - 30px - 0.5rem - 4px);
+}
+.wk-ui-component-container .admin__field-control._with-reset .admin__field-fallback-reset {
+margin-left: 0.5rem;
+margin-top: 1rem;
+vertical-align: top;
+}
+.wk-ui-component-container .admin__field-control._with-reset._with-tooltip > .wk-ui-component-container .admin__control-addon,
+.wk-ui-component-container .admin__field-control._with-reset._with-tooltip > .wk-ui-component-container .admin__control-text,
+.wk-ui-component-container .admin__field-control._with-reset._with-tooltip > .wk-ui-component-container .admin__control-textarea {
+width: calc(100% - 30px - 0.5rem - 45px - 8px);
+}
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field-collapsible {
+margin-bottom: 0;
+}
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field-collapsible .admin__field-control {
+border-top: 1px solid #cccccc;
+display: block;
+font-size: 1.7rem;
+font-weight: 700;
+padding: 1.7rem 0;
+width: calc(97%);
+}
+.wk-ui-component-container .admin__fieldset > .wk-ui-component-container .admin__field-collapsible .admin__field-option {
+padding-top: 0;
+}
+.wk-ui-component-container .admin__field-collapsible + div {
+margin-top: 2.5rem;
+}
+.wk-ui-component-container .admin__field-collapsible .admin__control-radio + label:before {
+height: 1.8rem;
+width: 1.8rem;
+}
+.wk-ui-component-container .admin__field-collapsible .admin__control-radio:checked + label:after {
+left: 4px;
+top: 5px;
+}
+.wk-ui-component-container .admin__field-error,
+label.mage-error {
+background: #fffbbb;
+border: 1px solid #ee7d7d;
+box-sizing: border-box;
+color: #555555;
+display: block;
+font-size: 1.2rem;
+font-weight: 400;
+line-height: 1.2;
+margin: .2rem 0 0;
+padding: .8rem 1rem .9rem;
+}
+.wk-ui-component-container .admin__field-note {
+color: #303030;
+font-size: 1.2rem;
+margin: 10px 0 0;
+padding: 0;
+}
+.wk-ui-component-container .admin__additional-info {
+padding-top: 1rem;
+}
+.wk-ui-component-container .admin__field-option {
+padding-top: 0.8rem;
+}
+.wk-ui-component-container .admin__field-option .admin__field-label {
+text-align: left;
+}
+.wk-ui-component-container .admin__field-control > .wk-ui-component-container .admin__field-option:nth-child(1):nth-last-child(2),
+.wk-ui-component-container .admin__field-control > .wk-ui-component-container .admin__field-option:nth-child(2):nth-last-child(1) {
+display: inline-block;
+}
+.wk-ui-component-container .admin__field-control > .wk-ui-component-container .admin__field-option:nth-child(1):nth-last-child(2) + .admin__field-option,
+.wk-ui-component-container .admin__field-control > .wk-ui-component-container .admin__field-option:nth-child(2):nth-last-child(1) + .admin__field-option {
+display: inline-block;
+margin-left: 41px;
+margin-top: 0;
+}
+.wk-ui-component-container .admin__field-control > .wk-ui-component-container .admin__field-option:nth-child(1):nth-last-child(2) + .admin__field-option:before,
+.wk-ui-component-container .admin__field-control > .wk-ui-component-container .admin__field-option:nth-child(2):nth-last-child(1) + .admin__field-option:before {
+background: #cacaca;
+content: '';
+display: inline-block;
+height: 20px;
+margin-left: -20px;
+position: absolute;
+width: 1px;
+}
+.wk-ui-component-container .admin__field-value {
+padding-top: 0.8rem;
+}
+.wk-ui-component-container .admin__field-service {
+padding-top: 1rem;
+}
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field:first-child,
+.wk-ui-component-container .admin__control-fields > .wk-ui-component-container .admin__field:first-child {
+position: static;
+}
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field:first-child > .wk-ui-component-container .admin__field-label,
+.wk-ui-component-container .admin__control-fields > .wk-ui-component-container .admin__field:first-child > .wk-ui-component-container .admin__field-label {
+width: calc( (100%) * 0.25 - 30px );
+float: left;
+margin-left: 30px;
+background: #ffffff;
+cursor: pointer;
+left: 0;
+position: absolute;
+top: 0;
+}
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field:first-child > .wk-ui-component-container .admin__field-label span:before,
+.wk-ui-component-container .admin__control-fields > .wk-ui-component-container .admin__field:first-child > .wk-ui-component-container .admin__field-label span:before {
+display: block;
+}
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field._disabled > .wk-ui-component-container .admin__field-label,
+.wk-ui-component-container .admin__control-fields > .wk-ui-component-container .admin__field._disabled > .wk-ui-component-container .admin__field-label {
+cursor: default;
+}
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field > .wk-ui-component-container .admin__field-label span:before,
+.wk-ui-component-container .admin__control-fields > .wk-ui-component-container .admin__field > .wk-ui-component-container .admin__field-label span:before {
+display: none;
+}
+.wk-ui-component-container .admin__control-fields .admin__field-label ~ .admin__field-control {
+width: 100%;
+}
+.wk-ui-component-container .admin__control-fields .admin__field-option {
+padding-top: 0;
+}
+[class*='admin__control-grouped'] {
+box-sizing: border-box;
+display: table;
+width: 100%;
+}
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field {
+display: table-cell;
+vertical-align: top;
+}
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field > .wk-ui-component-container .admin__field-control {
+float: none;
+width: 100%;
+}
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field.admin__field-default,
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field.admin__field-x-small,
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field.admin__field-small,
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field.admin__field-medium,
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field.admin__field-large {
+width: 1px;
+}
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field.admin__field-default + .admin__field:last-child,
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field.admin__field-x-small + .admin__field:last-child,
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field.admin__field-small + .admin__field:last-child,
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field.admin__field-medium + .admin__field:last-child,
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field.admin__field-large + .admin__field:last-child {
+width: auto;
+}
+[class*='admin__control-grouped'] > .wk-ui-component-container .admin__field:nth-child(n + 2) {
+padding-left: 20px;
+}
+.wk-ui-component-container .admin__control-group-equal {
+table-layout: fixed;
+}
+.wk-ui-component-container .admin__control-group-equal > .wk-ui-component-container .admin__field {
+width: 50%;
+}
+.wk-ui-component-container .admin__field-control-group {
+margin-top: .8rem;
+}
+.wk-ui-component-container .admin__field-control-group > .wk-ui-component-container .admin__field {
+padding: 0;
+}
+.wk-ui-component-container .admin__control-grouped-date > .wk-ui-component-container .admin__field-date {
+white-space: nowrap;
+width: 1px;
+}
+.wk-ui-component-container .admin__control-grouped-date > .wk-ui-component-container .admin__field-date.admin__field > .wk-ui-component-container .admin__field-control {
+float: left;
+position: relative;
+}
+.wk-ui-component-container .admin__control-grouped-date > .wk-ui-component-container .admin__field-date + .admin__field:last-child {
+width: auto;
+}
+.wk-ui-component-container .admin__control-grouped-date > .wk-ui-component-container .admin__field-date + .admin__field-date > .wk-ui-component-container .admin__field-label {
+float: left;
+padding-right: 20px;
+}
+.wk-ui-component-container .admin__control-grouped-date .ui-datepicker-trigger {
+left: 100%;
+top: 0;
+}
+.wk-ui-component-container .admin__field-group-columns.admin__field-control.admin__control-grouped {
+width: calc( (100%) * 1 - 30px );
+float: left;
+margin-left: 30px;
+}
+.wk-ui-component-container .admin__field-group-columns > .wk-ui-component-container .admin__field:first-child > .wk-ui-component-container .admin__field-label {
+float: none;
+margin: 0;
+opacity: 1;
+position: static;
+text-align: left;
+}
+.wk-ui-component-container .admin__field-group-columns .admin__control-select,
+.wk-ui-component-container .admin__field-group-columns .ui-datepicker .ui-datepicker-title select {
+width: 100%;
+}
+.wk-ui-component-container .admin__field-group-additional {
+clear: both;
+}
+.wk-ui-component-container .admin__field-group-additional .action-advanced {
+margin-top: 1rem;
+}
+.wk-ui-component-container .admin__field-group-additional .action-secondary {
+width: 100%;
+}
+.wk-ui-component-container .admin__field-group-show-label {
+white-space: nowrap;
+}
+.wk-ui-component-container .admin__field-group-show-label > .wk-ui-component-container .admin__field-label,
+.wk-ui-component-container .admin__field-group-show-label > .wk-ui-component-container .admin__field-control {
+display: inline-block;
+vertical-align: top;
+}
+.wk-ui-component-container .admin__field-group-show-label > .wk-ui-component-container .admin__field-label {
+margin-right: 20px;
+}
+.wk-ui-component-container .admin__field-complex {
+margin: 1rem 0 3rem;
+padding-left: 1rem;
+}
+.wk-ui-component-container .admin__field:not(._hidden) + .admin__field-complex {
+margin-top: 3rem;
+}
+.wk-ui-component-container .admin__field-complex .admin__field-complex-title {
+clear: both;
+color: #303030;
+font-size: 1.7rem;
+font-weight: 600;
+letter-spacing: .025em;
+margin-bottom: 1rem;
+}
+.wk-ui-component-container .admin__field-complex .admin__field-complex-elements {
+float: right;
+max-width: 40%;
+}
+.wk-ui-component-container .admin__field-complex .admin__field-complex-elements button,
+.wk-ui-component-container .admin__field-complex .admin__field-complex-elements .block-footer .action-add {
+margin-left: 1rem;
+}
+.wk-ui-component-container .admin__field-complex .admin__field-complex-content {
+max-width: 60%;
+overflow: hidden;
+}
+.wk-ui-component-container .admin__field-complex + .admin__field._empty._no-header {
+margin-top: -3rem;
+}
+.wk-ui-component-container .admin__legend {
+float: left;
+position: static;
+width: 100%;
+}
+.wk-ui-component-container .admin__legend + br {
+clear: left;
+display: block;
+height: 0;
+overflow: hidden;
+}
+.wk-ui-component-container .fieldset-wrapper-title,
+.wk-ui-component-container .admin__fieldset-wrapper-title {
+border-bottom: 1px solid #cccccc;
+line-height: 1.2;
+margin-bottom: 0;
+padding: 14px 0 16px;
+}
+.wk-ui-component-container .fieldset-wrapper-title .title,
+.wk-ui-component-container .admin__fieldset-wrapper-title .title {
+font-size: 2rem;
+font-weight: 400;
+}
+.wk-ui-component-container .admin__fieldset-wrapper-content .fieldset-wrapper-title .title,
+.wk-ui-component-container .admin__fieldset-wrapper-content .admin__fieldset-wrapper-title .title {
+font-size: 1.5rem;
+font-weight: 700;
+}
+.wk-ui-component-container .fieldset-wrapper-title .title.active ~ .actions,
+.wk-ui-component-container .admin__fieldset-wrapper-title .title.active ~ .actions {
+display: none;
+}
+.wk-ui-component-container .fieldset-wrapper-title .actions,
+.wk-ui-component-container .admin__fieldset-wrapper-title .actions {
+display: block;
+float: right;
+}
+.wk-ui-component-container .admin__fieldset-wrapper-content .admin__fieldset {
+padding-bottom: 3rem;
+padding-top: 3rem;
+}
+.wk-ui-component-container .admin__fieldset-wrapper-content .admin__fieldset > .wk-ui-component-container .admin__collapsible-block-wrapper:first-child {
+margin-top: -3rem;
+}
+.wk-ui-component-container .admin__fieldset-wrapper-content .admin__fieldset > *:first-child {
+margin-top: 0;
+}
+.wk-ui-component-container .admin__fieldset-wrapper-content .admin__fieldset > *:last-child {
+margin-bottom: 0;
+}
+.wk-ui-component-container .address-item-edit-content {
+background: #ffffff;
+border: 1px solid #dad1c8;
+box-shadow: 0 2px 1px 0 rgba(217, 210, 202, 0.5);
+margin-left: 359px;
+max-width: 500px;
+padding: 15px 30px;
+}
+.wk-ui-component-container .address-item-edit-content .admin__legend {
+display: none;
+}
+.wk-ui-component-container .address-list {
+float: left;
+list-style-type: none;
+margin: 0;
+padding: 0;
+width: 360px;
+}
+.wk-ui-component-container .address-list .address-list-item-actions {
+position: absolute;
+right: 1rem;
+top: 1rem;
+}
+.wk-ui-component-container .address-list .address-list-item {
+background: #f1f1f1;
+border: 1px solid #dad1c8;
+cursor: pointer;
+margin-bottom: -1px;
+padding: 10px 10px 15px;
+position: relative;
+z-index: 1;
+}
+.wk-ui-component-container .address-list .address-list-item.ui-state-active {
+background: #ffffff;
+box-shadow: 0 1px 1px 0 #d9d2ca;
+margin-left: -2px;
+padding-left: 12px;
+position: relative;
+z-index: 2;
+}
+.wk-ui-component-container .address-list .address-list-item.ui-state-active:before,
+.wk-ui-component-container .address-list .address-list-item.ui-state-active:after {
+color: #ffffff;
+content: '\e02a';
+font-family: 'MUI-Icons';
+font-size: 18px;
+font-style: normal;
+font-weight: normal;
+line-height: 11px;
+margin-top: -5px;
+position: absolute;
+right: -9px;
+speak: none;
+text-indent: -6px;
+top: 50%;
+width: 10px;
+z-index: 2;
+}
+.wk-ui-component-container .address-list .address-list-item.ui-state-active:before {
+color: #dad1c8;
+right: -11px;
+z-index: 1;
+}
+.wk-ui-component-container .address-list address {
+font-style: normal;
+line-height: 1.5;
+margin: 0 20px 15px 0;
+}
+.wk-ui-component-container .address-list address:first-line {
+font-weight: bold;
+}
+.wk-ui-component-container .address-list .address-list-actions {
+background: none;
+border: 0;
+box-shadow: none;
+cursor: default;
+padding: 20px 0 0;
+}
+.wk-ui-component-container .address-list .action-delete {
+background-image: none;
+background: none;
+-moz-box-sizing: content-box;
+border: 0;
+box-shadow: none;
+line-height: inherit;
+margin: 0;
+padding: 0;
+text-shadow: none;
+font-weight: 400;
+display: inline-block;
+text-decoration: none;
+}
+.wk-ui-component-container .address-list .action-delete:focus,
+.wk-ui-component-container .address-list .action-delete:active {
+background: none;
+border: none;
+}
+.wk-ui-component-container .address-list .action-delete:hover {
+background: none;
+border: none;
+}
+.wk-ui-component-container .address-list .action-delete.disabled,
+.wk-ui-component-container .address-list .action-delete[disabled],
+fieldset[disabled] .address-list .action-delete {
+cursor: not-allowed;
+pointer-events: none;
+opacity: 0.5;
+}
+.wk-ui-component-container .address-list .action-delete > span {
+border: 0;
+clip: rect(0, 0, 0, 0);
+height: 1px;
+margin: -1px;
+overflow: hidden;
+padding: 0;
+position: absolute;
+width: 1px;
+}
+.wk-ui-component-container .address-list .action-delete:after {
+-webkit-font-smoothing: antialiased;
+font-size: 1.6rem;
+line-height: 16px;
+color: #41362f;
+content: '\e620';
+font-family: 'Admin Icons';
+vertical-align: middle;
+display: inline-block;
+font-weight: normal;
+overflow: hidden;
+speak: none;
+text-align: center;
+}
+.wk-ui-component-container .address-list .action-delete span {
+max-height: 1px;
+max-width: 1px;
+}
+.wk-ui-component-container .address-list .action-delete:hover {
+position: relative;
+z-index: 2;
+}
+.wk-ui-component-container .address-list .action-delete:hover:after {
+color: #060504;
+}
+.wk-ui-component-container .address-list .action-delete:hover span {
+background-color: #fcfcfc;
+border: 1px solid #989287;
+border-radius: .4rem;
+bottom: 100%;
+clip: auto;
+font-size: 1.2rem;
+height: auto;
+left: auto;
+margin: 0 auto .1rem;
+max-height: 50px;
+max-width: 200px;
+padding: .5rem;
+right: auto;
+top: auto;
+transition: all .01s linear .7s;
+white-space: nowrap;
+width: auto;
+}
+[class*='admin__control-'].mage-error ~ [class*='admin__addon-']:before,
+.wk-ui-component-container .admin__field-control > [class*='admin__control-'].mage-error {
+border-color: #e22626;
+}
+.wk-ui-component-container .page-layout-admin-login .loading-mask {
+background: rgba(255, 255, 255, 0.2);
+height: 100%;
+left: 0;
+position: absolute;
+top: 0;
+width: 100%;
+z-index: 1000;
+}
+.wk-ui-component-container .page-layout-admin-login .popup-loading {
+height: 149px;
+left: 50%;
+margin-left: -109px;
+margin-top: -74.5px;
+overflow: hidden;
+position: absolute;
+top: 50%;
+width: 218px;
+}
+.wk-ui-component-container .page-layout-admin-login .field-captcha {
+padding-left: 30px;
+vertical-align: middle;
+}
+.wk-ui-component-container .page-layout-admin-login .field-captcha .captcha-reload {
+float: right;
+vertical-align: middle;
+}
+.wk-ui-component-container .admin__form-loading-mask {
+background: rgba(255, 255, 255, 0.5);
+bottom: 0;
+left: 0;
+position: fixed;
+right: 0;
+top: 0;
+z-index: 9999;
+}
+.wk-ui-component-container .admin__form-loading-mask .spinner {
+font-size: 4rem;
+left: 50%;
+margin-left: -2rem;
+margin-top: -2rem;
+position: absolute;
+top: 50%;
+}
+.wk-ui-component-container .data-grid .head-massaction .admin__control-select,
+.wk-ui-component-container .data-grid .head-massaction .ui-datepicker .ui-datepicker-title select {
+min-width: 6rem;
+}
+.wk-ui-component-container .data-grid .data-grid-filters td {
+border-bottom: 1px solid #d6d6d6;
+padding: 1rem;
+}
+.wk-ui-component-container .data-grid .data-grid-filters select,
+.wk-ui-component-container .data-grid .data-grid-filters input[type='text'] {
+font-size: 1.3rem;
+height: 2.8rem;
+min-width: 5rem;
+padding: .2rem .4rem;
+width: 100%;
+}
+.wk-ui-component-container .data-grid .data-grid-filters .admin__control-text {
+width: 100%;
+}
+.wk-ui-component-container .data-grid .data-grid-filters select {
+background-position: calc(100% - 5px) -37px, 100%, calc(100% - 18px) 0;
+background-size: auto, 18px 100%, 1px 100%;
+height: 2.8rem;
+padding: .2rem 1.8rem .2rem .3rem;
+}
+.wk-ui-component-container .data-grid .data-grid-filters select:focus {
+background-position: calc(100% - 5px) 11px, 100%, calc(100% - 18px) 0;
+}
+.wk-ui-component-container .data-grid .data-grid-filters td ._has-datepicker + .ui-datepicker-trigger {
+height: 2.8rem;
+margin-left: -3.2rem;
+width: 2.8rem;
+}
+.wk-ui-component-container .data-grid .data-grid-filters td ._has-datepicker + .ui-datepicker-trigger:after {
+line-height: 28px;
+}
+.wk-ui-component-container .data-grid .range-line {
+position: relative;
+}
+.wk-ui-component-container .data-grid .range-line + .range-line {
+margin-top: .5rem;
+}
+.wk-ui-component-container .data-grid .field-row {
+display: inline-block;
+}
+.wk-ui-component-container .mass-select-info:before {
+content: '(';
+}
+.wk-ui-component-container .mass-select-info:after {
+content: ')';
+}
+.wk-ui-component-container .mass-select-info._empty {
+display: none;
+}
+.wk-ui-component-container .mass-select-wrap {
+margin-left: 1.1rem;
+margin-top: 3.3rem;
+position: absolute;
+top: 100%;
+}
+.wk-ui-component-container .mass-select-wrap select {
+cursor: pointer;
+height: 22px;
+left: 0;
+opacity: .01;
+position: absolute;
+top: 0;
+width: 22px;
+z-index: 2;
+}
+.wk-ui-component-container .mass-select-wrap select + label {
+height: 16px;
+line-height: 16px;
+padding: 0;
+width: 16px;
+z-index: 1;
+}
+.wk-ui-component-container .mass-select-wrap select + label:before {
+left: 0;
+position: absolute;
+top: 0;
+}
+.wk-ui-component-container .mass-select-wrap select + label:after {
+top: 40% !important;
+}
+.wk-ui-component-container .mass-select-wrap select._checked._indeterminate + label:before {
+content: '-';
+font-size: 2rem;
+line-height: .7rem;
+}
+.wk-ui-component-container .mass-select-wrap select._disabled {
+display: none;
+}
+.wk-ui-component-container .mass-select-wrap select._disabled + label {
+cursor: not-allowed;
+opacity: .6;
+}
+.wk-ui-component-container .admin__data-grid-toolbar *,
+.wk-ui-component-container .admin__data-grid-toolbar *:before,
+.wk-ui-component-container .admin__data-grid-toolbar *:after {
+box-sizing: border-box;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__data-grid-header-row .action-select-multiselect {
+-webkit-appearance: menulist-button;
+height: 38px;
+left: -1rem;
+min-width: 0;
+opacity: .01;
+top: -1.2rem;
+width: 52px;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__data-grid-header-row > div {
+margin-left: 30px;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__data-grid-header-row > div:first-child {
+margin-left: 0;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__data-grid-header-row button,
+.wk-ui-component-container .admin__data-grid-toolbar .admin__data-grid-header-row .block-footer .action-add {
+vertical-align: top;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__filter-actions {
+float: left;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__control-filter .admin__control-select,
+.wk-ui-component-container .admin__data-grid-toolbar .admin__control-filter .ui-datepicker .ui-datepicker-title select {
+margin-right: 0.7rem;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__data-grid-export {
+float: right;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__data-grid-export .admin__control-select,
+.wk-ui-component-container .admin__data-grid-toolbar .admin__data-grid-export .ui-datepicker .ui-datepicker-title select {
+margin-right: 0.7rem;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__grid-massaction {
+float: left;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__grid-massaction .admin__control-select,
+.wk-ui-component-container .admin__data-grid-toolbar .admin__grid-massaction .ui-datepicker .ui-datepicker-title select {
+margin-right: 0.7rem;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__grid-massaction + .admin__control-text {
+float: left;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__grid-massaction .form-inline {
+display: inline;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__grid-massaction .form-inline .admin__field-label {
+float: none;
+padding-left: 2rem;
+padding-right: 1rem;
+width: auto;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__grid-massaction .admin__grid-massaction-form .admin__control-select ~ button,
+.wk-ui-component-container .admin__data-grid-toolbar .admin__grid-massaction .admin__grid-massaction-form .ui-datepicker .ui-datepicker-title select ~ button,
+.wk-ui-component-container .admin__data-grid-toolbar .admin__grid-massaction .admin__grid-massaction-form .admin__control-select ~ .block-footer .action-add {
+display: none;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__grid-massaction .admin__grid-massaction-form .admin__control-select._selected ~ button,
+.wk-ui-component-container .admin__data-grid-toolbar .admin__grid-massaction .admin__grid-massaction-form .ui-datepicker .ui-datepicker-title select._selected ~ button,
+.wk-ui-component-container .admin__data-grid-toolbar .admin__grid-massaction .admin__grid-massaction-form .admin__control-select._selected ~ .block-footer .action-add {
+display: inline-block;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__grid-massaction .admin__control-select-placeholder {
+color: #8a837f;
+font-weight: 700;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__data-grid-pager-wrap {
+float: right;
+}
+.wk-ui-component-container .admin__data-grid-toolbar .admin__data-grid-header-row._massaction {
+position: relative;
+z-index: 1;
+}
+.wk-ui-component-container .admin__grid-control .admin__grid-control {
+display: none;
+}
+.wk-ui-component-container .ui-dialog .admin__data-grid-header-row._massaction,
+.wk-ui-component-container .ui-dialog .mass-select-wrap select,
+.wk-ui-component-container .ui-dialog .mass-select-wrap,
+.wk-ui-component-container .ui-dialog .admin__grid-massaction {
+z-index: 2000;
+}
+.wk-ui-component-container .ui-dialog .admin__data-grid-wrap {
+z-index: 1999;
+}
+.wk-ui-component-container .data-grid td.col-action a + a:before {
+content: '';
+display: block;
+}
+.wk-ui-component-container .attribute-popup {
+background-color: #ffffff;
+}
+.wk-ui-component-container .attribute-popup .edit-form {
+padding-left: 1.8rem;
+padding-right: 1.8rem;
+}
+.wk-ui-component-container .product-configure-popup .time-picker {
+display: block;
+margin-top: 1rem;
+}
+.wk-ui-component-container .admin__control-wysiwig .buttons-set {
+margin: 0 0 15px;
+}
+.wk-ui-component-container .admin__control-wysiwig .buttons-set button,
+.wk-ui-component-container .admin__control-wysiwig .buttons-set .block-footer .action-add {
+margin-right: 4px;
+}
+.wk-ui-component-container .admin__control-wysiwig + button,
+.wk-ui-component-container .admin__control-wysiwig + .block-footer .action-add {
+margin-top: 1rem;
+}
+.wk-ui-component-container .admin__control-wysiwig textarea {
+width: 100%;
+}
+.wk-ui-component-container .admin__action-dropdown-wrap {
+display: inline-block;
+position: relative;
+}
+.wk-ui-component-container .admin__action-dropdown-wrap .admin__action-dropdown-text:after {
+left: -6px;
+right: 0;
+}
+.wk-ui-component-container .admin__action-dropdown-wrap .admin__action-dropdown-menu {
+left: auto;
+right: 0;
+}
+.wk-ui-component-container .admin__action-dropdown-wrap.active .admin__action-dropdown,
+.wk-ui-component-container .admin__action-dropdown-wrap._active .admin__action-dropdown {
+border-color: #007bdb;
+box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+.wk-ui-component-container .admin__action-dropdown-wrap.active .admin__action-dropdown-text:after,
+.wk-ui-component-container .admin__action-dropdown-wrap._active .admin__action-dropdown-text:after {
+background-color: #ffffff;
+content: '';
+height: 6px;
+position: absolute;
+top: 100%;
+}
+.wk-ui-component-container .admin__action-dropdown-wrap.active .admin__action-dropdown-menu,
+.wk-ui-component-container .admin__action-dropdown-wrap._active .admin__action-dropdown-menu {
+display: block;
+}
+.wk-ui-component-container .admin__action-dropdown-wrap._disabled .admin__action-dropdown {
+cursor: default;
+}
+.wk-ui-component-container .admin__action-dropdown-wrap._disabled:hover .admin__action-dropdown {
+color: #41362f;
+}
+.wk-ui-component-container .admin__action-dropdown {
+padding-right: 3.3rem;
+background-color: #ffffff;
+border: 1px solid transparent;
+border-bottom: none;
+border-radius: 0;
+box-shadow: none;
+color: #41362f;
+display: inline-block;
+font-size: 1.3rem;
+font-weight: 400;
+letter-spacing: -.025em;
+padding: 0.7rem 3.3rem 0.8rem 1.5rem;
+position: relative;
+vertical-align: baseline;
+z-index: 2;
+}
+.wk-ui-component-container .admin__action-dropdown._active:after,
+.wk-ui-component-container .admin__action-dropdown.active:after {
+transform: rotate(180deg);
+}
+.wk-ui-component-container .admin__action-dropdown:after {
+border-color: #000000 transparent transparent transparent;
+border-style: solid;
+border-width: 0.5rem 0.4rem 0 0.4rem;
+content: '';
+height: 0;
+margin-top: -0.2rem;
+position: absolute;
+right: 1.25rem;
+top: 50%;
+transition: all .2s linear;
+width: 0;
+}
+.wk-ui-component-container ._active .admin__action-dropdown:after,
+.wk-ui-component-container .active .admin__action-dropdown:after {
+transform: rotate(180deg);
+}
+.wk-ui-component-container .admin__action-dropdown:hover:after {
+border-color: #000000 transparent transparent transparent;
+}
+.wk-ui-component-container .admin__action-dropdown:hover,
+.wk-ui-component-container .admin__action-dropdown:focus {
+background-color: #ffffff;
+color: #060504;
+text-decoration: none;
+}
+.wk-ui-component-container .admin__action-dropdown:after {
+right: 1.5rem;
+}
+.wk-ui-component-container .admin__action-dropdown:before {
+margin-right: 1rem;
+}
+.wk-ui-component-container .admin__action-dropdown-menu {
+background-color: #ffffff;
+border: 1px solid #007bdb;
+box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+display: none;
+line-height: 1.36;
+margin-top: -1px;
+min-width: 120%;
+padding: 0.5rem 1rem;
+position: absolute;
+top: 100%;
+transition: all 0.15s ease;
+z-index: 1;
+}
+.wk-ui-component-container .admin__action-dropdown-menu > li {
+display: block;
+}
+.wk-ui-component-container .admin__action-dropdown-menu > li > a {
+color: #41362f;
+display: block;
+text-decoration: none;
+padding: 0.6rem 0.5rem;
+}
+.wk-ui-component-container .selectmenu {
+display: inline-block;
+padding-left: 1.5rem;
+position: relative;
+text-align: left;
+width: auto;
+z-index: 1;
+}
+.wk-ui-component-container .selectmenu._active {
+border-color: #007bdb;
+z-index: 500;
+}
+.wk-ui-component-container .selectmenu .action-save,
+.wk-ui-component-container .selectmenu .action-edit,
+.wk-ui-component-container .selectmenu .action-delete {
+background-color: transparent;
+border-color: transparent;
+box-shadow: none;
+padding: 0 1rem 0 1rem;
+}
+.wk-ui-component-container .selectmenu .action-save:hover,
+.wk-ui-component-container .selectmenu .action-edit:hover,
+.wk-ui-component-container .selectmenu .action-delete:hover {
+background-color: transparent;
+border-color: transparent;
+box-shadow: none;
+}
+.wk-ui-component-container .selectmenu .action-save:before,
+.wk-ui-component-container .selectmenu .action-edit:before,
+.wk-ui-component-container .selectmenu .action-delete:before {
+content: '\e630';
+}
+.wk-ui-component-container .selectmenu .action-edit,
+.wk-ui-component-container .selectmenu .action-delete {
+border: 0 solid #ffffff;
+border-left-width: 1px;
+bottom: 0;
+position: absolute;
+right: 0;
+top: 0;
+z-index: 1;
+}
+.wk-ui-component-container .selectmenu .action-edit:hover,
+.wk-ui-component-container .selectmenu .action-delete:hover {
+border: 0 solid #ffffff;
+border-left-width: 1px;
+}
+.wk-ui-component-container .selectmenu .action-save:before {
+content: '\e625';
+}
+.wk-ui-component-container .selectmenu .action-edit:before {
+content: '\e631';
+}
+.wk-ui-component-container .selectmenu-value {
+display: inline-block;
+}
+.wk-ui-component-container .selectmenu-value input[type='text'] {
+-moz-appearance: none;
+-webkit-appearance: none;
+appearance: none;
+border: 0;
+display: inline;
+margin: 0;
+width: 6rem;
+}
+body._keyfocus .selectmenu-value input[type='text']:focus {
+box-shadow: none;
+}
+.wk-ui-component-container .selectmenu-toggle {
+padding-right: 3rem;
+background: transparent;
+border-width: 0;
+bottom: 0;
+float: right;
+position: absolute;
+right: 0;
+top: 0;
+width: 0;
+}
+.wk-ui-component-container .selectmenu-toggle._active:after,
+.wk-ui-component-container .selectmenu-toggle.active:after {
+transform: rotate(180deg);
+}
+.wk-ui-component-container .selectmenu-toggle:after {
+border-color: #000000 transparent transparent transparent;
+border-style: solid;
+border-width: 0.5rem 0.4rem 0 0.4rem;
+content: '';
+height: 0;
+margin-top: -0.2rem;
+position: absolute;
+right: 1.1rem;
+top: 50%;
+transition: all .2s linear;
+width: 0;
+}
+.wk-ui-component-container ._active .selectmenu-toggle:after,
+.wk-ui-component-container .active .selectmenu-toggle:after {
+transform: rotate(180deg);
+}
+.wk-ui-component-container .selectmenu-toggle:hover:after {
+border-color: #000000 transparent transparent transparent;
+}
+.wk-ui-component-container .selectmenu-toggle:focus,
+.wk-ui-component-container .selectmenu-toggle:active,
+.wk-ui-component-container .selectmenu-toggle:hover {
+background: transparent;
+}
+.wk-ui-component-container .selectmenu._active .selectmenu-toggle:before {
+border-color: #007bdb;
+}
+body._keyfocus .selectmenu-toggle:focus {
+box-shadow: none;
+}
+.wk-ui-component-container .selectmenu-toggle:before {
+background: #e3e3e3;
+border-left: 1px solid #adadad;
+bottom: 0;
+content: '';
+display: block;
+position: absolute;
+right: 0;
+top: 0;
+width: 3.2rem;
+}
+.wk-ui-component-container .selectmenu-items {
+background: #ffffff;
+border: 1px solid #007bdb;
+box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+display: none;
+float: left;
+left: -1px;
+margin-top: 3px;
+max-width: 20rem;
+min-width: calc(100% + 2px);
+position: absolute;
+top: 100%;
+}
+.wk-ui-component-container .selectmenu-items._active {
+display: block;
+}
+.wk-ui-component-container .selectmenu-items ul {
+float: left;
+list-style-type: none;
+margin: 0;
+min-width: 100%;
+padding: 0;
+}
+.wk-ui-component-container .selectmenu-items li {
+display: -webkit-flex;
+display: -ms-flexbox;
+-webkit-flex-direction: row;
+-ms-flex-direction: row;
+display: flex;
+flex-direction: row;
+transition: background .2s linear;
+margin-bottom: 0!important;
+}
+.wk-ui-component-container .selectmenu-items li:hover {
+background: #e3e3e3;
+}
+.wk-ui-component-container .selectmenu-items li:last-child .selectmenu-item-action {
+color: #007bdb;
+text-decoration: none;
+}
+.wk-ui-component-container .selectmenu-items li:last-child .selectmenu-item-action:visited {
+color: #007bdb;
+text-decoration: none;
+}
+.wk-ui-component-container .selectmenu-items li:last-child .selectmenu-item-action:hover {
+color: #007bdb;
+text-decoration: underline;
+}
+.wk-ui-component-container .selectmenu-items li:last-child .selectmenu-item-action:active {
+color: #ff5501;
+text-decoration: underline;
+}
+.wk-ui-component-container .selectmenu-item {
+position: relative;
+width: 100%;
+z-index: 1;
+}
+li._edit > .wk-ui-component-container .selectmenu-item {
+display: none;
+}
+.wk-ui-component-container .selectmenu-item-edit {
+display: none;
+padding: .3rem 4rem .3rem .4rem;
+position: relative;
+white-space: nowrap;
+z-index: 1;
+}
+li:last-child .selectmenu-item-edit {
+padding-right: .4rem;
+}
+.wk-ui-component-container .selectmenu-item-edit .admin__control-text {
+margin: 0;
+width: 5.4rem;
+}
+li._edit .selectmenu-item-edit {
+display: block;
+}
+.wk-ui-component-container .selectmenu-item-action {
+-moz-appearance: none;
+-webkit-appearance: none;
+appearance: none;
+background: transparent;
+border: 0;
+color: #41362f;
+display: block;
+font-size: 1.4rem;
+font-weight: 400;
+min-width: 100%;
+padding: 1rem 6rem 1rem 1.5rem;
+text-align: left;
+transition: background .2s linear;
+width: 5rem;
+}
+.wk-ui-component-container .selectmenu-item-action:hover,
+.wk-ui-component-container .selectmenu-item-action:focus {
+background: #e3e3e3;
+}
+.wk-ui-component-container .abs-actions-split-xl .action-default,
+.wk-ui-component-container .page-actions .actions-split .action-default {
+margin-right: 4rem;
+}
+.wk-ui-component-container .abs-actions-split-xl .action-toggle,
+.wk-ui-component-container .page-actions .actions-split .action-toggle {
+padding-right: 4rem;
+}
+.wk-ui-component-container .abs-actions-split-xl .action-toggle:after,
+.wk-ui-component-container .page-actions .actions-split .action-toggle:after {
+border-width: 0.9rem 0.6rem 0 0.6rem;
+margin-top: -0.3rem;
+right: 1.4rem;
+}
+.wk-ui-component-container .actions-split {
+position: relative;
+z-index: 400;
+}
+.wk-ui-component-container .actions-split.active,
+.wk-ui-component-container .actions-split._active,
+.wk-ui-component-container .actions-split:hover {
+box-shadow: 0 0 0 1px #007bdb;
+}
+.wk-ui-component-container .actions-split.active .action-toggle.action-primary,
+.wk-ui-component-container .actions-split._active .action-toggle.action-primary,
+.wk-ui-component-container .actions-split.active .action-toggle.primary,
+.wk-ui-component-container .actions-split._active .action-toggle.primary {
+background-color: #ba4000;
+border-color: #ba4000;
+}
+.wk-ui-component-container .actions-split.active .dropdown-menu,
+.wk-ui-component-container .actions-split._active .dropdown-menu {
+opacity: 1;
+visibility: visible;
+display: block;
+}
+.wk-ui-component-container .actions-split .action-toggle,
+.wk-ui-component-container .actions-split .action-default {
+float: left;
+margin: 0;
+}
+.wk-ui-component-container .actions-split .action-toggle.active,
+.wk-ui-component-container .actions-split .action-default.active,
+.wk-ui-component-container .actions-split .action-toggle._active,
+.wk-ui-component-container .actions-split .action-default._active,
+.wk-ui-component-container .actions-split .action-toggle:hover,
+.wk-ui-component-container .actions-split .action-default:hover {
+box-shadow: none;
+}
+.wk-ui-component-container .actions-split .action-default {
+margin-right: 3.2rem;
+min-width: 9.300000000000001rem;
+}
+.wk-ui-component-container .actions-split .action-toggle {
+padding-right: 3.2rem;
+border-left-color: rgba(0, 0, 0, 0.2);
+bottom: 0;
+padding-left: 0;
+position: absolute;
+right: 0;
+top: 0;
+}
+.wk-ui-component-container .actions-split .action-toggle._active:after,
+.wk-ui-component-container .actions-split .action-toggle.active:after {
+transform: rotate(180deg);
+}
+.wk-ui-component-container .actions-split .action-toggle:after {
+border-color: #000000 transparent transparent transparent;
+border-style: solid;
+border-width: 0.5rem 0.4rem 0 0.4rem;
+content: '';
+height: 0;
+margin-top: -0.2rem;
+position: absolute;
+right: 1.2rem;
+top: 50%;
+transition: all .2s linear;
+width: 0;
+}
+.wk-ui-component-container ._active .actions-split .action-toggle:after,
+.wk-ui-component-container .active .actions-split .action-toggle:after {
+transform: rotate(180deg);
+}
+.wk-ui-component-container .actions-split .action-toggle:hover:after {
+border-color: #000000 transparent transparent transparent;
+}
+.wk-ui-component-container .actions-split .action-toggle.action-secondary:after,
+.wk-ui-component-container .actions-split .action-toggle.secondary:after,
+.wk-ui-component-container .actions-split .action-toggle.action-primary:after,
+.wk-ui-component-container .actions-split .action-toggle.primary:after {
+border-color: #ffffff transparent transparent transparent;
+}
+.wk-ui-component-container .actions-split .action-toggle > span {
+clip: rect(0, 0, 0, 0);
+overflow: hidden;
+position: absolute;
+display: none;
+visibility: hidden;
+}
+.wk-ui-component-container .action-select-wrap {
+display: inline-block;
+position: relative;
+}
+.wk-ui-component-container .action-select-wrap .action-select {
+padding-right: 3.2rem;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+background-color: #ffffff;
+font-weight: 400;
+text-align: left;
+}
+.wk-ui-component-container .action-select-wrap .action-select._active:after,
+.wk-ui-component-container .action-select-wrap .action-select.active:after {
+transform: rotate(180deg);
+}
+.wk-ui-component-container .action-select-wrap .action-select:after {
+border-color: #000000 transparent transparent transparent;
+border-style: solid;
+border-width: 0.5rem 0.4rem 0 0.4rem;
+content: '';
+height: 0;
+margin-top: -0.2rem;
+position: absolute;
+right: 1.2rem;
+top: 50%;
+transition: all .2s linear;
+width: 0;
+}
+.wk-ui-component-container ._active .action-select-wrap .action-select:after,
+.wk-ui-component-container .active .action-select-wrap .action-select:after {
+transform: rotate(180deg);
+}
+.wk-ui-component-container .action-select-wrap .action-select:hover:after {
+border-color: #000000 transparent transparent transparent;
+}
+.wk-ui-component-container .action-select-wrap .action-select:hover {
+border-color: #878787;
+}
+.wk-ui-component-container .action-select-wrap .action-select:hover:before {
+border-color: #878787;
+}
+.wk-ui-component-container .action-select-wrap .action-select:before {
+background-color: #e3e3e3;
+border: 1px solid #adadad;
+bottom: 0;
+content: '';
+position: absolute;
+right: 0;
+top: 0;
+width: 3.2rem;
+}
+.wk-ui-component-container .action-select-wrap .action-select._active {
+border-color: #007bdb;
+}
+.wk-ui-component-container .action-select-wrap .action-select._active:before {
+border-color: #007bdb;
+border-left-color: #adadad;
+}
+.wk-ui-component-container .action-select-wrap .action-select[disabled] {
+color: #41362f;
+}
+.wk-ui-component-container .action-select-wrap .action-select[disabled]:after {
+border-color: #41362f transparent transparent transparent;
+}
+.wk-ui-component-container .action-select-wrap._active {
+z-index: 500;
+}
+.wk-ui-component-container .action-select-wrap._active .action-select {
+border-color: #007bdb;
+}
+.wk-ui-component-container .action-select-wrap._active .action-select:before {
+border-color: #007bdb;
+}
+.wk-ui-component-container .action-select-wrap._active .action-select:after {
+transform: rotate(180deg);
+}
+.wk-ui-component-container .action-select-wrap .action-menu,
+.wk-ui-component-container .action-select-wrap .abs-action-menu .action-submenu,
+.wk-ui-component-container .action-select-wrap .action-menu .action-submenu,
+.wk-ui-component-container .action-select-wrap .actions-split .dropdown-menu .action-submenu,
+.wk-ui-component-container .action-select-wrap .actions-split .action-menu .action-submenu {
+max-height: 45rem;
+overflow-y: auto;
+width:inherit;
+}
+.wk-ui-component-container .action-select-wrap .action-menu-items {
+left: 0;
+position: absolute;
+right: 0;
+top: 100%;
+}
+.wk-ui-component-container .action-select-wrap .action-menu-items > .wk-ui-component-container .action-menu,
+.wk-ui-component-container .action-select-wrap .action-menu-items > .wk-ui-component-container .abs-action-menu .action-submenu,
+.wk-ui-component-container .action-select-wrap .action-menu-items > .wk-ui-component-container .action-menu .action-submenu,
+.wk-ui-component-container .action-select-wrap .action-menu-items > .wk-ui-component-container .actions-split .dropdown-menu .action-submenu,
+.wk-ui-component-container .action-select-wrap .action-menu-items > .wk-ui-component-container .actions-split .action-menu .action-submenu {
+min-width: 100%;
+position: static;
+}
+.wk-ui-component-container .action-select-wrap .action-menu-items > .wk-ui-component-container .action-menu .action-submenu,
+.wk-ui-component-container .action-select-wrap .action-menu-items > .wk-ui-component-container .abs-action-menu .action-submenu .action-submenu,
+.wk-ui-component-container .action-select-wrap .action-menu-items > .wk-ui-component-container .action-menu .action-submenu .action-submenu,
+.wk-ui-component-container .action-select-wrap .action-menu-items > .wk-ui-component-container .actions-split .dropdown-menu .action-submenu .action-submenu,
+.wk-ui-component-container .action-select-wrap .action-menu-items > .wk-ui-component-container .actions-split .action-menu .action-submenu .action-submenu {
+position: absolute;
+}
+.wk-ui-component-container .action-multicheck-wrap {
+display: inline-block;
+height: 1.6rem;
+padding-top: 1px;
+position: relative;
+width: 3.1rem;
+z-index: 200;
+}
+.wk-ui-component-container .action-multicheck-wrap:hover .admin__control-checkbox + label:before,
+.wk-ui-component-container .action-multicheck-wrap:hover .action-multicheck-toggle {
+border-color: #878787;
+}
+.wk-ui-component-container .action-multicheck-wrap._active .admin__control-checkbox + label:before,
+.wk-ui-component-container .action-multicheck-wrap._active .action-multicheck-toggle {
+border-color: #007bdb;
+}
+.wk-ui-component-container .action-multicheck-wrap._active .action-menu,
+.wk-ui-component-container .action-multicheck-wrap._active .abs-action-menu .action-submenu,
+.wk-ui-component-container .action-multicheck-wrap._active .action-menu .action-submenu,
+.wk-ui-component-container .action-multicheck-wrap._active .actions-split .dropdown-menu .action-submenu,
+.wk-ui-component-container .action-multicheck-wrap._active .actions-split .action-menu .action-submenu {
+opacity: 1;
+visibility: visible;
+display: block;
+}
+.wk-ui-component-container .action-multicheck-wrap._disabled .admin__control-checkbox + label:before {
+background-color: #ffffff;
+}
+.wk-ui-component-container .action-multicheck-wrap._disabled .admin__control-checkbox + label:before,
+.wk-ui-component-container .action-multicheck-wrap._disabled .action-multicheck-toggle {
+border-color: #adadad;
+opacity: 1;
+}
+.wk-ui-component-container .action-multicheck-wrap .admin__control-checkbox,
+.wk-ui-component-container .action-multicheck-wrap .admin__control-checkbox + label,
+.wk-ui-component-container .action-multicheck-wrap .action-multicheck-toggle {
+float: left;
+}
+.wk-ui-component-container .action-multicheck-wrap .action-multicheck-toggle {
+padding-right: 3rem;
+border-radius: 0 1px 1px 0;
+height: 1.6rem;
+margin-left: -1px;
+padding: 0;
+position: relative;
+transition: border-color 0.1s linear;
+width: 1.6rem;
+}
+.wk-ui-component-container .action-multicheck-wrap .action-multicheck-toggle._active:after,
+.wk-ui-component-container .action-multicheck-wrap .action-multicheck-toggle.active:after,
+.wk-ui-component-container .mass-select-wrap select:focus + label:after {
+transform: rotate(180deg);
+}
+.wk-ui-component-container .action-multicheck-wrap .action-multicheck-toggle:after,
+.wk-ui-component-container .mass-select-wrap select + label:after {
+border-color: #000000 transparent transparent transparent;
+border-style: solid;
+border-width: 0.5rem 0.4rem 0 0.4rem;
+content: '';
+height: 0;
+margin-top: -0.2rem;
+position: absolute;
+right: 1.1rem;
+top: 50%;
+transition: all .2s linear;
+width: 0;
+}
+.wk-ui-component-container ._active .action-multicheck-wrap .action-multicheck-toggle:after,
+.wk-ui-component-container .active .action-multicheck-wrap .action-multicheck-toggle:after {
+transform: rotate(180deg);
+}
+.wk-ui-component-container .action-multicheck-wrap .action-multicheck-toggle:hover:after {
+border-color: #000000 transparent transparent transparent;
+}
+.wk-ui-component-container .action-multicheck-wrap .action-multicheck-toggle:focus {
+border-color: #007bdb;
+}
+.wk-ui-component-container .action-multicheck-wrap .action-multicheck-toggle:after,
+.wk-ui-component-container .mass-select-wrap select + label:after {
+right: .3rem;
+}
+.wk-ui-component-container .action-multicheck-wrap .action-menu,
+.wk-ui-component-container .action-multicheck-wrap .abs-action-menu .action-submenu,
+.wk-ui-component-container .action-multicheck-wrap .action-menu .action-submenu,
+.wk-ui-component-container .action-multicheck-wrap .actions-split .dropdown-menu .action-submenu,
+.wk-ui-component-container .action-multicheck-wrap .actions-split .action-menu .action-submenu {
+left: -1.1rem;
+margin-top: 1px;
+right: auto;
+text-align: left;
+}
+.wk-ui-component-container .action-multicheck-wrap .action-menu-item {
+white-space: nowrap;
+}
+.wk-ui-component-container .admin__action-multiselect-wrap {
+-moz-user-select: none;
+-ms-user-select: none;
+-webkit-user-select: none;
+display: block;
+user-select: none;
+}
+.wk-ui-component-container .admin__action-multiselect-wrap.action-select-wrap:focus {
+box-shadow: none;
+}
+.wk-ui-component-container .admin__action-multiselect-wrap.action-select-wrap .action-menu,
+.wk-ui-component-container .admin__action-multiselect-wrap.action-select-wrap .abs-action-menu .action-submenu,
+.wk-ui-component-container .admin__action-multiselect-wrap.action-select-wrap .action-menu .action-submenu,
+.wk-ui-component-container .admin__action-multiselect-wrap.action-select-wrap .actions-split .dropdown-menu .action-submenu,
+.wk-ui-component-container .admin__action-multiselect-wrap.action-select-wrap .actions-split .action-menu .action-submenu {
+max-height: none;
+overflow-y: inherit;
+}
+.wk-ui-component-container .admin__action-multiselect-wrap .action-menu-item {
+transition: background-color 0.1s linear;
+}
+.wk-ui-component-container .admin__action-multiselect-wrap .action-menu-item._selected {
+background-color: #e0f6fe;
+}
+.wk-ui-component-container .admin__action-multiselect-wrap .action-menu-item._hover {
+background-color: #e3e3e3;
+}
+.wk-ui-component-container .admin__action-multiselect-wrap .action-menu-item._unclickable {
+cursor: default;
+}
+.wk-ui-component-container .admin__action-multiselect-wrap .admin__action-multiselect {
+border: 1px solid #adadad;
+cursor: pointer;
+display: block;
+min-height: 3.2rem;
+/* padding-right: 3.6rem; */
+padding-right: 0rem;
+white-space: normal;
+}
+.wk-ui-component-container .admin__action-multiselect-wrap .admin__action-multiselect:after {
+bottom: 1.25rem;
+top: auto;
+}
+.wk-ui-component-container .admin__action-multiselect-wrap .admin__action-multiselect:before {
+height: 3.3rem;
+top: auto;
+}
+.wk-ui-component-container .admin__control-table-wrapper .admin__action-multiselect-wrap {
+position: static;
+}
+.wk-ui-component-container .admin__control-table-wrapper .admin__action-multiselect-wrap .admin__action-multiselect {
+position: relative;
+}
+.wk-ui-component-container .admin__control-table-wrapper .admin__action-multiselect-wrap .admin__action-multiselect:before {
+right: -1px;
+top: -1px;
+}
+.wk-ui-component-container .admin__control-table-wrapper .admin__action-multiselect-wrap .action-menu,
+.wk-ui-component-container .admin__control-table-wrapper .admin__action-multiselect-wrap .abs-action-menu .action-submenu,
+.wk-ui-component-container .admin__control-table-wrapper .admin__action-multiselect-wrap .action-menu .action-submenu,
+.wk-ui-component-container .admin__control-table-wrapper .admin__action-multiselect-wrap .actions-split .dropdown-menu .action-submenu,
+.wk-ui-component-container .admin__control-table-wrapper .admin__action-multiselect-wrap .actions-split .action-menu .action-submenu {
+left: auto;
+min-width: 34rem;
+right: auto;
+top: auto;
+z-index: 1;
+}
+.wk-ui-component-container .admin__action-multiselect-wrap .admin__action-multiselect-item-path {
+color: #a79d95;
+font-size: 1.2rem;
+font-weight: 400;
+padding-left: 1rem;
+}
+.wk-ui-component-container .admin__action-multiselect-actions-wrap {
+border-top: 1px solid #e3e3e3;
+margin: 0 1rem;
+padding: 1rem 0;
+text-align: center;
+margin:0px;
+}
+.wk-ui-component-container .admin__action-multiselect-actions-wrap .action-default {
+font-size: 1.3rem;
+min-width: 13rem;
+}
+.wk-ui-component-container .admin__action-multiselect-text {
+padding: .6rem 1rem;
+}
+.wk-ui-component-container .action-menu,
+.wk-ui-component-container .abs-action-menu .action-submenu,
+.wk-ui-component-container .action-menu .action-submenu,
+.wk-ui-component-container .actions-split .dropdown-menu .action-submenu,
+.wk-ui-component-container .actions-split .action-menu .action-submenu {
+left: 0;
+margin-top: 2px;
+right: auto;
+text-align: left;
+}
+.wk-ui-component-container .admin__action-multiselect-label {
+cursor: pointer;
+position: relative;
+z-index: 1;
+}
+.wk-ui-component-container .admin__action-multiselect-label:before {
+margin-right: .5rem;
+}
+.wk-ui-component-container ._unclickable .admin__action-multiselect-label {
+cursor: default;
+font-weight: 700;
+}
+.wk-ui-component-container .admin__action-multiselect-search-wrap {
+border-bottom: 1px solid #e3e3e3;
+margin: 0 1rem;
+padding: 1rem 0;
+position: relative;
+}
+.wk-ui-component-container .admin__action-multiselect-search {
+padding-right: 3rem;
+width: 100%;
+}
+.wk-ui-component-container .admin__action-multiselect-search-label {
+display: block;
+font-size: 1.5rem;
+height: 1em;
+overflow: hidden;
+position: absolute;
+right: 2.2rem;
+top: 1.7rem;
+width: 1em;
+}
+.wk-ui-component-container .admin__action-multiselect-search-label:before {
+content: '\e60c';
+}
+.wk-ui-component-container .admin__action-multiselect-search-count {
+color: #a79d95;
+margin-top: 1rem;
+}
+.wk-ui-component-container .admin__action-multiselect-menu-inner {
+margin-bottom: 0;
+max-height: 46rem;
+overflow-y: auto;
+}
+.wk-ui-component-container .admin__action-multiselect-menu-inner .admin__action-multiselect-menu-inner {
+list-style: none;
+max-height: none;
+overflow: hidden;
+padding-left: 2.2rem;
+}
+.wk-ui-component-container .admin__action-multiselect-menu-inner ._hidden {
+display: none;
+}
+.wk-ui-component-container .admin__action-multiselect-crumb {
+background-color: #f5f5f5;
+border: 1px solid #a79d95;
+border-radius: 1px;
+display: inline-block;
+font-size: 1.2rem;
+margin: 0.3rem -4px 0.3rem 0.3rem;
+padding: 0.3rem 2.4rem 0.4rem 1rem;
+position: relative;
+transition: border-color 0.1s linear;
+}
+.wk-ui-component-container .admin__action-multiselect-crumb:hover {
+border-color: #908379;
+}
+.wk-ui-component-container .admin__action-multiselect-crumb .action-close {
+bottom: 0;
+font-size: .5em;
+position: absolute;
+right: 0;
+top: 0;
+width: 2rem;
+}
+.wk-ui-component-container .admin__action-multiselect-crumb .action-close:hover {
+color: #060504;
+}
+.wk-ui-component-container .admin__action-multiselect-crumb .action-close:focus,
+.wk-ui-component-container .admin__action-multiselect-crumb .action-close:active {
+background-color: transparent;
+}
+.wk-ui-component-container .admin__action-multiselect-crumb .action-close:active {
+transform: scale(0.9);
+}
+.wk-ui-component-container .admin__action-multiselect-tree .action-menu,
+.wk-ui-component-container .admin__action-multiselect-tree .abs-action-menu .action-submenu,
+.wk-ui-component-container .admin__action-multiselect-tree .action-menu .action-submenu,
+.wk-ui-component-container .admin__action-multiselect-tree .actions-split .dropdown-menu .action-submenu,
+.wk-ui-component-container .admin__action-multiselect-tree .actions-split .action-menu .action-submenu {
+min-width: 34.7rem;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .action-menu .action-menu-item,
+.wk-ui-component-container .admin__action-multiselect-tree .abs-action-menu .action-submenu .action-menu-item,
+.wk-ui-component-container .admin__action-multiselect-tree .action-menu .action-submenu .action-menu-item,
+.wk-ui-component-container .admin__action-multiselect-tree .actions-split .dropdown-menu .action-submenu .action-menu-item,
+.wk-ui-component-container .admin__action-multiselect-tree .actions-split .action-menu .action-submenu .action-menu-item {
+margin-top: .1rem;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .action-menu-item {
+margin-left: 4.2rem;
+position: relative;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .action-menu-item._expended:before {
+border-left: 1px dashed #a79d95;
+bottom: 0;
+content: '';
+left: -1rem;
+position: absolute;
+top: 1rem;
+width: 1px;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .action-menu-item._expended .admin__action-multiselect-dropdown:before {
+content: '\e615';
+}
+.wk-ui-component-container .admin__action-multiselect-tree .action-menu-item._with-checkbox .admin__action-multiselect-label {
+padding-left: 2.6rem;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner {
+position: relative;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner .admin__action-multiselect-menu-inner {
+padding-left: 3.2rem;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner .admin__action-multiselect-menu-inner:before {
+left: 4.3rem;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner-item {
+position: relative;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner-item:last-child:before {
+height: 2.1rem;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner-item:after,
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner-item:before {
+content: '';
+left: 0;
+position: absolute;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner-item:after {
+border-top: 1px dashed #a79d95;
+height: 1px;
+top: 2.1rem;
+width: 5.2rem;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner-item:before {
+border-left: 1px dashed #a79d95;
+height: 100%;
+top: 0;
+width: 1px;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner-item._parent:after {
+width: 4.2rem;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner-item._root {
+margin-left: -1rem;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner-item._root:after {
+left: 3.2rem;
+width: 2.2rem;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner-item._root:before {
+left: 3.2rem;
+top: 1rem;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner-item._root._parent:after {
+display: none;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner-item._root:first-child:before {
+top: 2.1rem;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-menu-inner-item._root:last-child:before {
+height: 1rem;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-label {
+line-height: 2.2rem;
+vertical-align: middle;
+word-break: break-all;
+}
+.wk-ui-component-container .admin__action-multiselect-tree .admin__action-multiselect-label:before {
+left: 0;
+position: absolute;
+top: .4rem;
+}
+.wk-ui-component-container .admin__action-multiselect-dropdown {
+border-radius: 50%;
+height: 2.2rem;
+left: -2.2rem;
+position: absolute;
+top: 1rem;
+width: 2.2rem;
+z-index: 1;
+}
+.wk-ui-component-container .admin__action-multiselect-dropdown:before {
+background: #ffffff;
+color: #a79d95;
+content: '\e616';
+font-size: 2.2rem;
+}
+.wk-ui-component-container .admin__actions-switch {
+display: inline-block;
+position: relative;
+vertical-align: middle;
+}
+.wk-ui-component-container .admin__field-control .admin__actions-switch {
+line-height: 3.2rem;
+}
+.wk-ui-component-container .admin__actions-switch + .admin__field-service {
+min-width: 34rem;
+}
+.wk-ui-component-container ._disabled .admin__actions-switch-checkbox + .admin__actions-switch-label,
+.wk-ui-component-container .admin__actions-switch-checkbox.disabled + .admin__actions-switch-label {
+cursor: not-allowed;
+opacity: 0.5;
+pointer-events: none;
+}
+.wk-ui-component-container .admin__actions-switch-checkbox:checked + .admin__actions-switch-label:before {
+left: 15px;
+}
+.wk-ui-component-container .admin__actions-switch-checkbox:checked + .admin__actions-switch-label:after {
+background: #79a22e;
+}
+.wk-ui-component-container .admin__actions-switch-checkbox:checked + .admin__actions-switch-label .admin__actions-switch-text:before {
+content: attr(data-text-on);
+}
+.wk-ui-component-container .admin__actions-switch-checkbox:focus + .admin__actions-switch-label:before,
+.wk-ui-component-container .admin__actions-switch-checkbox:focus + .admin__actions-switch-label:after {
+border-color: #007bdb;
+}
+.wk-ui-component-container ._error .admin__actions-switch-checkbox + .admin__actions-switch-label:before,
+.wk-ui-component-container ._error .admin__actions-switch-checkbox + .admin__actions-switch-label:after {
+border-color: #e22626;
+}
+.wk-ui-component-container .admin__actions-switch-label {
+-moz-user-select: none;
+-ms-user-select: none;
+-webkit-user-select: none;
+cursor: pointer;
+display: inline-block;
+height: 22px;
+line-height: 22px;
+position: relative;
+user-select: none;
+vertical-align: middle;
+}
+.wk-ui-component-container .admin__actions-switch-label:before,
+.wk-ui-component-container .admin__actions-switch-label:after {
+left: 0;
+position: absolute;
+right: auto;
+top: 0;
+}
+.wk-ui-component-container .admin__actions-switch-label:before {
+background: #ffffff;
+border: 1px solid #aaa6a0;
+border-radius: 100%;
+content: '';
+display: block;
+height: 22px;
+transition: left 0.2s ease-in 0s;
+width: 22px;
+z-index: 1;
+}
+.wk-ui-component-container .admin__actions-switch-label:after {
+background: #e3e3e3;
+border: 1px solid #aaa6a0;
+border-radius: 12px;
+content: '';
+display: block;
+height: 22px;
+transition: background 0.2s ease-in 0s;
+vertical-align: middle;
+width: 37px;
+z-index: 0;
+}
+.wk-ui-component-container .admin__actions-switch-text:before {
+content: attr(data-text-off);
+padding-left: 47px;
+white-space: nowrap;
+}
+.wk-ui-component-container .abs-action-reset,
+.wk-ui-component-container .admin__field-fallback-reset,
+.wk-ui-component-container .abs-action-delete,
+.wk-ui-component-container .action-close,
+.wk-ui-component-container .timeline-action,
+.wk-ui-component-container .image .action-remove,
+.wk-ui-component-container .image-panel-controls .action-delete,
+.wk-ui-component-container .image-panel-controls .action-remove,
+.wk-ui-component-container .file-uploader-preview .action-remove,
+.wk-ui-component-container .search-global-field._active .search-global-action,
+.wk-ui-component-container .notifications-close,
+.wk-ui-component-container .order-discounts .admin__field .action-default,
+.wk-ui-component-container .add-by-sku-wrapper .action-reset,
+.wk-ui-component-container .rma-items .col-actions .action-item-delete-line {
+background-color: transparent;
+border: none;
+border-radius: 0;
+box-shadow: none;
+margin: 0;
+padding: 0;
+}
+.wk-ui-component-container .abs-action-reset:hover,
+.wk-ui-component-container .admin__field-fallback-reset:hover,
+.wk-ui-component-container .abs-action-delete:hover,
+.wk-ui-component-container .action-close:hover,
+.wk-ui-component-container .timeline-action:hover,
+.wk-ui-component-container .image .action-remove:hover,
+.wk-ui-component-container .image-panel-controls .action-delete:hover,
+.wk-ui-component-container .image-panel-controls .action-remove:hover,
+.wk-ui-component-container .file-uploader-preview .action-remove:hover,
+.wk-ui-component-container .search-global-field._active .search-global-action:hover,
+.wk-ui-component-container .notifications-close:hover,
+.wk-ui-component-container .order-discounts .admin__field .action-default:hover,
+.wk-ui-component-container .add-by-sku-wrapper .action-reset:hover,
+.wk-ui-component-container .rma-items .col-actions .action-item-delete-line:hover {
+background-color: transparent;
+border: none;
+box-shadow: none;
+}
+.wk-ui-component-container .abs-action-pattern,
+.wk-ui-component-container .abs-action-default,
+.wk-ui-component-container .abs-action-primary,
+.wk-ui-component-container .abs-action-secondary,
+.wk-ui-component-container .abs-action-tertiary,
+.wk-ui-component-container .abs-action-quaternary,
+.wk-ui-component-container .action-default,
+button,
+.wk-ui-component-container .action-primary,
+.wk-ui-component-container .action-secondary,
+.wk-ui-component-container .action-tertiary,
+.wk-ui-component-container .action-quaternary,
+.wk-ui-component-container .mass-select-wrap select + label,
+button,
+button.primary,
+button.secondary,
+button.tertiary,
+.wk-ui-component-container .ui-dialog .action-close,
+.wk-ui-component-container .ui-dialog .ui-button,
+.wk-ui-component-container .ui-dialog .action-primary,
+.wk-ui-component-container .attribute-popup-actions .action-default.reset,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > button.action-default.primary,
+.wk-ui-component-container .modal-popup .modal-footer .action-primary,
+.wk-ui-component-container .modal-popup .modal-footer .action-secondary,
+.wk-ui-component-container .page-actions > button,
+.wk-ui-component-container .page-actions .page-actions-buttons > button,
+.wk-ui-component-container .page-actions > button.action-primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-primary,
+.wk-ui-component-container .page-actions > button.primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.primary,
+.wk-ui-component-container .page-actions > button.action-secondary,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-secondary,
+.wk-ui-component-container .steps-wizard .select-attributes-actions .action-default,
+.wk-ui-component-container .downloadable-form .action-add,
+.wk-ui-component-container .rma-items .col-actions .action-item-details,
+.wk-ui-component-container .rma-items .col-actions .action-item-split-line,
+.wk-ui-component-container .rma-items-block .col-actions a,
+.wk-ui-component-container .field-vat-number .action-default,
+.wk-ui-component-container .order-shipping-method-summary .action-default,
+.wk-ui-component-container .order-shipping-method-info .action-default,
+.wk-ui-component-container .block-footer .action-add,
+.wk-ui-component-container .block-footer .action-add,
+.wk-ui-component-container .popup-window .magento_buttons .ok_button,
+.wk-ui-component-container .popup-window .magento_buttons .cancel_button,
+.wk-ui-component-container .fade .actions .primary,
+.wk-ui-component-container .fade .actions .cancel,
+.wk-ui-component-container .block-footer .action-add,
+.wk-ui-component-container .block-footer .action-add.primary,
+.wk-ui-component-container .block-footer .action-add.secondary,
+.wk-ui-component-container .block-footer .action-add.tertiary,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-default.primary,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-primary,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.primary,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-secondary,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-secondary {
+border: 1px solid;
+border-radius: 0;
+display: inline-block;
+font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+font-size: 1.4rem;
+font-weight: 600;
+line-height: 1.36;
+padding: 0.6rem 1em 0.6rem;
+text-align: center;
+vertical-align: baseline;
+}
+.wk-ui-component-container .abs-action-pattern[disabled],
+.wk-ui-component-container .abs-action-pattern.disabled,
+.wk-ui-component-container .abs-action-default[disabled],
+.wk-ui-component-container .abs-action-default.disabled,
+.wk-ui-component-container .abs-action-primary[disabled],
+.wk-ui-component-container .abs-action-primary.disabled,
+.wk-ui-component-container .abs-action-secondary[disabled],
+.wk-ui-component-container .abs-action-secondary.disabled,
+.wk-ui-component-container .abs-action-tertiary[disabled],
+.wk-ui-component-container .abs-action-tertiary.disabled,
+.wk-ui-component-container .abs-action-quaternary[disabled],
+.wk-ui-component-container .abs-action-quaternary.disabled,
+.wk-ui-component-container .action-default[disabled],
+.wk-ui-component-container .action-default.disabled,
+button[disabled],
+button.disabled,
+.wk-ui-component-container .action-primary[disabled],
+.wk-ui-component-container .action-primary.disabled,
+.wk-ui-component-container .action-secondary[disabled],
+.wk-ui-component-container .action-secondary.disabled,
+.wk-ui-component-container .action-tertiary[disabled],
+.wk-ui-component-container .action-tertiary.disabled,
+.wk-ui-component-container .action-quaternary[disabled],
+.wk-ui-component-container .action-quaternary.disabled,
+.wk-ui-component-container .mass-select-wrap select + label[disabled],
+.wk-ui-component-container .mass-select-wrap select + label.disabled,
+button[disabled],
+button.disabled,
+button.primary[disabled],
+button.primary.disabled,
+button.secondary[disabled],
+button.secondary.disabled,
+button.tertiary[disabled],
+button.tertiary.disabled,
+.wk-ui-component-container .ui-dialog .action-close[disabled],
+.wk-ui-component-container .ui-dialog .action-close.disabled,
+.wk-ui-component-container .ui-dialog .ui-button[disabled],
+.wk-ui-component-container .ui-dialog .ui-button.disabled,
+.wk-ui-component-container .ui-dialog .action-primary[disabled],
+.wk-ui-component-container .ui-dialog .action-primary.disabled,
+.wk-ui-component-container .attribute-popup-actions .action-default.reset[disabled],
+.wk-ui-component-container .attribute-popup-actions .action-default.reset.disabled,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > button.action-default.primary[disabled],
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > button.action-default.primary.disabled,
+.wk-ui-component-container .modal-popup .modal-footer .action-primary[disabled],
+.wk-ui-component-container .modal-popup .modal-footer .action-primary.disabled,
+.wk-ui-component-container .modal-popup .modal-footer .action-secondary[disabled],
+.wk-ui-component-container .modal-popup .modal-footer .action-secondary.disabled,
+.wk-ui-component-container .page-actions > button[disabled],
+.wk-ui-component-container .page-actions > button.disabled,
+.wk-ui-component-container .page-actions .page-actions-buttons > button[disabled],
+.wk-ui-component-container .page-actions .page-actions-buttons > button.disabled,
+.wk-ui-component-container .page-actions > button.action-primary[disabled],
+.wk-ui-component-container .page-actions > button.action-primary.disabled,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-primary[disabled],
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-primary.disabled,
+.wk-ui-component-container .page-actions > button.primary[disabled],
+.wk-ui-component-container .page-actions > button.primary.disabled,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.primary[disabled],
+.wk-ui-component-container .page-actions .page-actions-buttons > button.primary.disabled,
+.wk-ui-component-container .page-actions > button.action-secondary[disabled],
+.wk-ui-component-container .page-actions > button.action-secondary.disabled,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-secondary[disabled],
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-secondary.disabled,
+.wk-ui-component-container .steps-wizard .select-attributes-actions .action-default[disabled],
+.wk-ui-component-container .steps-wizard .select-attributes-actions .action-default.disabled,
+.wk-ui-component-container .downloadable-form .action-add[disabled],
+.wk-ui-component-container .downloadable-form .action-add.disabled,
+.wk-ui-component-container .rma-items .col-actions .action-item-details[disabled],
+.wk-ui-component-container .rma-items .col-actions .action-item-details.disabled,
+.wk-ui-component-container .rma-items .col-actions .action-item-split-line[disabled],
+.wk-ui-component-container .rma-items .col-actions .action-item-split-line.disabled,
+.wk-ui-component-container .rma-items-block .col-actions a[disabled],
+.wk-ui-component-container .rma-items-block .col-actions a.disabled,
+.wk-ui-component-container .field-vat-number .action-default[disabled],
+.wk-ui-component-container .field-vat-number .action-default.disabled,
+.wk-ui-component-container .order-shipping-method-summary .action-default[disabled],
+.wk-ui-component-container .order-shipping-method-summary .action-default.disabled,
+.wk-ui-component-container .order-shipping-method-info .action-default[disabled],
+.wk-ui-component-container .order-shipping-method-info .action-default.disabled,
+.wk-ui-component-container .block-footer .action-add[disabled],
+.wk-ui-component-container .block-footer .action-add.disabled,
+.wk-ui-component-container .block-footer .action-add[disabled],
+.wk-ui-component-container .block-footer .action-add.disabled,
+.wk-ui-component-container .popup-window .magento_buttons .ok_button[disabled],
+.wk-ui-component-container .popup-window .magento_buttons .ok_button.disabled,
+.wk-ui-component-container .popup-window .magento_buttons .cancel_button[disabled],
+.wk-ui-component-container .popup-window .magento_buttons .cancel_button.disabled,
+.wk-ui-component-container .fade .actions .primary[disabled],
+.wk-ui-component-container .fade .actions .primary.disabled,
+.wk-ui-component-container .fade .actions .cancel[disabled],
+.wk-ui-component-container .fade .actions .cancel.disabled,
+.wk-ui-component-container .block-footer .action-add[disabled],
+.wk-ui-component-container .block-footer .action-add.disabled,
+.wk-ui-component-container .block-footer .action-add.primary[disabled],
+.wk-ui-component-container .block-footer .action-add.primary.disabled,
+.wk-ui-component-container .block-footer .action-add.secondary[disabled],
+.wk-ui-component-container .block-footer .action-add.secondary.disabled,
+.wk-ui-component-container .block-footer .action-add.tertiary[disabled],
+.wk-ui-component-container .block-footer .action-add.tertiary.disabled,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-default.primary[disabled],
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-default.primary.disabled,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add[disabled],
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.disabled,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add[disabled],
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.disabled,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-primary[disabled],
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-primary.disabled,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-primary[disabled],
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-primary.disabled,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.primary[disabled],
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.primary.disabled,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.primary[disabled],
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.primary.disabled,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-secondary[disabled],
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-secondary.disabled,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-secondary[disabled],
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-secondary.disabled {
+cursor: default;
+opacity: 0.5;
+pointer-events: none;
+}
+.wk-ui-component-container .abs-action-l,
+.wk-ui-component-container .ui-dialog .ui-button,
+.wk-ui-component-container .ui-dialog .action-primary,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > button.action-default.primary,
+.wk-ui-component-container .modal-popup .modal-footer .action-primary,
+.wk-ui-component-container .modal-popup .modal-footer .action-secondary,
+.wk-ui-component-container .page-actions button,
+.wk-ui-component-container .page-actions .page-actions-buttons > button,
+.wk-ui-component-container .page-actions > button.action-primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-primary,
+.wk-ui-component-container .page-actions > button.primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.primary,
+.wk-ui-component-container .page-actions > button.action-secondary,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-secondary,
+.wk-ui-component-container .page-layout-admin-login .action-primary,
+.wk-ui-component-container .admin__field-complex-attributes [class^='action-'],
+.wk-ui-component-container .steps-wizard .select-attributes-actions .action-default,
+.wk-ui-component-container .order-totals-actions .action-default,
+.wk-ui-component-container .staging-preview-item-content-wrapper > .wk-ui-component-container .actions-toolbar .action-primary,
+.wk-ui-component-container .popup-window .magento_buttons .ok_button,
+.wk-ui-component-container .fade .actions .primary,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-default.primary,
+.wk-ui-component-container .page-actions .block-footer .action-add,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-primary,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.primary,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-secondary,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-secondary {
+font-size: 1.6rem;
+letter-spacing: .025em;
+padding-bottom: 0.6875em;
+padding-top: 0.6875em;
+}
+.wk-ui-component-container .abs-action-delete,
+.wk-ui-component-container .rma-items .col-actions .action-item-delete-line {
+display: inline-block;
+font-size: 1.6rem;
+margin-left: 1.2rem;
+padding-top: .7rem;
+text-decoration: none;
+vertical-align: middle;
+}
+.wk-ui-component-container .abs-action-delete:after,
+.wk-ui-component-container .rma-items .col-actions .action-item-delete-line:after {
+color: #666666;
+content: '\e630';
+}
+.wk-ui-component-container .abs-action-delete:hover:after,
+.wk-ui-component-container .rma-items .col-actions .action-item-delete-line:hover:after {
+color: #35302c;
+}
+.wk-ui-component-container .abs-action-button-as-link,
+.wk-ui-component-container .action-advanced,
+.wk-ui-component-container .data-grid .action-delete {
+line-height: 1.36;
+padding: 0;
+color: #007bdb;
+text-decoration: none;
+background: none;
+border: 0;
+display: inline;
+font-weight: 400;
+border-radius: 0;
+}
+.wk-ui-component-container .abs-action-button-as-link:visited,
+.wk-ui-component-container .action-advanced:visited,
+.wk-ui-component-container .data-grid .action-delete:visited {
+color: #007bdb;
+text-decoration: none;
+}
+.wk-ui-component-container .abs-action-button-as-link:hover,
+.wk-ui-component-container .action-advanced:hover,
+.wk-ui-component-container .data-grid .action-delete:hover {
+color: #007bdb;
+text-decoration: underline;
+}
+.wk-ui-component-container .abs-action-button-as-link:active,
+.wk-ui-component-container .action-advanced:active,
+.wk-ui-component-container .data-grid .action-delete:active {
+color: #ff5501;
+text-decoration: underline;
+}
+.wk-ui-component-container .abs-action-button-as-link:hover,
+.wk-ui-component-container .action-advanced:hover,
+.wk-ui-component-container .data-grid .action-delete:hover {
+color: #007bdb;
+}
+.wk-ui-component-container .abs-action-button-as-link:hover,
+.wk-ui-component-container .abs-action-button-as-link:active,
+.wk-ui-component-container .abs-action-button-as-link:focus,
+.wk-ui-component-container .action-advanced:hover,
+.wk-ui-component-container .action-advanced:active,
+.wk-ui-component-container .action-advanced:focus,
+.wk-ui-component-container .data-grid .action-delete:hover,
+.wk-ui-component-container .data-grid .action-delete:active,
+.wk-ui-component-container .data-grid .action-delete:focus {
+background: none;
+border: 0;
+}
+.wk-ui-component-container .abs-action-button-as-link.disabled,
+.wk-ui-component-container .abs-action-button-as-link[disabled],
+fieldset[disabled] .abs-action-button-as-link,
+.wk-ui-component-container .action-advanced.disabled,
+.wk-ui-component-container .action-advanced[disabled],
+fieldset[disabled] .action-advanced,
+.wk-ui-component-container .data-grid .action-delete.disabled,
+.wk-ui-component-container .data-grid .action-delete[disabled],
+fieldset[disabled] .data-grid .action-delete {
+color: #007bdb;
+opacity: 0.5;
+cursor: default;
+pointer-events: none;
+text-decoration: underline;
+}
+.wk-ui-component-container .abs-action-button-as-link:active,
+.wk-ui-component-container .abs-action-button-as-link:not(:focus),
+.wk-ui-component-container .action-advanced:active,
+.wk-ui-component-container .action-advanced:not(:focus),
+.wk-ui-component-container .data-grid .action-delete:active,
+.wk-ui-component-container .data-grid .action-delete:not(:focus) {
+box-shadow: none;
+}
+.wk-ui-component-container .abs-action-button-as-link:focus,
+.wk-ui-component-container .action-advanced:focus,
+.wk-ui-component-container .data-grid .action-delete:focus {
+color: #007bdb;
+}
+.wk-ui-component-container .abs-action-default,
+.wk-ui-component-container .mass-select-wrap select + label,
+button,
+.wk-ui-component-container .rma-items .col-actions .action-item-details,
+.wk-ui-component-container .rma-items .col-actions .action-item-split-line,
+.wk-ui-component-container .rma-items-block .col-actions a,
+.wk-ui-component-container .block-footer .action-add {
+background: #e3e3e3;
+border-color: #adadad;
+color: #514943;
+}
+.wk-ui-component-container .abs-action-default:hover,
+.wk-ui-component-container .abs-action-default:active,
+.wk-ui-component-container .abs-action-default:focus,
+button:hover,
+button:active,
+button:focus,
+.wk-ui-component-container .rma-items .col-actions .action-item-details:hover,
+.wk-ui-component-container .rma-items .col-actions .action-item-details:active,
+.wk-ui-component-container .rma-items .col-actions .action-item-details:focus,
+.wk-ui-component-container .rma-items .col-actions .action-item-split-line:hover,
+.wk-ui-component-container .rma-items .col-actions .action-item-split-line:active,
+.wk-ui-component-container .rma-items .col-actions .action-item-split-line:focus,
+.wk-ui-component-container .rma-items-block .col-actions a:hover,
+.wk-ui-component-container .rma-items-block .col-actions a:active,
+.wk-ui-component-container .rma-items-block .col-actions a:focus,
+.wk-ui-component-container .block-footer .action-add:hover,
+.wk-ui-component-container .block-footer .action-add:active,
+.wk-ui-component-container .block-footer .action-add:focus {
+background-color: #dbdbdb;
+color: #514943;
+text-decoration: none;
+}
+.wk-ui-component-container .abs-action-primary,
+button.primary,
+.wk-ui-component-container .page-actions > button.action-primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-primary,
+.wk-ui-component-container .page-actions > button.primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.primary,
+.wk-ui-component-container .block-footer .action-add.primary,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-primary,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.primary {
+background-color: #eb5202;
+border-color: #eb5202;
+color: #ffffff;
+text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+}
+.wk-ui-component-container .abs-action-primary:hover,
+.wk-ui-component-container .abs-action-primary:active,
+.wk-ui-component-container .abs-action-primary:focus,
+button.primary:hover,
+button.primary:active,
+button.primary:focus,
+.wk-ui-component-container .page-actions > button.action-primary:hover,
+.wk-ui-component-container .page-actions > button.action-primary:active,
+.wk-ui-component-container .page-actions > button.action-primary:focus,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-primary:hover,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-primary:active,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-primary:focus,
+.wk-ui-component-container .page-actions > button.primary:hover,
+.wk-ui-component-container .page-actions > button.primary:active,
+.wk-ui-component-container .page-actions > button.primary:focus,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.primary:hover,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.primary:active,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.primary:focus,
+.wk-ui-component-container .block-footer .action-add.primary:hover,
+.wk-ui-component-container .block-footer .action-add.primary:active,
+.wk-ui-component-container .block-footer .action-add.primary:focus,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-primary:hover,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-primary:active,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-primary:focus,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-primary:hover,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-primary:active,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-primary:focus,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.primary:hover,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.primary:active,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.primary:focus,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.primary:hover,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.primary:active,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.primary:focus {
+background-color: #ba4000;
+border-color: #b84002;
+box-shadow: 0 0 0 1px #007bdb;
+color: #ffffff;
+text-decoration: none;
+}
+.wk-ui-component-container .abs-action-primary.disabled,
+.wk-ui-component-container .abs-action-primary[disabled],
+button.primary.disabled,
+button.primary[disabled],
+.wk-ui-component-container .page-actions > button.action-primary.disabled,
+.wk-ui-component-container .page-actions > button.action-primary[disabled],
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-primary.disabled,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-primary[disabled],
+.wk-ui-component-container .page-actions > button.primary.disabled,
+.wk-ui-component-container .page-actions > button.primary[disabled],
+.wk-ui-component-container .page-actions .page-actions-buttons > button.primary.disabled,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.primary[disabled],
+.wk-ui-component-container .block-footer .action-add.primary.disabled,
+.wk-ui-component-container .block-footer .action-add.primary[disabled],
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-primary.disabled,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-primary[disabled],
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-primary.disabled,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-primary[disabled],
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.primary.disabled,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.primary[disabled],
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.primary.disabled,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.primary[disabled] {
+cursor: default;
+opacity: 0.5;
+pointer-events: none;
+}
+.wk-ui-component-container .abs-action-secondary,
+button.secondary,
+.wk-ui-component-container .ui-dialog .ui-button,
+.wk-ui-component-container .ui-dialog .action-primary,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > button.action-default.primary,
+.wk-ui-component-container .modal-popup .modal-footer .action-primary,
+.wk-ui-component-container .page-actions > button.action-secondary,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-secondary,
+.wk-ui-component-container .steps-wizard .select-attributes-actions .action-default,
+.wk-ui-component-container .popup-window .magento_buttons .ok_button,
+.wk-ui-component-container .fade .actions .primary,
+.wk-ui-component-container .block-footer .action-add.secondary,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-default.primary,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-secondary,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-secondary {
+background-color: #514943;
+border-color: #514943;
+color: #ffffff;
+text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+.wk-ui-component-container .abs-action-secondary:hover,
+.wk-ui-component-container .abs-action-secondary:active,
+.wk-ui-component-container .abs-action-secondary:focus,
+button.secondary:hover,
+button.secondary:active,
+button.secondary:focus,
+.wk-ui-component-container .ui-dialog .ui-button:hover,
+.wk-ui-component-container .ui-dialog .ui-button:active,
+.wk-ui-component-container .ui-dialog .ui-button:focus,
+.wk-ui-component-container .ui-dialog .action-primary:hover,
+.wk-ui-component-container .ui-dialog .action-primary:active,
+.wk-ui-component-container .ui-dialog .action-primary:focus,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > button.action-default.primary:hover,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > button.action-default.primary:active,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > button.action-default.primary:focus,
+.wk-ui-component-container .modal-popup .modal-footer .action-primary:hover,
+.wk-ui-component-container .modal-popup .modal-footer .action-primary:active,
+.wk-ui-component-container .modal-popup .modal-footer .action-primary:focus,
+.wk-ui-component-container .page-actions > button.action-secondary:hover,
+.wk-ui-component-container .page-actions > button.action-secondary:active,
+.wk-ui-component-container .page-actions > button.action-secondary:focus,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-secondary:hover,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-secondary:active,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-secondary:focus,
+.wk-ui-component-container .steps-wizard .select-attributes-actions .action-default:hover,
+.wk-ui-component-container .steps-wizard .select-attributes-actions .action-default:active,
+.wk-ui-component-container .steps-wizard .select-attributes-actions .action-default:focus,
+.wk-ui-component-container .popup-window .magento_buttons .ok_button:hover,
+.wk-ui-component-container .popup-window .magento_buttons .ok_button:active,
+.wk-ui-component-container .popup-window .magento_buttons .ok_button:focus,
+.wk-ui-component-container .fade .actions .primary:hover,
+.wk-ui-component-container .fade .actions .primary:active,
+.wk-ui-component-container .fade .actions .primary:focus,
+.wk-ui-component-container .block-footer .action-add.secondary:hover,
+.wk-ui-component-container .block-footer .action-add.secondary:active,
+.wk-ui-component-container .block-footer .action-add.secondary:focus,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-default.primary:hover,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-default.primary:active,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-default.primary:focus,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-secondary:hover,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-secondary:active,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-secondary:focus,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-secondary:hover,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-secondary:active,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-secondary:focus {
+background-color: #35302c;
+border-color: #35302c;
+box-shadow: 0 0 0 1px #007bdb;
+color: #ffffff;
+text-decoration: none;
+}
+.wk-ui-component-container .abs-action-secondary:active,
+button.secondary:active,
+.wk-ui-component-container .ui-dialog .ui-button:active,
+.wk-ui-component-container .ui-dialog .action-primary:active,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > button.action-default.primary:active,
+.wk-ui-component-container .modal-popup .modal-footer .action-primary:active,
+.wk-ui-component-container .page-actions > button.action-secondary:active,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-secondary:active,
+.wk-ui-component-container .steps-wizard .select-attributes-actions .action-default:active,
+.wk-ui-component-container .popup-window .magento_buttons .ok_button:active,
+.wk-ui-component-container .fade .actions .primary:active,
+.wk-ui-component-container .block-footer .action-add.secondary:active,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-default.primary:active,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-secondary:active,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-secondary:active {
+background-color: #35302c;
+}
+.wk-ui-component-container .abs-action-tertiary,
+button.tertiary,
+.wk-ui-component-container .ui-dialog .action-close,
+.wk-ui-component-container .attribute-popup-actions .action-default.reset,
+.wk-ui-component-container .modal-popup .modal-footer .action-secondary,
+.wk-ui-component-container .popup-window .magento_buttons .cancel_button,
+.wk-ui-component-container .fade .actions .cancel,
+.wk-ui-component-container .block-footer .action-add.tertiary {
+background-color: transparent;
+border-color: transparent;
+text-shadow: none;
+color: #007bdb;
+}
+.wk-ui-component-container .abs-action-tertiary:active,
+.wk-ui-component-container .abs-action-tertiary:hover,
+.wk-ui-component-container .abs-action-tertiary:focus,
+button.tertiary:active,
+button.tertiary:hover,
+button.tertiary:focus,
+.wk-ui-component-container .ui-dialog .action-close:active,
+.wk-ui-component-container .ui-dialog .action-close:hover,
+.wk-ui-component-container .ui-dialog .action-close:focus,
+.wk-ui-component-container .attribute-popup-actions .action-default.reset:active,
+.wk-ui-component-container .attribute-popup-actions .action-default.reset:hover,
+.wk-ui-component-container .attribute-popup-actions .action-default.reset:focus,
+.wk-ui-component-container .modal-popup .modal-footer .action-secondary:active,
+.wk-ui-component-container .modal-popup .modal-footer .action-secondary:hover,
+.wk-ui-component-container .modal-popup .modal-footer .action-secondary:focus,
+.wk-ui-component-container .popup-window .magento_buttons .cancel_button:active,
+.wk-ui-component-container .popup-window .magento_buttons .cancel_button:hover,
+.wk-ui-component-container .popup-window .magento_buttons .cancel_button:focus,
+.wk-ui-component-container .fade .actions .cancel:active,
+.wk-ui-component-container .fade .actions .cancel:hover,
+.wk-ui-component-container .fade .actions .cancel:focus,
+.wk-ui-component-container .block-footer .action-add.tertiary:active,
+.wk-ui-component-container .block-footer .action-add.tertiary:hover,
+.wk-ui-component-container .block-footer .action-add.tertiary:focus {
+background-color: transparent;
+border-color: transparent;
+box-shadow: none;
+}
+
+.wk-ui-component-container .abs-action-quaternary,
+.wk-ui-component-container .page-actions > button,
+.wk-ui-component-container .page-actions .page-actions-buttons > button,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add {
+background-color: transparent;
+border-color: transparent;
+text-shadow: none;
+box-shadow: none;
+color: #41362f;
+}
+.wk-ui-component-container .abs-action-quaternary:active,
+.wk-ui-component-container .abs-action-quaternary:hover,
+.wk-ui-component-container .abs-action-quaternary:focus,
+.wk-ui-component-container .page-actions > button:active,
+.wk-ui-component-container .page-actions > button:hover,
+.wk-ui-component-container .page-actions > button:focus,
+.wk-ui-component-container .page-actions .page-actions-buttons > button:active,
+.wk-ui-component-container .page-actions .page-actions-buttons > button:hover,
+.wk-ui-component-container .page-actions .page-actions-buttons > button:focus,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add:active,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add:hover,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add:focus,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add:active,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add:hover,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add:focus {
+background-color: transparent;
+border-color: transparent;
+box-shadow: none;
+}
+.wk-ui-component-container .abs-action-quaternary:active,
+.wk-ui-component-container .abs-action-quaternary:hover,
+.wk-ui-component-container .abs-action-quaternary:focus,
+.wk-ui-component-container .page-actions > button:active,
+.wk-ui-component-container .page-actions > button:hover,
+.wk-ui-component-container .page-actions > button:focus,
+.wk-ui-component-container .page-actions .page-actions-buttons > button:active,
+.wk-ui-component-container .page-actions .page-actions-buttons > button:hover,
+.wk-ui-component-container .page-actions .page-actions-buttons > button:focus,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add:active,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add:hover,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add:focus,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add:active,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add:hover,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add:focus {
+color: #231d1a;
+}
+.wk-ui-component-container .attribute-popup-actions.page-actions {
+float: none;
+}
+.wk-ui-component-container .attribute-popup-actions.fixed {
+background: #ffffff !important;
+border-bottom: 0 !important;
+left: 0 !important;
+padding: 3rem !important;
+}
+.wk-ui-component-container .attribute-popup-actions.fixed .page-actions-buttons {
+padding-right: 0;
+}
+.wk-ui-component-container .attribute-popup-actions .action-default.reset {
+font-size: 1.6rem;
+padding: 0.7em 0;
+}
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > button.action-default.primary,
+.wk-ui-component-container .attribute-popup-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-default.primary {
+float: right;
+}
+.wk-ui-component-container .attribute-popup-actions .page-actions-inner:before {
+display: none;
+}
+.wk-ui-component-container .ie9 .catalog-product-attribute-edit.attribute-popup {
+min-width: 0;
+}
+.wk-ui-component-container .ie9 .catalog-product-attribute-edit.attribute-popup .menu-wrapper {
+display: none;
+}
+.wk-ui-component-container .ie9 .catalog-product-attribute-edit.attribute-popup .page-actions button,
+.wk-ui-component-container .ie9 .catalog-product-attribute-edit.attribute-popup .page-actions .block-footer .action-add {
+float: none;
+}
+.wk-ui-component-container .ie9 .catalog-product-attribute-edit.attribute-popup .page-actions .primary {
+float: right;
+}
+.wk-ui-component-container .page-main-actions:not(._hidden),
+.wk-ui-component-container .page-actions._fixed {
+background: #f8f8f8;
+border-bottom: 1px solid #e3e3e3;
+border-top: 1px solid #e3e3e3;
+padding: 1.5rem;
+}
+.wk-ui-component-container .page-main-actions._hidden .page-actions-placeholder {
+min-height: 50px;
+}
+.wk-ui-component-container .page-actions {
+float: right;
+}
+.wk-ui-component-container .page-main-actions .page-actions._fixed {
+left: 8.800000000000001rem;
+position: fixed;
+right: 0;
+top: 0;
+z-index: 501;
+}
+.wk-ui-component-container .page-main-actions .page-actions._fixed .page-actions-inner:before {
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+color: #41362f;
+content: attr(data-title);
+float: left;
+font-size: 2.8rem;
+margin-top: .3rem;
+max-width: 50%;
+}
+.wk-ui-component-container .page-actions > button,
+.wk-ui-component-container .page-actions .page-actions-buttons > button,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add {
+float: right;
+margin-left: 1.3rem;
+}
+.wk-ui-component-container .page-actions > button.back,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.back,
+.wk-ui-component-container .page-actions > button.action-back,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-back,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.back,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.back,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-back,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-back {
+float: left;
+-ms-flex-order: -1;
+-webkit-order: -1;
+order: -1;
+}
+.wk-ui-component-container .page-actions > button.back:before,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.back:before,
+.wk-ui-component-container .page-actions > button.action-back:before,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-back:before,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.back:before,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.back:before,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-back:before,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-back:before {
+content: '\e626';
+margin-right: .5em;
+position: relative;
+top: 1px;
+}
+.wk-ui-component-container .page-actions > button.action-primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.action-primary,
+.wk-ui-component-container .page-actions > button.primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.primary,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.action-primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.action-primary,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.primary,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.primary {
+-ms-flex-order: 2;
+-webkit-order: 2;
+order: 2;
+}
+.wk-ui-component-container .page-actions > button.save:not(.primary),
+.wk-ui-component-container .page-actions .page-actions-buttons > button.save:not(.primary),
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.save:not(.primary),
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.save:not(.primary) {
+-ms-flex-order: 1;
+-webkit-order: 1;
+order: 1;
+}
+.wk-ui-component-container .page-actions > button.delete,
+.wk-ui-component-container .page-actions .page-actions-buttons > button.delete,
+.wk-ui-component-container .page-actions > .wk-ui-component-container .block-footer .action-add.delete,
+.wk-ui-component-container .page-actions .page-actions-buttons > .wk-ui-component-container .block-footer .action-add.delete {
+-ms-flex-order: -1;
+-webkit-order: -1;
+order: -1;
+}
+.wk-ui-component-container .page-actions .actions-split {
+float: right;
+margin-left: 1.3rem;
+-ms-flex-order: 2;
+-webkit-order: 2;
+order: 2;
+}
+.wk-ui-component-container .page-actions .actions-split .dropdown-menu .item {
+display: block;
+}
+.wk-ui-component-container .page-actions-buttons {
+float: right;
+justify-content: flex-end;
+display: -webkit-flex;
+display: -ms-flexbox;
+display: block;
+}
+.wk-ui-component-container .customer-index-edit .page-actions-buttons {
+background-color: transparent;
+}
+.wk-ui-component-container .scheduled-changes-modal-slide .page-actions {
+display: -webkit-flex;
+display: -ms-flexbox;
+display: flex;
+width: 100%;
+}
+.wk-ui-component-container .scheduled-changes-modal-slide .page-actions .store-switcher {
+-ms-flex-order: -1;
+-webkit-order: -1;
+order: -1;
+-ms-flex: 1;
+-webkit-flex: 1;
+flex: 1;
+}
+.wk-ui-component-container .scheduled-changes-modal-slide .page-actions .store-switcher .admin__action-dropdown {
+font-size: 1.3rem;
+letter-spacing: -.025em;
+}
+.action-secondary {
+  background-color: #514943;
+  border-color: #514943 !important;
+  color: #fff !important;
+  text-shadow: 1px 1px 1px rgb(0 0 0 / 30%);
+}

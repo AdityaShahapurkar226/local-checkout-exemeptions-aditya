@@ -1,0 +1,114 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul Software Private Limited Software Private Limited
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+namespace Webkul\MpAssignProduct\Controller\Adminhtml\Upload;
+
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Framework\View\Result\PageFactory;
+use Magento\Framework\App\RequestInterface;
+
+class Run extends Action
+{
+    /**
+     * @var PageFactory
+     */
+    protected $resultPageFactory;
+
+    /**
+     * @var \Magento\Customer\Model\Url
+     */
+    protected $_url;
+
+    /**
+     * @var \Magento\Customer\Model\Session
+     */
+    protected $_session;
+
+    /**
+     * @var \Webkul\Marketplace\Helper\Data
+     */
+    protected $marketplaceHelper;
+
+    /** @var \Webkul\MpAssignProduct\Controller\Adminhtml\Product\SaveAssignedProduct */
+    protected $saveController;
+
+    /** @var  \Magento\Framework\Json\Helper\Data */
+    protected $jsonHelper;
+
+   /**
+    * Initialization
+    *
+    * @param Context $context
+    * @param PageFactory $resultPageFactory
+    * @param \Magento\Customer\Model\Url $url
+    * @param \Magento\Customer\Model\Session $session
+    * @param \Webkul\Marketplace\Helper\Data $marketplaceHelper
+    * @param \Webkul\MpAssignProduct\Controller\Adminhtml\Product\SaveAssignedProduct $saveConstroller
+    * @param \Magento\Framework\Json\Helper\Data $jsonHelper
+    */
+    public function __construct(
+        Context $context,
+        PageFactory $resultPageFactory,
+        \Magento\Customer\Model\Url $url,
+        \Magento\Customer\Model\Session $session,
+        \Webkul\Marketplace\Helper\Data $marketplaceHelper,
+        \Webkul\MpAssignProduct\Controller\Adminhtml\Product\SaveAssignedProduct $saveConstroller,
+        \Magento\Framework\Json\Helper\Data $jsonHelper
+    ) {
+        $this->resultPageFactory = $resultPageFactory;
+        $this->_url = $url;
+        $this->_session = $session;
+        $this->marketplaceHelper = $marketplaceHelper;
+        $this->saveController = $saveConstroller;
+        $this->jsonHelper = $jsonHelper;
+        parent::__construct($context);
+    }
+
+    /**
+     * Run action.
+     *
+     * @return \Magento\Framework\Controller\ResultInterface
+     */
+    public function execute()
+    {
+        if (!empty($this->getRequest()->getPost())) {
+            try {
+                $profileId = $this->getRequest()->getParam('profile_id');
+                $wholeData = $this->getRequest()->getParams();
+                if (isset($wholeData['row'])) {
+                    $row = $wholeData['row'];
+                    $res = $wholeData[$row];
+                    if (!isset($res['error'])) {
+                        $result = $this->saveController->saveAssignedProduct($res);
+                    } else {
+                        $result['error'] = 1;
+                        $result['msg'] = $wholeData[$row]['error'];
+                    }
+                    $result['next_row_data'] = $row + 1;
+                } else {
+                    $result['error'] = 1;
+                    $result['msg'] = $wholeData['error'];
+                }
+                if (empty($result['error'])) {
+                    $result['error'] = 0;
+                }
+                if ($result['error']) {
+                    $result['msg'] = '<div class="wk-mu-error wk-mu-box">'.$result['msg'].'</div>';
+                }
+                $result = $this->jsonHelper->jsonEncode($result);
+                $this->getResponse()->representJson($result);
+            } catch (\Exception $e) {
+                $result = $this->jsonHelper->jsonEncode($e->getMessage());
+                $this->getResponse()->representJson($result);
+            }
+        }
+    }
+}

@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+
+        <policy id="connect-src">
+            <values>
+                <value id="googleAdds" type="host">https://stats.g.doubleclick.net</value>
+                <value id="google" type="host">https://www.google.com</value>
+                <value id="userwayApi" type="host">https://api.userway.org</value>
+                <value id="userwayCdn77" type="host">https://cdn77.api.userway.org</value>
+                <value id="userwayCdn" type="host">https://cdn.userway.org</value>
+                <value id="googleAnalytics" type="host">www.google-analytics.com</value>
+                <value id="googleAds" type="host">www.googleadservices.com</value>
+                <value id="bingBat" type="host">https://bat.bing.com</value>
+                <value id="pinimgScript" type="host">https://s.pinimg.com</value>
+                <value id="adobe" type="host">*.adobe.com</value>
+                <value id="klaviyo" type="host">https://static.klaviyo.com</value>
+                <value id="yotpo" type="host">yotpo.com</value>
+                <value id="swellrewards" type="host">*.swellrewards.com</value>
+                <value id="googleFonts" type="host">fonts.googleapis.com</value>
+                <value id="maxcdn" type="host">maxcdn.bootstrapcdn.com</value>
+                <value id="klevu" type="host">*.klevu.com</value>
+                <value id="ksearchnet" type="host">*.ksearchnet.com</value>
+                <value id="fontawesome" type="host">*.fontawesome.com</value>
+                <value id="tagmanager" type="host">tagmanager.google.com</value>
+                <value id="google" type="host">fonts.google.com</value>
+                <value id="embedsocial" type="host">https://embedsocial.com/</value>
+                <value id="pinterest" type="host">ct.pinterest.com</value>
+            </values>
+        </policy>
+
+        <policy id="img-src">
+            <values>
+                <value id="everestNews" type="host">https://news.everest.com</value>
+                <value id="embedsocial" type="host">https://embedsocial.com/</value>
+                <value id="doubleClickImage" type="host">https://ad.doubleclick.net/</value>
+                <value id="cloudfrontImg" type="host">https://d3k81ch9hvuctc.cloudfront.net</value>
+                <value id="facebookImg" type="host">https://www.facebook.com</value>
+                <value id="specifiedImage" type="host">www.google.co.in</value>
+                <value id="bingImg" type="host">https://bat.bing.com</value>
+                <value id="userwayImg" type="host">https://cdn.userway.org</value>
+                <value id="adobe" type="host">assets.adobedtm.com</value>
+                <value id="securitymetrics" type="host">https://www.securitymetrics.com</value>
+                <value id="omniture" type="host">amcglobal.sc.omtrdc.net</value>
+                <value id="demdex" type="host">dpm.demdex.net</value>
+            </values>
+        </policy>
+
+        <policy id="script-src">
+            <values>
+                <value id="swiperCdn" type="host">https://cdn.jsdelivr.net</value>
+                <value id="cloudflareInsightsScript" type="host">https://static.cloudflareinsights.com</value>
+                <value id="bingScript" type="host">bat.bing.com</value>
+                <value id="xg4kenScript" type="host">resources.xg4ken.com</value>
+                <value id="adobe" type="host">*.adobe.com</value>
+                <value id="klaviyo" type="host">https://static.klaviyo.com</value>
+                <value id="yotpo" type="host">yotpo.com</value>
+                <value id="swellrewards" type="host">*.swellrewards.com</value>
+                <value id="google" type="host">www.google.com</value>
+                <value id="paypal" type="host">www.paypal.com</value>
+                <value id="userwayScript" type="host">cdn.userway.org</value>
+                <value id="adobe" type="host">assets.adobedtm.com</value>
+                <value id="omniture" type="host">amcglobal.sc.omtrdc.net</value>
+                <value id="demdex" type="host">dpm.demdex.net</value>
+                <value id="embedsocial" type="host">https://embedsocial.com/</value>
+                <value id="pinimgScript" type="host">https://s.pinimg.com</value>
+                <value id="klaviyoStatic" type="host">https://static.klaviyo.com</value>
+                <value id="klaviyoForms" type="host">https://static-forms.klaviyo.com</value>
+                <value id="klaviyoFast" type="host">https://fast.a.klaviyo.com</value>
+                <value id="klaviyoTracking" type="host">https://static-tracking.klaviyo.com</value>
+                <value id="klaviyoA" type="host">https://a.klaviyo.com</value>
+                <value id="klaviyoTelemetrics" type="host">https://telemetrics.klaviyo.com</value>
+                <value id="braintree" type="host">https://js.braintreegateway.com</value>
+                <value id="braintreeAssets" type="host">https://assets.braintreegateway.com</value>
+                <value id="paypalBraintree" type="host">https://c.paypal.com</value>
+                <value id="googleRecaptcha" type="host">https://www.gstatic.com/recaptcha/ https://www.google.com/recaptcha/ www.google.com/recaptcha/ www.gstatic.com/recaptcha/</value>
+                <value id="adobedtm" type="host">assets.adobedtm.com</value>
+                <value id="googleadservices" type="host">www.googleadservices.com</value>
+                <value id="google-analytics" type="host">www.google-analytics.com</value>
+                <value id="doubleclick" type="host">googleads.g.doubleclick.net</value>
+                <value id="analytics-google" type="host">analytics.google.com</value>
+                <value id="googletagmanager" type="host">www.googletagmanager.com</value>
+                <value id="sandbox-paypal" type="host">www.sandbox.paypal.com</value>
+                <value id="paypalobjects" type="host">www.paypalobjects.com</value>
+                <value id="youtube" type="host">*.youtube.com</value>
+                <value id="vimeo" type="host">*.vimeo.com</value>
+                <value id="klaviyo" type="host">static.klaviyo.com</value>
+                <value id="klevu" type="host">*.klevu.com</value>
+                <value id="ksearchnet" type="host">*.ksearchnet.com</value>
+                <value id="fontawesome" type="host">*.fontawesome.com</value>
+                <value id="tagmanager-google" type="host">tagmanager.google.com</value>
+                <value id="googleapis" type="host">www.googleapis.com</value>
+                <value id="connect-facebook" type="host">connect.facebook.net</value>
+                <value id="pinterest" type="host">ct.pinterest.com</value>
+            </values>
+        </policy>
+
+        <policy id="frame-src">
+            <values>
+                <value id="doubleclickFrame" type="host">https://11839007.fls.doubleclick.net</value>
+                <value id="adobe" type="host">fast.amc.demdex.net</value>
+                <value id="doubleClick" type="host">https://td.doubleclick.net/</value>
+                <value id="googleAds" type="host">bid.g.doubleclick.net</value>
+                <value id="embedsocial" type="host">https://embedsocial.com/</value>
+                <value id="pinimgFrame" type="host">https://s.pinimg.com</value>
+                <value id="fontsGstatic" type="host">fonts.gstatic.com</value>
+                <value id="fast-amc" type="host">fast.amc.demdex.net</value>
+                <value id="doubleclick" type="host">bid.g.doubleclick.net</value>
+                <value id="geostag" type="host">geostag.cardinalcommerce.com</value>
+                <value id="geo" type="host">geo.cardinalcommerce.com</value>
+                <value id="1eafstag" type="host">1eafstag.cardinalcommerce.com</value>
+                <value id="1eaf" type="host">1eaf.cardinalcommerce.com</value>
+                <value id="centinelapistag" type="host">centinelapistag.cardinalcommerce.com</value>
+                <value id="centinelapi" type="host">centinelapi.cardinalcommerce.com</value>
+                <value id="paypal" type="host">*.paypal.com</value>
+                <value id="yotpo" type="host">yotpo.com</value>
+                <value id="swellrewards" type="host">*.swellrewards.com</value>
+                <value id="recaptcha" type="host">www.google.com/recaptcha/</value>
+                <value id="assets-braintree" type="host">assets.braintreegateway.com</value>
+                <value id="paypal-checkout" type="host">checkout.paypal.com</value>
+                <value id="pay-google" type="host">pay.google.com</value>
+                <value id="cardinalcommerce" type="host">*.cardinalcommerce.com</value>
+                <value id="paypal" type="host">*.paypal.com</value>
+                <value id="11839007-fli" type="host">https://11839007.fls.doubleclick.net</value>
+                <value id="td-doubleclick" type="host">https://td.doubleclick.net/</value>
+                <value id="embedsocial" type="host">https://embedsocial.com/</value>
+                <value id="pinterest" type="host">ct.pinterest.com</value>
+            </values>
+        </policy>
+
+        <policy id="font-src">
+            <values>
+                <value id="klaviyoFont" type="host">https://static.klaviyo.com</value>
+                <value id="fontAwesome" type="host">use.fontawesome.com</value>
+                <value id="maxcdn" type="host">maxcdn.bootstrapcdn.com</value>
+            </values>
+        </policy>
+
+        <policy id="style-src">
+            <values>
+                <value id="swiperCdn" type="host">https://cdn.jsdelivr.net</value>
+                <value id="klaviyoCdn" type="host">https://static-tracking.klaviyo.com</value>
+                <value id="adobe" type="host">*.adobe.com</value>
+                <value id="klaviyo" type="host">https://static.klaviyo.com</value>
+                <value id="yotpo" type="host">yotpo.com</value>
+                <value id="swellrewards" type="host">*.swellrewards.com</value>
+                <value id="googleFonts" type="host">fonts.googleapis.com</value>
+                <value id="maxcdn" type="host">maxcdn.bootstrapcdn.com</value>
+                <value id="klevu" type="host">*.klevu.com</value>
+                <value id="ksearchnet" type="host">*.ksearchnet.com</value>
+                <value id="fontawesome" type="host">*.fontawesome.com</value>
+                <value id="tagmanager" type="host">tagmanager.google.com</value>
+                <value id="google" type="host">fonts.google.com</value>
+                <value id="embedsocial" type="host">https://embedsocial.com/</value>
+                <value id="pinimgStyle" type="host">https://s.pinimg.com</value>
+            </values>
+        </policy>
+
+    </policies>
+</csp_whitelist>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="page.messages">
+            <block ifconfig="ammostviewed/bundle_packs/display_cart_message"
+                   class="Amasty\Mostviewed\Block\Checkout\Cart\Messages"
+                   name="amasty.mostviewed.bundle.messages"/>
+        </referenceContainer>
+
+        <referenceContainer name="content">
+            <block ifconfig="ammostviewed/bundle_packs/display_cart_block"
+                   class="Amasty\Mostviewed\Block\Checkout\Cart\Bundle"
+                   name="amasty.mostviewed.bundle.cart"/>
+        </referenceContainer>
+        <move element="amasty.mostviewed.bundle.cart" destination="checkout.cart.container" before="checkout.cart.crosssell" />
+
+        <referenceBlock name="additional.product.info">
+            <block name="amasty.mostviewed.item.message"
+                   class="Amasty\Mostviewed\Block\Checkout\Cart\Item\Message"
+                   template="Amasty_Mostviewed::cart/item/message.phtml" />
+        </referenceBlock>
+    </body>
+</page>

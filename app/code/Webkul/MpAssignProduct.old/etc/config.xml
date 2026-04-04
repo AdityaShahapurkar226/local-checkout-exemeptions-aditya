@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <mpassignproduct>
+            <settings>
+                <admin_name>Admin</admin_name>
+                <admin_email>no-reply@test.com</admin_email>
+                <add_msg>I would like to inform you that recently I assigned a new product in the store. Please approve the product as soon as possible.</add_msg>
+                <edit_msg>I would like to inform you that recently I updated the assigned product in the store. Please approve the product as soon as possible.</edit_msg>
+            </settings>
+        </mpassignproduct>
+    </default>
+</config>
+

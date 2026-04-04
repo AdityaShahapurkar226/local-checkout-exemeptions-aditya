@@ -1,0 +1,59 @@
+<?php
+
+declare(strict_types=1);
+
+use Ahy\PaymentIntegrations\ViewModel\Braintree as BraintreeViewModel;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\AbstractBlock;
+
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+/** @var AbstractBlock $block */
+
+/** @var BraintreeViewModel $braintreeViewModel */
+$braintreeViewModel = $viewModels->require(BraintreeViewModel::class);
+?>
+
+<div x-data="braintreeVenmo"
+    x-init="initialise"
+    id="braintreeVenmo"
+    class="relative z-10"
+    wire:key="<?= uniqid('', true) ?>">
+    <template x-if="isBrowserNotSupported">
+        <p><?= $escaper->escapeHtml(__('Your browser does not support Venmo.')) ?></p>
+    </template>
+    <template x-if="isBrowserSupported">
+        <div>
+            <template x-if="hasVenmoToken">
+                <p class="nonce_thankyou_message">
+                    <?= $escaper->escapeHtml(__('Thank you. Please click')) ?>
+                    <span><?= $escaper->escapeHtml(__('Place Order')) ?></span>
+                    <?= $escaper->escapeHtml(__('to finish checkout with Venmo.')) ?>
+                </p>
+
+            </template>
+            <template x-if="hasNoVenmoToken">
+                <button x-on:click="onClick" class="btn bg-venmo-blue py-3">
+                    <img class="h-6" src="<?= $escaper->escapeHtmlAttr(
+                        $block->getViewFileUrl('PayPal_Braintree::images/venmo_logo_white.png')
+                    ) ?>" />
+                </button>
+            </template>
+        </div>
+    </template>
+</div>
+<style>
+    .bg-venmo-blue {
+        background-color: #008CFF;
+    }
+    .nonce_thankyou_message {
+        font-size: 20px;
+        margin: 25px 0;
+        color: #a0802c;
+        font-weight: 500;
+    }
+    .nonce_thankyou_message span {
+        font-weight: 700;
+    }
+</style>

@@ -1,0 +1,17 @@
+<?php
+    $categories = $block->getFirstCategoryAndChildren();
+?>
+
+<?php if(count($categories) !== 0):?>
+    <section class="explore-more-related-search py-8 relative">
+        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 h-full w-screen bg-ahy-bg z-[-1]"></div>
+        <div class="flex flex-col items-center gap-6 text-ahy-blue">
+            <div class="title-font text-2xl font-extrabold uppercase tracking-tighter text-center"><?= __('explore more related searches') ?></div>
+            <div class="explore-more-related-search-category-name flex gap-2 flex-wrap justify-center">
+                <?php foreach ($categories as $category):?>
+                    <a href="/<?= $category['url']?>"><div class="explore-more-related-search-category-hunting capitalize font-bold border-2 border-ahy-blue px-5 py-4 text-sm"><?= $category['name'] ?></div></a>
+                <?php endforeach;?>
+            </div>
+        </div>
+    </section>
+<?php endif;?>

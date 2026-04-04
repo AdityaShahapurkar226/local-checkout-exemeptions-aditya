@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Customer\Helper\Session" type="Ahy\ThemeCustomization\Helper\Session" />
+
+    <preference for="Klevu\Search\Model\Product\LoadAttribute" type="Ahy\ThemeCustomization\Model\Klevu\Search\Product\LoadAttribute" />
+
+    <preference for="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option" type="Ahy\ThemeCustomization\Block\Bundle\Product\View\Type\Bundle\Option" />
+
+    <preference for="Hyva\Checkout\Magewire\Checkout\AddressView\ShippingDetails\AddressForm" type="Ahy\ThemeCustomization\Magewire\Checkout\AddressView\ShippingDetails\AddressForm" />
+
+    <preference for="Hyva\Checkout\Magewire\Checkout\Shipping\MethodList" type="Ahy\ThemeCustomization\Magewire\Checkout\Shipping\MethodList" />
+
+    <preference for="Magento\Paypal\Model\Api\Nvp" type="Ahy\ThemeCustomization\Model\Api\Nvp" />
+
+    <preference for="Magento\Paypal\Block\Express\InContext\Minicart\SmartButton" type="Ahy\ThemeCustomization\Block\Override\SmartButton" />
+
+    <preference for="Yireo\GoogleTagManager2\DataLayer\Event\RemoveFromCart" type="Ahy\ThemeCustomization\DataLayer\Event\RemoveFromCart"/>
+
+    <preference for="Klevu\Search\Helper\Image" type="Ahy\ThemeCustomization\Helper\Image" />
+
+    <preference for="Magento\Contact\Controller\Index\Post" type="Ahy\ThemeCustomization\Controller\Contact\Index\Post" />
+    
+    <preference for="Magento\Checkout\Block\Onepage\Success" type="Ahy\ThemeCustomization\Block\Onepage\Success" />
+
+    <type name="Ahy\ThemeCustomization\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">Klaviyo</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Ahy\ThemeCustomization\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+    <!--
+        We will use the existing condition from the Klevu_Search module to ensure
+        that our changes to the frontend search options only take place when the
+        relevant configuration is enabled
+    -->
+    <type name="Ahy\ThemeCustomization\Service\InteractiveOptionsProvider">
+        <arguments>
+            <argument name="isEnabledCondition" xsi:type="object">Klevu\Search\Service\ThemeV2\IsEnabledCondition</argument>
+        </arguments>
+    </type>
+
+    <type name="Klevu\FrontendJs\Service\InteractiveOptionsGenerator">
+        <arguments>
+            <argument name="interactiveOptionsProviders" xsi:type="array">
+                <!--
+                    Register our overrides to search power-up configuration
+                -->
+                <item name="ahy_themecustomization_search" xsi:type="object">Ahy\ThemeCustomization\Service\InteractiveOptionsProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Hyva\CheckoutPayPal\Magewire\Payment\Method\PPExpress" type="Ahy\ThemeCustomization\Magewire\Payment\Method\PPExpress"/>
+    <!-- <type name="Ahy\ThemeCustomization\Model\Klevu\Search\Product\LoadAttribute">
+        <arguments>
+            <argument name="webkulMarketPlaceHelper" xsi:type="object">Webkul\Marketplace\Helper\Data</argument>
+            <argument name="themeCustomizationHelper" xsi:type="object">Ahy\ThemeCustomization\Helper\Data</argument>
+        </arguments>
+    </type> -->
+
+    <!-- PLUGINS -->
+    <type name="Magento\Paypal\Controller\Express\ReturnAction">
+        <!-- Intercept the PayPal return action to point it (optionally) to a different checkout -->
+        <plugin name="Hyva_CheckoutPayPal_Plugin_Magento_PayPal_Controller_Express_ReturnAction" type="Hyva\CheckoutPayPal\Plugin\Magento\PayPal\Controller\Express"/>
+    </type>
+
+    <type name="Magento\Paypal\Controller\Express\Cancel">
+        <!-- Intercept the PayPal cancel action to point it (optionally) to a different checkout -->
+        <plugin name="Hyva_CheckoutPayPal_Plugin_Magento_PayPal_Controller_Express_Cancel" type="Hyva\CheckoutPayPal\Plugin\Magento\PayPal\Controller\Express"/>
+    </type>
+
+    <type name="Magento\Paypal\Controller\Express\OnAuthorization">
+        <!-- Intercept the PayPal cancel action to point it (optionally) to a different checkout -->
+        <plugin name="Hyva_CheckoutPayPal_Plugin_Magento_PayPal_Controller_Express_OnAuthorization" type="Hyva\CheckoutPayPal\Plugin\Magento\PayPal\Controller\Express"/>
+    </type>
+
+    <type name="Hyva\Checkout\ViewModel\Checkout\Payment\Method">
+        <!-- Hide the PayPal Express BML payment method option from the payment options list -->
+        <plugin name="Hyva_CheckoutPayPal_Plugin_Hyva_Checkout_ViewModel_Checkout_Payment_Method" type="Hyva\CheckoutPayPal\Plugin\Hyva\Checkout\ViewModel\Checkout\Payment\Method"/>
+    </type>
+
+    <type name="Hyva\CheckoutPayPal\Model\Payment\PPExpress">
+        <arguments>
+            <argument name="sessionPayPal" xsi:type="object">Magento\Paypal\Model\Session</argument>
+        </arguments>
+    </type>
+
+    <type name="Hyva\Checkout\Model\Magewire\Payment\PlaceOrderServiceProvider">
+        <arguments>
+            <argument name="placeOrderServiceList" xsi:type="array">
+                <item name="paypal_express" xsi:type="object">Hyva\CheckoutPayPal\Model\Magewire\Payment\ExpressPlaceOrderService</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

@@ -1,0 +1,35 @@
+status,category,name,description,short_description,sku,price,special_price,special_from_date,special_to_date,tax_class_id,is_in_stock,stock,images,meta_title,meta_keyword,meta_description,links_title,links_purchased_separately,downloadable_link_title,downloadable_link_price,downloadable_link_type,downloadable_link_file,downloadable_link_sample_type,downloadable_link_sample,downloadable_link_is_sharable,downloadable_link_is_unlimited,downloadable_link_number_of_downloads,samples_title,downloadable_sample_title,downloadable_sample_file,downloadable_sample_type,color,manufacturer,custom_option,tier_price,attribute_mapping_category,related_skus,crosssell_skus,upsell_skus,seller_id
+1,"Men,Women",Downloadable1,Downloadable1,Downloadable1,Downloadable1,100,80,2017-05-25,2018-05-27,Taxable Goods,In Stock,1000,"1.jpg,2.jpg",Test Title,Test Keyword,Test Description,Link Title,Yes,"link1,link2","10,20","file,file","1.pdf,2.pdf","file,file","sample1.pdf,sample2.pdf","Use Config,Use config","yes,no","0,5",Sample Title,"Sample1,Sample2","sample1.png,sample2.pdf","file,file",,webkul,"[
+  {
+    ""is_require"": 1,
+    ""title"": ""Color"",
+    ""type"": ""drop_down"",
+    ""sort_order"": 0,
+    ""sku"": ""co01"",   
+    ""values"": [
+ {""title"":""cream"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co011"",""sort_order"": 5},{""title"":""cream1"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co012"",""sort_order"": 5}  ]
+  }, {
+    ""is_require"": 1,
+    ""title"": ""Color2"",
+    ""type"": ""drop_down"",
+    ""sort_order"": 0,
+    ""sku"": ""co02"",   
+    ""values"": [
+ {""title"":""cream"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co021"",""sort_order"": 5},{""title"":""cream1"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co022"",""sort_order"": 5}  ]
+  }]","[
+  {
+    ""cust_group"": ""ALL GROUPS"",
+    ""price_qty"": ""2"",
+    ""price"": ""10""
+  }, {
+    ""cust_group"":""Wholesale"" ,
+    ""price_qty"": ""10"",
+    ""price"": ""40""
+  }]",Men,,,,
+1,"Men,Women",Downloadable2,Downloadable2,Downloadable2,Downloadable2,100,80,2017-05-25,2018-05-27,None,Out of Stock,1000,"1.jpg,2.jpg",Test Title,Test Keyword,Test Description,Link Title,Yes,"link1,link2","10,20","file,file","3.pdf,4.pdf","file,file","sample3.pdf,sample4.pdf","Use Config,Use config","yes,no","0,5",Sample Title,"Sample1,Sample2","sample1.png,sample2.pdf","file,file",,webkul,,,Men,Downloadable1,Downloadable1,Downloadable1,
+1,"Men,Women",Downloadable3,Downloadable3,Downloadable3,Downloadable3,100,80,2017-05-25,2018-05-27,Taxable Goods,In Stock,1000,"1.jpg,2.jpg",Test Title,Test Keyword,Test Description,Link Title,Yes,"link1,link2","10,20","file,file","5.pdf,6.pdf","file,file","sample5.pdf,sample6.pdf","Use Config,Use config","yes,no","0,5",Sample Title,"Sample1,Sample2","sample1.png,sample2.pdf","file,file",,webkul,,,Men,"Downloadable1,Downloadable2","Downloadable1,Downloadable2","Downloadable1,Downloadable2",
+1,"Men,Women",Downloadable4,Downloadable4,Downloadable4,Downloadable4,100,80,2017-05-25,2018-05-27,Taxable Goods,In Stock,1000,"1.jpg,2.jpg",Test Title,Test Keyword,Test Description,Link Title,Yes,"link1,link2","10,20","file,file","7.pdf,8.pdf","file,file","sample7.pdf,sample8.pdf","Use Config,Use config","yes,no","0,5",Sample Title,"Sample1,Sample2","sample1.png,sample2.pdf","file,file",,webkul,,,Women,"Downloadable2,Downloadable3","Downloadable2,Downloadable3","Downloadable2,Downloadable3",

@@ -1,0 +1,28 @@
+{
+    "name": "ahy/module-everest-news",
+    "description": "Magento 2 module to fetch and store latest Everest news JSON every minute.",
+    "require": {
+        "php": ">=8.1",
+        "magento/framework": ">=103.0.0"
+    },
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": [
+        "MIT"
+    ],
+    "authors": [
+        {
+            "name": "Afzal Sayed",
+            "homepage": "https://github.com/afzal-sayed/",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ahy\\EverestNews\\": ""
+        }
+    }
+}

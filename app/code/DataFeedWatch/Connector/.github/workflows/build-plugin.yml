@@ -1,0 +1,35 @@
+name: Build plugin
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          # checkout repository to directory with a name
+          # you want to be the root directory in the plugin zip archive
+          path: dfwconnector-magento2
+
+        # Add `revision` file with HEAD commit hash
+        # It will allow to keep track of the plugin version
+      - name: Add revision
+        run: cd dfwconnector-magento2 && git rev-parse HEAD > revision
+
+        # Zip plugin files
+      - name: Zip files
+        run: zip -r dfwconnector-magento2.zip dfwconnector-magento2 -x "dfwconnector-magento2/*.git*" "dfwconnector-magento2/*.github/*" "dfwconnector-magento2/README.md" "dfwconnector-magento2/dfw-logo.png" "dfwconnector-magento2/*.idea*"
+
+        # Add plugin archive to the release
+      - name: Add to release
+        uses: AButler/upload-release-assets@v2.0
+        with:
+          files: dfwconnector-magento2.zip
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

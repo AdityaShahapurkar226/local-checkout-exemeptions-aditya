@@ -1,0 +1,82 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var Template $block */
+/** @var HeroiconsOutline $heroiconsViewModel */
+/** @var Magewire $magewire */
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Checkout\Magewire\Checkout\CouponCode as Magewire;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+$heroiconsViewModel = $viewModels->require(HeroiconsOutline::class);
+$classCouponAvailability = $magewire->couponCode ? 'available' : 'not-available';
+$saveAction = $magewire->couponCode ? 'revokeCouponCode' : 'applyCouponCode';
+?>
+<div class="coupon-code <?= $escaper->escapeHtmlAttr($classCouponAvailability) ?> flex flex-col mt-2 items-stretch  text-ahy-blue "
+    x-data="{
+        couponCode: $wire.entangle('couponCode'),
+        couponHits: $wire.entangle('couponHits'),
+        show: false
+    }"
+>
+    <button class="coupon-text  text-center w-full" x-show="!show" @click="show = true">
+        <span class="underline underline-offset-4">
+            Have a Code, Gift Card, or Coupon?
+        </span>
+    </button>
+    <div class="flex mt-2 items-stretch w-full" x-show="show">
+        <input type="text"
+            class="form-input rounded-none rounded-l-md border-r-0 text-sm w-1/2 focus:ring-0"
+            placeholder="<?= $escaper->escapeHtmlAttr(__('Enter discount code')) ?>"
+            wire:model.defer="couponCode"
+            wire:loading.attr="disabled"
+            wire:keydown.enter="<?= /* @noEscape */ $saveAction ?>"
+            x-bind:class="{ 'has-coupon': couponCode, 'disabled': couponCode, 'invalid': couponHits !== 0 }"
+            x-bind:disabled="couponCode"
+        />
+        <button type="button"
+                class="btn btn-secondary
+                    justify-center
+                    w-1/2
+                    rounded-none
+                    rounded-r-md
+                    bottom-0"
+                wire:click="<?= /* @noEscape */ $saveAction ?>"
+                wire:loading.attr="disabled"
+                wire:loading.class="disabled"
+                x-bind:class="{ 'has-coupon': couponCode, 'disabled': ! couponCode, 'invalid': couponHits !== 0 }"
+                x-cloak
+        >
+            <span wire:loading.block class="hidden">
+                <?= $escaper->escapeHtml(__('Processing...')) ?>
+            </span>
+            <?php if ($magewire->couponCode): ?>
+                <span wire:loading.remove>
+                    <?= $escaper->escapeHtml(__('Cancel coupon')) ?>
+                </span>
+            <?php else: ?>
+                <span wire:loading.remove>
+                    <?= $escaper->escapeHtml(__('Apply Discount')) ?>
+                </span>
+            <?php endif ?>
+        </button>
+    </div>
+<?php
+    echo $this->getLayout()
+    ->createBlock('Magento\Cms\Block\Block')
+    ->setBlockId('creator_testimonial')
+    ->toHtml();
+?>
+</div>

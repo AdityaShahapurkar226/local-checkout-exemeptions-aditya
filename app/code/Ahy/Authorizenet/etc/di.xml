@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Payment\Model\MethodInterface" type="Ahy\Authorizenet\Model\PaymentMethod" />
+
+    <preference for="Hyva\Checkout\Magewire\Checkout\Payment\MethodList" type="Ahy\Authorizenet\Magewire\Checkout\Payment\MethodList" />
+
+    <type name="Ahy\Authorizenet\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Ahy\Authorizenet\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">Authorizenet</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Ahy\Authorizenet\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- SavedCC Frontend & Admin Logger -->
+    <!-- <type name="Ahy\Authorizenet\Logger\SavedCCFrontendLogger"/>
+    <type name="Ahy\Authorizenet\Logger\SavedCCAdminLogger"/> -->
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="ahyAuthorizenetGenerateEncrptionKeyCommand" xsi:type="object">Ahy\Authorizenet\Console\Command\AuthEncryptionKeyGenerate</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ahy\Authorizenet\Model\Magewire\Payment\PlaceOrderService">
+        <arguments>
+            <argument name="customerProfileCreator" xsi:type="object">Ahy\Authorizenet\Service\CustomerProfileCreator</argument>
+        </arguments>
+    </type>
+    <preference for="Ahy\Authorizenet\Api\AhyAuthorizeNetRepositoryInterface" type="Ahy\Authorizenet\Model\AhyAuthorizeNetRepository"/>
+    <preference for="Ahy\Authorizenet\Api\Data\AhyAuthorizeNetInterface" type="Ahy\Authorizenet\Model\AhyAuthorizeNet"/>
+    <preference for="Ahy\Authorizenet\Api\Data\AhyAuthorizeNetSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+    <type name="Magento\Payment\Model\Method\AbstractMethod">
+        <plugin name="ahy_authorizenet_payment_method" type="Ahy\Authorizenet\Plugin\Payment\Model\Method\Authnetahypayment" sortOrder="1" />
+    </type>
+
+</config>

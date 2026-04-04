@@ -1,0 +1,380 @@
+<?php    
+    declare(strict_types=1);
+    
+    use Magento\Contact\Block\ContactForm;
+    use Magento\Contact\Helper\Data as ContactHelper;
+    use Magento\Framework\Escaper;
+    use Hyva\Theme\ViewModel\ReCaptcha;
+    
+    // phpcs:disable Magento2.Templates.ThisInTemplate.FoundHelper
+    
+    /** @var ContactForm $block */
+    /** @var Escaper $escaper */
+    /** @var ReCaptcha $recaptcha|null */
+    
+    $formId = 'contact';
+    /** @var ContactHelper $contactHelper */
+    $contactHelper = $this->helper(ContactHelper::class);
+    
+    // Do not replace this with $viewModels->require(ReCaptcha::class); that would break the dependency
+    // on the Magento_ReCaptchaContact module
+    // $recaptcha = $block->getData('viewModelRecaptcha');
+    $recaptcha = $viewModels->require(ReCaptcha::class);
+?>
+
+<section class="partner-page text-ahy-blue container">
+    <div class="text-center sm:text-left pt-8 md:py-16 xl:pt-10 pb-0">
+        <h1 class="text-6xl text-center leading-none sm:leading-none sm:text-8xl md:text-[120px] lg:text-[160px] 2xl:text-[210px] uppercase font-league-gothic">ADVERTISING RESOURCES</h1>
+        <p class="!leading-normal md:text-xl pt-3 2xl:text-[1.65rem] text-center font-extrabold uppercase text-ahy-blue">REACH KEY OUTDOOR SHOPPING ENTHUSIASTS</p>
+    </div>
+
+    <div x-data="scrollSmoothOnClick()" id="tab_wrapper" class="pt-8 md:pb-12">
+        <div class="tab-bg-line-desktop relative pb-4 flex justify-center">
+            <div class="bg-white text-ahy-blue tab-bg-mobile relative flex shadow-lg justify-center w-[675px] rounded-full">
+                <button @click.prevent="scrollToAboutUs()" class="mx-2 sm:mx-4 uppercase h-16 text-xs sm:text-sm flex items-center hover:underline underline-offset-6 font-bold">About Us</button>
+
+                <button @click.prevent="scrollToPartnerStats()" class="mx-2 sm:mx-4 uppercase h-16 text-xs sm:text-sm flex items-center hover:underline underline-offset-6 font-bold">Stats</button>
+
+                <button @click.prevent="scrollToOpportunities()" class="mx-2 sm:mx-4 uppercase h-16 text-xs sm:text-sm flex items-center hover:underline underline-offset-6 font-bold">opportunities</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="pb-8 w-full md:w-[84%] mx-auto mt-8 md:my-8" id="about-us">
+        <div class="pb-8">
+            <h2 class="uppercase font-extrabold text-3xl md:text-5xl text-center">About Everest</h2>
+        </div>
+        <p class="sm:text-2xl md:text-3xl lg:text-4xl !leading-normal font-light text-left text-center mb-4 pb-6">
+            As a Rights-Valued Independent Outdoor Focused Marketplace we connect outdoor enthusiasts to outdoor independent sellers to spark the next adventure.
+        </p>
+        <p class="sm:text-2xl md:text-3xl lg:text-4xl !leading-normal font-light text-left text-center mb-4 pb-6">
+            The Everest ecosystem is focused on amplifying the experiences of both customers and brands in the outdoor industry. By promoting exploration, participation, and education to our customers we help brands of all shapes and sizes build relationships and trust with the outdoor community. 
+        </p>
+        <p class="sm:text-2xl md:text-3xl lg:text-4xl !leading-normal font-light text-left text-center mb-4">
+            Together, we're building the industry’s first true outdoor marketplace dedicated to helping everyone climb their Everest ⛰️
+        </p>
+    </div>
+
+    <div class="w-full border-2 border-white md:my-12"></div>
+    
+    <div class="py-8 w-full md:w-[90%] mx-auto mt-8 md:my-12" id="partner-stats">
+        <div class="pb-8">
+            <h2 class="uppercase font-extrabold text-2xl md:text-5xl text-center">BRAND PARTNERS INCLUDE</h2>
+        </div>
+        <div class="brand-logo py-8 flex items-center justify-center">
+            <img src="<?= $block->getViewFileUrl('Ahy_ThemeCustomization::images/brands_desktop.png')?>" alt="brand logo desktop" width="250" height="250" class="w-auto hidden lg:block w-11/12" loading="lazy">
+            <img src="<?= $block->getViewFileUrl('Ahy_ThemeCustomization::images/brands_mobile.png')?>" alt="brand logo mobile" width="250" height="250" class="w-auto lg:hidden" loading="lazy">
+        </div>
+        <div class="pb-8 text-center text-sm font-normal leading-tight lg:w-9/12 p-4 m-auto">
+            From the small mom and pop shops to the largest outdoor gear sellers on the planet, Everest has built the reputation of the go-to marketplace for the outdoor community. With 100’s of brands joining monthly, Everest is becoming the destination for outdoor consumers looking to find gear for their next weekend adventure.
+        </div>
+        <div class="relative partner-stats h-[700px] md:h-[360px] xl:h-[400px] 2xl:h-[520px] my-8" x-data="{ shown: false }" x-intersect="runAnimations()">
+            <div class="flex text-white flex-col md:flex-row items-center justify-between relative h-full py-16">
+                <div class="flex items-center justify-center flex-col md:w-1/4">
+                    <div class="text-white text-5xl lg:text-[88px] font-normal font-league-gothic leading-[48px] md:leading-[88px]"><span class="countup" data-val="5">5</span><span class="">M+</span></div>
+                    <div class="text-white lg:text-lg font-bold uppercase md:leading-snug">ITEMS FOR SALE</div>
+                </div>
+                <div class="flex items-center justify-center flex-col md:w-1/4">
+                    <div class="text-white text-5xl lg:text-[88px] font-normal font-league-gothic leading-[48px] md:leading-[88px]"><span class="countup" data-val="180">180</span><span class="">M+</span></div>
+                    <div class="text-white lg:text-lg font-bold uppercase md:leading-snug">Consumers reached</div>
+                </div>
+                <div class="flex items-center justify-center flex-col md:w-1/4">
+                    <div class="text-white text-5xl lg:text-[88px] font-normal font-league-gothic leading-[48px] md:leading-[88px]"><span class="countup" data-val="2000">2,000</span><span class="">+</span></div>
+                    <div class="text-white lg:text-lg font-bold uppercase md:leading-snug">SELLERS</div>
+                </div>
+                <div class="flex items-center justify-center flex-col md:w-1/4">
+                    <div class="text-white text-5xl lg:text-[88px] font-normal font-league-gothic leading-[48px] md:leading-[88px]"><span class="">$</span><span class="countup" data-val="1">1</span><span class="">B+</span></div>
+                    <div class="text-white lg:text-lg font-bold uppercase md:leading-snug">Curated Inventory</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="py-8 w-full xl:w-[90%] mx-auto md:my-12" id="opportunities">
+        <div class="pb-16">
+            <h2 class="uppercase font-extrabold text-3xl md:text-5xl text-center">OPPORTUNITIES</h2>
+        </div>
+        <div class="flex w-full items-start justify-around flex-wrap">
+            <div class="w-full md:w-1/2 lg:w-1/3 2xl:w-[28%] px-4 py-6 xl:px-6">
+                <div class="flex items-center justify-center">
+                    <img src="<?= $block->getViewFileUrl('Ahy_ThemeCustomization::images/icon_banner.png')?>" alt="BANNER ADVERTISING" class="rounded-full" width="80" height="80">
+                </div>
+                <div class="md:text-lg font-bold py-4 text-center uppercase">BANNER ADVERTISING</div>
+                <div class="text-sm text-center">
+                    Capture attention in the Everest Marketplace with vibrant, targeted banner ads. Elevate your visibility amidst a sea of outdoor enthusiasts, ensuring your brand stands out to potential buyers. Our strategic ad placements guarantee maximum exposure, reaching the right audience at the right time.
+                </div>
+            </div>
+            <div class="w-full md:w-1/2 lg:w-1/3 2xl:w-[28%] px-4 py-6 xl:px-6">
+                <div class="flex items-center justify-center">
+                    <img src="<?= $block->getViewFileUrl('Ahy_ThemeCustomization::images/icon_binocular.png')?>" alt="PRODUCT spotlights" class="rounded-full" width="80" height="80">
+                </div>
+                <div class="md:text-lg font-bold py-4 text-center uppercase">PRODUCT spotlights</div>
+                <div class="text-sm text-center">
+                    Elevate your product visibility with Everest Marketplace's spotlight feature! Showcase your products or services to a massive outdoor enthusiast audience, gaining prime exposure that drives sales and boosts brand recognition. Harness the power of Everest's spotlight tool to attract targeted buyers.
+                </div>
+            </div>
+            <div class="w-full md:w-1/2 lg:w-1/3 2xl:w-[28%] px-4 py-6 xl:px-6">
+                <div class="flex items-center justify-center">
+                    <img src="<?= $block->getViewFileUrl('Ahy_ThemeCustomization::images/icon_camera.png')?>" alt="PRODUCT VIDEOS" class="rounded-full" width="80" height="80">
+                </div>
+                <div class="md:text-lg font-bold py-4 text-center uppercase">PRODUCT VIDEOS</div>
+                <div class="text-sm text-center">Experience the power of product storytelling with Everest Marketplace's captivating video features. Engage your audience like never before by showcasing your products in dynamic, immersive videos, driving higher conversion rates helping skyrocket brand awareness and sales.</div>
+            </div>
+            <div class="w-full md:w-1/2 lg:w-1/3 2xl:w-[28%] px-4 py-6 xl:px-6">
+                <div class="flex items-center justify-center">
+                    <img src="<?= $block->getViewFileUrl('Ahy_ThemeCustomization::images/icon_typewriter.png')?>" alt="Dedicated E-mails" class="rounded-full" width="80" height="80">
+                </div>
+                <div class="md:text-lg font-bold py-4 text-center uppercase">Dedicated E-mails</div>
+                <div class="text-sm text-center">Unlock unparalleled outreach potential by leveraging dedicated emails through Everest Marketplace's extensive consumer database. Reach directly into the inboxes of a highly engaged audience, ensuring your message resonates with precision and impact. Elevate your marketing strategy by tapping into Everest's refined targeting options for unparalleled conversion rates.</div>
+            </div>
+            <div class="w-full md:w-1/2 lg:w-1/3 2xl:w-[28%] px-4 py-6 2xl:px-6">
+                <div class="flex items-center justify-center">
+                    <img src="<?= $block->getViewFileUrl('Ahy_ThemeCustomization::images/icon_butterfly.png')?>" alt="Social media" class="rounded-full" width="80" height="80">
+                </div>
+                <div class="md:text-lg font-bold py-4 text-center uppercase">Social media</div>
+                <div class="text-sm text-center">Partnering with Everest on social media promises unparalleled exposure to a focused audience eager for unique experiences. By aligning your brand with Everest, you'll tap into a community passionate about adventure, sustainable living, and authentic connections. Let's elevate your presence and engage with our audience through compelling storytelling and immersive content.</div>
+            </div>
+            <div class="w-full md:w-1/2 lg:w-1/3 2xl:w-[28%] px-4 py-6 xl:px-6">
+                <div class="flex items-center justify-center">
+                    <img src="<?= $block->getViewFileUrl('Ahy_ThemeCustomization::images/icon_x.png')?>" alt="Collaborations" class="rounded-full" width="80" height="80">
+                </div>
+                <div class="md:text-lg font-bold py-4 text-center uppercase">Collaborations</div>
+                <div class="text-sm text-center">Embark on an exhilarating journey with the Everest brand in collaboration efforts, where adventure meets quality. Elevate brand awareness using the “cool factor” of the Everest marketplace, reaching new heights in customer reach and awareness. Join us as we scale the peaks of success together, merging premium offerings with the unparalleled reach of Everest Marketplace.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full border-2 border-white md:my-12"></div>
+
+    <div class="text-7xl text-center leading-none sm:leading-none sm:text-8xl md:text-[120px] lg:text-[160px] py-12 uppercase font-league-gothic ">WE’RE HERE FOR YOU</div>
+
+    <div class="flex justify-center pb-16 mb-12">
+        <form class="form contact mt-6 p-4 lg:p-12 md:p-8 card bg-ahy-yellow-card w-full lg:w-2/4 "
+            action="/contact/index/post/"
+            id="<?= $escaper->escapeHtmlAttr($formId) ?>"
+            x-data="initContactForm()"
+            method="post"
+            @submit.prevent="submitForm(event)"
+        >
+            <fieldset class="">
+                <div id="write-us" class="flex flex-col  w-full mb12">
+                    <h2 class="text-2xl text-center title-font font-bold mb-4 text-ahy-blue">
+                        <span><?= $escaper->escapeHtml(__('Write Us')) ?></span>
+                    </h2>
+                    <p class="w-full mx-auto leading-relaxed text-base">
+                        <?= $escaper->escapeHtml( __('Jot us a note and we’ll get back to you as quickly as possible.') ) ?>
+                    </p>
+                </div>
+                <div class="flex flex-wrap -m-2">
+                    <div class="field name required p-2 w-full text-left">
+                        <label class="label font-bold text-ahy-blue" for="name">
+                            <span>
+                                <?= $escaper->escapeHtml( __('Name *') ) ?>
+                            </span>
+                        </label>
+                        <input
+                            name="name"
+                            id="name"
+                            required
+                            title="<?= $escaper->escapeHtmlAttr(__('Name')) ?>"
+                            value="<?= $escaper->escapeHtmlAttr( $contactHelper->getPostValue('name') ?: $contactHelper->getUserName() ) ?>"
+                            class="form-input w-full focus:ring-transparent !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue required-entry"
+                            type="text"
+                            placeholder="<?= $escaper->escapeHtml(__('Name')) ?>"
+                        />
+                    </div>
+                    <div class="field email required p-2 w-full text-left">
+                        <label class="label font-bold text-ahy-blue" for="email">
+                            <span>
+                                <?= $escaper->escapeHtml(  __('Email *') ) ?>
+                            </span>
+                        </label>
+                        <input
+                            name="email"
+                            id="email"
+                            required
+                            title="<?= $escaper->escapeHtmlAttr(__('Email')) ?>"
+                            value="<?= $escaper->escapeHtmlAttr( $contactHelper->getPostValue('email') ?: $contactHelper->getUserEmail() ) ?>"
+                            class="form-input w-full focus:ring-transparent !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue required-entry"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Email')) ?>"
+                            type="email"
+                            oninput="this.value = this.value.replace(/[^a-zA-Z0-9@._-]/g, '')"
+                        />
+                    </div>
+                    <div class="field telephone p-2 w-full text-left">
+                        <label class="label font-bold text-ahy-blue" for="telephone">
+                            <span>
+                                <?= $escaper->escapeHtml( __('Phone Number *') ) ?>
+                            </span>
+                        </label>
+                        <input
+                            name="telephone"
+                            id="telephone"
+                            title="<?= $escaper->escapeHtmlAttr(__('Phone Number')) ?>"
+                            value="<?= $escaper->escapeHtmlAttr( $contactHelper->getPostValue('telephone')  ) ?>"
+                            class="form-input w-full focus:ring-transparent !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue required-entry"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Phone Number')) ?>"
+                            type="text"
+                            required
+                            maxlength="15"
+                            oninput="this.value = this.value.replace(/[^+0-9()\-]/g, '')"
+                        />
+                    </div>
+                    <div class="field comment required p-2 w-full text-left">
+                        <label class="label font-bold text-ahy-blue" for="comment">
+                            <span>
+                                <?= $escaper->escapeHtml( __('What’s on your mind?') ) ?>
+                            </span>
+                        </label>
+                        <textarea
+                            name="comment"
+                            id="comment"
+                            required
+                            title="<?= $escaper->escapeHtmlAttr(__('What’s on your mind? *')) ?>"
+                            class="form-input w-full focus:ring-transparent !text-ahy-blue !border border-ahy-gray focus:border-ahy-blue required-entry h-48"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Tell us')) ?>"
+                        ><?= $escaper->escapeHtml(trim($contactHelper->getPostValue('comment'))) ?></textarea>
+                    </div>
+                    <?= $block->getChildHtml('form.additional.info') ?>
+                    <?= $recaptcha ? $recaptcha->getInputHtml(ReCaptcha::RECAPTCHA_FORM_ID_CONTACT) : '' ?>
+                </div>
+            </fieldset>
+            <div class="w-full my-8">
+                <?= $block->getBlockHtml('formkey') ?>
+                <button type="submit" title="<?= $escaper->escapeHtmlAttr(__('Submit')) ?>" class="ahy-custom-btn bg-ahy-red text-white font-bold hover:bg-ahy-red-light w-full h-16">
+                    <span>
+                        <?= $escaper->escapeHtml(__('Submit')) ?>
+                    </span>
+                </button>
+            </div>
+            <div class="w-full">
+                <?= $block->getChildHtml('form.additional.after') ?>
+                <?= $recaptcha ? $recaptcha->getLegalNoticeHtml(ReCaptcha::RECAPTCHA_FORM_ID_CONTACT) : '' ?>
+
+            </div>
+        </form>
+    </div>
+    <!-- {{block class="Magento\Contact\Block\ContactForm" name="contactForm" template="Magento_Contact::form.phtml"}} -->
+</section>
+
+<style>
+    @media screen and (min-width:768px){
+        .partner-stats:before {
+            background: url(<?= $block->getViewFileUrl('Ahy_ThemeCustomization::images/stats_background_desktop-1.jpg')?>);
+            background-position: 12% 100%;
+            background-repeat: no-repeat;
+            content: "";
+            height: 100%;
+            left: 50%;
+            position: absolute;
+            top: 0;
+            transform: translateX(-50%);
+            width: 100vw;
+            background-size: cover;
+        }
+    }
+    @media screen and (max-width:767px){
+        .partner-stats:before {
+            background: url(<?= $block->getViewFileUrl('Ahy_ThemeCustomization::images/stats_background_mobile-1.jpg')?>);
+            background-position: 12% center;
+            background-repeat: no-repeat;
+            content: "";
+            height: 100%;
+            left: 50%;
+            position: absolute;
+            top: 0;
+            transform: translateX(-50%);
+            width: 100vw;
+            background-size: cover;
+        }
+    }
+</style>
+<script id="animateNumbers">
+    // How long you want the animation to take, in ms
+    const animationDuration = 2000;
+    // Calculate how long each ‘frame’ should last if we want to update the animation 60 times per second
+    const frameDuration = 1000 / 60;
+    // Use that to calculate how many frames we need to complete the animation
+    const totalFrames = Math.round( animationDuration / frameDuration );
+    // An ease-out function that slows the count as it progresses
+    const easeOutQuad = t => t * ( 2 - t );
+
+    // The animation function, which takes an Element
+    const animateCountUp = el => {
+        let frame = 0;
+        const countTo = parseInt( el.getAttribute('data-val'), 10 );
+        // Start the animation running 60 times per second
+        const counter = setInterval( () => {
+            frame++;
+            // Calculate our progress as a value between 0 and 1
+            // Pass that value to our easing function to get our
+            // progress on a curve
+            const progress = easeOutQuad( frame / totalFrames );
+            // Use the progress value to calculate the current count
+            const currentCount = Math.round( countTo * progress );
+
+            // If the current count has changed, update the element
+            if ( parseInt( el.innerHTML, 10 ) !== currentCount ) {
+                el.innerHTML = currentCount.toLocaleString();
+            }
+
+            // If we’ve reached our last frame, stop the animation
+            if ( frame === totalFrames ) {
+                clearInterval( counter );
+            }
+        }, frameDuration );
+    };
+
+    // Run the animation on all elements with a class of ‘countup’
+    const runAnimations = () => {
+        const countupEls = document.querySelectorAll( '.countup' );
+        countupEls.forEach( animateCountUp );
+    };
+</script>
+<script id="initContactForm">
+    function initContactForm() {
+        return {
+            errors: 0,
+            hasCaptchaToken: 0,
+            submitForm() {
+                // Do not rename $form, the variable is expected to be declared in the recaptcha output
+                const $form = document.querySelector('#<?= $escaper->escapeJs($formId) ?>');
+                <?= $recaptcha ? $recaptcha->getValidationJsHtml(ReCaptcha::RECAPTCHA_FORM_ID_CONTACT) : '' ?>
+
+                if (this.errors === 0) {
+                    $form.submit();
+                }
+            },
+        }
+    }
+</script>
+<script id="smooth-scroll">
+    function scrollSmoothOnClick() {
+        return {
+            scrollToAboutUs() {
+                const aboutUsEl = document.getElementById("about-us");
+                if (aboutUsEl) {
+                    aboutUsEl.scrollIntoView({
+                        behavior: "smooth",
+                    });
+                }
+            },
+            scrollToPartnerStats() {
+                const partnerStatsEl = document.getElementById("partner-stats");
+                if (partnerStatsEl) {
+                    partnerStatsEl.scrollIntoView({
+                        behavior: "smooth",
+                    });
+                }
+            },
+            scrollToOpportunities() {
+                const opportunitiesEl = document.getElementById("opportunities");
+                if (opportunitiesEl) {
+                    opportunitiesEl.scrollIntoView({
+                        behavior: "smooth",
+                    });
+                }
+            },
+        };
+    }
+</script>

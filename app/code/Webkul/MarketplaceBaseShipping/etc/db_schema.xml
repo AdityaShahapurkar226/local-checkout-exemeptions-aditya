@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software
+ *
+ * @category Webkul
+ * @package Webkul_MarketplaceBaseShipping
+ * @author Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license https://store.webkul.com/license.html
+ */
+-->
+
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="marketplace_shipping_setting" resource="default" engine="innodb" comment="marketplace_shipping_setting">
+        <column xsi:type="int" name="entity_id" padding="11" unsigned="false" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="int" name="seller_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Seller ID"/>
+        <column xsi:type="text" name="company" nullable="true" comment="company name"/>
+        <column xsi:type="varchar" name="telephone" nullable="true" length="50" comment="Telephone"/>
+        <column xsi:type="varchar" name="country_id" nullable="true" length="10" comment="Country Code"/>
+        <column xsi:type="varchar" name="region" nullable="true" length="50" comment="Region"/>
+        <column xsi:type="int" name="region_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Region Code"/>
+        <column xsi:type="varchar" name="postal_code" nullable="true" length="10" comment="Postal Code"/>
+        <column xsi:type="varchar" name="city" nullable="true" length="50" comment="City"/>
+        <column xsi:type="text" name="street" nullable="true" comment="Street"/>
+        <column xsi:type="int" name="store_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Store ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+          <column name="entity_id"/>
+        </constraint>
+        <index referenceId="MARKETPLACE_SHIPPING_SETTING_SELLER_ID" indexType="btree">
+          <column name="seller_id"/>
+        </index>
+    </table>
+</schema>

@@ -1,0 +1,11 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */ /** @var \Magento\Framework\View\Element\Template $block */ ?>
+
+<?= $block->escapeHtml(__(
+    'You added products to your <a href="%1">shopping cart</a>.',
+    $block->getData('cart_url')
+), ['a']); ?>

@@ -1,0 +1,32 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+
+use Hyva\Checkout\ViewModel\Breadcrumbs;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\View\Element\Template;
+
+$viewModel = $viewModels->require(Breadcrumbs::class);
+$config = $viewModel->getCheckoutConfig();
+?>
+<nav id="breadcrumbs"
+    class="nav-braincrumbs mb-6 pb-1 flex justify-center md:space-x-4 md:border-b md:border-gray-200 bg-ahy-blue w-screen left-1/2 right-1/2 mx-[-50vw] relative
+"
+>
+    <?php if ($config->hasSteps() && $config->isMultiStepper()): ?>
+        <?= $block->getChildHtml('hyva.checkout.breadcrumbs.waypoints') ?>
+    <?php endif ?>
+
+    <div class="flex flex-col space-y-4 float-right md:space-x-4 md:space-y-0 md:flex-row">
+        <?= $block->getChildHtml('hyva.checkout.breadcrumbs.additional') ?>
+    </div>
+</nav>

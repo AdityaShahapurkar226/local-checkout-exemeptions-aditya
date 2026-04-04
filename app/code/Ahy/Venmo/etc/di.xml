@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- ClearNonce binding -->
+    <preference for="Ahy\Venmo\Api\ClearNonceInterface"
+                type="Ahy\Venmo\Model\ClearNonce" />
+
+    <!-- Optional frontend logger interface -->
+    <preference for="Ahy\Venmo\Api\FrontendLoggerInterface"
+                type="Ahy\Venmo\Model\FrontendLogger" />
+
+    <!-- Inject the custom handler into VenmoLogger -->
+    <type name="Ahy\Venmo\Logger\VenmoLogger">
+        <arguments>
+            <argument name="handler" xsi:type="object">Ahy\Venmo\Logger\Handler\Venmo</argument>
+        </arguments>
+    </type>
+
+</config>

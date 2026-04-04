@@ -1,0 +1,69 @@
+"You are trying to add a quantity for some products that doesn't match the quantity that was shipped.","You are trying to add a quantity for some products that doesn't match the quantity that was shipped."
+"Products should be added to package(s)","Products should be added to package(s)"
+"The value that you entered is not valid.","The value that you entered is not valid."
+"You created the shipping label.","You created the shipping label."
+"An error occurred while creating shipping label.","An error occurred while creating shipping label."
+"We can't save the shipment right now.","We can't save the shipment right now."
+"""Shipment Document Validation Error(s):\n"" .","""Shipment Document Validation Error(s):\n"" ."
+"The shipment has been created.","The shipment has been created."
+"Cannot save shipment.","Cannot save shipment."
+"You saved the shipping origin address.","You saved the shipping origin address."
+"We can't save the origin address.","We can't save the origin address."
+"Origin Address","Origin Address"
+Pounds,Pounds
+Kilograms,Kilograms
+Inches,Inches
+Centimeters,Centimeters
+inch,inch
+cm,cm
+Height,Height
+Depth,Depth
+Width,Width
+Regular,Regular
+Specific,Specific
+"Shipping labels is not available.","Shipping labels is not available."
+"Response info is not exist.","Response info is not exist."
+"Invalid carrier: %1","Invalid carrier: %1"
+"We don't have enough information to create shipping labels. Please make sure your store information and settings are complete.","We don't have enough information to create shipping labels. Please make sure your store information and settings are complete."
+"* Required Fields","* Required Fields"
+"Shipping Origin Address","Shipping Origin Address"
+Save,Save
+"Street Address","Street Address"
+"Street Address %1","Street Address %1"
+City,City
+State/Province,State/Province
+"Please select a region, state or province.","Please select a region, state or province."
+"Zip/Postal Code","Zip/Postal Code"
+Country,Country
+"Shipping Setting","Shipping Setting"
+"Select All","Select All"
+"Product Name","Product Name"
+Weight,Weight
+"Customs Value","Customs Value"
+"Qty Ordered","Qty Ordered"
+Qty,Qty
+Delete,Delete
+Package,Package
+Type,Type
+"Total Weight","Total Weight"
+Size,Size
+Length,Length
+"Signature Confirmation","Signature Confirmation"
+Contents,Contents
+Girth,Girth
+"Items in the Package","Items in the Package"
+Product,Product
+Packages,Packages
+"Create Shipping Label","Create Shipping Label"
+"Create Shipping Label...","Create Shipping Label..."
+"Download Shipping Label","Download Shipping Label"
+"Create Packages","Create Packages"
+Cancel,Cancel
+"Add Package","Add Package"
+"Add Selected Product(s) to Package","Add Selected Product(s) to Package"
+"Add Products to Package","Add Products to Package"
+"USPS domestic shipments don't use package types.","USPS domestic shipments don't use package types."
+in,in
+lb,lb
+kg,kg
+"Delete Package","Delete Package"

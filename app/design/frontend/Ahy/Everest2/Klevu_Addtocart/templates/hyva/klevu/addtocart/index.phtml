@@ -1,0 +1,173 @@
+<?php /** @var $block \Klevu\Addtocart\Block\Index */ ?>
+
+<?php if ($block->isAddtocartEnabled()): ?>
+    <script type="text/javascript">
+        async function klevu_addtocart(id, url, qty, options = {}) {
+
+            let spinnerColor = '#000'; //Black for simple products and white for configurable
+
+            // console.log(options);return false;
+            let form = document.createElement("form");
+            form.setAttribute('id', "ahyAddToCartFormId");
+            form.setAttribute('method', "post");
+            form.setAttribute('action', "<?= $block->escapeUrl($block->getUrl('checkout/cart/add')) ?>");
+
+            let formKey = document.createElement("input"); //input element form_key, hidden
+            formKey.setAttribute('type', "hidden");
+            formKey.setAttribute('name', "form_key");
+            formKey.setAttribute('value', hyva.getFormKey());
+
+            let productId = document.createElement("input"); //input element product, hidden
+            productId.setAttribute('type', "hidden");
+            productId.setAttribute('name', "product");
+            productId.setAttribute('value', id);
+
+            let quantity = document.createElement("input"); //input element qty, hidden
+            quantity.setAttribute('type', "hidden");
+            quantity.setAttribute('name', "qty");
+            quantity.setAttribute('value', qty);
+
+            form.appendChild(formKey);
+            form.appendChild(productId);
+            form.appendChild(quantity);
+
+            // Add options for configurable products
+
+            if (Object.keys(options).length > 0) {
+                spinnerColor = '#fff';
+                // console.log('Product Options: ', options);
+                for (const [key, value] of Object.entries(options)) {
+                    let option = document.createElement("input");
+                    option.setAttribute('type', "hidden");
+                    option.setAttribute('name', `super_attribute[${key}]`);
+                    option.setAttribute('value', value);
+                    form.appendChild(option);
+                }
+            }
+
+
+            document.body.appendChild(form);
+             // form.submit();
+            //document.body.removeChild(form);
+
+            // form.addEventListener('submit', e => {
+                // e.preventDefault();
+
+            
+            const data = new URLSearchParams(new FormData(form)),
+                button = form.querySelector('button') ?
+                    form.querySelector('button') :
+                    (document.getElementById('kuAddToCartBtn-' + id) || document.querySelector('[data-productid="' + id + '"]')),
+                loader = document.createElement('div');
+
+                loader.className = 'absolute inset-0 flex justify-center items-center loader';
+                
+                loader.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="32" height="32" viewBox="0 0 128 128" xml:space="preserve">
+                        <g>
+                            <circle cx="16" cy="64" r="4" fill="${spinnerColor}"/>
+                            <circle cx="16" cy="64" r="8" fill="${spinnerColor}" transform="rotate(45 64 64)"/>
+                            <circle cx="16" cy="64" r="12" fill="${spinnerColor}" transform="rotate(90 64 64)"/>
+                            <circle cx="16" cy="64" r="16" fill="${spinnerColor}" transform="rotate(135 64 64)"/>
+                            <animateTransform attributeName="transform" type="rotate" values="45 64 64;90 64 64;135 64 64;180 64 64;225 64 64;270 64 64;315 64 64;0 64 64" calcMode="discrete" dur="960ms" repeatCount="indefinite"/>
+                        </g>
+                    </svg>
+                `;
+                 // console.log(button);return false;
+            button.prepend(loader);
+            button.classList.add('relative', 'is-loading');
+            button.disabled = true;
+
+            // Estate Api Integration
+            const orchidResult = await Alpine.store('estateApi').checkProductRestriction(id, null);
+            if (orchidResult !== 1) {
+                console.warn('Orchid validation failed, stopping ATC.');
+                loader.remove();
+                button.classList.remove('is-loading');
+                button.disabled = false;
+                return;
+            }
+            fetch(form.action, {
+                    method: 'POST',
+                    body: data,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(res => {
+                    if (!res.ok) {
+                        return form.submit();
+                    }
+
+                    if (res.redirected) {
+                        return [];
+                    }
+
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.backUrl) {
+                        form.submit();
+                    }
+
+                    // if (recursive) {
+                    window.dispatchEvent(new CustomEvent('product-addtocart-success'));
+                    // }
+
+                    window.dispatchEvent(new CustomEvent('reload-customer-section-data'));
+                })
+                .catch(err => {
+                    window.dispatchEvent(new CustomEvent('product-addtocart-error'));
+
+                    setMessage({
+                        text: '<?= $escaper->escapeHtml(__('There was a problem adding your item to the cart.')) ?>',
+                        type: 'error'
+                    });
+                })
+                .finally(() => {
+                    try {
+                        var messages = hyva.getCookie('mage-messages');
+                        messages = messages ? JSON.parse(decodeURIComponent(messages).replace(/\+/g, ' ')) : [];
+                        document.cookie = 'mage-messages=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
+                    } catch (error) {
+                        console.warn('Error parsing Cookie Messages:', error);
+                        return;
+                    }
+
+                    setTimeout(() => {
+                        loader.remove();
+                        button.classList.remove('is-loading');
+                        button.disabled = false;
+
+                        //Close Quickview sidebar 
+                        window.dispatchEvent(new CustomEvent('close-quickview'));
+                        const existingStyleTag = document.getElementById('swiperjs-slider-styles');
+                        if (existingStyleTag) {
+                            existingStyleTag.remove();
+                        }
+                        // toggle the mini cart after add to cart.
+                        window.dispatchEvent(new CustomEvent("toggle-cart"));
+
+                        messages.forEach(message => {
+                            setMessage(message);
+                        });
+                    }, 1000);
+                });
+            // });
+
+
+            document.body.removeChild(form);
+        }
+
+        /**
+         * Set Message
+         */
+        function setMessage(message) {
+            typeof window.dispatchMessages !== "undefined" && window.dispatchMessages(
+                [message], 5000
+            );
+        }
+    </script>
+<?php endif; ?>

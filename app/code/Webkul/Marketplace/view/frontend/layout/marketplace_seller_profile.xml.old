@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<update handle="marketplace_seller_top_header" />
+	<head>
+        <css src="Webkul_Marketplace::css/filter.css"/>
+        <css src="Magento_Swatches::css/swatches.css"/>
+    </head>
+    <body>
+		<referenceContainer name="content">
+			<block class="Webkul\Marketplace\Block\Profile" name="marketplace_sellerprofile" template="Webkul_Marketplace::seller/profile/profile_layout.phtml" after="-">
+				<arguments>
+					<argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+				</arguments>
+
+				
+			</block>
+			<referenceBlock name="marketplace_sellerprofile">
+				<block class="Webkul\Marketplace\Block\Profile" name="marketplace_sellerprofile_layout1" template="Webkul_Marketplace::seller/profile/profile.phtml" after="-">
+					<arguments>
+						<argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+					</arguments>
+				</block>
+				<block class="Webkul\Marketplace\Block\Profile" name="microsite.details" template="Webkul_Marketplace::seller/profile/profile_layout2.phtml" cacheable="false" after="-">
+					<!-- <arguments>
+						<argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+					</arguments> -->
+				</block>
+			</referenceBlock>
+			<referenceBlock name="marketplace_sellerprofile_layout1">
+				<block class="Webkul\Marketplace\Block\Profile" name="marketplace_sellerprofile_recently_added_products" template="Webkul_Marketplace::seller/profile/recently_added_products.phtml">
+					<arguments>
+						<argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+					</arguments>
+				</block>
+				<block class="Webkul\Marketplace\Block\Profile" name="marketplace_seller_description" template="Webkul_Marketplace::seller/profile/description.phtml">
+				<arguments>
+						<argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+					</arguments>
+				</block>
+				<block class="Webkul\Marketplace\Block\Profile" name="marketplace_sellerprofile_rating" template="Webkul_Marketplace::seller/profile/rating.phtml">
+					<arguments>
+						<argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+					</arguments>
+				</block>
+
+			</referenceBlock>
+			<referenceBlock name="microsite.details">
+				<block class="Webkul\Marketplace\Block\Collection" name="marketplace_sellercollection" template="Webkul_Marketplace::collectionview.phtml"   group="microsite_details">
+					<arguments>
+						<argument translate="true" name="title" xsi:type="string">Products</argument>
+						<argument name="class" xsi:type="string">profile_layout2 collection</argument>
+						<argument name="attributes" xsi:type="array">
+							<item name="class" xsi:type="string">the-class</item>
+						</argument>
+					</arguments>
+					<block class="Magento\Catalog\Block\Product\ProductList\Toolbar" name="product_list_toolbar" template="Magento_Catalog::product/list/toolbar.phtml">
+						<block class="Magento\Theme\Block\Html\Pager" name="product_list_toolbar_pager"/>
+					</block>
+					<action method="setToolbarBlockName">
+						<argument name="name" xsi:type="string">product_list_toolbar</argument>
+					</action>
+					
+				</block>
+				<block class="Webkul\Marketplace\Block\Feedbackcollection" name="supplier_review_info"  template="Webkul_Marketplace::seller/profile/layout2/review.phtml" group="microsite_details" cacheable="false">
+					<arguments>
+						<argument translate="true" name="title" xsi:type="string">Reviews</argument>
+						<argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+					</arguments>
+				</block>
+				<block class="Webkul\Marketplace\Block\Profile" name="marketplace_sellerprofile_tab"  template="Webkul_Marketplace::seller/profile/layout2/description.phtml" group="microsite_details" cacheable="false">
+					<arguments>
+						<argument translate="true" name="title" xsi:type="string">About Us</argument>
+						<argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+					</arguments>
+				</block>
+				
+				<block class="Webkul\Marketplace\Block\Profile" name="supplier_policies" template="Webkul_Marketplace::seller/profile/layout2/policies.phtml" group="microsite_details" cacheable="false">
+					<arguments>
+						<argument translate="true" name="title" xsi:type="string">Policies</argument>
+						<argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+					</arguments>
+				</block>
+				<block class="Webkul\Marketplace\Block\Profile" name="marketplace_contact" template="Webkul_Marketplace::seller/profile/layout2/contact.phtml" group="microsite_details" cacheable="false">
+					<arguments>
+						<argument translate="true" name="title" xsi:type="string">Contact</argument>
+						<argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+					</arguments>
+				</block>
+				
+			</referenceBlock>
+			<referenceContainer name="marketplace_sellercollection">
+            <block class="Webkul\Marketplace\Block\Sellercategory" name="marketplace_sellercollectionleft" template="Webkul_Marketplace::collectionleft.phtml" before="-"/>
+        	</referenceContainer>
+			<referenceContainer name="marketplace_sellercollectionleft">
+				<block class="Webkul\Marketplace\Block\Collection\Navigation\Category" name="marketplace_sellercollection_layered_navigation" before="-" template="Webkul_Marketplace::seller/collection/layer/view.phtml">
+					<block class="Magento\LayeredNavigation\Block\Navigation\State" name="marketplace.catalog.navigation.state" as="state" template="Webkul_Marketplace::seller/collection/layer/state.phtml">
+						<arguments>
+							<argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+						</arguments>
+					</block>
+					<block class="Magento\LayeredNavigation\Block\Navigation\FilterRenderer" name="marketplace.catalog.navigation.renderer" as="renderer" template="Webkul_Marketplace::seller/collection/layer/filter.phtml">
+						<arguments>
+							<argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+						</arguments>
+					</block>
+				</block>
+			</referenceContainer>
+			<referenceBlock name="marketplace_sellercollection">
+				<arguments>
+					<argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+				</arguments>
+			</referenceBlock>
+			<referenceBlock name="marketplace_sellercollectionleft">
+				<arguments>
+					<argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+				</arguments>
+			</referenceBlock>
+			</referenceContainer>
+    </body>
+</page>

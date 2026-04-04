@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Change validation for Cart Price Rules related to qty of items in a cart -->
+    <type name="Magento\Rule\Model\Condition\AbstractCondition">
+        <plugin name="Ewave_ExtendedBundleProduct::Magento\Rule\Model\Condition\AbstractCondition"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\Rule\Model\Condition\AbstractConditionPlugin" />
+    </type>
+
+    <!-- Change a number of items displayed on mini-cart with Count Bundle Items Separately setting -->
+    <type name="Magento\Checkout\CustomerData\Cart">
+        <plugin name="Ewave_ExtendedBundleProduct::Magento\Checkout\CustomerData\Cart"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\Checkout\CustomerData\CartPlugin" />
+    </type>
+
+    <type name="Magento\ConfigurableProduct\Block\Product\View\Type\Configurable">
+        <plugin name="Ewave_ExtendedBundleProduct::Magento\ConfigurableProduct\Block\Product\View\Type\Configurable"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\ConfigurableProduct\Block\Product\View\Type\Configurable"
+                sortOrder="20" />
+    </type>
+</config>

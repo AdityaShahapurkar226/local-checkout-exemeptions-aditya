@@ -1,0 +1,39 @@
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ *
+ * Styles taken directly from the original module.
+ *
+ * @see vendor/paypal/module-braintree-core/view/frontend/web/css/source/_extend.less
+ */
+
+.braintree-applepay-container-product {
+    display: inline-block;
+
+    .braintree-apple-pay-button {
+        padding: 10px 0;
+        margin: 0;
+        margin-bottom: 15px;
+    }
+}
+
+.braintree-apple-pay-button {
+    -webkit-appearance: -apple-pay-button;
+    -apple-pay-button-type: plain;
+    display: block;
+    width: 200px;
+    min-height: 40px;
+    border: 1px solid black;
+    background-image: -webkit-named-image(apple-pay-logo-black);
+    background-size: 100% ~ 'calc(60% + 2px)';
+    background-repeat: no-repeat;
+    background-color: black;
+    background-position: 50% 50%;
+    border-radius: 5px;
+    padding: 2px;
+    margin: 20px auto;
+    transition: background-color 0.15s;
+    cursor: pointer;
+}

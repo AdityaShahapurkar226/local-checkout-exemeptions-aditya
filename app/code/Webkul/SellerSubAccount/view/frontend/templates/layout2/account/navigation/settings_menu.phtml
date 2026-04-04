@@ -1,0 +1,64 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_SellerSubAccount
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$subAccountHelper = $block->getLayout()->createBlock(
+    \Webkul\SellerSubAccount\Block\SubAccount::class
+)->getSubAccountHelper();
+
+$_helper = $block->getLayout()->createBlock(
+    \Webkul\SellerSubAccount\Block\SubAccount::class
+)->getMarketplaceHelperInstance();
+    
+$magentoCurrentUrl = $block->getCurrentUrl();
+$isSellerGroup = $_helper->isSellerGroupModuleInstalled();
+$isAllowedChildMenu = $subAccountHelper->isAllowedChildMenu();
+if (($isSellerGroup && ($_helper->isAllowedAction('marketplace/account/editprofile') ||
+ $isAllowedChildMenu)) || !$isSellerGroup) { ?>
+    <li class="wk-mp-item-settings level-0 
+    <?=strpos($magentoCurrentUrl, 'marketplace/account/editprofile')? "current active":"";?>"
+     id="wk-mp-menu-settings">
+        <a href="#" onclick="return false;" class="">
+            <span><?=$block->escapeHtml(__('Settings'));?></span>
+        </a>
+        <div class="wk-mp-submenu">
+            <strong class="wk-mp-submenu-title"><?=$block->escapeHtml(__('Settings'));?></strong>
+            <a href="#" class="action-close _close" data-role="wk-mp-close-submenu"></a>
+            <ul>
+                <li data-ui-id="menu-webkul-marketplace-setting-menu" class="item-menu parent level-1">
+                    <strong class="wk-mp-submenu-group-title">
+                        <span><?=$block->escapeHtml(__('Menu'));?></span>
+                    </strong>
+                    <div class="wk-mp-submenu">
+                        <ul>
+                            <?php if (($isSellerGroup &&
+                             $_helper->isAllowedAction('marketplace/account/editprofile')) ||
+                                                !$isSellerGroup) { ?>
+                                                    <?php if ($_helper->getSellerProfileDisplayFlag()) { ?>
+                                    <li class="level-2">
+                                        <a href="<?=$block->escapeUrl($block->getUrl(
+                                            'marketplace/account/editprofile',
+                                            ['_secure' => $block->getRequest()->isSecure()]
+                                        )); ?>">
+                                            <span><?=$block->escapeHtml(__('Profile Settings')); ?></span>
+                                        </a>
+                                    </li>
+                                <?php } ?>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                </li>
+                <?=$block->getChildHtml('layout2_seller_account_navigation_shipping_menu'); ?>
+                <?=$block->getChildHtml('layout2_seller_account_navigation_payment_menu'); ?>
+            </ul>
+        </div>
+    </li>
+    <?php
+} ?>

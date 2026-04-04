@@ -1,0 +1,35 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+use Magento\Customer\Block\Widget\Telephone;
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var Telephone $block */
+?>
+
+<div class="field field-reserved telephone h-[80px] mt-5  <?= $block->isRequired() ? 'required' : '' ?>">
+    <label for="telephone" class="label font-bold text-ahy-blue mt-5">
+        <span>
+            <?= $escaper->escapeHtml(__('Phone Number')) ?> *
+        </span>
+    </label>
+    <div class="control">
+        <input type="tel"
+               name="telephone"
+               id="telephone"
+               <?php if ($block->isRequired()): ?>required<?php endif; ?>
+               data-validate='{"telephone": {"minlength": 3}}'
+               value="<?= $escaper->escapeHtmlAttr($block->getTelephone()) ?>"
+               title="<?= $escaper->escapeHtmlAttr(__('Phone Number')) ?>"
+               class="form-input <?= $escaper->escapeHtmlAttr(
+                   $block->getAttributeValidationClass('telephone')
+               ) ?> form-input w-full focus:ring-transparent !text-ahy-blue !h-16 !border !border-ahy-gray focus:border-ahy-blue !rounded-md"
+        >
+    </div>
+</div>

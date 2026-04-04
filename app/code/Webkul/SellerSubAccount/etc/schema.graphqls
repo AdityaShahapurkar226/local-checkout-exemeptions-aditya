@@ -1,0 +1,56 @@
+#schema for Webkul_SellerSubAccount
+type Query {
+    getAllowedPermissionByAdminToSeller (customerId: String! @doc(description: "customer id to check")
+                                      ): GetAllowedPermissionByAdminToSeller @resolver(class: "\\Webkul\\SellerSubAccount\\Model\\Resolver\\GetAllowedPermissionByAdminToSeller") @doc(description: "Return the list of applied permissions to the sub seller") @cache(cacheable: false)
+    
+    getSubSellerList (customerId: String! @doc(description: "customer id to check")
+                  ): [GetSubSellerList] @resolver(class: "\\Webkul\\SellerSubAccount\\Model\\Resolver\\GetSubSellerList") @doc(description: "Return the list Sub Sellers") @cache(cacheable: false)
+}
+
+type Mutation {
+    createSellerSubAccount (customerId: String! @doc(description: "customer id to check authentication"),
+                            firstname: String! @doc(description: "First name of the seller"),
+                            lastname: String! @doc(description: "Last name of the seller"),
+                            email: String! @doc(description: "Email of the seller"),
+                            permissionType: String! @doc(description:"Permission type which is allowed by the admin (permission must be in (,) comma separated )"),
+                            status: String! @doc(description:"Status of the seller")
+                           ): CreateSellerSubAccountOutput @resolver(class: "\\Webkul\\SellerSubAccount\\Model\\Resolver\\Account\\CreateSellerSubAccount") @doc(description: "Mutation to create seller sub account") @cache(cacheable: false)
+
+    updateSellerSubAccount (customerId: String! @doc(description: "customer id to check authentication"),
+                            id: String! @doc(description: "id of seller sub account"),
+                            firstname: String! @doc(description: "First name of the seller"),
+                            lastname: String! @doc(description: "Last name of the seller"),
+                            email: String! @doc(description: "Email of the seller"),
+                            permissionType: String! @doc(description:"Permission type which is allowed by the admin (permission must be in (,) comma separated )"),
+                            status: String! @doc(description:"Status of the seller")
+                           ): UpdateSellerSubAccountOutput @resolver(class: "\\Webkul\\SellerSubAccount\\Model\\Resolver\\Account\\UpdateSellerSubAccount") @doc(description: "Mutation to create seller sub account") @cache(cacheable: false)
+
+    deleteSubSellerAccount (customerId: String! @doc(description: "customer id to check authentication"),
+                            id: String! @doc(description: "subSeller ids if want to perform massDelete then id must be comma(,) separated")
+                            ): DeleteSubSellerAccount @resolver(class: "\\Webkul\\SellerSubAccount\\Model\\Resolver\\Account\\DeleteSubSellerAccount") @doc(description: "Mutation to Delete seller sub account") @cache(cacheable: false)
+}
+type UpdateSellerSubAccountOutput @doc(description: "Message after updating seller sub account") {
+    message: String
+}
+type DeleteSubSellerAccount @doc(description: "Message after deleting seller sub account") {
+    message: String
+}
+type CreateSellerSubAccountOutput @doc(description: "Message after saving seller sub account") {
+    errorMessage: String
+    successMessage: String
+}
+
+type GetSubSellerList @doc(description: "Return list of sellers") {
+    entity_id: String
+    name: String
+    email: String
+    customer_id: String
+    permissionType: [String]
+    status: String
+    seller_id: String
+    created_at: String
+    updated_at: String
+}
+type GetAllowedPermissionByAdminToSeller @doc(description: "List of Allowed permission from the admin to seller to create sub-seller") {
+    permissions: [String]
+}

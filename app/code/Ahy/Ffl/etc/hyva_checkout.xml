@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Hyva_Checkout:etc/hyva_checkout.xsd">
+    <!-- Default -->
+    <checkout name="default" label="Hyvä Default" layout="2columns">
+        <step name="login" label="Customer Login" route="login" layout="1column">
+            <!-- Show login step when guest checkout is not allowed -->
+            <condition name="is_customer_required" if="is_customer" method="required" />
+            <!-- Show login step when the current customer is actually a guest -->
+            <condition name="is_guest" if="is_guest"/>
+        </step>
+
+        <step name="shipping" label="Shipping" route="shipping">
+            <!-- Only show this step when the cart isn't fully virtual -->
+            <condition name="is_physical" if="is_physical"/>
+        </step>
+        <step name="payment" label="Review &amp; Payments" route="payment">
+            <!-- Remove all the stuff related to shipping when the cart is fully virtual -->
+            <update handle="hyva_checkout_default_virtual" if="is_virtual"/>
+        </step>
+    </checkout>
+
+    <!-- Default: Mobile -->
+    <checkout name="mobile" label="Hyvä Default (for: Mobile devices)" parent="default" layout="1column">
+        <!-- Rename from Review & Payment to just Payments -->
+        <step name="payment" label="Payment"/>
+        <!-- Specific summary step for better overview purposes -->
+        <step name="summary" label="Summary"/>
+    </checkout>
+
+    <!-- Default: One Page -->
+    <checkout name="onepage" label="Hyvä One Page" layout="3columns">
+        <step name="onepage" label="One Page">
+            <update handle="hyva_checkout_default_virtual" if="is_virtual"/>
+        </step>
+    </checkout>
+
+    <!-- This below code has been moved to Ahy_EfflApiIntegration module -->
+
+    <!-- Custom: Ahy Custom Checkout -->
+    <!-- <checkout name="ahy" label="Ahy Custom Checkout" layout="2columns">
+        <step name="login" label="Customer Login" route="login" layout="1column">
+
+            <condition name="is_customer_required" if="is_customer" method="required" />
+
+            <condition name="is_guest" if="is_guest"/>
+        </step>
+
+        <step name="shipping" label="BILLING &amp; SHIPPING" route="shipping">
+
+            <condition name="is_physical" if="is_physical"/>
+        </step>
+
+        <step name="verify" label="VERIFY AGE">
+
+            <condition name="is_age_required" if="is_age_required" />
+        </step>
+
+        <step name="ffl" label="SELECT FFL">
+
+            <condition name="is_ffl_required" if="is_ffl_required"/>
+        </step>
+
+        <step name="payment" label="REVIEW &amp; ORDER" route="payment">
+
+            <update handle="hyva_checkout_default_virtual" if="is_virtual"/>
+        </step>
+    </checkout> -->
+</config>

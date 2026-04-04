@@ -1,0 +1,114 @@
+<?php
+/**
+ * Webkul software.
+ * @category Webkul
+ * @package Webkul_MpSellerBuyerCommunication
+ * @author Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license https://store.webkul.com/license.html
+ */
+
+/** @var \Magento\Captcha\Block\Captcha\DefaultCaptcha $blockObj */
+/** @var \Magento\Customer\Block\Form\Login $block */
+
+$captchaStatus = $block->getData('captcha_status');
+$blockObj= $block->getLayout()->createBlock(\Magento\Captcha\Block\Captcha\DefaultCaptcha::class);
+$captcha = $blockObj->getCaptchaModel();
+$url  = $block->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]);
+$login_url = $block->getUrl('customer/account/loginPost', ['referer' => base64_encode($url)]);
+?>
+<div class="block block-customer-login">
+    <div class="block-content" aria-labelledby="block-customer-login-heading">
+        <form class="form form-login"
+              action="<?= /* @noEscape */ $login_url ?>"
+              method="post"
+              id="login-form"
+              data-mage-init='{"validation":{}}'>
+            <?= $block->getBlockHtml('formkey') ?>
+            <fieldset class="fieldset login" 
+                      data-hasrequired="<?= $escaper->escapeHtmlAttr(__('* Required Fields')) ?>">
+                <div class="field note">
+                    <?= $escaper->escapeHtml(__('If you have an account, sign in with your email address.')) ?>
+                </div>
+                <div class="field email required">
+                    <label class="label" for="email"><span><?= $escaper->escapeHtml(__('Email')) ?></span></label>
+                    <div class="control">
+                        <input name="login[username]" value="<?= $escaper->escapeHtmlAttr($block->getUsername()) ?>"
+                                <?php if ($block->isAutocompleteDisabled()): ?> autocomplete="off"<?php endif; ?>
+                               id="email" type="email" class="input-text"
+                               title="<?= $escaper->escapeHtmlAttr(__('Email')) ?>"
+                               data-validate="{required:true, 'validate-email':true}">
+                    </div>
+                </div>
+                <div class="field password required">
+                    <label for="pass" class="label"><span><?= $escaper->escapeHtml(__('Password')) ?></span></label>
+                    <div class="control">
+                        <input name="login[password]" type="password"
+                                <?php if ($block->isAutocompleteDisabled()): ?> autocomplete="off"<?php endif; ?>
+                               class="input-text" id="pass" title="<?= $escaper->escapeHtmlAttr(__('Password')) ?>"
+                               data-validate="{required:true}">
+                    </div>
+                </div>
+                <?php //if ($captchaStatus) { ?>
+                <?php if (false) { ?>
+                <!---- Capcha Code Start ---->
+                <!-- <div class="field captcha required" role="user_login">
+                    <label for="captcha_user_login" class="label">
+                        <span><?= $blockObj->escapeHtml(__('Please type the letters and numbers below')) ?></span>
+                    </label>
+                    <div class="control captcha">
+                        <input name="<?= $blockObj->escapeHtmlAttr(\Magento\Captcha\Helper\Data::INPUT_NAME_FIELD_VALUE)
+                        ?>[user_login]"
+                               type="text" class="input-text required-entry"
+                               data-validate="{required:true}" id="captcha_user_login" />
+                        <div class="nested">
+                            <div class="field captcha no-label"
+                                data-captcha="user_login"
+                                id="captcha-container-user_login"
+                                data-mage-init='{
+                                    "captcha":{
+                                        "url": "<?= $blockObj->escapeUrl($blockObj->getRefreshUrl()) ?>",
+                                        "imageLoader": "<?=
+                                        $blockObj->escapeUrl($blockObj->getViewFileUrl('images/loader-2.gif')) ?>",
+                                        "type": "user_login"}}'>
+                                <div class="control captcha-image">
+                                    <img alt="<?=
+                                        $blockObj->escapeHtmlAttr(__('Please type the letters and numbers below')) ?>"
+                                         class="captcha-img"
+                                         height="<?= /* @noEscape */ (float) $blockObj->getImgHeight() ?>"
+                                         src="<?= $blockObj->escapeUrl($captcha->getImgSrc()) ?>"/>
+                                    <button type="button" class="action reload captcha-reload"
+                                            title="<?= $blockObj->escapeHtmlAttr(__('Reload Captcha')) ?>">
+                                        <span><?= $blockObj->escapeHtml(__('Reload Captcha')) ?></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <?php if ($captcha->isCaseSensitive()):?>
+                                <div class="captcha-note note">
+                                    <?= $blockObj->escapeHtml(
+                                        __('<strong>Attention</strong>: Captcha is case sensitive.'),
+                                        ['strong']
+                                    ) ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div> -->
+            <!---- Capcha Code End ---->
+                <?php } ?>
+                <div class="actions-toolbar">
+                    <div class="primary">
+                        <button type="submit" class="action login primary" name="send" id="send2">
+                            <span><?= $escaper->escapeHtml(__('Sign In')) ?></span>
+                        </button>
+                    </div>
+                    <div class="secondary">
+                        <a class="action remind" href="<?= $escaper->escapeUrl($block->getForgotPasswordUrl()) ?>">
+                            <span><?= $escaper->escapeHtml(__('Forgot Your Password?')) ?></span>
+                        </a>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

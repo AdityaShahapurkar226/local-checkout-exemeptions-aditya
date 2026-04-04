@@ -1,0 +1,46 @@
+Legend
+
++ Features
+
+-------------------------------- Version 5.0.0 --------------------------------------
+	+ Compatibility with Magento 2.4.x. and Marketplace 5.0.x
+
+-------------------------------- Version 4.0.0 --------------------------------------
+	+ Compatibility with Magento 2.4.x EE and Marketplace 4.0.x
+
+-------------------------------- Version 3.0.1 --------------------------------------
+	+ Compatibility with Magento Multi-Address Shipping Implemented.
+	+ Bugs fixed.
+	+ Restructured Multi-Address Shipping.
+
+-------------------------------- Version 3.0.0 --------------------------------------
+
+	+ Version updated for magento 2.3.x and Marketplace 3.0.x
+
+-------------------------------- Version 2.2.1 --------------------------------------
+
+	+ Product Wise Shipping feature added.
+
+-------------------------------- Version 2.2.0 --------------------------------------
+
+	+ Compatible with magento 2.3.x and Marketplace 2.2.x
+
+-------------------------------- Version 2.1.0 --------------------------------------
+
+	+ Compatible with Magento Marketplace Base Shipping.
+
+-------------------------------- Version 2.0.2 --------------------------------------
+
+	+ Compatible with Magento 2.2.* version.
+	+ Compatible with Webkul Marketplace 2.1.* version.
+
+-------------------------------- Version 2.0.1 --------------------------------------
+
+	+ Compatible with Magento 2.1.x version.
+
+-------------------------------- Version 2.0.0 --------------------------------------
+
+	+ Seller can allow his shipping service from his panel.
+	+ Buyer can select shipping according to seller  in same order.
+	+ Vendor can choose shipping channel which he want to display at checkout so that shipping will be based on per seller / vendor instead of whole cart.
+	+ This addon will enable shipping selection and freight calculation at vendor level.

@@ -1,0 +1,26 @@
+Legend
+
++ Features
+- Bugs
+
+-------------------------------- Version 5.0.2 --------------------------------------
+	 + Bugs Fixed.
+
+-------------------------------- Version 5.0.1 --------------------------------------
+	 + Compatible with Magento 2.4.x. and Marketplace 5.0.x.
+	 + Allow admin to see numbers of login attempts from his admin panel.
+
+-------------------------------- Version 5.0.0 --------------------------------------
+	 + Compatible with Magento 2.4.x. and Marketplace 5.x.x.
+
+-------------------------------- Version 2.2.0 --------------------------------------
+	 + Compatible with Magento 2.3.x. and Marketplace 3.x.x.
+
+-------------------------------- Version 2.1.1 --------------------------------------
+	- Fixed vendor/customer login with magento version 2.2.2.
+	- Removed backend plugin as not needed in the current version.
+
+-------------------------------- Version 2.1.0 --------------------------------------
+	+ Supported with magento version 2.2.
+	+ Allow admin to login vendor account from his admin panel.
+	+ Allow admin to login customer account from his admin panel.

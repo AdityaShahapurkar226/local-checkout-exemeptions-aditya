@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+  <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+    <arguments>
+      <argument name="collections" xsi:type="array">
+        <item name="mpsellerbuyercommunication_query_list_data_source" xsi:type="string">Webkul\MpSellerBuyerCommunication\Model\ResourceModel\SellerBuyerCommunication\Grid\Collection</item>
+        <item name="mpsellerbuyercommunication_query_view_data_source" xsi:type="string">Webkul\MpSellerBuyerCommunication\Model\ResourceModel\Conversation\Grid\Collection</item>
+      </argument>
+    </arguments>
+  </type>
+  <type name="Webkul\MpSellerBuyerCommunication\Model\ResourceModel\SellerBuyerCommunication\Grid\Collection">
+    <arguments>
+      <argument name="mainTable" xsi:type="string">marketplace_sellerbuyercommunication</argument>
+      <argument name="eventPrefix" xsi:type="string">mpsellerbuyercommunication_query_grid_collection</argument>
+      <argument name="eventObject" xsi:type="string">mpsellerbuyercommunication_query_grid_collection</argument>
+      <argument name="resourceModel" xsi:type="string">Webkul\MpSellerBuyerCommunication\Model\ResourceModel\SellerBuyerCommunication</argument>
+    </arguments>
+  </type>
+  <type name="Webkul\MpSellerBuyerCommunication\Model\ResourceModel\Conversation\Grid\Collection">
+    <arguments>
+      <argument name="mainTable" xsi:type="string">marketplace_sellerbuyercommunication_conversation</argument>
+      <argument name="eventPrefix" xsi:type="string">mpsellerbuyercommunication_query_view_grid_collection</argument>
+      <argument name="eventObject" xsi:type="string">mpsellerbuyercommunication_query_view_grid_collection</argument>
+      <argument name="resourceModel" xsi:type="string">Webkul\MpSellerBuyerCommunication\Model\ResourceModel\Conversation</argument>
+    </arguments>
+  </type>
+  <virtualType name="MpSellerBuyerCommunicationGirdFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+    <arguments>
+      <argument name="appliers" xsi:type="array">
+        <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+        <item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+      </argument>
+    </arguments>
+  </virtualType>
+  <virtualType name="MpSellerBuyerCommunicationQueryGirdFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+    <arguments>
+      <argument name="collection" xsi:type="object" shared="false">Webkul\MpSellerBuyerCommunication\Model\ResourceModel\SellerBuyerCommunication\Collection</argument>
+      <argument name="filterPool" xsi:type="object" shared="false">MpSellerBuyerCommunicationGirdFilterPool</argument>
+    </arguments>
+  </virtualType>
+  <virtualType name="MpSellerBuyerCommunicationQueryViewGirdFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+    <arguments>
+      <argument name="collection" xsi:type="object" shared="false">Webkul\MpSellerBuyerCommunication\Model\ResourceModel\Conversation\Collection</argument>
+      <argument name="filterPool" xsi:type="object" shared="false">MpSellerBuyerCommunicationGirdFilterPool</argument>
+    </arguments>
+  </virtualType>
+  <preference for="Webkul\MpSellerBuyerCommunication\Api\Data\SellerBuyerCommunicationInterface" type="Webkul\MpSellerBuyerCommunication\Model\SellerBuyerCommunication"/>
+  <preference for="Webkul\MpSellerBuyerCommunication\Api\CommunicationRepositoryInterface" type="Webkul\MpSellerBuyerCommunication\Model\CommunicationRepository"/>
+  <preference for="Webkul\MpSellerBuyerCommunication\Api\Data\ConversationInterface" type="Webkul\MpSellerBuyerCommunication\Model\Conversation"/>
+  <preference for="Webkul\MpSellerBuyerCommunication\Api\ConversationRepositoryInterface" type="Webkul\MpSellerBuyerCommunication\Model\ConversationRepository"/>
+  <type name="Magento\Sales\Block\Adminhtml\Order\View">
+    <plugin name="addMyButton" type="Webkul\MpSellerBuyerCommunication\Plugin\Order\View"/>
+  </type>
+  <type name="Webkul\MpSellerBuyerCommunication\Logger\Handler">
+    <arguments>
+      <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+    </arguments>
+  </type>
+  <preference for="\Magento\Framework\Mail\Template\TransportBuilder" type="Webkul\MpSellerBuyerCommunication\Model\Mail\Template\TransportBuilder" />
+   <type name="Webkul\MpSellerBuyerCommunication\Model\Mail\Template\TransportBuilder">
+        <arguments>
+            <argument name="message" xsi:type="object" >Webkul\MpSellerBuyerCommunication\Model\Mail\Message</argument>
+        </arguments>
+    </type>
+  <type name="Webkul\MpSellerBuyerCommunication\Logger\Logger">
+    <arguments>
+      <argument name="name" xsi:type="string">webkulMpSellerBuyerCommunicationLogHandler</argument>
+      <argument name="handlers" xsi:type="array">
+        <item name="system" xsi:type="object">Webkul\MpSellerBuyerCommunication\Logger\Handler</item>
+      </argument>
+    </arguments>
+  </type>
+  <preference for="\Webkul\Marketplace\Controller\Wysiwyg\Gallery\Upload" type="Webkul\MpSellerBuyerCommunication\Plugin\UploadPlugin" />
+  
+</config>

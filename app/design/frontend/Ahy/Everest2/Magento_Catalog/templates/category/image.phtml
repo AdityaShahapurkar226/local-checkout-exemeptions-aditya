@@ -1,0 +1,49 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+use Magento\Catalog\Block\Category\View;
+use Magento\Framework\Escaper;
+
+/** @var View $block */
+/** @var Escaper $escaper */
+
+?>
+<?php
+$category = $block->getCurrentCategory();
+$imgHtml  = '';
+
+if ($imgUrl = $block->getImage()->getUrl($category)) {
+    $imgHtml = '<div class="category-image"><img src="'
+        . $escaper->escapeUrl($imgUrl)
+        . '" alt="'
+        . $escaper->escapeHtmlAttr($category->getName())
+        . '" title="'
+        . $escaper->escapeHtmlAttr($category->getName())
+        . '" class="image" /></div>';
+    $imageUrlAhy = $escaper->escapeUrl($imgUrl);
+    $imgHtml = "<style>.catalog_category_view_ahy{background-image:url($imageUrlAhy) !important;}</style>";
+    /* @noEscape */ echo $block->getOutput()->categoryAttribute($category, $imgHtml, 'image');
+} else {
+    $imgHtml = "<style>.catalog_category_view_ahy{padding-top: 2rem !important; 
+margin-bottom: 1rem !important; 
+justify-content: flex-start !important; 
+height: auto !important;
+padding-bottom: 1rem !important; 
+}
+.catalog_category_view_ahy_heading{width:auto !important};
+
+@media (min-width: 768px) { 
+    padding-top: 3rem !important; 
+    padding-bottom: 2rem !important; 
+}
+#category-view-container{display:none;}
+</style>";
+    /* @noEscape */ echo $block->getOutput()->categoryAttribute($category, $imgHtml, 'image');
+
+}
+?>

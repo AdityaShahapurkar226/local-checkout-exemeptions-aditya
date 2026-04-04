@@ -1,0 +1,99 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+    $mpAssignBlock = $block->getLayout()->createBlock(\Webkul\MpAssignProduct\Block\Link::class);
+    $helper = $mpAssignBlock->getHelperObject();
+    $product = $helper->getCurrentProduct();
+    $productId = $product->getId();
+    $type = $product->getTypeId();
+if ($productId) {
+    $assignProdcuts = $helper->getAssignProducts($productId, '', 'ASC', false);
+}
+    $mediaUrl = $helper->getBaseMediaUrl();
+?>
+<div class="wk-ap-product-details">
+    <?php if ($productId && $assignProdcuts->getSize()): ?>
+        <table>
+            <thead>
+                <th><?= /* @noEscape */ __("Seller Info") ?></th>
+                <th></th>
+                <th><?= /* @noEscape */ __("Condition") ?></th>
+                <?php if ($type == "configurable"): ?>
+                    <th><?= /* @noEscape */ __("Associated Product") ?></th>
+                <?php endif; ?>
+                <th><?= /* @noEscape */ __("Price") ?></th>
+                <th><?= /* @noEscape */ __("Quantity") ?></th>
+            </thead>
+        </div>
+        <tbody>
+            <?php foreach ($assignProdcuts as $product): ?>
+                <?php
+                    $assignId = $product->getId();
+                    $price = $mpAssignBlock->getHelperObject('pricingHelper')->currency(
+                        $product->getProductPrice(),
+                        true,
+                        false
+                    );
+                    $sellerId = $product->getSellerId();
+                    $shopTitle = $product->getShopTitle();
+                if (!$shopTitle) {
+                    $shopTitle = $product->getShopUrl();
+                }
+                    $logo = $product->getLogoPic() != '' ? $product->getLogoPic():"noimage.png";
+                    $logo = $mediaUrl.'avatar/'.$logo;
+                    $baseImage = $product->getImage();
+                    $condition = $product->getCondition();
+                if ($condition == 1) {
+                    $condition = __("New");
+                } else {
+                    $condition = __("Used");
+                }
+                    $qty = $product->getAssignQty();
+                if ($type == "configurable") {
+                    $associatedProducts = $helper->getAssignedAssociatedProducts($assignId);
+                    $productHtml = "";
+                    $qtyHtml = "";
+                    $priceHtml = "";
+                    foreach ($associatedProducts as $associate) {
+                        $productHtml .= "<div class='wk-ap-associate-name'>".$associate->getName()."</div>";
+                        $assignProduct = $helper->getProduct($associate->getAssignProductId());
+                        $stockItem = $assignProduct->getExtensionAttributes()->getStockItem();
+                        $price = $mpAssignBlock->getHelperObject('pricingHelper')->currency(
+                            $assignProduct->getPrice(),
+                            true,
+                            false
+                        );
+                        $qtyHtml .= "<div class='wk-ap-associate-name'>".$stockItem->getQty()."</div>";
+                        $priceHtml .= "<div class='wk-ap-associate-name'>".$price."</div>";
+                    }
+                }
+                ?>
+                <tr>
+                    <td class="wk-ap-seller-logo"><img src="<?= /* @noEscape */ $logo; ?>"></td>
+                    <td><?= /* @noEscape */ $shopTitle; ?></td>
+                    <td><?= /* @noEscape */ $condition; ?></td>
+                    <?php if ($type == "configurable"): ?>
+                        <td><?= /* @noEscape */ $productHtml; ?></td>
+                        <td><?= /* @noEscape */ $priceHtml; ?></td>
+                        <td><?= /* @noEscape */ $qtyHtml; ?></td>
+                    <?php else: ?>
+                        <td><?= /* @noEscape */ $price; ?></td>
+                        <td><?= /* @noEscape */ $qty; ?></td>
+                    <?php endif; ?>
+
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    <?php else: ?>
+        <?= /* @noEscape */ __('No assigned products'); ?>
+    <?php endif; ?>
+</div>

@@ -1,0 +1,362 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+// for ($candidate = $block, $isCartPage = false; $candidate && ! $isCartPage; $candidate = $candidate->getParentBlock()) {
+//     $isCartPage = $candidate->getNameInLayout() === 'checkout.cart.shortcut.buttons';
+// }
+// $isMinicart = ! $isCartPage;
+
+// echo $isMinicart;
+
+/**
+ * @var Template $block
+ * @var Escaper $escaper
+ */
+?>
+<script>
+    // Functionality directly ported from original uiComponent, with minor modifications to work with Alpine
+    function initBraintreeGooglePayExpress(merchantId, clientToken)
+    {
+        return {
+            merchantId: merchantId,
+            clientToken: clientToken,
+            buttonApi: {},
+            cartData: null,
+            cartContainsRestrictedProduct: false,
+
+            init()
+            {
+                if (!this.deviceSupported()) {
+                    return;
+                }
+
+                this.loadScript('https://pay.google.com/gp/p/js/pay.js', function() {
+                    this.setupButton(this.$root);
+                }.bind(this));
+            },
+            receiveCustomerData(data)
+            {
+                const element = document.querySelector('.googlepay-minicart-logo.minicart');
+
+                if(data.cart.cartContainsRestrictedProduct) {
+                    this.cartContainsRestrictedProduct = true;
+                    element.style.display = 'none';
+                    return;
+                }
+
+                this.cartData = data.cart;
+
+                const amount = this.getCartAmount();
+
+                // Button already initialized → update amount dynamically
+                if (amount !== null && this.buttonApi?.amount) {
+                    this.buttonApi.amount = amount;
+                }
+            },
+            getCartAmount()
+            {
+                if (
+                    this.cartData &&
+                    typeof this.cartData.subtotalAmount !== 'undefined'
+                ) {
+                    return parseFloat(this.cartData.subtotalAmount);
+                }
+
+                return null;
+            },
+            async logFrontend(message, level = 'info') {
+                try {
+                    await fetch('/rest/V1/googlepay/frontend/log', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({ message, level })
+                    });
+                } catch (err) {
+                    console.error('[Logger] Failed to log:', message, err);
+                }
+            },
+            loadScript(url, callback)
+            {
+                const script = document.createElement('script');
+
+                script.type = 'text/javascript';
+                script.src = url;
+                script.addEventListener('load', callback);
+                document.head.appendChild(script);
+            },
+            buildForm(actionUrl, fields)
+            {
+                const form = document.createElement('form');
+                form.action = actionUrl;
+                form.method = 'POST';
+                form.hidden = true;
+                form.enctype = 'application/x-www-form-urlencoded';
+
+                Object.entries(fields).forEach(field => {
+                    const [key, value] = field;
+                    let fieldElement;
+
+                    fieldElement = document.createElement('input');
+                    fieldElement.type = 'hidden';
+                    fieldElement.name = key;
+                    fieldElement.value = value;
+                    form.appendChild(fieldElement);
+                });
+
+                document.body.appendChild(form);
+                form.submit();
+            },
+            getMerchantId()
+            {
+                return this.merchantId;
+            },
+            getClientToken()
+            {
+                return this.clientToken;
+            },
+            deviceSupported()
+            {
+                return !!(window.PaymentRequest);
+            },
+            getPaymentRequest()
+            {
+                var buttonApi = this.buttonApi,
+                    result = {
+                        transactionInfo: {
+                            totalPriceStatus: 'ESTIMATED',
+                            totalPrice: buttonApi.amount,
+                            currencyCode: buttonApi.currencyCode,
+                        },
+                        allowedPaymentMethods: ['CARD'],
+                        phoneNumberRequired: true,
+                        emailRequired: true,
+                        shippingAddressRequired: true,
+                        cardRequirements: {
+                            billingAddressRequired: true,
+                            billingAddressFormat: 'FULL',
+                            allowedCardNetworks: Object.values({...buttonApi.cardTypes}), // Needs to be Array protototype not object
+                        },
+                    };
+
+                if (buttonApi.environment !== "TEST") {
+                    result['merchantId'] = this.getMerchantId();
+                }
+
+                return result;
+            },
+            startPlaceOrder(nonce, paymentData)
+            {
+                var payload = {
+                    details: {
+                        shippingAddress: {
+                            streetAddress: paymentData.shippingAddress?.address1
+                                + "\n"
+                                + paymentData.shippingAddress?.address2,
+                            locality: paymentData.shippingAddress?.locality,
+                            postalCode: paymentData.shippingAddress?.postalCode,
+                            countryCodeAlpha2: paymentData.shippingAddress?.countryCode,
+                            email: paymentData.email,
+                            name: paymentData.shippingAddress?.name,
+                            telephone: typeof paymentData.shippingAddress?.phoneNumber !== 'undefined'
+                                ? paymentData.shippingAddress?.phoneNumber
+                                : '',
+                            region: typeof paymentData.shippingAddress?.administrativeArea !== 'undefined'
+                                ? paymentData.shippingAddress?.administrativeArea
+                                : '',
+                        },
+                        billingAddress: {
+                            streetAddress: paymentData.cardInfo?.billingAddress?.address1
+                                + "\n"
+                                + paymentData.cardInfo?.billingAddress?.address2,
+                            locality: paymentData.cardInfo?.billingAddress?.locality,
+                            postalCode: paymentData.cardInfo?.billingAddress?.postalCode,
+                            countryCodeAlpha2: paymentData.cardInfo?.billingAddress?.countryCode,
+                            email: paymentData.email,
+                            name: paymentData.cardInfo?.billingAddress?.name,
+                            telephone: typeof paymentData.cardInfo?.billingAddress?.phoneNumber !== 'undefined'
+                                ? paymentData.cardInfo?.billingAddress?.phoneNumber
+                                : '',
+                            region: typeof paymentData.cardInfo?.billingAddress?.administrativeArea !== 'undefined'
+                                ? paymentData.cardInfo?.billingAddress?.administrativeArea
+                                : '',
+                        },
+                    },
+                    nonce: nonce,
+                };
+
+                this.buildForm(
+                    this.buttonApi.actionSuccess,
+                    {
+                        result: JSON.stringify(payload),
+                        form_key: hyva.getFormKey(),
+                    }
+                );
+            },
+            initButton(element, context)
+            {
+                // No element or context
+                if (!element || !context || !this.deviceSupported()) {
+                    return;
+                }
+
+                // Context must implement these methods
+                if (!context.clientToken) {
+                    console.error(
+                        '<?= $escaper->escapeJs(__('Braintree GooglePay Context passed does not provide a clientToken')); ?>',
+                        context
+                    );
+
+                    return;
+                }
+                if (typeof context.getPaymentRequest !== 'function') {
+                    console.error(
+                        '<?= $escaper->escapeJs(__('Braintree GooglePay Context passed does not provide a getPaymentRequest method')); ?>',
+                        context
+                    );
+
+                    return;
+                }
+                if (typeof context.startPlaceOrder !== 'function') {
+                    console.error(
+                        '<?= $escaper->escapeJs(__('Braintree GooglePay Context passed does not provide a startPlaceOrder method')); ?>',
+                        context
+                    );
+
+                    return;
+                }
+
+                // init google pay object
+                let paymentsClient = new google.payments.api.PaymentsClient({
+                    environment: context.environment
+                });
+
+                // Create a button within the KO element, as google pay can only be instantiated through
+                // a valid on click event (ko onclick bind interferes with this).
+                var button = document.createElement('button');
+                var self = this;
+                button.className = `braintree-googlepay-button long ${Number(context.btnColor) ? 'black' : 'white'}`;
+                button.title = '<?= $escaper->escapeHtml('Buy with Google Pay'); ?>';
+
+                self.loadScript('https://js.braintreegateway.com/web/3.67.0/js/client.min.js', () => {
+                    // init braintree api
+                    braintree.client.create({
+                        authorization: context.clientToken
+                    }, function (clientErr, clientInstance) {
+                        if (clientErr) {
+                            console.error('<?= $escaper->escapeJs(__('Error creating client:')); ?>', clientErr);
+                            return;
+                        }
+
+                        self.loadScript('https://js.braintreegateway.com/web/3.67.0/js/google-payment.min.js', () => {
+                            braintree.googlePayment.create({
+                                client: clientInstance
+                            }, function (googlePayErr, googlePaymentInstance) {
+                                // No instance
+                                if (googlePayErr) {
+                                    console.error(
+                                        '<?= $escaper->escapeJs(__('Braintree GooglePay Error creating googlePayInstance:')); ?>',
+                                        googlePayErr
+                                    );
+
+                                    return;
+                                }
+
+                                paymentsClient.isReadyToPay({
+                                    allowedPaymentMethods: googlePaymentInstance.createPaymentDataRequest().allowedPaymentMethods
+                                }).then(function(response) {
+                                    if (response.result) {
+                                        button.addEventListener('click', function (event) {
+                                            event.preventDefault();
+
+                                            var responseData;
+                                            var paymentDataRequest = googlePaymentInstance.createPaymentDataRequest(
+                                                context.getPaymentRequest.call(self)
+                                            );
+
+                                            paymentsClient.loadPaymentData(
+                                                paymentDataRequest
+                                            ).then(function (paymentData) {
+                                                // Persist the paymentData (shipping address etc)
+                                                responseData = paymentData;
+
+                                                // Return the braintree nonce promise
+                                                return googlePaymentInstance.parseResponse(paymentData);
+                                            }).then(async function (result) {
+                                                await context.logFrontend('Nonce received in Express Google Pay', 'info');
+
+                                                context.startPlaceOrder.call(self, result.nonce, responseData);
+                                            }).catch(async function (err) {
+                                                // Handle errors
+                                                // err = {statusCode: "CANCELED"}
+
+                                                if (err.statusCode === 'CANCELED') {
+                                                    await context.logFrontend('User cancelled Express Google Pay', 'warning');
+
+                                                    window.dispatchMessages([
+                                                        {
+                                                            type: "error",
+                                                            text: "Payment cancelled."
+                                                        }
+                                                    ], 2000);
+                                                } else {
+                                                    await context.logFrontend('Express Google Pay error: ' + err.message, 'error');
+
+                                                    window.dispatchMessages([
+                                                        {
+                                                            type: "error",
+                                                            text: err.message
+                                                        }
+                                                    ], 2000);
+                                                }
+                                            });
+
+                                        });
+
+                                        element.appendChild(button);
+                                    }
+                                }).catch(function (err) {
+                                    console.error(err);
+                                });
+                            });
+                        });
+                    });
+                });
+            },
+            setupButton(button)
+            {
+                const fallbackAmount = parseFloat(button.getAttribute('data-amount'));
+                const cartAmount = this.getCartAmount();
+
+                this.buttonApi = {
+                    environment: button.getAttribute('data-environment'),
+                    currencyCode: button.getAttribute('data-currency'),
+                    clientToken: this.getClientToken(),
+                    merchantId: this.getMerchantId(),
+                    actionSuccess: button.getAttribute('data-success'),
+                    amount: cartAmount !== null ? cartAmount : fallbackAmount,
+                    cardTypes: button.getAttribute('data-card-types').split(','),
+                    btnColor: button.getAttribute('data-color'),
+                    getPaymentRequest: this.getPaymentRequest,
+                    startPlaceOrder: this.startPlaceOrder,
+                    logFrontend: this.logFrontend
+                };
+
+                this.initButton(button, this.buttonApi);
+                return this;
+            },
+            
+        }
+    }
+</script>

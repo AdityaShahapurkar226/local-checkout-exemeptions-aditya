@@ -1,0 +1,649 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var MagewireAddressFormInterface $magewire */
+/** @var Escaper $escaper */
+/** @var EntityFormInterface $form */
+
+use Hyva\Checkout\Model\Form\EntityFormInterface;
+use Hyva\Checkout\Magewire\Checkout\AddressView\MagewireAddressFormInterface;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+$iconsViewModel = $viewModels->require(HeroiconsOutline::class);
+$form = $magewire->getPublicForm();
+$namespace = $form->getNamespace();
+?>
+<form class="space-y-2 address-form"
+      x-data="hyva.formValidation($el)"
+      novalidate
+      <?php if ($magewire->canAutoSave()): ?>
+          x-init="(() => {
+            let timeout = null,
+                dirty = false
+
+            const doSave = async (isWithValidation = true) => {
+                clearTimeout(timeout)
+
+                if (isWithValidation) {
+                    await validate()
+                }
+
+                try {
+                    if (! dirty) {
+                        return
+                    }
+
+
+                    dirty = false
+                    await $wire.save(true)
+                } catch (exception) {
+                    // ignore
+                }
+            }
+
+            const interactionCallback = () => {
+                dirty = true
+
+                clearTimeout(timeout)
+                timeout = setTimeout(() => doSave(false), <?= $escaper->escapeJs($magewire->getAutoSaveTimeout()) ?>)
+            }
+
+            hyvaCheckout.navigation.addTask(doSave)
+
+            Array.from($el.querySelectorAll('[data-autosave]')).forEach(field => {
+                field.addEventListener('input', interactionCallback)
+                field.addEventListener('change', interactionCallback)
+            })
+          })()"
+          x-on:validate-address-form.window="if ($event.detail && $event.detail.form && $event.detail.form === '<?= $escaper->escapeJs($namespace) ?>') {
+              return validate().catch(() => {})
+          }
+
+          if ($event.detail && $event.detail.event) {
+              window.dispatchEvent(new CustomEvent($event.detail.event, { detail: $event.detail }))
+          }
+          "
+          wire:loading.class="loading"
+          wire:target="save"
+      <?php endif ?>
+>
+    <div class="grid grid-cols-12 gap-x-4" x-data="formValidation" x-init="initializeCheckMarks">
+        <script>
+            function formValidation() {
+                const predefinedFields = ['firstname', 'lastname', 'postcode', 'telephone', 'email', 'street', 'city'];
+
+                return {
+                    firstname: '',
+                    lastname: '',
+                    postcode: '',
+                    telephone: '',
+                    email: '',
+                    street: '',
+                    city: '',
+                    isSecondStreetVisible: false,
+
+                    firstnameError: '',
+                    lastnameError: '',
+                    postcodeError: '',
+                    telephoneError: '',
+                    emailError: '',
+                    streetError: '',
+                    cityError: '',
+                    checkInput(fieldName, event) {
+                        const inputElement = event.target;
+                        const value = inputElement.value.trim();
+                        const checkmarkElement = document.getElementById(`input-checkmark-${fieldName}`);
+                        if (predefinedFields.includes(fieldName)) {
+                            if (value !== '') {
+                                switch (fieldName) {
+                                    case 'firstname':
+                                        this.validateFirstName(value);
+                                        if (this.firstnameError === '') {
+                                            var errorMsgId = inputElement.getAttribute("aria-errormessage");
+                                            var errorMsg = document.getElementById(errorMsgId);
+                                            if (errorMsg) {
+                                                errorMsg.remove();
+                                            }        
+                                            if (inputElement.classList.contains("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white")) {
+                                                        // Remove the class from the element
+                                                        inputElement.classList.remove("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                                    }
+                                                    checkmarkElement.style.display = 'block';
+                                        } else {
+                                            checkmarkElement.style.display = 'none';
+                                            console.log(fieldName + ' Error:', this.firstnameError);
+                                        }
+                                        break;
+                                    case 'lastname':
+                                        this.validateLastName(value);
+                                        if (this.lastnameError === '') {
+                                            var errorMsgId = inputElement.getAttribute("aria-errormessage");
+                                            var errorMsg = document.getElementById(errorMsgId);
+                                            if (errorMsg) {
+                                                errorMsg.remove();
+                                            }        
+                                            if (inputElement.classList.contains("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white")) {
+                                                        // Remove the class from the element
+                                                        inputElement.classList.remove("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                                    }
+                                                    checkmarkElement.style.display = 'block';
+                                        } else {
+                                            checkmarkElement.style.display = 'none';
+                                            console.log(fieldName + ' Error:', this.lastnameError);
+                                        }
+                                        break;
+                                    case 'postcode':
+                                        this.validatePostcode(value);
+                                        if (this.postcodeError === '') {
+                                            var errorMsgId = inputElement.getAttribute("aria-errormessage");
+                                            var errorMsg = document.getElementById(errorMsgId);
+                                            if (errorMsg) {
+                                                errorMsg.remove();
+                                            }        
+                                            if (inputElement.classList.contains("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white")) {
+                                                        // Remove the class from the element
+                                                        inputElement.classList.remove("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                                    }
+                                                    checkmarkElement.style.display = 'block';
+                                        } else {
+                                            checkmarkElement.style.display = 'none';
+                                            console.log(fieldName + ' Error:', this.postcodeError);
+                                        }
+                                        break;
+                                    case 'telephone':
+                                        this.validateTelephone(value);
+                                        if (this.telephoneError === '') {
+                                            var errorMsgId = inputElement.getAttribute("aria-errormessage");
+                                            var errorMsg = document.getElementById(errorMsgId);
+                                            if (errorMsg) {
+                                                errorMsg.remove();
+                                            }        
+                                            if (inputElement.classList.contains("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white")) {
+                                                        // Remove the class from the element
+                                                        inputElement.classList.remove("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                                    }
+                                                    checkmarkElement.style.display = 'block';
+                                        } else {
+                                            checkmarkElement.style.display = 'none';
+                                            console.log(fieldName + ' Error:', this.telephoneError);
+                                        }
+                                        break;
+                                    case 'email':
+                                        this.validateEmail(value);
+                                        if (this.emailError === '') {
+                                            var errorMsgId = inputElement.getAttribute("aria-errormessage");
+                                            var errorMsg = document.getElementById(errorMsgId);
+                                            if (errorMsg) {
+                                                errorMsg.remove();
+                                            }        
+                                            if (inputElement.classList.contains("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white")) {
+                                                        // Remove the class from the element
+                                                        inputElement.classList.remove("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                                    }
+                                                    checkmarkElement.style.display = 'block';
+                                        } else {
+                                            checkmarkElement.style.display = 'none';
+                                            console.log(fieldName + ' Error:', this.emailError);
+                                        }
+                                        break;
+                                    case 'street':
+                                        this.validateStreet(value);
+                                        if (this.streetError === '') {
+                                            var errorMsgId = inputElement.getAttribute("aria-errormessage");
+                                            var errorMsg = document.getElementById(errorMsgId);
+                                            if (errorMsg) {
+                                                errorMsg.remove();
+                                            }        
+                                            if (inputElement.classList.contains("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white")) {
+                                                        // Remove the class from the element
+                                                        inputElement.classList.remove("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                                    }
+                                                    checkmarkElement.style.display = 'block';
+
+                                        } else {
+                                            checkmarkElement.style.display = 'none';
+                                        }
+                                        break;
+                                    case 'city':
+                                        this.validateCity(value);
+                                        if (this.cityError === '') {
+                                            var errorMsgId = inputElement.getAttribute("aria-errormessage");
+                                            var errorMsg = document.getElementById(errorMsgId);
+                                            if (errorMsg) {
+                                                errorMsg.remove();
+                                            }        
+                                            if (inputElement.classList.contains("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white")) {
+                                                        // Remove the class from the element
+                                                        inputElement.classList.remove("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                                    }
+                                                    checkmarkElement.style.display = 'block';
+                                        } else {
+                                            checkmarkElement.style.display = 'none';
+                                        }
+                                        break;
+                                }
+                            } else {
+                                checkmarkElement.style.display = 'none';
+                                this.clearValidationError(fieldName);
+                            }
+                        } else {
+                            if (value !== '') {
+                                checkmarkElement.style.display = 'block';
+                            }else {
+                                checkmarkElement.style.display = 'none';
+                            }
+                        }
+                    },
+                    initializeCheckMarks() {
+                        setInterval(() => {
+                            const inputElements = document.querySelectorAll('.field.address-attribute');
+                            inputElements.forEach((inputElement) => {
+                                const fieldName = inputElement.getAttribute('data-attribute');
+                                const checkmarkElement = document.getElementById(`input-checkmark-${fieldName}`);
+                                if (inputElement.closest(".field-error")) {
+                                    // Change the border color of the input element
+                                    inputElement.classList.add("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                    // inputElement.classList.remove("border-ahy-gray");
+                                    console.log('inputElement ',inputElement);
+                                }
+                                if (checkmarkElement) {
+                                    const value = inputElement.value.trim();
+                                    if (value !== '') {
+                                        switch (fieldName) {
+                                            case 'firstname':
+                                                this.validateFirstName(value);
+                                                if (this.firstnameError === '') {
+                                                    
+                                                    var errorMsgId = inputElement.getAttribute("aria-errormessage");
+                                            var errorMsg = document.getElementById(errorMsgId);
+                                            if (errorMsg) {
+                                                errorMsg.remove();
+                                            }
+                                                    if (inputElement.classList.contains("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white")) {
+                                                        // Remove the class from the element
+                                                        inputElement.classList.remove("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                                    }
+                                                    checkmarkElement.style.display = 'block';
+                                                } else {
+                                                    checkmarkElement.style.display = 'none';
+                                                }
+                                                break;
+                                            case 'lastname':
+                                                this.validateLastName(value);
+                                                if (this.lastnameError === '') {
+                                                    var errorMsgId = inputElement.getAttribute("aria-errormessage");
+                                            var errorMsg = document.getElementById(errorMsgId);
+                                            if (errorMsg) {
+                                                errorMsg.remove();
+                                            }
+                                                    if (inputElement.classList.contains("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white")) {
+                                                        // Remove the class from the element
+                                                        inputElement.classList.remove("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                                    }
+                                                    checkmarkElement.style.display = 'block';
+                                                } else {
+                                                    checkmarkElement.style.display = 'none';
+                                                }
+                                                break;
+                                            case 'postcode':
+                                                this.validatePostcode(value);
+                                                if (this.postcodeError === '') {
+                                                    
+                                                    var errorMsgId = inputElement.getAttribute("aria-errormessage");
+                                            var errorMsg = document.getElementById(errorMsgId);
+                                            if (errorMsg) {
+                                                errorMsg.remove();
+                                            }
+                                                    if (inputElement.classList.contains("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white")) {
+                                                        // Remove the class from the element
+                                                        inputElement.classList.remove("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                                    }
+                                                    checkmarkElement.style.display = 'block';
+                                                } else {
+                                                    checkmarkElement.style.display = 'none';
+                                                }
+                                                break;
+                                            case 'telephone':
+                                                this.validateTelephone(value);
+                                                if (this.telephoneError === '') {
+                                                    var errorMsgId = inputElement.getAttribute("aria-errormessage");
+                                            var errorMsg = document.getElementById(errorMsgId);
+                                            if (errorMsg) {
+                                                errorMsg.remove();
+                                            }
+                                                    if (inputElement.classList.contains("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white")) {
+                                                        // Remove the class from the element
+                                                        inputElement.classList.remove("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                                    }
+                                                    checkmarkElement.style.display = 'block';
+                                                } else {
+                                                    checkmarkElement.style.display = 'none';
+                                                }
+                                                break;
+                                            case 'email':
+                                                this.validateEmail(value);
+                                                if (this.emailError === '') {
+                                                    var errorMsgId = inputElement.getAttribute("aria-errormessage");
+                                            var errorMsg = document.getElementById(errorMsgId);
+                                            if (errorMsg) {
+                                                errorMsg.remove();
+                                            }
+                                                    if (inputElement.classList.contains("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white")) {
+                                                        // Remove the class from the element
+                                                        inputElement.classList.remove("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                                    }
+                                                    checkmarkElement.style.display = 'block';
+                                                } else {
+                                                    checkmarkElement.style.display = 'none';
+                                                }
+                                                break;
+                                            case 'street':
+                                                this.validateStreet(value);
+                                                if (this.streetError === '') {
+                                                    var errorMsgId = inputElement.getAttribute("aria-errormessage");
+                                            var errorMsg = document.getElementById(errorMsgId);
+                                            if (errorMsg) {
+                                                errorMsg.remove();
+                                            }
+                                                    if (inputElement.classList.contains("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white")) {
+                                                        // Remove the class from the element
+                                                        inputElement.classList.remove("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                                    }
+                                                    checkmarkElement.style.display = 'block';
+                                                    // console.log('no er', checkmarkElement)
+                                                } else {
+                                                    checkmarkElement.style.display = 'none';
+                                                }
+                                                break;
+                                            case 'city':
+                                                this.validateCity(value);
+                                                if (this.cityError === '') {
+                                                    var errorMsgId = inputElement.getAttribute("aria-errormessage");
+                                            var errorMsg = document.getElementById(errorMsgId);
+                                            if (errorMsg) {
+                                                errorMsg.remove();
+                                            }
+                                                    if (inputElement.classList.contains("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white")) {
+                                                        // Remove the class from the element
+                                                        inputElement.classList.remove("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                                    }
+                                                    checkmarkElement.style.display = 'block';
+                                                } else {
+                                                    checkmarkElement.style.display = 'none';
+                                                }
+                                                break;
+                                            default:
+                                                if(value !== ''){
+                                                    var errorMsgId = inputElement.getAttribute("aria-errormessage");
+                                            var errorMsg = document.getElementById(errorMsgId);
+                                            if (errorMsg) {
+                                                errorMsg.remove();
+                                            }
+                                                    if (inputElement.classList.contains("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white")) {
+                                                        // Remove the class from the element
+                                                        inputElement.classList.remove("!border-ahy-error", "!bg-ahy-error-background", "focus:!bg-white");
+                                                    }
+                                                    checkmarkElement.style.display = 'block';
+                                                }
+                                        }
+                                    } else {
+                                        this.clearValidationError(fieldName);
+                                    }
+                                }
+                            });
+
+                        }, 1000);
+                        
+                        const secondField = document.getElementById('street-1');
+                        const toggleBtn = document.getElementById('second-street-toggle-button');
+                        const inputValue = secondField.value.trim();
+                        
+                        if ((inputValue !== '' && inputValue !== null)) {
+                            secondField.style.display = 'flex';
+                            toggleBtn.style.display = 'none';
+                            this.isSecondStreetVisible = false;
+                        } else {
+                            secondField.style.display = 'none';
+                            toggleBtn.style.display = 'flex';
+                            this.isSecondStreetVisible = true;
+                        }
+                    },
+
+                    validateField(fieldName, value) {
+                        switch (fieldName) {
+                            case 'firstname':
+                                this.validateFirstName(value);
+                                break;
+                            case 'lastname':
+                                this.validateLastName(value);
+                                break;
+                            case 'postcode':
+                                this.validatePostcode(value);
+                                break;
+                            case 'telephone':
+                                this.validateTelephone(value);
+                                break;
+                            case 'email':
+                                this.validateEmail(value);
+                                break;
+                            case 'street':
+                                this.validateStreet(value);
+                                break;
+                            case 'city':
+                                this.validateCity(value);
+                                break;
+                            default:
+                                break;
+                        }
+                    },
+                    clearValidationError(fieldName) {
+                        if (predefinedFields.includes(fieldName)) {
+                            switch (fieldName) {
+                                case 'firstname':
+                                    this.firstnameError = '';
+                                    break;
+                                case 'lastname':
+                                    this.lastnameError = '';
+                                    break;
+                                case 'postcode':
+                                    this.postcodeError = '';
+                                    break;
+                                case 'telephone':
+                                    this.telephoneError = '';
+                                    break;
+                                case 'email':
+                                    this.emailError = '';
+                                    break;
+                                case 'street':
+                                    this.streetError = '';
+                                    break;
+                                case 'city':
+                                    this.cityError = '';
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    },
+                    validateFirstName(value) {
+                        const regex = /^[a-zA-Z ]*$/;
+                        if (value.length > 0) {
+                            if (value.length > 25) {
+                                this.firstnameError = 'First name should be a maximum of 25 characters';
+                                console.log('firstname Error:', this.firstnameError);
+                            } else if (!regex.test(value)) {
+                                this.firstnameError = 'First name should only contain alphabets and spaces';
+                                console.log('firstname Error:', this.firstnameError);
+                            } else {
+                                this.firstnameError = '';
+                            }
+                        } else {
+                            this.clearValidationError('firstname');
+                        }
+                    },
+                    validateLastName(value) {
+                        const regex = /^[a-zA-Z ]*$/;
+                        if (value.length > 0) {
+                            if (value.length > 25) {
+                                this.lastnameError = 'Last name should be a maximum of 25 characters';
+                                console.log('lastname Error:', this.lastnameError);
+                            } else if (!regex.test(value)) {
+                                this.lastnameError = 'Last name should only contain alphabets and spaces';
+                                console.log('lastname Error:', this.lastnameError);
+                            } else {
+                                this.lastnameError = '';
+                            }
+                        } else {
+                            this.clearValidationError('lastname');
+                        }
+                    },
+                    validatePostcode(value) {
+                        const regex = /^\d{5}(?:[-\s]\d{4})?$/;
+                        if (value.length > 0) {
+                            if (value.length > 10) {
+                                this.postcodeError = 'Postal code should be a maximum of 10 characters';
+                                console.log('Postal code Error:', this.postcodeError);
+                            } else if (!regex.test(value)) {
+                                this.postcodeError = 'Invalid Postal code';
+                                console.log('Postal code Error:', this.postcodeError);
+                            } else {
+                                this.postcodeError = '';
+                            }
+                        } else {
+                            this.clearValidationError('postcode');
+                        }
+                    },
+                    validateTelephone(value) {
+                        const regex = /^\+?1?[-.\s]?\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})$/;
+
+                        if (value.length < 9) {
+                            this.telephoneError = 'Telephone number should be a minimum of 10 digits';
+                            console.log('telephone Error:', this.telephoneError);
+                        } else if (!regex.test(value) && value.length > 9) {
+                            this.telephoneError = 'Invalid telephone number';
+                            console.log('telephone Error:', this.telephoneError);
+                        } else {
+                            this.clearValidationError('telephone');
+                        }
+                    },
+                    validateEmail(value) {
+                        const regex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+                        if (value.length > 0) {
+                            if (!regex.test(value)) {
+                                this.emailError = 'Invalid email address';
+                            } else {
+                                this.emailError = '';
+                            }
+                        } else {
+                            this.clearValidationError('email');
+                        }
+                    },
+                    validateStreet(value) {
+                        return true;
+                        // if (value.length > 0) {
+                        //     // Perform validation logic for street field here
+                        //     // Update the streetError accordingly
+                        //     console.log('street ', this.streetError);
+                        // } else {
+                        //     this.clearValidationError('street');
+                        // }
+                    },
+                    validateCity(value) {
+                        if (value.length > 0) {
+                            // Perform validation logic for city field here
+                            // Update the cityError accordingly
+                            // console.log('city Error:', this.cityError);
+                        } else {
+                            this.clearValidationError('city');
+                        }
+                    },
+                    toggleSecondStreetField() {
+                        const secondField = document.getElementById('street-1');
+                        const toggleBtn = document.getElementById('second-street-toggle-button');
+                        const inputValue = secondField.value.trim();
+                        this.isSecondStreetVisible = true;
+                        
+                        if (this.isSecondStreetVisible) {
+                            secondField.style.display = 'block';
+                            toggleBtn.style.display = 'none';
+                            this.isSecondStreetVisible = false;
+                        } else {
+                            secondField.style.display = 'none';
+                            toggleBtn.style.display = 'block';
+                            this.isSecondStreetVisible = true;
+                        }
+                    }
+                };
+            }
+        </script>
+
+        <?= /** @noEscape */ $block->getChildHtml('address-form.before') ?>
+        <?php
+            $fieldOrder = [
+                'email',
+                'firstname',
+                'lastname',
+                'street',
+                'city',
+                'region',
+                'postcode',
+                'telephone'
+            ];
+            /**
+             *  * Removed checkout form attributes.
+                'allowed_shipping',
+                'authnetcim_profile_id',
+                'authnetcim_profile_version',
+                'company',
+             */
+        ?>
+
+            <?php if ($form->hasFields()): ?>
+                <?php foreach ($fieldOrder as $fieldId): ?>
+                    <?php $field = $form->getField($fieldId); ?>
+                    <?php if ($field && $field->canRender()): ?>
+                        <?php /** @purge: md:col-span-3 md:col-span-6 md:col-span-9 md:col-span-12 */ ?>
+                        <div class="<?= $escaper->escapeHtmlAttr($field->renderWrapperClass(['col-span-12'])) ?> <?= $magewire->hasError($field->getId()) ? 'ahy-error' : '' ?>" >
+                            <?= /* @noEscape */ $field->render($form->getNamespace()) ?>
+                            <?php if ($magewire->hasError($field->getId())): ?>
+                                <?= /** @noEscape */ $magewire->getError($field->getId()) ?>
+                            <?php endif ?>
+                        </div>
+                    <?php endif ?>
+                <?php endforeach ?>
+            <?php endif ?>
+
+        <?= /** @noEscape */ $block->getChildHtml('address-form.after') ?>
+    </div>
+
+    <?php /* Temporary, will be replaced inside the $form with the Form Builder feature that will be included in the future. */ ?>
+    <?php if ($magewire->canSaveToAddressBook()): ?>
+        <div class="bg-gray-100 px-6 py-4 rounded-lg flex flex-col space-y-6">
+            <label class="inline-flex items-center mb-0 cursor-pointer" for="save-address">
+                <input id="save-address"
+                       type="checkbox"
+                       name="save-address"
+                       wire:model.defer="address.save"
+                       data-autosave
+                />
+
+                <span class="ml-4 text-gray-700 font-bold">
+                    <?= $escaper->escapeHtml(__('Save in address book')) ?>
+                </span>
+                <div class="hidden border-ahy-error text-ahy-error !border-ahy-error bg-ahy-error-background !bg-ahy-error-background focus:bg-white focus:!bg-white"></div>
+            </label>
+        </div>
+    <?php endif ?>
+</form>

@@ -1,0 +1,52 @@
+Legend
+
++ Features
+- Bugs
+
+------------------------------- Version 5.0.1 --------------------------------------
+	+ License file Updated and minor issue Fixed
+
+-------------------------------- Version 5.0.0 --------------------------------------
+	+ Compatible with Magento 2.4.x and Marketplace 5.0.x.
+
+------------------------------- Version 4.0.1 --------------------------------------
+	+ License file Updated and minor issue Fixed
+	
+-------------------------------- Version 4.0.0 --------------------------------------
+	+ Compatible with Magento 2.4.x Enterprise Edition and Marketplace 4.0.x.
+
+-------------------------------- Version 3.0.1 --------------------------------------
+	+ Updated according to MarketplaceBaseshipping version 3.0.1
+	+ Compatible with MarketplaceBaseshipping version 3.0.1 or higher only.
+
+-------------------------------- Version 3.0.0 --------------------------------------
+	+ Updated composer.json as per Magento 2.3.x version.
+	+ Updated according to Marketplace 3.x.x and Marketplace Multi Shipping.
+	- Fixed Bugs
+
+-------------------------------- Version 2.2.0 --------------------------------------
+	+ Updated composer.json as per Magento 2.2.x version.
+	+ Updated according to Marketplace 2.3.x and Marketplace Multi Shipping.
+	- Fixed Bugs
+
+-------------------------------- Version 2.0.4 --------------------------------------
+	+ Compatible with Marketplace Base Shipping Module.
+
+-------------------------------- Version 2.0.3 --------------------------------------
+
+	+ Compatible with Magento2.2.x and Marketplace 2.1.x
+
+-------------------------------- Version 2.0.2 --------------------------------------
+    + Compatible with Marketplace Seller Group Module
+
+-------------------------------- Version 2.0.1 --------------------------------------
+
+	+ Compatible with Magento 2.1.x version.
+
+-------------------------------- Version 2.0.0 --------------------------------------
+
+	+ Admin can enable or disable Fixed Rate Shipping method.
+	+ Admin can set the Marketplace Fixed Rate shipping rate that will be shown at front side.
+	+ Seller can set his fix shipping amount that apply on seller's per product from his account.
+    + shipping calculated based on vendor/product.
+    + charges can be depend upon quantity of products.

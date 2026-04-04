@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="ahy_ffl_selection_update">
+        <observer name="ahy_ffl_selection_update_observer" instance="Ahy\Ffl\Observer\FflSelectionUpdateObserver" />
+    </event>
+</config>

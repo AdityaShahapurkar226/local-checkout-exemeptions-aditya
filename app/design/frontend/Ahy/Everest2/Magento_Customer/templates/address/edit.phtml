@@ -1,0 +1,377 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Customer\Block\Address\Edit;
+use Magento\Customer\ViewModel\Address as AddressViewModel;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
+
+/** @var Edit $block */
+/** @var Escaper $escaper */
+/** @var SecureHtmlRenderer $secureRenderer */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var AddressViewModel $addressViewModel */
+$addressViewModel = $block->getViewModel();
+$directoryViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Directory::class);
+
+$companyBlock = $block->getLayout()->createBlock(\Magento\Customer\Block\Widget\Company::class);
+$phoneBlock = $block->getLayout()->createBlock(\Magento\Customer\Block\Widget\Telephone::class);
+$faxBlock = $block->getLayout()->createBlock(\Magento\Customer\Block\Widget\Fax::class);
+$streetLabel = $block->getAttributeData()->getFrontendLabel('street');
+$regionLabel = $block->getAttributeData()->getFrontendLabel('region');
+$showOptionalRegions = $block->getConfig('general/region/display_all');
+
+?>
+<form class="form-address-edit p-4 lg:p-12 md:p-8 bg-ahy-yellow-card card container w-full lg:w-3/4 flex flex-col m-0"
+      x-data="Object.assign(initCustomerAddressEdit(), hyva.formValidation($root))"
+      @private-content-loaded.window="onPrivateContentLoaded($event.detail.data)"
+      @submit="onSubmit"
+      action="<?= $escaper->escapeUrl($block->getSaveUrl()) ?>"
+      method="post"
+      id="form-validate"
+      enctype="multipart/form-data"
+      data-hasrequired="<?= $escaper->escapeHtmlAttr(__('* Required Fields')) ?>"
+>
+    <fieldset class="fieldset">
+        <legend class="legend font-extrabold text-ahy-blue pb-6 border-b-3 border-ahy-blue w-full">
+            <span>
+                <?= $escaper->escapeHtml(__('Contact Information')) ?>
+            </span>
+        </legend>
+        <?= $block->getBlockHtml('formkey') ?>
+        <input type="hidden" name="success_url" value="<?= $escaper->escapeUrl($block->getSuccessUrl()) ?>">
+        <input type="hidden" name="error_url" value="<?= $escaper->escapeUrl($block->getErrorUrl()) ?>">
+
+        <div class="md:grid grid-cols-2 gap-x-4 gap-y-0">
+            <?= $block->getNameBlockHtml() ?>
+        </div>
+        <div class="street w-full mt-5">
+            <div class="field field-reserved">
+                <label for="street_1" class="label font-bold text-ahy-blue">
+                    <span><?= /* @noEscape */ $streetLabel ?></span>
+                </label>
+                <div class="control">
+                    <input type="text"
+                           name="street[]"
+                           required
+                           value="<?= $escaper->escapeHtmlAttr($block->getStreetLine(1)) ?>"
+                           title="<?= /* @noEscape */ $streetLabel ?>"
+                           id="street_1"
+                           class="form-input w-full focus:ring-transparent !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue "
+                    />
+                </div>
+            </div>
+            <?php for ($i = 1, $n = $addressViewModel->addressGetStreetLines(); $i < $n; $i++): ?>
+                <div class="field additional">
+                    <label class="label font-bold text-ahy-blue" for="street_<?= /* @noEscape */ $i + 1 ?> ">
+                        <span><?= $escaper->escapeHtml(__('Street Address %1', $i + 1)) ?></span>
+                    </label>
+                    <div class="control">
+                        <input type="text" name="street[]"
+                               value="<?= $escaper->escapeHtmlAttr($block->getStreetLine($i + 1)) ?>"
+                               title="<?= $escaper->escapeHtmlAttr(__('Street Address %1', $i + 1)) ?>"
+                               id="street_<?= /* @noEscape */ $i + 1 ?>"
+                               class="form-input w-full focus:ring-transparent !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue "
+                        />
+                    </div>
+                </div>
+            <?php endfor; ?>
+        </div>
+
+        <div class="field field-reserved city pt-6 w-full">
+            <label class="label font-bold text-ahy-blue" for="city">
+            <span><?= /* @noEscape */ $block->getAttributeData()->getFrontendLabel('city') ?></span>
+            </label>
+            <div class="control">
+                <input type="text"
+                    name="city"
+                    required
+                    value="<?= $escaper->escapeHtmlAttr($block->getAddress()->getCity()) ?>"
+                    title="<?= $escaper->escapeHtmlAttr(__('City')) ?>"
+                    class="form-input w-full focus:ring-transparent !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue "
+                    id="city"
+                >
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row pt-6 gap-x-4 gap-y-0">
+            <div class="field field-reserved region w-full lg:w-3/4"
+                 x-cloak
+                 x-show="(hasAvailableRegions() && isRegionRequired) || showOptionalRegions"
+            >
+                <label class="label font-bold text-ahy-blue" for="region_id">
+                    <span><?= /* @noEscape */ $regionLabel ?></span>
+                </label>
+                <div class="control flex items-center gap-4 relative">
+                    <template x-if="hasAvailableRegions() && (isRegionRequired || showOptionalRegions)">
+                        <select id="region_id" name="region_id"
+                                title="<?= /* @noEscape */ $regionLabel ?>"
+                                class="form-select w-full pr-6 validate-select region_id focus:ring-transparent h-16 !border border-ahy-gray focus:border-ahy-blue "
+                                x-ref="region_id"
+                                x-model="selectedRegion"
+                                @change="$refs.region.value = availableRegions[selectedRegion].name"
+                        >
+                            <option value=""><?= $escaper->escapeHtml(__('Please select a region, state or province.')) ?></option>
+                            <template x-for="regionId in Object.keys(availableRegions)">
+                                <?php /* in alpine v3, if the bound props update, the template body gets evaluated before the template condition */ ?>
+                                <?php /* because of this it is required to check if availableRegions[regionId] is set */ ?>
+                                <option :value="regionId"
+                                        :name="availableRegions[regionId] && availableRegions[regionId].name"
+                                        x-text="availableRegions[regionId] && availableRegions[regionId].name"
+                                        :selected="selectedRegion === regionId"
+                                >
+                                </option>
+                            </template>
+                        </select>
+                    </template>
+                    <input :type="hasAvailableRegions() && (isRegionRequired || showOptionalRegions) ? 'hidden' : 'text'"
+                           id="region"
+                           name="region"
+                           x-ref="region"
+                           value="<?= $escaper->escapeHtmlAttr($block->getRegion()) ?>"
+                           title="<?= /* @noEscape */ $regionLabel ?>"
+                           class="form-input w-full focus:ring-transparent !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue "
+                           :required="isRegionRequired"
+                    />
+                </div>
+            </div>
+            <div class="field field-reserved zip w-full lg:w-3/12">
+                <label class="label font-bold text-ahy-blue" for="zip">
+                    <span>
+                        Zip
+                    </span>
+                </label>
+                <div class="control">
+                    <input type="text"
+                        name="postcode"
+                        x-ref="postcode"
+                        value="<?= $escaper->escapeHtmlAttr($block->getAddress()->getPostcode()) ?>"
+                        title="<?= /* @noEscape */ $block->getAttributeData()->getFrontendLabel('postcode') ?>"
+                        id="zip"
+                        :required="isZipRequired"
+                        @change="onChange"
+                        data-validate='{"postcode": true}'
+                        class="form-input w-full focus:ring-transparent !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue ">
+                </div>
+            </div>
+        </div>
+
+        <div class="field field-reserved country w-full hidden">
+            <label class="label" for="country">
+                <span>
+                    <?= /* @noEscape */ $block->getAttributeData()->getFrontendLabel('country_id') ?>
+                </span>
+            </label>
+            <div class="control">
+                <?php $countries = $block
+                    ->getCountryCollection()
+                    ->setForegroundCountries($directoryViewModel->getTopCountryCodes())
+                    ->toOptionArray();
+                ?>
+                <select name="country_id"
+                        id="country"
+                        title="Country"
+                        required
+                        class="form-select"
+                        x-ref="country_id"
+                        @change="changeCountry($event.target)"
+                >
+                    <option name="United States"
+                            value="US"
+                            data-is-zip-required="1"
+                            data-is-region-required="1"
+                            selected="selected"
+                    >
+                        United States
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="flex w-full gap-x-4 gap-y-0">
+            <?php if ($phoneBlock->isEnabled()): ?>
+                <div class="w-full">
+                    <?= $phoneBlock->setTelephone($block->getAddress()->getTelephone())->toHtml() ?>
+                </div>
+            <?php endif ?>
+        </div>
+        <?php $isDefaultMessages = array_filter([
+            $block->isDefaultBilling() ? __("It's a default billing address.") : null,
+            $block->isDefaultShipping() ? __("It's a default shipping address.") : null,
+        ]) ?>
+        <?php if ($isDefaultMessages): ?>
+            <div class="message">
+                <?= $escaper->escapeHtml(implode("<br>\n", $isDefaultMessages), ['br']) ?>
+            </div>
+        <?php endif; ?>
+        <?php if (! $block->isDefaultBilling() && $block->canSetAsDefaultBilling()): ?>
+            <div class="field choice set billing !hidden">
+                <input type="checkbox" id="primary_billing" name="default_billing" value="1" class="checkbox">
+                <label class="label cursor-pointer" for="primary_billing">
+                    <span><?= $escaper->escapeHtml(__('Use as my default billing address')) ?></span>
+                </label>
+            </div>
+        <?php else: ?>
+            <input type="hidden" name="default_billing" value="1"/>
+        <?php endif; ?>
+
+        <?php if (! $block->isDefaultShipping() && $block->canSetAsDefaultShipping()): ?>
+            <div class="field choice set shipping hidden shipping_checkbox">
+                <input type="checkbox" id="primary_shipping" name="default_shipping" value="1" class="checkbox">
+                <label class="label cursor-pointer" for="primary_shipping">
+                    <span><?= $escaper->escapeHtml(__('Use as my default shipping address')) ?></span>
+                </label>
+            </div>
+        <?php else: ?>
+            <input type="hidden" name="default_shipping" value="1">
+        <?php endif; ?>
+    </fieldset>
+    <div class="flex border-0 pt-4 gap-6 items-center !justify-end ">
+        
+        <div class="secondary">
+            <a class="action back" href="<?= $escaper->escapeUrl($block->getBackUrl()) ?>">
+                <span class="font-bold underline hover:text-ahy-blue-light text-ahy-blue  text-sm underline-offset-6"><?= $escaper->escapeHtml(__('Go back')) ?></span>
+            </a>
+        </div>
+        <div class="primary">
+            <button type="submit"
+                    class="action save primary text-white w-28 h-12 save primary ahy-custom-btn text-sm  !rounded-full !bg-ahy-red hover:!bg-ahy-red-light"
+                    data-action="save-address"
+                    title="<?= $escaper->escapeHtmlAttr(__('Save Address')) ?>">
+                <span><?= $escaper->escapeHtml(__('Save')) ?></span>
+            </button>
+        </div>
+    </div>
+</form>
+
+<script>
+function initCustomerAddressEdit() {
+    return {
+        directoryData: {},
+        availableRegions: {},
+        messageTime: 5000,
+        fieldsNames: [],
+        selectedRegion: '<?= $escaper->escapeJs($block->getRegion() ?: 0) ?>',
+        isZipRequired: true,
+        isRegionRequired: true,
+        showOptionalRegions: <?= $showOptionalRegions ? 'true' : 'false' ?>,
+        onPrivateContentLoaded(data) {
+            this.directoryData = data['directory-data'] || {};
+
+            <?php if ($block->getCountryId()): ?>
+                this.setCountry(this.$refs['country_id'], '<?= $escaper->escapeJs($block->getRegion()) ?>');
+            <?php endif; ?>
+
+        },
+        setRegionInputValue(regionName) {
+            this.$nextTick(() => {
+                const regionInputElement = this.$refs['region'];
+                if (regionInputElement) {
+                    regionInputElement.value = regionName;
+                }
+            })
+        },
+        setCountry(countrySelectElement, initialRegion) {
+            const selectedOption = countrySelectElement.options[countrySelectElement.selectedIndex];
+            const countryCode = countrySelectElement.value;
+            const countryData = this.directoryData[countryCode] || false;
+
+            if (!countryData) {
+                this.setRegionInputValue('');
+                return;
+            }
+
+            this.isZipRequired = selectedOption.dataset.isZipRequired === '1';
+            this.isRegionRequired = selectedOption.dataset.isRegionRequired === '1';
+
+            this.availableRegions = countryData.regions || {};
+
+            const initialRegionId = Object.keys(this.availableRegions).filter(regionId => this.availableRegions[regionId].name === initialRegion)[0];
+            this.selectedRegion = initialRegionId || '0';
+            this.setRegionInputValue(initialRegionId && this.availableRegions[initialRegionId].name || '');
+
+        },
+        changeCountry(countrySelectElement, initialRegion) {
+            this.setCountry(countrySelectElement, initialRegion);
+
+            this.validateCountryDependentFields();
+        },
+        validateCountryDependentFields() {
+            this.$nextTick(() => {
+                <?php /* Reinitialize validation rules for fields that depend on the country */ ?>
+                this.fields['postcode'] && this.removeMessages(this.fields['postcode'])
+                this.fields['region'] && this.removeMessages(this.fields['region'])
+                delete this.fields['postcode'];
+                delete this.fields['region'];
+                <?php /* Initialize country_id, too, because the postcode validation depends on it */ ?>
+                this.setupField(this.$refs['country_id']);
+                this.setupField(this.$refs['postcode']);
+                this.setupField(this.$refs['region']);
+
+                this.fields['postcode'] && this.validateField(this.fields['postcode']);
+                this.fields['region'] && this.validateField(this.fields['region']);
+            })
+        },
+        hasAvailableRegions() {
+            return Object.keys(this.availableRegions).length > 0;
+        }
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+
+    hyva.formValidation.addRule('telephone', (value, options) => {
+        const phoneNumber = value.trim().replace(' ', '');
+        if (phoneNumber && phoneNumber.length < (options.minlength || 3)) {
+            return '<?= $escaper->escapeJs(__('The telephone number is too short.')) ?>';
+        }
+
+        return true;
+    });
+
+    const postCodeSpecs = <?= /* @noEscape */ $block->getPostCodeConfig()->getSerializedPostCodes() ?>;
+
+    hyva.formValidation.addRule('postcode', (postCode, options, field, context) => {
+        context.removeMessages(field, 'postcode-warning')
+        const countryId = (context.fields['country_id'] && context.fields['country_id'].element.value),
+              validatedPostCodeExamples = [],
+              countryPostCodeSpecs = countryId && postCodeSpecs ? postCodeSpecs[countryId] : false;
+
+        if (! postCode || ! countryPostCodeSpecs) return true;
+
+        for (const postCodeSpec of Object.values(countryPostCodeSpecs)) {
+            if (new RegExp(postCodeSpec.pattern).test(postCode)) return true;
+            validatedPostCodeExamples.push(postCodeSpec.example);
+        }
+        if (validatedPostCodeExamples) {
+            context.addMessages(field, 'postcode-warning', [
+                '<?= $escaper->escapeJs(__('Provided Zip/Postal Code seems to be invalid.')) ?>',
+                '<?= $escaper->escapeJs(__('Example: ')) ?>' + validatedPostCodeExamples.join('; ') + '. ',
+                '<?= $escaper->escapeJs(__('If you believe it is the right one you can ignore this notice.')) ?>'
+            ]);
+        }
+
+        return true;
+    });
+})
+</script>
+
+<style>
+    .shipping_checkbox{
+        margin-top: 40px !important;
+    }
+
+
+    .form-address-edit .field.telephone {
+        margin-bottom: 2rem;
+    }
+
+</style>

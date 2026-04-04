@@ -1,0 +1,32 @@
+
+.admin__control-grouped ._has-datepicker + .ui-datepicker-trigger {
+    position: absolute;
+}
+
+.admin__control-grouped-date > .admin__field-date.admin__field > .admin__field-control,
+.admin__control-grouped-date > .admin__field-date.admin__field > .admin__field-control ._has-datepicker.admin__control-text {
+    width: 20rem;
+}
+
+.admin__field .amrelated-qty > .amrelated-qty {
+    display: inline-block;
+    max-width: 45px;
+    text-align: center;
+}
+
+.admin__field .amrelated-qty .admin__field-error {
+    position: absolute;
+}
+
+[class*="amasty_mostviewed_"] .action-select-wrap .action-close {
+    padding: 0;
+    line-height: 1;
+}
+
+[class*="amasty_mostviewed_"] .action-select-wrap .action-close:before {
+    font-size: 1rem;
+}
+
+.amrelated-additional-info .admin__additional-info {
+    font-size: 1.2rem;
+}

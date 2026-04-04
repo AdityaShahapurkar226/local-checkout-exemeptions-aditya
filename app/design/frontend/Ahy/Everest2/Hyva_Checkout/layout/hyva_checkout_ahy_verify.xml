@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <body>
+        <container name="ahy.checkout.verification"
+                   htmlTag="div"
+                   htmlId="ahy-verification-container">
+
+            <block name="checkout.age.verification"
+                   template="Ahy_EstateApiIntegration::checkout/verification/AhyEstateAge.phtml">
+
+                <arguments>
+                    <!-- Magewire component -->
+                    <argument name="magewire" xsi:type="object">
+                        Ahy\EstateApiIntegration\Magewire\HyvaCheckout\EstateAgeVerification
+                    </argument>
+
+                    <!-- ViewModel for condition -->
+                    <argument name="view_model" xsi:type="object">
+                        Ahy\EstateApiIntegration\ViewModel\CheckoutRestrictions
+                    </argument>
+                </arguments>
+
+            </block>
+
+            <block name="checkout.document.compliance"
+                    template="Ahy_EstateApiIntegration::checkout/verification/document_compliance.phtml">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">
+                            Ahy\EstateApiIntegration\ViewModel\CheckoutRestrictions
+                        </argument>
+                    </arguments>
+            </block>
+
+        </container>
+
+        <move element="ahy.checkout.verification"
+              destination="column.main"
+              before="-"/>
+    </body>
+</page> 

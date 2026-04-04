@@ -1,0 +1,8 @@
+app/etc/env.php
+.DS_Store
+/vendor/
+/var/
+/generated/
+/pub/static/
+/pub/media/
+/node_modules/

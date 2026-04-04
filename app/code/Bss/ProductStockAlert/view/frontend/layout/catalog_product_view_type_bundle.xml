@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Bss_ProductStockAlert
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2015-2017 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+    	<referenceBlock name="before.body.end">
+    		<block class="Bss\ProductStockAlert\Block\Catalog\Product\View\Type\Bundle" name="bundle.stock.alert.options">
+	            <action  method="setTemplate">
+	                <argument name="template" xsi:type="string">Bss_ProductStockAlert::product/view/type/bundle/stock_notice.phtml</argument>
+	            </action>
+	        </block>
+        </referenceBlock>
+		<referenceBlock name="customize.button">
+			<action method="setTemplate">
+				<argument name="template" xsi:type="string">Bss_ProductStockAlert::product/view/type/bundle/customize.phtml</argument>
+			</action>
+		</referenceBlock>
+    </body>
+</page>

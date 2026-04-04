@@ -1,0 +1,142 @@
+//
+// Base Styles
+// __________________________
+
+//
+//  Variables
+//  _____________________________________________
+
+@amrelated-cart__icon: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAzMCAzMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxNSIgY3k9IjE1IiByPSIxNSIgZmlsbD0iI0VCNTc1NyIvPjxwYXRoIGQ9Ik05Ljg5ODQ0IDEwLjgxMjVDOS44OTg0NCAxMC4xMjUgMTAuMTE5OCA5LjU2MjUgMTAuNTYyNSA5LjEyNUMxMS4wMDUyIDguNjgyMjkgMTEuNTg1OSA4LjQ2MDk0IDEyLjMwNDcgOC40NjA5NEMxMy4wMzM5IDguNDYwOTQgMTMuNjE3MiA4LjY4MjI5IDE0LjA1NDcgOS4xMjVDMTQuNDk3NCA5LjU2MjUgMTQuNzE4OCAxMC4xMzggMTQuNzE4OCAxMC44NTE2VjExLjQxNDFDMTQuNzE4OCAxMi4wOTY0IDE0LjQ5NzQgMTIuNjU2MiAxNC4wNTQ3IDEzLjA5MzhDMTMuNjE3MiAxMy41MzEyIDEzLjAzOTEgMTMuNzUgMTIuMzIwMyAxMy43NUMxMS42MTcyIDEzLjc1IDExLjAzNjUgMTMuNTM2NSAxMC41NzgxIDEzLjEwOTRDMTAuMTI1IDEyLjY3NzEgOS44OTg0NCAxMi4wOTY0IDkuODk4NDQgMTEuMzY3MlYxMC44MTI1Wk0xMS4yMjY2IDExLjQxNDFDMTEuMjI2NiAxMS43NzM0IDExLjMyNTUgMTIuMDY1MSAxMS41MjM0IDEyLjI4OTFDMTEuNzI2NiAxMi41MDc4IDExLjk5MjIgMTIuNjE3MiAxMi4zMjAzIDEyLjYxNzJDMTIuNjQzMiAxMi42MTcyIDEyLjkwMzYgMTIuNTA3OCAxMy4xMDE2IDEyLjI4OTFDMTMuMjk5NSAxMi4wNjUxIDEzLjM5ODQgMTEuNzYzIDEzLjM5ODQgMTEuMzgyOFYxMC44MTI1QzEzLjM5ODQgMTAuNDUzMSAxMy4yOTY5IDEwLjE2MTUgMTMuMDkzOCA5LjkzNzVDMTIuODk1OCA5LjcxMzU0IDEyLjYzMjggOS42MDE1NiAxMi4zMDQ3IDkuNjAxNTZDMTEuOTc2NiA5LjYwMTU2IDExLjcxMzUgOS43MTYxNSAxMS41MTU2IDkuOTQ1MzFDMTEuMzIyOSAxMC4xNjkzIDExLjIyNjYgMTAuNDY2MSAxMS4yMjY2IDEwLjgzNTlWMTEuNDE0MVpNMTUuMzY3MiAxNy4yMTA5QzE1LjM2NzIgMTYuNTEzIDE1LjU5MzggMTUuOTQ3OSAxNi4wNDY5IDE1LjUxNTZDMTYuNSAxNS4wODMzIDE3LjA3ODEgMTQuODY3MiAxNy43ODEyIDE0Ljg2NzJDMTguNDg5NiAxNC44NjcyIDE5LjA2NzcgMTUuMDgzMyAxOS41MTU2IDE1LjUxNTZDMTkuOTY4OCAxNS45NDc5IDIwLjE5NTMgMTYuNTMxMiAyMC4xOTUzIDE3LjI2NTZWMTcuODIwM0MyMC4xOTUzIDE4LjQ5NzQgMTkuOTc2NiAxOS4wNTczIDE5LjUzOTEgMTkuNUMxOS4xMDY4IDE5LjkzNzUgMTguNTI2IDIwLjE1NjIgMTcuNzk2OSAyMC4xNTYyQzE3LjA2NzcgMjAuMTU2MiAxNi40NzkyIDE5Ljk0MDEgMTYuMDMxMiAxOS41MDc4QzE1LjU4ODUgMTkuMDcwMyAxNS4zNjcyIDE4LjQ5NDggMTUuMzY3MiAxNy43ODEyVjE3LjIxMDlaTTE2LjY5NTMgMTcuODIwM0MxNi42OTUzIDE4LjE3NDUgMTYuNzk2OSAxOC40NjYxIDE3IDE4LjY5NTNDMTcuMjA4MyAxOC45MTkzIDE3LjQ3NCAxOS4wMzEyIDE3Ljc5NjkgMTkuMDMxMkMxOC4xMzAyIDE5LjAzMTIgMTguMzkwNiAxOC45MjQ1IDE4LjU3ODEgMTguNzEwOUMxOC43NzA4IDE4LjQ5MjIgMTguODY3MiAxOC4xODc1IDE4Ljg2NzIgMTcuNzk2OVYxNy4yMTA5QzE4Ljg2NzIgMTYuODQ2NCAxOC43NjU2IDE2LjU1NDcgMTguNTYyNSAxNi4zMzU5QzE4LjM1OTQgMTYuMTE3MiAxOC4wOTkgMTYuMDA3OCAxNy43ODEyIDE2LjAwNzhDMTcuNDU4MyAxNi4wMDc4IDE3LjE5NTMgMTYuMTE3MiAxNi45OTIyIDE2LjMzNTlDMTYuNzk0MyAxNi41NTQ3IDE2LjY5NTMgMTYuODU2OCAxNi42OTUzIDE3LjI0MjJWMTcuODIwM1pNMTIuNzEwOSAxOS4xNDg0TDExLjczNDQgMTguNTg1OUwxNy4yODkxIDkuNjk1MzFMMTguMjY1NiAxMC4yNTc4TDEyLjcxMDkgMTkuMTQ4NFoiIGZpbGw9IndoaXRlIi8+PC9zdmc+);
+@amrelated-cart__background: #e9f6ff;
+@amrelated-cart__color: #333;
+
+//
+//  Common
+//  ----------------------------------------------
+
+& when (@media-common = true) {
+    .am-tabs-view .amrelated-grid-wrapper .product-items.slick-slider {
+        display: block;
+    }
+
+    #amrelated_product_content_tab .block-title {
+        display: none;
+    }
+
+    .amrelated-grid-wrapper {
+        .slick-arrow {
+            z-index: 999;
+        }
+
+        .slick-slide {
+            margin: 0 5px;
+        }
+
+        .slick-track {
+            display: flex;
+        }
+
+        // Page Builder styles override
+        .slick-dots {
+            .slick-active button {
+                background: transparent;
+            }
+
+            li {
+                margin: 0 5px 5px;
+            }
+
+            button {
+                & {
+                    border: none;
+                    text-indent: initial;
+                }
+
+                &:hover,
+                &:active,
+                &:focus {
+                    border: none;
+                }
+            }
+        }
+
+        /* rewrite magento luma styles*/
+        .products-grid .product-item-info:hover {
+            z-index: 3;
+        }
+    }
+
+    .amrelated-sidebar-wrap {
+        width: 100%;
+    }
+
+    .amrelated-cart-message {
+        & {
+            position: relative;
+            display: block;
+            margin: 0 0 10px;
+            padding: 5px 25px;
+            background: @amrelated-cart__background;
+            color: @amrelated-cart__color;
+            text-align: center;
+            font-size: 1.6rem;
+            line-height: 42px;
+        }
+
+        &:before {
+            position: relative;
+            top: 8px;
+            display: inline-block;
+            margin-right: 2px;
+            width: 30px;
+            height: 30px;
+            background-image: @amrelated-cart__icon;
+            content: '';
+        }
+
+        .price,
+        .product-link {
+            font-weight: bold;
+        }
+    }
+
+    .amrelated-bundle-toolbar {
+        .pager {
+            text-align: right;
+        }
+
+        .pages,
+        .limiter {
+            display: inline-block;
+        }
+    }
+
+    .amrelated-cart-bundle {
+        float: left;
+        margin-top: 30px;
+        padding: 0 5px;
+    }
+
+    .amrelated-pack-info {
+        display: inline-flex;
+        margin: 1rem 0;
+        padding: 5px 8px 6px;
+        border-radius: 4px;
+        background: #eef2f9;
+        color: #6d88b0;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 14px;
+    }
+}
+
+//
+//  Tablet +
+//  --------------------------------------------
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .amrelated-cart-bundle {
+        padding: 0;
+        width: 73%;
+    }
+}

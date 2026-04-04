@@ -1,0 +1,18 @@
+<?php /** @var Klevu\FrontendJs\Block\Template $block */ ?>
+<!-- custom version of the klevuLandingTemplateResultsHeadingTitle template -->
+<script type="template/klevu" id="ahyKlevuLandingTemplateResultsHeadingTitle">
+    <%
+        var totalNumberOfResults = klevu.getObjectPath(data,"query."+dataLocal+".meta.totalResultsFound");
+        var searchedTerm = helper.escapeHTML(data.settings.term);
+        var isCATNAV = data.settings.isCATNAV;
+        if(isCATNAV){
+            searchedTerm = helper.escapeHTML(data.settings.categoryPath);
+        }
+    %>
+    <div class="kuResultsHeadingTitleContainer px-4">
+        <p class="kuResultsNumber !font-semibold text-ahy-blue !border-ahy-blue">
+            (<%= (totalNumberOfResults) ? totalNumberOfResults : 0 %>
+            <%= helper.translate((parseInt(totalNumberOfResults) > 1) ? " Items" : " Item") %>)
+        </p>
+    </div>
+</script>

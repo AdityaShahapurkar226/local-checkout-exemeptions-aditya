@@ -1,0 +1,37 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+     $isMultiple = $block->getRequest()->getParam('multiple');
+    $btnHtml = "
+    <button style='display:block; margin-top:15px;' type='button' class='button' id='run-profile'><span><span>
+    ";
+    $btnHtml .= __("Run Profile");
+    $btnHtml .= "</span></span></button>";
+
+    $data = [
+        "isMultiple" => $isMultiple,
+        "mutiimportUrl" => $block->getUrl('mpmassupload/run/index'),
+        "defaultUrl" => $block->getUrl('mpmassupload/run/profile'),
+        "btnHtml" => $btnHtml,
+        "sellerWarning" => __('Please Select Seller'),
+        "profileWarning" => __('Please Select Profile.')
+    ];
+    $data = $block->jsonEncode($data);
+    ?>
+    
+<script type="text/x-magento-init">
+    {
+        "body": {
+            "Webkul_MpMassUpload/js/run": <?= /* @noEscape */ $data ?>
+        }
+    }
+</script>

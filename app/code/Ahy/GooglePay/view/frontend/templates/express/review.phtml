@@ -1,0 +1,213 @@
+<?php
+/** @var \PayPal\Braintree\Block\GooglePay\Checkout\Review $block */
+
+$isCurrentShippingRateAvailable = (bool) $block->getCurrentShippingRate();
+
+?>
+
+<div class="paypal-review view space-y-6">
+
+    <div class="flex justify-between flex-wrap gap-x-4 gap-y-[3rem] border border-solid border-gray-200 bg-[#fef9eb] px-12 py-8 rounded-md">
+
+        <!-- Shipping Method Section -->
+        <?php if ($block->getShippingAddress()): ?>
+            <div>
+                <h2 class="text-lg font-semibold mb-4"><?= $block->escapeHtml(__('Shipping Method')) ?></h2>
+
+                <?php if ($block->canEditShippingMethod() && ($groups = $block->getShippingRateGroups())): ?>
+                    <form
+                        x-data="{
+                            method: '<?= $block->getCurrentShippingRate() ? $block->escapeHtml($block->renderShippingRateValue($block->getCurrentShippingRate())) : '' ?>',
+                            submitting: false,
+                            async submitShippingMethod() {
+                                this.submitting = true;
+                                try {
+                                    const formData = new FormData();
+                                    formData.append('form_key', '<?= $block->escapeHtml($block->getFormKey()) ?>');
+                                    formData.append('shipping_method', this.method);
+                                    formData.append('isAjax', '1');
+
+                                    const response = await fetch('<?= $block->escapeUrl($block->getShippingMethodSubmitUrl()) ?>', {
+                                        method: 'POST',
+                                        body: formData,
+                                        credentials: 'same-origin',
+                                        headers: {
+                                            'X-Requested-With': 'XMLHttpRequest'
+                                        }
+                                    });
+
+                                    if (!response.ok) {
+                                        throw new Error('Failed to update shipping method');
+                                    }
+
+                                    location.reload();
+                                } catch (error) {
+                                    console.error('Pravin', error);
+                                    alert('An error occurred while updating the shipping method.');
+                                } finally {
+                                    this.submitting = false;
+                                }
+                            }
+                        }"
+                        @submit.prevent="submitShippingMethod"
+                        class="space-y-4"
+                    >
+                        <div class="relative">
+                            <!-- <label for="shipping-method" class="block text-sm font-medium mb-1">
+                                <?//= $block->escapeHtml(__('Select Shipping Method')) ?>
+                            </label> -->
+                            <select 
+                                name="shipping_method" 
+                                id="shipping-method" 
+                                x-model="method" 
+                                class="form-select w-full border-gray-300 rounded"
+                                :class="method ? 'border-gray-300' : 'border-red-500 bg-red-50'"
+                            >
+                                <?php if (!$block->getCurrentShippingRate()): ?>
+                                    <option value=""><?= $block->escapeHtml(__('Please select a shipping method...')) ?></option>
+                                <?php endif; ?>
+                                <?php foreach ($groups as $code => $rates): ?>
+                                    <optgroup label="<?= $block->escapeHtml($block->getCarrierName($code)) ?>">
+                                        <?php foreach ($rates as $rate): ?>
+                                            <option value="<?= $block->escapeHtml($block->renderShippingRateValue($rate)) ?>">
+                                                <?= $block->renderShippingRateOption($rate) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </optgroup>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div>
+                            <button 
+                                type="submit" 
+                                class="btn bg-ahy-red hover:bg-ahy-red-light" 
+                                :class="(submitting || !method) ? 'opacity-25 cursor-not-allowed' : ''"
+                                :disabled="submitting || !method"
+                                x-cloak
+                            >
+                                <span x-show="!submitting"><?= $block->escapeHtml(__('Update Shipping Method')) ?></span>
+                                <span x-show="submitting"><?= $block->escapeHtml(__('Updating...')) ?></span>
+                            </button>
+                        </div>
+                    </form>
+                <?php elseif ($block->getCurrentShippingRate()): ?>
+                    <p><?= $block->renderShippingRateOption($block->getCurrentShippingRate()) ?></p>
+                <?php else: ?>
+                    <p class="text-red-500"><?= $block->escapeHtml(__('Sorry, no quotes are available for this order right now.')) ?></p>
+                <?php endif; ?>
+            </div>
+
+            <!-- Shipping Address -->
+            <div>
+                <h2 class="text-lg font-semibold mb-2"><?= $block->escapeHtml(__('Shipping Address')) ?></h2>
+                <div class="text-sm text-gray-700">
+                    <address>
+                        <?= $block->escapeHtml($block->renderAddress($block->getShippingAddress()), ['br']) ?>
+                    </address>
+                </div>
+                <?php if ($block->getCanEditShippingAddress()): ?>
+                    <div class="mt-2">
+                        <a href="<?= $block->escapeUrl($block->getEditUrl()) ?>" class="text-blue-600 hover:underline">
+                            <?= $block->escapeHtml(__('Edit')) ?>
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Payment Method -->
+        <div>
+            <h2 class="text-lg font-semibold"><?= $block->escapeHtml(__('Payment Method')) ?></h2>
+            <div class="text-sm text-gray-700 mt-2">
+                <?= $block->escapeHtml('Google Pay') ?><br>
+                <?= $block->escapeHtml($block->getEmail()) ?><br>
+                <img src="<?= $this->getViewFileUrl('PayPal_Braintree::images/GooglePay_AcceptanceMark_WhiteShape_WithStroke_RGB_62x38pt@4x.png') ?>"
+                     alt="<?= $block->escapeHtml(__('Buy now with Google Pay')) ?>"
+                     class="mt-2 w-16" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Items -->
+    <div class="border border-solid border-gray-200 bg-[#fef9eb] p-6 rounded-md px-12 py-8">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold"><?= $block->escapeHtml(__('Items in Your Shopping Cart')) ?></h2>
+            <a href="/checkout/cart">
+                <button class="w-28 font-bold rounded-full text-ahy-blue ahy-edit-cart bg-transparent border-2 p-2 text-sm capitalize border-ahy-blue">
+                    edit cart
+                </button>
+            </a>
+        </div>
+
+        <?php
+            $templateBlock = $block->getLayout()
+                ->createBlock(\Ahy\GooglePay\Block\Paypal\Express\Review\Details::class)
+                ->setTemplate('Ahy_GooglePay::express/review/details.phtml');
+
+            $totalsBlock = $block->getLayout()
+                ->createBlock(\Ahy\GooglePay\Block\Cart\Totals::class)
+                ->setTemplate('Ahy_GooglePay::express/review/totals.phtml');
+
+            $templateBlock->setChild('totals', $totalsBlock);
+
+            echo $templateBlock->toHtml();
+        ?>
+
+        <form method="post"
+              id="order-review-form"
+              action="<?= $block->escapeUrl($block->getPlaceOrderUrl()) ?>"
+              x-data="{ submitting: false }"
+              @submit="submitting = true"
+              class="mt-6 space-y-4"
+        >
+            <!-- Required for CSRF validation -->
+            <input type="hidden" name="form_key" value="<?= $block->escapeHtml($block->getFormKey()) ?>" />
+
+            <?= $block->getChildHtml('agreements') ?>
+
+            <div>
+                <button 
+                    type="submit" 
+                    id="review-button" 
+                    class="ahy-proceed-btn ahy-custom-btn btn bg-ahy-red rounded-full w-full h-14 flex leading-none !border-0 justify-center hover:bg-ahy-red-light rounded-full focus:ring-transparent p-4" 
+                    :class="(submitting || <?= $isCurrentShippingRateAvailable ? 'false' : 'true' ?>) ? 'opacity-25 cursor-not-allowed' : ''"
+                    :disabled="submitting || <?= $isCurrentShippingRateAvailable ? 'false' : 'true' ?>"
+                    :title="(submitting || <?= $isCurrentShippingRateAvailable ? 'false' : 'true' ?>) ? 'Please select a shipping method before placing the order' : ''"
+                    x-cloak
+                >
+                    <span x-show="!submitting"><?= $block->escapeHtml(__('Place Order')) ?></span>
+                    <span x-show="submitting"><?= $block->escapeHtml(__('Processing Your Order...')) ?></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- TODO: Generate these temporary tailwind: -->
+<style>
+
+    .page-main {
+        background-color: #efeadd;
+    }
+
+    .googlepay_review_border {
+        border-color: #ddc379;
+    }
+
+    .ahy-edit-cart:hover {
+        outline: 1px solid black;
+        outline-offset: -3px;
+    }
+
+    /* .container {
+        border: 0 solid #e5e7eb;
+        background: #fef9eb;
+    } */
+
+    .text-blue-600 {
+        color: #2563eb;
+    }
+
+    [x-cloak] { display: none !important; }
+</style>

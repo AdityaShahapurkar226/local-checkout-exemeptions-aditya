@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="webkul" translate="label" sortOrder="10">
+            <label>Webkul</label>
+        </tab>
+        <section id="custom_attribute" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Custom Attribute</label>
+            <!-- Assign section to tab -->
+            <tab>webkul</tab>
+            <resource>Webkul_Customattribute::config_customattribute</resource>
+            <!-- create group for fields in section -->
+
+            <group id="custom_attribute_product_information" translate="label" type="text" sortOrder="700" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Show Product Information</label>
+                <field id="author" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label><![CDATA[<p>Author: <a target="_blank" title="Webkul Software Private Limited" href="https://webkul.com/">Webkul</a></p>
+                        <p>Vesion: 5.0.2</p>
+                        <p>User Guide: <a target="_blank" href="https://webkul.com/blog/magento2-marketplace-custom-attribute/">Click Here</a></p>
+                        <p>Store Extension: <a target="_blank" href="https://store.webkul.com/magento2-multi-vendor-custom-attributes.html">Click Here</a></p>
+                        <p>Ticket/Customisations: <a target="_blank" href="https://webkul.uvdesk.com/en/customer/create-ticket/">Click Here</a></p>
+                        <p>Services: <a target="_blank" href="https://webkul.com/magento-development/">Click Here</a></p>
+					]]>                    
+                    </label>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

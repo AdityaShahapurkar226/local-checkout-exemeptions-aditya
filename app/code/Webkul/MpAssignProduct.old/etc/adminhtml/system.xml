@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+	<system>
+		<tab id="webkul" translate="label" sortOrder="10">
+			<label>Webkul</label>
+		</tab>
+		<section id="mpassignproduct" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+			<label>Assign Product</label>
+			<tab>webkul</tab>
+			<resource>Webkul_MpAssignProduct::config_mpassignproduct</resource>
+			<group id="settings" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>Assign Product Settings</label>
+				<field id="minimun" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Show minimum price on product page</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="add_product" translate="label comment" sortOrder="2" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Product Approval Required</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="edit_product" translate="label comment" sortOrder="3" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Product Edit Approval Required</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				</field>
+				<field id="assign" translate="label comment" sortOrder="4" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+					<label>Assign Product to Seller with</label>
+					<source_model>Webkul\MpAssignProduct\Model\Config\Source\Options</source_model>
+					<comment>This setting will be used when main seller deletes the product</comment>
+				</field>
+				<field id="admin_name" translate="label comment" sortOrder="15" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Admin Name</label>
+					<validate>required-entry</validate>
+                </field>
+				<field id="admin_email" translate="label comment" sortOrder="25" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Admin Email</label>
+					<validate>required-entry validate-email</validate>
+                </field>
+				<field id="add_msg" translate="label comment" sortOrder="35" type="textarea" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Add Product Message For Email</label>
+					<validate>required-entry</validate>
+                </field>
+				<field id="edit_msg" translate="label comment" sortOrder="35" type="textarea" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Edit Product Message For Email</label>
+					<validate>required-entry</validate>
+                </field>
+			</group>
+		</section>
+	</system>
+</config>

@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="ammostviewed" translate="label" type="text" sortOrder="012118" showInDefault="1" showInWebsite="1" showInStore="1">
+            <resource>Amasty_Mostviewed::config</resource>
+            <class>separator-top</class>
+            <label>Automatic Related Products</label>
+            <tab>amasty</tab>
+            <group id="amasty_information" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Information</label>
+                <frontend_model>Amasty\Mostviewed\Block\Adminhtml\System\Config\Information</frontend_model>
+            </group>
+
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <frontend_model>Amasty\Mostviewed\Block\Adminhtml\System\Config\General</frontend_model>
+
+                <field id="period" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Data Gathered Period (days)</label>
+                    <comment>Please specify the time period basing on which the module will gather statistical data and display related, up-selling and cross-selling products for 'Bought together' and 'Viewed together' condition.</comment>
+                </field>
+                <field id="order_status" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Order Statuses</label>
+                    <comment>Please specify the order statuses that needs to be considered when the system selects matching products for 'Bought together' condition.</comment>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                    <frontend_model>Amasty\Mostviewed\Block\Adminhtml\System\Config\Element\Multiselect</frontend_model>
+                </field>
+                <field id="ignore_anchor_categories" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Ignore Anchor Categories in 'Same As' Condition </label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If enabled, the rule condition 'Category is same as Current Product Categories' will consider only non-anchor categories the product belongs to.</comment>
+                </field>
+            </group>
+
+            <group id="bundle_packs" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Bundle Packs</label>
+
+                <field id="position" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Display Position</label>
+                    <comment>Select the position to display the Bundle Packs Promo at the Product Page.</comment>
+                    <source_model>Amasty\Mostviewed\Model\OptionSource\PackPosition</source_model>
+                </field>
+
+                <field id="tab_title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Tab Title</label>
+                    <depends>
+                        <field id="position">tab</field>
+                    </depends>
+                </field>
+
+                <field id="cms_page" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" >
+                    <label>Choose CMS Page</label>
+                    <comment>Please make sure the CMS page is enabled (Content -> Elements -> Pages)</comment>
+                    <source_model>Amasty\Mostviewed\Model\OptionSource\Page</source_model>
+                </field>
+
+                <field id="top_menu_enabled" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" >
+                    <label>Add Bundle Packs Link to Top Menu</label>
+                    <source_model>Amasty\Mostviewed\Model\OptionSource\TopMenuLink</source_model>
+                    <comment>Display Link to All Bundle Packs in Top Menu</comment>
+                </field>
+
+                <field id="menu_item_label" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Bundle Packs Item Label</label>
+                    <comment>Used in top menu</comment>
+                    <depends>
+                        <field id="top_menu_enabled" separator=",">1,2</field>
+                    </depends>
+                </field>
+
+                <field id="confirmation_title" translate="label" type="text" sortOrder="53" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Bundle Pack Title in Confirmation Popup</label>
+                    <validate>required-entry</validate>
+                    <frontend_model>Amasty\Mostviewed\Block\Adminhtml\System\Config\Element\AmCartField</frontend_model>
+                </field>
+
+                <field id="display_options" translate="label comment" type="select" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Display Popup for Options Choosing</label>
+                    <source_model>Amasty\Mostviewed\Model\OptionSource\DisplayOptions</source_model>
+                    <comment>If set to Always, popup will be displayed even if the product has only non-required options to choose.</comment>
+                </field>
+
+                <field id="apply_for_separately" translate="label comment" type="select" sortOrder="57" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Apply Bundle Discounts for Items That Were Added Separately</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>When set to No, the discount will be applied only after bundle pack’s Add To Cart action.</comment>
+                </field>
+
+                <field id="apply_cart_rule" translate="label comment" type="select" sortOrder="58"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Replace Bundle Pack Item Discount with Cart Price Rules</label>
+                    <comment>
+                        <![CDATA[Cart Price Rules will replace bundle discount for an individual Cart Item only if they provide a greater discount.
+                         You can find more information in the <a target="_blank" href="https://amasty.com/docs/doku.php?id=magento_2:automatic_related_products#bundle_packs">user guide</a>.]]>
+                    </comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="display_cart_message" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Display Upsell Message in Cart</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Display one random hint message in cart, telling the customer which product to add in order to get the Bundle Pack discount.</comment>
+                    <depends>
+                        <field id="apply_for_separately">1</field>
+                    </depends>
+                </field>
+
+                <field id="display_cart_block" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Display Bundle Pack in Cart</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Display one random Bundle Pack in cart, telling the customer which Bundle Pack to add in order to get the discount.</comment>
+                </field>
+
+                <field id="product_description_embedding" translate="label comment" type="textarea" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Description Embedding Code</label>
+                    <comment>Copy this code into description field on product edit page to insert Bundle Pack there.</comment>
+                    <frontend_model>Amasty\Mostviewed\Block\Adminhtml\System\Config\Element\Disabled</frontend_model>
+                    <depends>
+                        <field id="position">custom</field>
+                    </depends>
+                </field>
+
+                <field id="template_embedding" translate="label comment" type="textarea" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Template Embedding Code</label>
+                    <comment>Insert this code into *.phtml template directly to display Bundle Pack in any block.</comment>
+                    <frontend_model>Amasty\Mostviewed\Block\Adminhtml\System\Config\Element\Disabled</frontend_model>
+                    <depends>
+                        <field id="position">custom</field>
+                    </depends>
+                </field>
+
+                <field id="layout_embedding" translate="label comment" type="textarea" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Layout Embedding Code</label>
+                    <comment>Insert this code into layout to display the Bundle Pack block.</comment>
+                    <frontend_model>Amasty\Mostviewed\Block\Adminhtml\System\Config\Element\Disabled</frontend_model>
+                    <depends>
+                        <field id="position">custom</field>
+                    </depends>
+                </field>
+
+                <group id="analytics" translate="label" type="text" sortOrder="900" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Analytics Set Up</label>
+
+                    <field id="order_status" translate="label comment" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Order Status Used for Statistics</label>
+                        <comment>Please select an Order Status to be used in calculation of the quantity of ordered bundle packs.</comment>
+                        <source_model>Amasty\Mostviewed\Model\OptionSource\Config\Order\Status</source_model>
+                        <frontend_model>Amasty\Mostviewed\Block\Adminhtml\System\Config\Element\Multiselect</frontend_model>
+                        <can_be_empty>1</can_be_empty>
+                    </field>
+
+                    <field id="period" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Data Gathering Period for Recommendations (days)</label>
+                        <comment>The value defines the time period of statistical data the module will gather for recommendation section (bought and viewed together) of Bundle Packs. Leave empty (or 0) for life-time statistics.</comment>
+                        <validate>validate-zero-or-greater validate-number</validate>
+                    </field>
+
+                    <field id="order_status_bought" translate="label comment" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Bought Together Order Status for Recommendations</label>
+                        <comment>Please select an Order Status to be used for recommendations of Bundle Pack Products.</comment>
+                        <source_model>Amasty\Mostviewed\Model\OptionSource\Config\Order\Status</source_model>
+                        <frontend_model>Amasty\Mostviewed\Block\Adminhtml\System\Config\Element\Multiselect</frontend_model>
+                        <can_be_empty>1</can_be_empty>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,212 @@
+<?php
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+$id = $block->getRequestId();
+$_helper = $block->getHelperCustomerView();
+$communicationData = $block->getSellerBuyerCommunicationById();
+if (count($communicationData)) { ?>
+    <div class="wk-mp-design">
+        <fieldset class="fieldset info wk-mp-fieldset">
+            <div class="grid">
+                <div class="hor-scroll">
+                    <legend class="legend">
+                        <span class="wk-sbcom-legend query-heading-comm">
+                            <strong><?=  $escaper->escapeHtml(__("Subject"))?></strong> : 
+                            <?= $escaper->escapeHtml($communicationData['subject']); ?>
+                        </span>
+                        <?php
+                        if ($communicationData['product_id']) { ?>
+                            <span class="query-heading-comm">
+                                <strong><?= $escaper->escapeHtml(__("Query Regarding Product"))?></strong> :
+                                <a href="<?= $escaper->escapeHtml($block->getProductUrlById(
+                                    $communicationData['product_id']
+                                )); ?>">
+                                    <?php if ($productName = $block->getProductNameById(
+                                        $communicationData['product_id']
+                                    )): ?>
+                                                <?=  $escaper->escapeHtml($productName); ?>
+                                        <?php else: ?>
+                                            <?=  $escaper->escapeHtml($communicationData['product_name']); ?>
+                                    <?php endif; ?>
+                                </a>
+                            </span>
+                            <?php
+                        } ?>
+                        <?php
+                        if ($communicationData['order_id']) { ?>
+                            <span class="query-heading-comm">
+                                <strong><?= $escaper->escapeHtml(__("Query Regarding Order"))?></strong> :
+                                
+                                <?=  $escaper->escapeHtml($communicationData['order_id']); ?>
+                               
+                            </span>
+                            <?php
+                        } ?>
+                        <span class="query-heading-comm wk-sbcom-legend">
+                            <strong><?=  $escaper->escapeHtml(__("Support Type"))?> </strong> :
+                            <?=$escaper->escapeHtml($_helper->getSupportTypeName($communicationData['support_type']))?>
+                        </span>
+                    </legend>
+                    <?php
+                     $collection = $block->getAllCommunicationData();
+                    foreach ($collection as $coll): ?>
+                        <div class="wk-sbcom-onereply">
+                            <span class="wk-sbcom-onereply-head 
+                            <?php if ($coll->getSenderType() == 0) {
+                                echo  $escaper->escapeHtml("wk-sbcom-onereply-customer");
+                            } elseif ($coll->getSenderType() == 2) {
+                                echo  $escaper->escapeHtml("wk-sbcom-onereply-admin");
+                            } else {
+                                echo  $escaper->escapeHtml("wk-sbcom-onereply-seller");
+                            } ?>">
+
+                                <span class="wk-sbcom-onereply-head-left"><?= $escaper->escapeHtml($_helper->formatDate(
+                                    $coll->getCreatedAt()
+                                ));?></span>
+                                <span class="wk-sbcom-onereply-head-right">
+                                    <?php
+                                    if ($coll->getSenderType() == 0) {
+                                        echo  $escaper->escapeHtml(__("Me"));
+                                    } elseif ($coll->getSenderType() == 1) {
+                                        echo  $escaper->escapeHtml(__("Seller: %1", $coll->getSender()));
+                                    } else {
+                                        echo  $escaper->escapeHtml(__("Administrator"));
+                                    }
+                                    ?>
+                                </span>
+
+                            </span>
+                            <div class="wk-sbcom-onereply-cntnt"><?= /* @noEscape */ nl2br($coll->getMessage());?></div>
+                            <div class = "image-container">
+                            <?php $attachments = explode(',', $coll->getAttachments());
+                            if (!empty(array_filter($attachments))) {
+                                foreach ($attachments as $value) { ?>
+                                    <span class="file_image">
+                                        <?php if ($block->isImage($value, $coll->getCommId(), $coll->getEntityId())): ?>
+                                        <a href="<?=  $escaper->escapeHtml($block->getImageUrl(
+                                            $value,
+                                            $coll->getCommId(),
+                                            $coll->getEntityId()
+                                        )); ?>" target="_blank">
+                                            <img src ="<?=  $escaper->escapeHtml($block->getImageUrl(
+                                                $value,
+                                                $coll->getCommId(),
+                                                $coll->getEntityId()
+                                            )); ?>"/>
+                                        </a>
+                                        <?php else: ?>
+                                        <a href="<?=  $escaper->escapeHtml($block->getImageUrl(
+                                            $value,
+                                            $coll->getCommId(),
+                                            $coll->getEntityId()
+                                        )); ?>" target="_blank">
+                                            <?=  $escaper->escapeHtml(__($value)) ?>
+                                        </a>
+                                        <?php endif; ?>
+                                    </span>
+                            <?php	}
+                            }
+                            ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+
+                </div>
+            </div>
+        </fieldset>
+        <?php if ($block->getPagerHtml()): ?>
+            <div class="order-products-toolbar toolbar bottom"><?=  $block->getPagerHtml(); ?></div>
+        <?php endif ?>
+        <form method="post" action="<?= $escaper->escapeJsQuote($block->getUrl(
+            'mpsellerbuyercommunication/customer/saveconversation/'
+        ))?>" id="wk-customercommunication-save-form" data-form="wk-customercommunication-save-form" 
+        enctype="multipart/form-data" data-mage-init='{"validation":{}}'>
+            <fieldset class="fieldset info wk-mp-fieldset">
+                <?=  $block->getBlockHtml('formkey')?>
+                <input type="hidden" value="<?=  $escaper->escapeHtml($id); ?>" name="comm_id"/>
+                <input type="hidden" value="0" name="sender_type"/>
+                <div class="field required">
+                    <label class="label">
+                        <?=  $escaper->escapeHtml(__("Enter Message")); ?>
+                    </label>
+                    <div>
+                        <textarea class="required-entry" name="message"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="query_status">
+                    <?php $supportTypes =  $_helper->getQueryStatus(); ?>
+                        <select name = "query_status">
+                        <?php foreach ($supportTypes as $key => $value) { ?>
+                            <option value="<?= $escaper->escapeHtml($key) ?>"
+                            <?php if ($communicationData['query_status']==$key) {
+                                echo  $escaper->escapeHtml("   selected=selected");
+                            } ?>>
+                                <?=  $escaper->escapeHtml($_helper->getQueryStatusname($key)) ?>
+                            </option>
+                        <?php }
+                        ?>   </select>
+                </div>
+                <div class="input-box">
+                    <input type="file" name="img_attachment_1" class="wk_imagevalidate"/>
+                    <input type="hidden" name="attach_count" class= "attach_count"/>
+                    <br>
+                    <div id="otherimages"></div>
+                    <a href="#" class="new_attachment"><?=  $escaper->escapeHtml(__("Add More image")); ?></a><br />
+                    <span>
+                        <strong><?=  $escaper->escapeHtml(__('Allowed Files')) ?>: </strong>
+                        jpeg,jpg,png,gif,zip,doc,pdf,rar,xls,xlsx,csv
+                    </span>
+                </div>
+
+                <button class="button wk-mp-btn" title="<?=  $escaper->escapeHtml(__('Send Message')) ?>" 
+                type="submit" id="save-btn">
+                    <span><span><?= $escaper->escapeHtml(__('Send Message')) ?></span></span>
+                </button>
+            </fieldset>
+        </form>
+    </div>
+    <?php
+} else { ?>
+    <h2 class="wk-mp-error-msg">
+        <?=  $escaper->escapeHtml(__("You are not authorize to view this conversation.")); ?>
+    </h2>
+    <?php
+} ?>
+<div class="buttons-set">
+    <p class="back-link">
+        <a href="javascript:;" onclick="javascript: window.history.back();" class="left">
+            &laquo; <?= $escaper->escapeHtml(__('Back')) ?>
+        </a>
+    </p>
+</div>
+<script id="attachment-template" type="text/x-magento-template">
+    <div id='childDiv<%- fields.index %>'>
+        <input type='file' name='img_attachment_<%- fields.index %>' class='wk_imagevalidate'/>
+        <a href="javascript:void(0)" class="remove_attch"><?= $escaper->escapeHtml(__('Remove')); ?></a>
+    </div>
+</script>
+    <?php
+
+        $releventFormData = [
+            'attachmentTemplate' => '#attachment-template',
+        ];
+
+        $serializedData = $block->getJson()->jsonEncode($releventFormData);
+        ?>
+
+<script>
+{
+    "*": {
+        "viewCustomerForm": <?= $escaper->escapeJsQuote($serializedData); ?>
+    }
+}
+</script>

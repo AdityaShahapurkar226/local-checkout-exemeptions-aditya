@@ -1,0 +1,68 @@
+<?php /** @var Klevu\FrontendJs\Block\Template $block */ ?>
+<!-- custom version of the kuFilterTagsTemplate template -->
+<script type="template/klevu" id="ahyKuFilterTagsTemplate">
+    <%
+        var filterTagsModule = data.filterTags;
+        var filterTagsData = [];
+        if(dataLocal && dataLocal.length){
+            filterTagsData = filterTagsModule.query[dataLocal].tags;
+        }
+    %>
+    <% if(filterTagsData.length) { %>
+        <div class="kuFilterTagsContainer">
+            <div class="filter-heading flex justify-between px-4 py-3 items-center">
+                <div class="filter-by !text-xl !font-bold capitalize text-ahy-blue">filter by</div>
+                <div class="clear-all-selected-filter">
+                    <span title="<%= helper.translate("Clear all") %>" class="kuFilterTagClearAll text-xs font-bold text-ahy-blue-light">
+                        <%= helper.translate("Clear all") %>
+                    </span>
+                </div>
+            </div>
+            <% helper.each(filterTagsData, function(key,item){
+                var filterTagItemKey = helper.escapeHTML(item.key);
+                var filterTagItemLabel = helper.escapeHTML(helper.translate(item.label));
+            %>
+            <div class="kuFilterTag selected-filters px-2" data-key="<%= filterTagItemKey %>" data-type="<%= helper.escapeHTML(item.type) %>">
+                <% helper.each(item.values, function(key,option){ %>
+
+                    <% if(item.type === "RATING") { %>
+
+                        <span title="<%= helper.escapeHTML(helper.translate(option)) %>" data-value="<%= helper.escapeHTML(helper.translate(option)) %>" class="kuFilterTagValue !px-4 !py-3">
+                            <span class="clear-selectedValues flex flex-row items-center">
+                                <span class="flex pr-2">
+                                    <div class="klevuFacetStars">
+                                        <div class="klevuFacetRating" style="width:<%=(20*Number(option))%>%;"></div>
+                                    </div>
+                                </span>
+                                <svg id="Layer_2" data-name="Layer 2" class="" xmlns="http://www.w3.org/2000/svg"  width="0.625rem" height="0.625rem" viewBox="0 0 9.71 9.71">
+                                    <defs>
+                                        <style>.cls-1{fill:none;stroke:#0d2f47;stroke-miterlimit:10;}</style>
+                                    </defs>
+                                    <line class="cls-1" x1="0.35" y1="0.35" x2="9.36" y2="9.36"/><line class="cls-1" x1="9.36" y1="0.35" x2="0.35" y2="9.36"/>
+                                </svg>
+                            </span>
+                        </span>
+                    <% } else { %>
+                        <span title="<%= helper.escapeHTML(helper.translate(option)) %>" data-value="<%= helper.escapeHTML(helper.translate(option)) %>" class="kuFilterTagValue text-ahy-blue">
+                            <span class="clear-selectedValues flex flex-row items-center">
+                                <% if (filterTagItemKey.toLowerCase() === 'price range') { %>
+                                    <% const newString = option.split('-').map(i => "$" + i.trim()).join(' - '); %>
+                                    <span class="selectedValues-title pr-2 text-sm"><%=newString%></span>
+                                <% } else { %>
+                                    <span class="selectedValues-title pr-2 text-sm"><%= helper.translate(option) %></span>
+                                <% } %>
+                                <svg id="Layer_2" data-name="Layer 2" class="" xmlns="http://www.w3.org/2000/svg"  width="0.625rem" height="0.625rem" viewBox="0 0 9.71 9.71">
+                                    <defs>
+                                        <style>.cls-1{fill:none;stroke:#0d2f47;stroke-miterlimit:10;}</style>
+                                    </defs>
+                                    <line class="cls-1" x1="0.35" y1="0.35" x2="9.36" y2="9.36"/><line class="cls-1" x1="9.36" y1="0.35" x2="0.35" y2="9.36"/>
+                                </svg>
+                            </span>
+                        </span>
+                    <% } %>
+                <% }); %>
+            </div>
+            <% }); %>
+        </div>
+    <% } %>
+</script>

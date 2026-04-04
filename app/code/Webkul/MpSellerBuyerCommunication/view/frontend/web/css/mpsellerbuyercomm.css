@@ -1,0 +1,156 @@
+/**
+ * Webkul Software
+ *
+ * @category Marketplace
+ * @package  Webkul_MpSellerBuyerCommunication
+ * @author   Webkul
+ * @license  https://store.webkul.com/license.html
+ */
+ .image-con {
+    margin: 5px 0;
+ }
+.wk-sbcom-onereply .image-container .file_image {
+    float : none!important;
+    border : none;
+    padding: 5px;
+}
+.wk-sbcom-onereply {
+    margin-bottom: 10px;
+}
+.wk-sbcom-onereply img{
+    max-width: 99%;
+}
+.wk-mp-design .legend span.query-heading-comm{
+    font-size: 18px;
+}
+#wk-sbcom-history{
+    font-size: 16pt;
+    font-weight: bold;
+    margin-top: 5px;
+    padding: 0;
+}
+.wk-sbcom-onereply{
+    box-shadow: 2px 2px 5px;
+}
+.wk-sbcom-onereply-head{
+    height: auto;
+    padding: 1%;
+    display: inline-block;
+    width: 98%;
+}
+.wk-sbcom-onereply-head-left{
+    color: #000000;
+    float: left;
+    font-size: 10pt;
+    font-weight: bold;
+}
+.wk-sbcom-onereply-head-right{
+    color: #888888;
+    float: right;
+    font-size: 11pt;
+    font-weight: bold;
+}
+.wk-sbcom-onereply-cntnt{
+    font-family: tahoma;
+    line-height: 25px;
+    padding: 10px;
+}
+.wk-sbcom-onereply-customer{
+    background: #B9CDF8;
+}
+.wk-sbcom-onereply-admin{
+    background: #FFE0B3;
+}
+.wk-sbcom-onereply-seller{
+    background: #96C986;
+}
+#wk-sbcom-conversation-container{
+    margin-top: 10px;
+}
+.wk-sbcom-legend{
+    width: 100%;
+    display: inline-block;
+}
+.query_status{
+    float: left;
+    width: 100%;
+    padding: 5px 0;
+}
+.query_status select {
+    width: 20%;
+}
+
+.image-container .image img{
+    height: 100px;
+}
+.image-container .image{
+    display: inline-block;
+}
+
+.wk-mp-design .wk-mp-body .filter_by{
+    width: 20%;
+}
+.wk-mp-design .wk-mp-body .filter_text{
+    width: 50%;
+}
+.wk-seller-response-container::after, .wk-seller-response-container::before {
+    border: 1px solid transparent;
+    bottom: -1px;
+    content: " ";
+    height: 0;
+    margin-left: 22%;
+    margin-top: -51px;
+    position: absolute;
+    width: 0;
+}
+.wk-seller-response-container{
+    box-shadow: 0 2px 8px 2px #848484;
+    display: none;
+    padding: 10px;
+    color:#999;
+}
+.seller-response-rate{
+    color:#999;
+    font-size:10px;
+}
+.wk-mp-profile_container .wk-seller .askque {
+    width: 100%;
+}
+
+@media all and (max-width: 768px) {
+    .query_status select {
+        width: 33%;
+    }
+
+    .wk-mp-fieldset .order-products-toolbar.toolbar.bottom {
+        margin-top: 10px;
+    }
+
+    h1.page-title{
+        line-height: 2.9;
+        font-size: 2.4rem;
+    }
+}
+
+button.action-close-contact {
+    background: none;
+    border: none;
+    float: right;
+}
+button.action-close-contact:before {
+    content: "X";
+
+}
+button.action-close-contact span {
+    display: none;
+}
+.modals-overlay {
+    z-index: 10 !important;
+}
+input.wk_imagevalidate {
+    padding: 5px 0;
+}
+.askque:hover
+{
+    cursor: pointer;
+}

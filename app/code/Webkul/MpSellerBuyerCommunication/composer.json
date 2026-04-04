@@ -1,0 +1,20 @@
+{
+    "name": "webkul/module-seller-buyer-communication",
+    "description": "Webkul Magento2 Marketplace Seller Buyer Communication Module",
+    "require": {
+        "webkul/module-marketplace": "5.0.*"
+    },
+    "type": "magento2-module",
+    "version": "5.0.0-p1",
+    "license": [
+        "proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Webkul\\MpSellerBuyerCommunication\\": ""
+        }
+    }
+}

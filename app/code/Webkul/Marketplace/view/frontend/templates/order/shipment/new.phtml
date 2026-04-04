@@ -1,0 +1,113 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$viewModel = $block->getViewModel();
+$helper = $viewModel->getHelper();
+$orderHelper = $viewModel->getOrderHelper();
+$isPartner = $helper->isSeller();
+if ($isPartner == 1) {
+    $orderId = $block->getRequest()->getParam('id');
+    $order = $block->Order->load($orderId);
+    $marketplaceOrders = $block->getSellerOrderInfo($orderId);
+    if (count($marketplaceOrders)) {
+        $submitUrl = $block->getUrl(
+            'marketplace/order/shipment',
+            [
+                'id' => $orderId,
+                '_secure' => $block->getRequest()->isSecure()
+            ]
+        );
+        ?>
+        <div class="wk-mp-design">
+            <div class="fieldset wk-mp-fieldset">
+                <form action="<?= $escaper->escapeUrl($submitUrl)?>"
+                    id="marketplace-shipment-form" method="post"
+                    data-form="marketplace-shipment-form"
+                    data-mage-init='{"validation":{}}'>
+                    <?= $block->getBlockHtml('formkey')?>
+                    <?= $block->getBlockHtml('seller.formkey')?>
+                    <?= $block->getChildHtml('marketplace_order_info') ?>
+                    <section class="wk-mp-order-payment-shipping-information">
+                        <div class="block block-order-details-view">
+                            <div class="block-title">
+                                <strong><?= /* @noEscape */ __('Payment & Shipping Information') ?></strong>
+                            </div>
+                            <div class="block-content">
+                                <div class="wk-mp-order-payment-method box
+                                <?php if ($order->getIsVirtual()): ?> order-payment-method-virtual<?php endif; ?>">
+                                    <strong class="box-title">
+                                        <span class="title"><?= $block->escapeHtml(__('Payment Information')) ?></span>
+                                    </strong>
+                                    <div class="block-content">
+                                        <div class="order-payment-method-title">
+                                            <?= $block->getChildHtml('order_payment') ?>
+                                        </div>
+                                        <div class="order-payment-currency">
+                                            <?= $block->escapeHtml(
+                                                __('The order was placed using %1.', $order->getOrderCurrencyCode())
+                                            ) ?>
+                                        </div>
+                                        <div class="order-payment-additional">
+                                            <?= $block->getChildHtml('order_payment_additional') ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php if (!$order->getIsVirtual()): ?>
+                                    <div class="wk-mp-order-shipping-address box">
+                                        <?php /*Shipping Address */ ?>
+                                        <strong class="box-title">
+                                            <span class="title">
+                                                <?= $block->escapeHtml(__('Shipping Information')) ?>
+                                            </span>
+                                        </strong>
+                                        <div class="block-content">
+                                            <div class="shipping-description-wrapper">
+                                                <div class="shipping-description-title">
+                                                    <?= $block->escapeHtml($order->getShippingDescription()) ?></div>
+                                                <div class="shipping-description-content">
+                                                    <?= $block->escapeHtml(__('Total Shipping Charges')) ?>:
+                                                    <?= /* @noEscape */ $order->getBaseShippingAmount() ?>
+                                                </div>
+                                            </div>
+                                            <div id="wk_mp_order_tracking">
+                                                <?= $block->getChildHtml(
+                                                    'marketplace_order_new_shipment_tracking',
+                                                    false
+                                                ) ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="wk_shipment_item_container">
+                        <h2><?= /* @noEscape */ __('Items to Ship') ?></h2>
+                        <?= $block->getChildHtml('marketplace_order_new_shipment_items') ?>
+                    </section>
+                </form>
+            </div>
+        </div>
+        <div class="buttons-set">
+            <p class="back-link">
+                <a href="<?= $escaper->escapeHtml($block
+                ->getUrl('marketplace/order/history', ['_secure' => $block
+                ->getRequest()->isSecure()]));?>" class="left">&laquo; <?= /* @noEscape */
+                 __('Back To My Orders') ?></a>
+            </p>
+        </div>
+        <?php
+    }
+} else { ?>
+    <h2 class="wk-mp-error-msg">
+        <?= /* @noEscape */ __("To Become Seller Please Contact to Admin."); ?>
+    </h2>
+    <?php
+} ?>

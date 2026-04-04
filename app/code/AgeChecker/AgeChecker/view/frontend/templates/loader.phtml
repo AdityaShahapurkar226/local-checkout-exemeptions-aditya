@@ -1,0 +1,17 @@
+<?php
+
+$ageCheckerScript = $block->generateScript();
+
+if($ageCheckerScript) {
+
+echo '<noscript><meta http-equiv="refresh" content="0; url=https://agechecker.net/noscript"></noscript>';
+
+?>
+
+<?=  /* @noEscape */ $secureRenderer->renderTag('script', ['data-cfasync' => 'false'], $ageCheckerScript, false); ?>
+
+<?php
+
+}
+
+?>

@@ -1,0 +1,158 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$viewModel = $block->getViewModel();
+$helper = $viewModel->getHelper();
+$orderHelper = $viewModel->getOrderHelper();
+$isPartner = $helper->isSeller();
+if ($isPartner == 1) {
+    $orderId = $block->getRequest()->getParam('id');
+    $order = $block->Order->load($orderId);
+    $orderStatusLabel = $order->getStatusLabel();
+
+    $marketplaceOrders = $block->getSellerOrderInfo($orderId);
+    if (count($marketplaceOrders)) {
+        $submitUrl = $block->getUrl('marketplace/order/invoice', ['_secure' => $block->getRequest()->isSecure()]);
+        ?>
+        <div class="wk-mp-design">
+            <div class="fieldset wk-mp-fieldset">
+                <form action="<?= $escaper->escapeUrl($submitUrl)?>" id="marketplace-invoice-form" method="post">
+                    <?= $block->getBlockHtml('formkey')?>
+                    <?= $block->getBlockHtml('seller.formkey')?>
+                    <?= $block->getChildHtml('marketplace_order_info') ?>
+                    <section class="wk-mp-order-payment-shipping-information">
+                        <div class="block block-order-details-view">
+                            <div class="block-title">
+                                <strong><?= /* @noEscape */ __('Payment & Shipping Information') ?></strong>
+                            </div>
+                            <div class="block-content">
+                                <div class="wk-mp-order-payment-method box
+                                <?php if ($order->getIsVirtual()): ?> order-payment-method-virtual<?php endif; ?>">
+                                    <strong class="box-title">
+                                        <span class="title"><?= $block->escapeHtml(__('Payment Information')) ?></span>
+                                    </strong>
+                                    <div class="block-content">
+                                        <div class="order-payment-method-title">
+                                            <?= $block->getChildHtml('order_payment') ?>
+                                        </div>
+                                        <div class="order-payment-currency">
+                                            <?= $block->escapeHtml(
+                                                __('The order was placed using %1.', $order->getOrderCurrencyCode())
+                                            ) ?>
+                                        </div>
+                                        <div class="order-payment-additional">
+                                            <?= $block->getChildHtml('order_payment_additional') ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php if (!$order->getIsVirtual()): ?>
+                                    <div class="wk-mp-order-shipping-address box">
+                                        <?php /*Shipping Address */ ?>
+                                        <strong class="box-title">
+                                            <span class="title">
+                                                <?= $block->escapeHtml(__('Shipping Information')) ?>
+                                            </span>
+                                        </strong>
+                                        <div class="block-content">
+                                            <div class="shipping-description-wrapper">
+                                                <div class="shipping-description-title">
+                                                    <?= $block->escapeHtml($order->getShippingDescription()) ?></div>
+                                                <div class="shipping-description-content">
+                                                    <?= $block->escapeHtml(__('Total Shipping Charges')) ?>:
+                                                    <?= /* @noEscape */ $order->getBaseShippingAmount() ?>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <input type="checkbox" 
+                                                    name="invoice[do_shipment]" 
+                                                    id="wk_mp_invoice_do_shipment" 
+                                                    value="1"
+                                                    class="checkbox"/>
+                                                <label for="wk_mp_invoice_do_shipment"
+                                                    class="label">
+                                                    <span><?= $block->escapeHtml(__('Create Shipment')) ?></span>
+                                                </label>
+                                            </div>
+                                            <div id="wk_mp_order_tracking" style="display:none;">
+                                                <?= $block->getChildHtml(
+                                                    'marketplace_order_new_invoice_tracking',
+                                                    false
+                                                ) ?>
+                                            </div>
+                                            <?= /* @noEscape */ $secureRenderer->renderStyleAsTag(
+                                                "display:none;",
+                                                'div#tracking'
+                                            ) ?>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="invoice_item_container">
+                        <h2><?= /* @noEscape */ __('Items to Invoice') ?></h2>
+                        <?= $block->getChildHtml('marketplace_order_new_invoice_items') ?>
+                    </section>
+                </form>
+            </div>
+        </div>
+        <div class="buttons-set">
+            <p class="back-link">
+                <a href="<?= $escaper->escapeHtml($block
+                ->getUrl('marketplace/order/history', ['_secure' => $block
+                ->getRequest()->isSecure()]));?>" class="left">&laquo; <?= /* @noEscape */
+                 __('Back To My Orders') ?></a>
+            </p>
+        </div>
+        <?php
+        //$forcedShipmentCreate = (int) $block->getForcedShipmentCreate();
+        $forcedShipmentCreate = 0;
+        $scriptString = <<<script
+
+        require(['prototype'], function(){
+
+        //<![CDATA[
+            var createShipment = $('wk_mp_invoice_do_shipment');
+            if (createShipment) {
+                createShipment.observe('click', function(e){
+                    if (createShipment.checked) {
+                        document.getElementById('wk_mp_order_tracking').style.display = 'block';
+                    } else {
+                        document.getElementById('wk_mp_order_tracking').style.display = 'none'
+                    }
+                })
+            }
+
+            /*forced creating of shipment*/
+            var forcedShipmentCreate = {$forcedShipmentCreate};
+            var shipmentElement = $('wk_mp_invoice_do_shipment');
+            if (forcedShipmentCreate && shipmentElement) {
+                shipmentElement.checked = true;
+                shipmentElement.disabled = true;
+                document.getElementById('wk_mp_order_tracking').style.display = 'block';
+            }
+
+            window.createShipment = createShipment;
+            window.forcedShipmentCreate = forcedShipmentCreate;
+            window.shipmentElement = shipmentElement;
+        //]]>
+
+        });
+        script;
+        ?>
+        <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
+        <?php
+    }
+} else { ?>
+    <h2 class="wk-mp-error-msg">
+        <?= /* @noEscape */ __("To Become Seller Please Contact to Admin."); ?>
+    </h2>
+    <?php
+} ?>

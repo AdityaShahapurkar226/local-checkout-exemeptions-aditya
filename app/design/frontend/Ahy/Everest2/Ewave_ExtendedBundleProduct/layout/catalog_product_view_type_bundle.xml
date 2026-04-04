@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+
+        <referenceBlock name="product.info.bundle.options.multi" template="Magento_Bundle::catalog/product/view/type/bundle/option/multi.phtml"/>
+
+        <referenceContainer name="before.body.end">
+            <block name="product.info.options.configurable.bundle.js" as="options_configurable_bundle_js" template="Ewave_ExtendedBundleProduct::catalog/product/options/js/configurable_bundle_js.phtml" />
+        </referenceContainer>
+
+        <referenceBlock name="product.info.bundle.options.radio" template="Magento_Bundle::catalog/product/view/type/bundle/option/radio.phtml">
+            <block class="Magento\Framework\View\Element\Template" name="product.info.bundle.option.radio.selection" as="product.info.bundle.option.radio.selection" template="Ewave_ExtendedBundleProduct::catalog/product/view/type/bundle/selection.phtml">
+                <block class="Ewave\ExtendedBundleProduct\Block\Product\Bundle\Configurable" name="bundle.options.radio.selection.configurable" template="Ewave_ExtendedBundleProduct::catalog/product/bundle/configurable.phtml">
+                    <block class="Magento\Framework\View\Element\Template" name="bundle.options.radio.selection.configurable.tier" as="bundle.options.selection.configurable.tier" template="Ewave_ExtendedBundleProduct::catalog/product/price/tier_price.phtml" />
+                </block>
+            </block>
+        </referenceBlock>
+
+        <referenceBlock name="product.info.bundle.options.checkbox" template="Ewave_ExtendedBundleProduct::catalog/product/view/type/bundle/option/checkbox.phtml">
+            <block class="Magento\Framework\View\Element\Template" name="product.info.bundle.option.checkbox.selection" as="product.info.bundle.option.checkbox.selection" template="Ewave_ExtendedBundleProduct::catalog/product/view/type/bundle/selection.phtml">
+                <block class="Ewave\ExtendedBundleProduct\Block\Product\Bundle\Configurable" name="bundle.options.checkbox.selection.configurable" template="Ewave_ExtendedBundleProduct::catalog/product/bundle/configurable.phtml">
+                    <block class="Magento\Framework\View\Element\Template" name="bundle.options.checkbox.selection.configurable.tier" as="bundle.options.selection.configurable.tier" template="Ewave_ExtendedBundleProduct::catalog/product/price/tier_price.phtml" />
+                </block>
+            </block>
+        </referenceBlock>
+
+        <referenceBlock name="product.info.bundle.options.select" template="Magento_Bundle::catalog/product/view/type/bundle/option/select.phtml">
+            <block class="Magento\Framework\View\Element\Template" name="product.info.bundle.option.select.selection" as="product.info.bundle.option.select.selection" template="Ewave_ExtendedBundleProduct::catalog/product/view/type/bundle/selection.phtml">
+                <block class="Ewave\ExtendedBundleProduct\Block\Product\Bundle\Configurable" name="bundle.options.select.selection.configurable" template="Ewave_ExtendedBundleProduct::catalog/product/bundle/configurable.phtml">
+                    <block class="Magento\Framework\View\Element\Template" name="bundle.options.select.selection.configurable.tier" as="bundle.options.selection.configurable.tier" template="Ewave_ExtendedBundleProduct::catalog/product/price/tier_price.phtml" />
+                </block>
+            </block>
+        </referenceBlock>
+
+    </body>
+</page>

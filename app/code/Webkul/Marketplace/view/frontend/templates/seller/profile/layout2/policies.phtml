@@ -1,0 +1,60 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$viewModel = $block->getViewModel();
+$helper = $viewModel->getHelper();
+$partner=$block->getProfileDetail();
+
+if (!empty($partner['shop_url']) && $helper->getSellerPolicyApproval()) { ?>
+    <div class="wk-seller-policy-contaainer">
+        <div class="wk-seller-policy-left-container">
+            <div class="left-container-content">
+                <h3 class="return-poliy-heading"><?= $escaper->escapeHTML(__('Return Policy'))?>
+                <h3 class="shipping-poliy-heading"><?= $escaper->escapeHTML(__('Shipping Policy'))?>
+                <h3 class="privacy-poliy-heading"><?= $escaper->escapeHTML(__('Privacy Policy'))?>
+            </div>
+        </div>
+        <div class="wk-seller-policy-right-container">
+            <div class="policy-content-container">
+                <h3 class="policy-heading"><?= $escaper->escapeHTML(__('Return Policy'))?></h3>
+                <span class="border-line"></span>
+                <div class="policy-content">
+                    <?php if ($partner->getReturnPolicy()!= ''):?>
+                        <?= /* @noEscape */ $partner->getReturnPolicy()?>
+                    <?php else:?>
+                        <?= $escaper->escapeHtml(__('No return policy provided by seller.'))?>
+                    <?php endif?>
+                </div>
+            </div>
+            <div class="policy-content-container">
+                <h3 class="policy-heading "><?= $escaper->escapeHTML(__('Shipping Policy'))?></h3>
+                <span class="border-line"></span>
+                <div class="policy-content">
+                    <?php if ($partner->getShippingPolicy()!= ''):?>
+                        <?= /* @noEscape */ $partner->getShippingPolicy()?>
+                    <?php else:?>
+                        <?= $escaper->escapeHtml(__('No shipping policy provided by seller.'))?>
+                    <?php endif?>
+                </div>
+            </div>
+            <div class="policy-content-container">
+                <h3 class="policy-heading"><?= $escaper->escapeHTML(__('Privacy Policy'))?></h3>
+                <span class="border-line"></span>
+                <div class="policy-content">
+                    <?php if ($partner->getPrivacyPolicy()!= ''):?>
+                        <?= /* @noEscape */ $partner->getPrivacyPolicy()?>
+                    <?php else:?>
+                        <?= $escaper->escapeHtml(__('No privacy policy provided by seller.'))?>
+                    <?php endif?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>

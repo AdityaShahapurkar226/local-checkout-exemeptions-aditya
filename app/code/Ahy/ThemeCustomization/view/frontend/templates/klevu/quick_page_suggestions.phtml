@@ -1,0 +1,17 @@
+<?php /** @var Klevu\FrontendJs\Block\Template $block */ ?>
+
+<!-- custom version of the klevuQuickPageSuggestions template -->
+<script type="template/klevu" id="ahyKlevuQuickPageSuggestions">
+    <% if(data.query.cmsCompressed) { %>
+        <% if(data.query.cmsCompressed.result.length > 0 ){ %>
+            <div class="klevuAutoSuggestionsWrap klevuCmsSuggestions" id="klevuCmsContentArea">
+                <div class="klevuSuggestionHeading !capitalize"><span class="klevuHeadingText"><%=helper.translate("Resources")%></span></div>
+                <ul>
+                    <% helper.each(data.query.cmsCompressed.result,function(key,cms){ %>
+                        <li tabindex="-1"><a target="_self" href="<%=cms.url%>" class="klevu-track-click" data-url="<%=cms.url%>" data-name="<%=cms.name%>"><%=cms.name%></a></li>
+                    <% }); %>
+                </ul>
+            </div>
+        <% } %>
+    <% } %>
+</script>

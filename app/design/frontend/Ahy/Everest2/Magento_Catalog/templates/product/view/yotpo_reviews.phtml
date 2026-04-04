@@ -1,0 +1,784 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductPage;
+use Magento\Catalog\Model\Product;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Hyva\Theme\ViewModel\HeroiconsSolid;
+use Hyva\Theme\ViewModel\Modal;
+
+/** @var Modal $modelViewModel */
+/** @var HeroiconsSolid $heroIcons */
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var ProductPage $productViewModel */
+/** @var Product $product */
+
+
+$modelViewModel = $viewModels->require(Modal::class);
+$heroIcons = $viewModels->require(HeroiconsSolid::class);
+$modal = $modelViewModel->createModal()
+->positionCenter()
+->removeDialogClass('p-10', 'rounded-lg')
+->addDialogClass('rounded-xl m-4 md:max-w-screen-sm lg:max-w-screen-md xl:max-w-screen-lg 2xl:max-w-screen-xl min-[1536px]:max-w-screen-2xl')
+->withAriaLabelledby('modal-title');
+$productViewModel = $viewModels->require(ProductPage::class);
+$product = $productViewModel->getProduct();
+?>
+
+<div class="" x-data="yotpoReview()" x-init="initReview()" id="ahy-yotpo-product-reviews">
+    <template x-if="!isReviewAvailable">
+        <!-- create review section -->
+        <div x-data="{
+                sku: '',
+                product_title: '',
+                product_url: '',
+                display_name: '',
+                email: '',
+                review_content: '',
+                review_title: '',
+                review_score: null,
+                rating: { score: 1 },
+                showReviewForm: false,
+            }"
+            class="relative"
+        >   
+            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 h-full w-screen bg-ahy-bg z-[-1]"></div>
+            <div class="heading border-b border-gray-400">
+                <h1 class="md:leading-loose uppercase font-black text-4xl text-ahy-blue py-4">ratings & reviews</h1>
+            </div>
+            <button @click="showReviewForm = !showReviewForm"
+                class="bg-ahy-blue mt-8 hover:bg-ahy-blue-light text-white uppercase text-xs tracking-widest font-medium py-3 px-4 rounded transition duration-300 ease-in-out w-full md:w-64">
+                write a review
+            </button>
+            <template x-if="showReviewForm">
+                <div class="fixed inset-0 overflow-hidden z-[500]" x-ref="slideOutModal" x-on:click.self="showReviewForm=false">
+                    <div class="absolute inset-0 overflow-hidden">
+                        <div class="absolute inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true"></div>
+                        <section class="absolute inset-y-0 right-0 pl-10 max-w-full flex" aria-labelledby="slide-over-title">
+                            <div class="relative w-screen max-w-[769px]">
+                                <div class="h-full flex flex-col p-6 bg-white shadow-xl overflow-y-scroll">
+                                    <div class="flex items-start justify-between py-6">
+                                        <div class="font-bold text-ahy-blue">Write a review</div>
+                                        <div class="ml-3 h-7 flex items-center">
+                                            <button class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                                x-on:click="showReviewForm=false">
+                                                <span class="sr-only">Close panel</span>
+                                                <!-- Heroicon name: x -->
+                                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="rounded transition duration-300 ease-in-out">
+                                        <form class="space-y-6" x-on:submit.prevent="submitReviews(); showForm = showForm; showThankYouForm = showThankYouForm" x-data="createReview()"
+                                            x-init="createReview()">
+                                            <div @private-content-loaded.window="getCustomerData($event.detail.data)" x-show="showForm">
+                                                <div class="pb-4">
+                                                    <label for="display_name" class="block text-gray-700 font-medium">Your Name:</label>
+                                                    <input type="text" x-model.trim="display_name = getCustomerName() ? getCustomerName() : display_name" id="display_name"
+                                                        name="display_name" placeholder="e.g.: John Smith"
+                                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required />
+                                                </div>
+                                                <div class="pb-4">
+                                                    <label for="email" class="block text-gray-700 font-medium">Email:</label>
+                                                    <input type="email" x-model.trim="email = getCustomerEmail() ? getCustomerEmail() : email" id="email" name="email" required
+                                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                        placeholder="e.g.: john@example.com" />
+                                                </div>
+                                                <div class="pb-4">
+                                                    <label for="review_title" class="block text-gray-700 font-medium">Review Summary:</label>
+                                                    <input type="text" x-model.trim="review_title" id="review_title" name="review_title"
+                                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required />
+                                                </div>
+                                                <div class="pb-4">
+                                                    <label for="review_content" class="block text-gray-700 font-medium">Review Description:</label>
+                                                    <textarea x-model.trim="review_content" id="review_content" name="review_content" rows="3"
+                                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                        required></textarea>
+                                                </div>
+                                                <div class="flex items-baseline">
+                                                    <label class="text-gray-700 font-medium">Your Rating:</label>
+                                                    <div x-data="{ hoverIndex: null, selectedIndex: null, updateSelected: null }">
+                                                        <ul class="flex pl-0">
+                                                            <template x-for="(item, index) in Array(5)" :key="index">
+                                                                <li @mouseenter="hoverIndex = index" @mouseleave="hoverIndex = null"
+                                                                    @click="selectedIndex = index; $refs.starInput.value = selectedIndex + 1; updateSelected = index + 1"
+                                                                    :class="((index === 0 && hoverIndex === null && selectedIndex === null) ? 'text-gray-300' : (index <= hoverIndex || index <= selectedIndex) ? 'text-ahy-blue' : 'text-gray-300')"
+                                                                    class="text-lg p-2 cursor-pointer transition duration-300 ease-in-out">
+                                                                    ★
+                                                                </li>
+                                                            </template>
+                                                        </ul>
+                                                        <input type="hidden" x-ref="starInput" required id="review_score" x-model.number="review_score = updateSelected"
+                                                            name="review_score" />
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center flex-col md:flex-row gap-4 md:gap-0">
+                                                    <button type="submit"
+                                                        class="bg-ahy-blue hover:bg-ahy-blue-light text-white uppercase text-xs tracking-widest font-semibold py-3 px-4 rounded transition duration-300 ease-in-out w-full md:w-64">
+                                                        Submit
+                                                    </button>
+                                                    <div class="text-red font-bold px-4" id="review-form-error" x-html="errorMessage"></div>
+                                                </div>
+                                            </div>
+                                            <div class="yotpo-messages text-center shadow-lg p-8" x-show="showThankYouForm">
+                                                <div class="yotpo-thank-you" data-type="share" aria-label="Thank you for posting a review" tabindex="-1">
+                                                    <div class="yotpo-icon-btn transparent-color-btn">
+                                                        <span class="yotpo-icon yotpo-icon-cross" role="button" tabindex="0"></span>
+                                                    </div>
+                                                    <div class="yotpo-thankyou-header text-3xl">
+                                                        <span class="yotpo-icon yotpo-icon-heart"></span> <span>Thank you for posting a review!</span>
+                                                    </div>
+                                                    <div class="yotpo-thankyou-content">
+                                                        <span>We value your input. Your review was sent successfully and is now waiting for our staff to publish it.</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </template>
+    
+    <template x-if="isReviewAvailable">
+        <div class="container py-8 relative">
+            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 h-full w-screen bg-ahy-bg z-[-1]"></div>
+            <div class="review-summary py-4">
+                <div class="heading border-b border-gray-400">
+                    <h1 class="md:leading-loose uppercase font-black text-4xl text-ahy-blue py-4">ratings & reviews</h1>
+                </div>
+                <div class="flex flex-col lg:flex-row gap-4 lg:gap-28 pt-4">
+                    <div class="avg-star-rating-from-total">
+                        <div class="flex items-baseline">
+                            <span class="pr-2 text-6xl font-semibold text-ahy-blue" x-html="getAverageReviewScore()"></span> 
+                            <span class="text-sm font-normal text-ahy-rating-text"> out of 5 stars</span>
+                        </div>
+                        <div class="yotpo-review-stars" x-bind:style="'--rating: ' + getAverageReviewScore() + ';'"></div>
+                    </div>
+                    <div class="yotpo-review-summary">
+                        <div class="text-center capitalize font-semibold text-ahy-body-text-color py-4">
+                            <span x-html="totalReviewCount"></span>
+                            <span x-html="totalRatingCountText"></span>
+                        </div>
+                        <div class="flex gap-1 items-center">
+                            <div class="flex w-7 justify-between items-center">
+                                <div class="text-ahy-blue">★</div>
+                                <div class="px-1 text-ahy-blue text-xs">5</div>
+                            </div>
+                            <div class="progress-bar" style="width: 200px">
+                                <div class="bar-container">
+                                    <div class="bar 5-star" x-bind:style="'width:' + fiveStartPercentage"></div>
+                                </div>
+                            </div>
+                            <div class="star-percentage text-xs pl-0.5" x-html="fiveStartPercentage"></div>
+                        </div>
+                        <div class="flex gap-1 items-center">
+                            <div class="flex w-7 justify-between items-center">
+                                <div class="text-ahy-blue">★</div>
+                                <div class="px-1 text-ahy-blue text-xs">4</div>
+                            </div>
+                            <div class="progress-bar" style="width: 200px">
+                                <div class="bar-container">
+                                    <div class="bar 4-star" x-bind:style="'width:' + fourStartPercentage"></div>
+                                </div>
+                            </div>
+                            <div class="star-percentage text-xs pl-0.5" x-html="fourStartPercentage"></div>
+                        </div>
+                        <div class="flex gap-1 items-center">
+                            <div class="flex w-7 justify-between items-center">
+                                <div class="text-ahy-blue">★</div>
+                                <div class="px-1 text-ahy-blue text-xs">3</div>
+                            </div>
+                            <div class="progress-bar" style="width: 200px">
+                                <div class="bar-container">
+                                    <div class="bar 3-star" x-bind:style="'width:' + threeStartPercentage"></div>
+                                </div>
+                            </div>
+                            <div class="star-percentage text-xs pl-0.5" x-html="threeStartPercentage"></div>
+                        </div>
+                        <div class="flex gap-1 items-center">
+                            <div class="flex w-7 justify-between items-center">
+                                <div class="text-ahy-blue">★</div>
+                                <div class="px-1 text-ahy-blue text-xs">2</div>
+                            </div>
+                            <div class="progress-bar" style="width: 200px">
+                                <div class="bar-container">
+                                    <div class="bar 2-star" x-bind:style="'width:' + twoStartPercentage"></div>
+                                </div>
+                            </div>
+                            <div class="star-percentage text-xs pl-0.5" x-html="twoStartPercentage"></div>
+                        </div>
+                        <div class="flex gap-1 items-center">
+                            <div class="flex w-7 justify-between items-center">
+                                <div class="text-ahy-blue">★</div>
+                                <div class="px-1 text-ahy-blue text-xs">1</div>
+                            </div>
+                            <div class="progress-bar" style="width: 200px">
+                                <div class="bar-container">
+                                    <div class="bar 1-star" x-bind:style="'width:' + oneStartPercentage"></div>
+                                </div>
+                            </div>
+                            <div class="star-percentage text-xs pl-0.5" x-html="oneStartPercentage"></div>
+                        </div>
+                    </div>
+
+                    <!-- create review section -->
+                    <div x-data="{
+                            sku: '',
+                            product_title: '',
+                            product_url: '',
+                            display_name: '',
+                            email: '',
+                            review_content: '',
+                            review_title: '',
+                            review_score: null,
+                            rating: { score: 1 },
+                            showReviewForm: false,
+                        }">
+                        <button @click="showReviewForm = !showReviewForm"
+                            class="bg-ahy-blue mt-8 hover:bg-ahy-blue-light text-white uppercase text-xs tracking-widest font-medium py-3 px-4 rounded transition duration-300 ease-in-out w-full md:w-64">
+                            write a review
+                        </button>
+                        <template x-if="showReviewForm">
+                            <div class="fixed inset-0 overflow-hidden z-[500]" x-ref="slideOutModal" x-on:click.self="showReviewForm=false">
+                                <div class="absolute inset-0 overflow-hidden">
+                                    <div class="absolute inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true"></div>
+                                    <section class="absolute inset-y-0 right-0 pl-10 max-w-full flex" aria-labelledby="slide-over-title">
+                                        <div class="relative w-screen max-w-[769px]">
+                                            <div class="h-full flex flex-col p-6 bg-white shadow-xl overflow-y-scroll">
+                                                <div class="flex items-start justify-between py-6">
+                                                    <div class="font-bold text-ahy-blue">Write a review</div>
+                                                    <div class="ml-3 h-7 flex items-center">
+                                                        <button class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                                            x-on:click="showReviewForm=false">
+                                                            <span class="sr-only">Close panel</span>
+                                                            <!-- Heroicon name: x -->
+                                                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="rounded transition duration-300 ease-in-out">
+                                                    <form class="space-y-6" x-on:submit.prevent="submitReviews(); showForm = showForm; showThankYouForm = showThankYouForm" x-data="createReview()"
+                                                        x-init="createReview()">
+                                                        <div @private-content-loaded.window="getCustomerData($event.detail.data)" x-show="showForm">
+                                                            <div class="pb-4">
+                                                                <label for="display_name" class="block text-gray-700 font-medium">Your Name:</label>
+                                                                <input type="text" x-model.trim="display_name = getCustomerName() ? getCustomerName() : display_name" id="display_name"
+                                                                    name="display_name" placeholder="e.g.: John Smith"
+                                                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required />
+                                                            </div>
+                                                            <div class="pb-4">
+                                                                <label for="email" class="block text-gray-700 font-medium">Email:</label>
+                                                                <input type="email" x-model.trim="email = getCustomerEmail() ? getCustomerEmail() : email" id="email" name="email" required
+                                                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                                    placeholder="e.g.: john@example.com" />
+                                                            </div>
+                                                            <div class="pb-4">
+                                                                <label for="review_title" class="block text-gray-700 font-medium">Review Summary:</label>
+                                                                <input type="text" x-model.trim="review_title" id="review_title" name="review_title"
+                                                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required />
+                                                            </div>
+                                                            <div class="pb-4">
+                                                                <label for="review_content" class="block text-gray-700 font-medium">Review Description:</label>
+                                                                <textarea x-model.trim="review_content" id="review_content" name="review_content" rows="3"
+                                                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                                    required></textarea>
+                                                            </div>
+                                                            <div class="flex items-baseline">
+                                                                <label class="text-gray-700 font-medium">Your Rating:</label>
+                                                                <div x-data="{ hoverIndex: null, selectedIndex: null, updateSelected: null }">
+                                                                    <ul class="flex pl-0">
+                                                                        <template x-for="(item, index) in Array(5)" :key="index">
+                                                                            <li @mouseenter="hoverIndex = index" @mouseleave="hoverIndex = null"
+                                                                                @click="selectedIndex = index; $refs.starInput.value = selectedIndex + 1; updateSelected = index + 1"
+                                                                                :class="((index === 0 && hoverIndex === null && selectedIndex === null) ? 'text-gray-300' : (index <= hoverIndex || index <= selectedIndex) ? 'text-ahy-blue' : 'text-gray-300')"
+                                                                                class="text-lg p-2 cursor-pointer transition duration-300 ease-in-out">
+                                                                                ★
+                                                                            </li>
+                                                                        </template>
+                                                                    </ul>
+                                                                    <input type="hidden" x-ref="starInput" required id="review_score" x-model.number="review_score = updateSelected"
+                                                                        name="review_score" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="flex items-center flex-col md:flex-row gap-4 md:gap-0">
+                                                                <button type="submit"
+                                                                    class="bg-ahy-blue hover:bg-ahy-blue-light text-white uppercase text-xs tracking-widest font-semibold py-3 px-4 rounded transition duration-300 ease-in-out w-full md:w-64">
+                                                                    Submit
+                                                                </button>
+                                                                <div class="text-red font-bold px-4" id="review-form-error" x-html="errorMessage"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="yotpo-messages text-center shadow-lg p-8" x-show="showThankYouForm">
+                                                            <div class="yotpo-thank-you" data-type="share" aria-label="Thank you for posting a review" tabindex="-1">
+                                                                <div class="yotpo-icon-btn transparent-color-btn">
+                                                                    <span class="yotpo-icon yotpo-icon-cross" role="button" tabindex="0"></span>
+                                                                </div>
+                                                                <div class="yotpo-thankyou-header text-3xl">
+                                                                    <span class="yotpo-icon yotpo-icon-heart"></span> <span>Thank you for posting a review!</span>
+                                                                </div>
+                                                                <div class="yotpo-thankyou-content">
+                                                                    <span>We value your input. Your review was sent successfully and is now waiting for our staff to publish it.</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <div class="yotpo-filter flex gap-2 pb-8 flex-col border-b border-gray-500">
+                <div class="py-2 capitalize font-semibold text-ahy-rating-text">
+                    <span class="md:hidden"><span x-html="startPageResults()"></span>-<span x-html="endResults()"></span> of </span>
+                    <span x-html="totalReviewCount">100</span>
+                    <span x-html="totalReviewCountText"></span>
+                </div>
+                <div class="sort-by-filter-section flex gap-2 flex-col md:flex-row">
+                    <div class="yotpo-sort-by w-full md:w-[30%] xl:w-[15%]">
+                        <div class="relative">
+                            <select
+                                class="block w-full bg-white border-2 border-gray-500 shadow-sm hover:bg-gray-50 focus:border-gray-400 focus:bg-gray-50 focus:ring-transparent text-ahy-rating-text rounded px-2 pt-5 pb-1 capitalize"
+                                name="reviewsSortBy" id="" @change="reviewsSortBy">
+                                <option value="most-recent" default>most recent</option>
+                                <option value="least-recent">least recent</option>
+                                <option value="rating-high-low">Ratings high to low</option>
+                                <option value="rating-low-high">Ratings low to high</option>
+                            </select>
+                            <span class="absolute inset-y-0 left-0 flex font-medium text-ahy-rating-text items-center pl-1 uppercase text-xs" style="top: -20px; left: 6px;">sort</span>
+                        </div>
+                    </div>
+                    <div class="yotpo-search-bar w-full md:w-[30%] xl:w-[20%]">
+                        <label for="searchField" class="relative block">
+                            <span class="sr-only">Search reviews</span>
+                            <input x-ref="searchField" x-model="search" x-on:keydown.window.prevent.slash="$refs.searchField.focus()" placeholder="Search reviews..." type="search" id="searchField"
+                                class="yotpo-review-search block hover:bg-gray-50 w-full bg-white focus:bg-gray-50 focus:ring-transparent border-2 border-gray-500 shadow-sm text-gray-700 focus:border-gray-400 rounded pl-7 pr-4 py-3" />
+                            <span class="absolute inset-y-0 search-icon-main left-0 flex items-center pl-1" style="top: 3px; left: 2px;">
+                                <svg class="w-4 h-4 text-gray-400 search-icon" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" width="" height="" viewBox="0 0 25.35 26.24">
+                                    <defs>
+                                        <style>.cls-1{fill:none;stroke:#0d2f47;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.24px;}</style>
+                                    </defs>
+                                    <circle class="cls-1" cx="10.63" cy="10.63" r="9.51"></circle>
+                                    <line class="cls-1" x1="16.88" y1="17.78" x2="24.23" y2="25.12"></line>
+                                </svg>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="yotpo-filter-rating w-full md:w-[30%] xl:w-[12%]">
+                        <div class="">
+                            <div class="relative" x-data="{ open: false, selectedRatings: [] }">
+                                <button type="button"
+                                    class="inline-flex justify-between items-center w-full px-2 py-1.5 border-2 border-gray-500 focus:border-gray-400 shadow-sm focus:shadow rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-transparent"
+                                    x-on:click="open = !open" aria-haspopup="true" x-bind:aria-expanded="open">
+                                    <span class="flex flex-col items-start">
+                                        <span class="uppercase font-normal text-xs">filter</span>
+                                        <span class="font-medium text-sm">Star Ratings</span>
+                                    </span>
+                                    <span class="p-1 pr-1 pl-2 mt-0.5 ml-2 bg-[url('/media/icons/arrow-nav.svg')] bg-contain bg-no-repeat bg-center rotate-180" :class="{ 'rotate-180': open }"></span>
+                                </button>
+                                <div class="absolute z-10 w-full mt-2 rounded-md shadow-lg bg-white rounded-lg px-4 py-3" x-show="open" x-on:click.away="open = false">
+                                    <div class="grid grid-cols-1 gap-y-2">
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="form-checkbox h-4 w-4 text-indigo-600" name="rating5" value="5" x-on:change="filterByRatings($event)" />
+                                            <span class="ml-2 text-gray-700">5 star</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="form-checkbox h-4 w-4 text-indigo-600" name="rating4" value="4" x-on:change="filterByRatings($event)" />
+                                            <span class="ml-2 text-gray-700">4 star</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="form-checkbox h-4 w-4 text-indigo-600" name="rating3" value="3" x-on:change="filterByRatings($event)" />
+                                            <span class="ml-2 text-gray-700">3 star</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="form-checkbox h-4 w-4 text-indigo-600" name="rating2" value="2" x-on:change="filterByRatings($event)" />
+                                            <span class="ml-2 text-gray-700">2 star</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="form-checkbox h-4 w-4 text-indigo-600" name="rating1" value="1" x-on:change="filterByRatings($event)" />
+                                            <span class="ml-2 text-gray-700">1 star</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <template x-for="review in searchReviews">
+                <div class="flex flex-col md:flex-row py-8 border-b border-gray-500">
+                    <div class="md:w-1/2 flex flex-col justify-between">
+                        <div class="flex flex-col gap-4">
+                            <div class="flex items-center">
+                                <div class="yotpo-review-stars-font yotpo-review-stars" x-bind:style="'--rating: ' + review.score + ';'"></div>
+                            </div>
+                            <div class="w-full">
+                                <div class="text-xl text-ahy-rating-text font-semibold capitalize" x-html="review.title"></div>
+                                <div class="capitalize text-gray-600 tracking-wide" x-html="review.content"></div>
+                            </div>
+                            <div class="text-gray-500 text-xs" x-html="formatReviewDate(review.created_at)"></div>
+                            <div class="flex items-center md:items-start flex-row md:flex-col gap-4 md:gap-0 mb-4">
+                                <div class="text-gray-600" x-html="review.user.display_name"></div>
+                                <template class="" x-if="review.verified_buyer">
+                                    <div class="ml-1">
+                                        <span class="flex text-center px-5 py-1 md:py-0 rounded-full bg-ahy-rating-green text-xs md:text-sm font-medium text-white tracking-widest uppercase">
+                                            Verified purchaser
+                                        </span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                        <div class="hidden md:flex">
+                            <div class="text-ahy-rating-text">Was this helpful?</div>
+                            <div class="flex items-center relative">
+                                <span class="absolute z-10 opacity-50 flex items-center justify-center bg-gray-200 helpful-loading h-12 w-36" style="display:none">
+                                    <img src="/media/icons/everest-loading-icon.gif" alt="" srcset="" width="30" height="30" >
+                                </span>
+                                <span class="yes-helpful cursor-pointer flex items-center px-4" @click="reviewFeedback(1, review.id, event)">
+                                    <svg class="w-6 text-ahy-rating-green" :id="'vote-up-' + review.id" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                        >
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                    </svg>
+                                    <span class="text-ahy-rating-green pl-0.5" x-html="review.votes_up"></span>
+                                </span>
+
+                                <span class="not-helpful cursor-pointer flex items-center px-4" @click="reviewFeedback(0, review.id, event)">
+                                    <svg :id="'vote-down-' + review.id" class="rotate-180 w-6 text-ahy-rating-green" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                        stroke="currentColor" >
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                    </svg>
+                                    <span class="text-ahy-rating-green pl-0.5" x-html="review.votes_down"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 flex flex-col lg:flex-row">
+                        <!-- <div class="w-full lg:w-2/3">
+                            <div class="text-xl text-ahy-rating-text font-semibold capitalize" x-html="review.title"></div>
+                            <div class="capitalize text-gray-600 tracking-wide" x-html="review.content"></div>
+                        </div> -->
+                        <div class="w-full flex gap-2 flex-wrap items-start">
+
+                            <template x-if="review.images_data">
+                                <template x-for="(image, index) in review.images_data" :key="image.id">
+                                    <img
+                                        :src="image.thumb_url"
+                                        :alt="'Image ' + image.id"
+                                        :id="'image_' + image.id"
+                                        class="cursor-pointer hover:scale-105 transform transition duration-300 ease-in-out"
+                                        style="width: 150px; height: 150px; margin: 5px"
+                                        @click="openDialog(index)"
+                                    />
+                                </template>
+                            </template>
+
+                            <div class="fixed flex justify-center items-center text-left z-[500] inset-0" x-show="modalOpen" @keyup.escape.window.prevent.stop="modalOpen = false" role="dialog" aria-modal="true">
+                                <div
+                                    x-show="modalOpen"
+                                    x-transition:enter="transition-opacity"
+                                    x-transition:enter-start="opacity-0"
+                                    x-transition:enter-end="opacity-100"
+                                    x-transition:leave="transition-opacity"
+                                    x-transition:leave-start="opacity-100"
+                                    x-transition:leave-end="opacity-0"
+                                    class="fixed inset-0 bg-black bg-opacity-50"
+                                ></div>
+
+                                <div
+                                    x-show="modalOpen"
+                                    x-transition:enter="transition ease-out duration-300"
+                                    x-transition:enter-start="opacity-0 transform scale-90"
+                                    x-transition:enter-end="opacity-100 transform scale-100"
+                                    x-transition:leave="transition ease-in duration-300"
+                                    x-transition:leave-start="opacity-100 transform scale-100"
+                                    x-transition:leave-end="opacity-0 transform scale-90"
+                                    x-on:click.away="modalOpen = false"
+                                    class="inline-block bg-white shadow-xl max-h-screen overflow-auto rounded-xl m-4 md:max-w-screen-sm lg:max-w-screen-md xl:max-w-screen-lg 2xl:max-w-screen-xl min-[1536px]:max-w-screen-2xl z-10"
+                                >
+                                    <div x-on:click.stop="" x-trap.noscroll.inert="modalOpen" class="p-7 flex flex-col lg:flex-row lg:gap-5 w-full">
+                                        <div class="relative">
+                                            <img :src="currentImage.original_url" :alt="'Image ' + currentImage.id" class="" />
+                                            <button 
+                                                class="absolute top-1/2 left-[3%] h-10 z-10 w-10 bg-white shadow-[1px_1px_6px_0px_rgba(0,0,0,0.15)] border border-[#ECECEB] p-2 disabled:bg-slate-600 disabled:text-slate-50 disabled:opacity-70 cursor-pointer disabled:cursor-not-allowed items-center justify-center rounded-full flex" 
+                                                @click="prevImage"
+                                                @keyup.left.window.prevent.stop="prevImage"
+                                                :disabled="currentIndex === 0"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" title="previous image" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"></path>
+                                                </svg>
+                                            </button>
+                                            <button 
+                                                class="absolute top-1/2 right-[3%] h-10 z-10 w-10 bg-white shadow-[1px_1px_6px_0px_rgba(0,0,0,0.15)] border border-[#ECECEB] p-2 disabled:bg-slate-600 disabled:text-slate-50 disabled:opacity-70 cursor-pointer  disabled:cursor-not-allowed items-center justify-center rounded-full flex" 
+                                                @click="nextImage"
+                                                @keyup.right.window.prevent.stop="nextImage"
+                                                :disabled="currentIndex === currentReviewAllImages.length - 1"
+                                                >
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" title="next image" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
+                                                </svg>
+                                            </button>
+                                            <div class="absolute top-0 right-[3%] pt-4 block lg:hidden">
+                                                <button
+                                                    class="right-[3%] h-10 z-10 w-10 bg-white shadow-[1px_1px_6px_0px_rgba(0,0,0,0.15)] border border-[#ECECEB] p-2 hover:rotate-180 ease-in-out duration-300 transition disabled:bg-slate-600 disabled:text-slate-50 disabled:opacity-70 cursor-pointer  disabled:cursor-not-allowed items-center justify-center rounded-full flex"
+                                                    @click="modalOpen = false"
+                                                    x-focus-first=""
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" class="fill-current" width="32" height="32">
+                                                        <path
+                                                            fill-rule="evenodd"
+                                                            d="M4.293 4.293a1 1 0 0 1 1.414 0L10 8.586l4.293-4.293a1 1 0 1 1 1.414 1.414L11.414 10l4.293 4.293a1 1 0 0 1-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 0 1-1.414-1.414L8.586 10 4.293 5.707a1 1 0 0 1 0-1.414Z"
+                                                            clip-rule="evenodd"
+                                                        ></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="lg:text-left">
+                                            <div id="modal-title" class="text-xl leading-7 font-bold text-ahy-blue mb-3 flex justify-between items-center">
+                                                <div class="pt-6 lg:pt-0" x-html="currentContentData.title"></div>
+                                                <button
+                                                    class="justify-center rounded-md text-base shadow-none hover:rotate-180 ease-in-out duration-300 active:shadow disabled:shadow-none transition focus:ring-blue-200 disabled:bg-slate-600 disabled:text-slate-50 disabled:opacity-70 hidden lg:block"
+                                                    @click="modalOpen = false"
+                                                    x-focus-first=""
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" class="fill-current" width="32" height="32">
+                                                        <path
+                                                            fill-rule="evenodd"
+                                                            d="M4.293 4.293a1 1 0 0 1 1.414 0L10 8.586l4.293-4.293a1 1 0 1 1 1.414 1.414L11.414 10l4.293 4.293a1 1 0 0 1-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 0 1-1.414-1.414L8.586 10 4.293 5.707a1 1 0 0 1 0-1.414Z"
+                                                            clip-rule="evenodd"
+                                                        ></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <div class="flex flex-wrap gap-2 py-8">
+                                                <template x-for="(image, index) in currentReviewAllImages" :key="image.id">
+                                                    <img
+                                                        :src="image.thumb_url"
+                                                        :alt="'Image ' + image.id"
+                                                        :id="'image_' + image.id"
+                                                        class="cursor-pointer hover:scale-105 transform transition duration-300 ease-in-out"
+                                                        style="width: 100px; height: 100px;"
+                                                        @click="openDialog(index)"
+                                                    />
+                                                </template>
+                                            </div>
+                                            <div class="capitalize text-gray-600 tracking-wide" x-html="currentContentData.content"></div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-gray-100 p-7 flex flex-col gap-4 lg:flex-row-reverse">
+                                        <button
+                                            class="btn justify-center rounded-md py-3 px-6 text-base shadow-none hover:shadow-lg active:shadow disabled:shadow-none transition bg-ahy-blue text-white border border-transparent hover:bg-ahy-blue-light focus:ring-blue-200 active:bg-ahy-blue disabled:bg-slate-600 disabled:text-slate-50 disabled:opacity-70"
+                                            @click="modalOpen = false"
+                                        >
+                                            Close
+                                        </button>
+                                    </div>
+                                    <div class="flex justify-between px-7 mt-4">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div x-show="review.verified_buyer" class="opacity-0">
+                                <div class="capitalize text-gray-500 text-sm opacity-0">purchased on oct 25, 2022</div>
+                            </div>
+                            <div class="flex justify-end items-center text-gray-500 text-sm gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" font-weight="bold" stroke-linejoin="round" d="M3 3v1.5M3 21v-6m0 0l2.77-.693a9 9 0 016.208.682l.108.054a9 9 0 006.086.71l3.114-.732a48.524 48.524 0 01-.005-10.499l-3.11.732a9 9 0 01-6.085-.711l-.108-.054a9 9 0 00-6.208-.682L3 4.5M3 15V4.5" />
+                                </svg>
+                                Flag
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="md:hidden flex mt-4">
+                        <div class="text-ahy-rating-text">Was this helpful?</div>
+                        <div class="flex items-center">
+                            <span class="absolute z-10 opacity-50 flex items-center justify-center bg-gray-200 helpful-loading h-12 w-36" style="display:none">
+                                <img src="/media/icons/everest-loading-icon.gif" alt="" srcset="" width="30" height="30" >
+                            </span>
+                            <span class="yes-helpful flex items-center px-4" @click="reviewFeedback(1, review.id, event)">
+                                <svg class="w-6 text-ahy-rating-green" :id="'vote-up-' + review.id" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                </svg>
+                                <span class="text-ahy-rating-green pl-0.5" x-html="review.votes_up"></span>
+                            </span>
+                            <span class="not-helpful flex items-center px-4" @click="reviewFeedback(0, review.id, event)">
+                                <svg :id="'vote-down-' + review.id" class="rotate-180 w-6 text-ahy-rating-green " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                </svg>
+                                <span class="text-ahy-rating-green pl-0.5" x-html="review.votes_down"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <div class="w-full py-6 flex justify-center items-center" x-show="pageCount() > 1">
+
+                <!--First Button-->
+                <button x-on:click="viewPage(0)" :disabled="pageNumber==0" :class="{ 'disabled cursor-not-allowed text-gray-600 opacity-25' : pageNumber==0 }" class="rounded-full flex items-center justify-center h-12 w-12">
+                    <svg class="h-8 w-8 text-ahy-blue" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="19 20 9 12 19 4 19 20"></polygon>
+                        <line x1="5" y1="19" x2="5" y2="5"></line>
+                    </svg>
+                </button>
+
+                <!--Previous Button-->
+                <button x-on:click="prevPage" class="rounded-full flex items-center justify-center h-12 w-12" :disabled="pageNumber==0" :class="{ 'disabled cursor-not-allowed text-gray-600  opacity-25' : pageNumber==0 }">
+                    <svg class="h-8 w-8 text-ahy-blue" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+
+                <!-- Display page numbers -->
+                <template x-for="(page,index) in pages()" :key="index">
+                    <button class="px-3 py-3 h-10 w-10 rounded-full hidden leading-none md:block" :class="{ 'bg-ahy-blue text-white font-bold' : index === pageNumber }" type="button" x-on:click="viewPage(index)">
+                        <span x-html="index+1"></span>
+                    </button>
+                </template>
+
+                <!--Next Button-->
+                <button x-on:click="nextPage" :disabled="pageNumber >= pageCount() -1" :class="{ 'disabled cursor-not-allowed text-gray-600 opacity-25' : pageNumber >= pageCount() -1 }">
+                    <svg class="h-8 w-8 text-ahy-blue" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+
+                <!--Last Button-->
+                <button x-on:click="viewPage(Math.ceil(totalPages/pageSize)-1)" :disabled="pageNumber >= pageCount() -1"
+                    :class="{ 'disabled cursor-not-allowed text-gray-600 opacity-25' : pageNumber >= pageCount() -1 }">
+                    <svg class="h-8 w-8 text-ahy-blue" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                        <line x1="19" y1="5" x2="19" y2="19"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div>
+                <div class="mt-6 flex flex-wrap justify-between items-center text-sm leading-5 text-gray-700">
+                    <div class="w-full sm:w-auto text-center sm:text-left" x-show="pageCount() > 1">
+                        Page <span x-html="pageNumber+1"> </span> of <span x-html="pageCount()"></span> | Showing <span x-html="startPageResults()"></span> to <span x-html="endResults()"></span>
+                    </div>
+                    <div class="w-full sm:w-auto text-center sm:text-right" x-show="totalPages > 0">Total <span class="font-bold" x-html="totalPages"></span> results</div>
+
+                    <!--Message to display when no results-->
+                    <div class="mx-auto flex items-center font-bold text-ahy-blue" x-show="totalPages===0">
+                        <svg class="h-8 w-8 text-ahy-blue" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" />
+                            <circle cx="12" cy="12" r="9" />
+                            <line x1="9" y1="10" x2="9.01" y2="10" />
+                            <line x1="15" y1="10" x2="15.01" y2="10" />
+                            <path d="M9.5 16a10 10 0 0 1 6 -1.5" />
+                        </svg>
+
+                        <span class="ml-4"> No results!!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>
+
+<style>
+    :root {
+        --star-size: 37px;
+        --star-color: #ccc;
+        --star-background: #0d2f47;
+    }
+    .yotpo-search-bar input[type="search"]::-webkit-search-cancel-button {
+        cursor: pointer;
+    }
+
+    .yotpo-search-bar input[type="search"]:focus::-webkit-search-cancel-button {
+        pointer-events: all;
+    }
+    .yotpo-review-stars {
+        --percent: calc(var(--rating) / 5 * 100%);
+        display: inline-block;
+        font-size: var(--star-size);
+        font-family: 'Poppins';
+        line-height: 1;
+    }
+    .yotpo-review-stars-font {
+        font-size: 28px !important;
+    }
+    .yotpo-review-stars::before {
+        content: "★★★★★";
+        letter-spacing: 3px;
+        background: linear-gradient(90deg, var(--star-background) var(--percent), var(--star-color) var(--percent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-color: var(--star-background);
+    }
+    .star-percentage{
+        color:var(--star-background);
+    }
+    .bar-container {
+        width: 100%;
+        background-color: #d2cec2;
+        margin:2px;
+    }
+    .progress-bar {
+        padding-right: 1px;
+    }
+    .bar {
+        height: 20px;
+        background-color: #344a48;
+        width: 0;
+        transition: width 0.5s;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+        opacity:0;
+    }
+    /* Center the search icon vertically */
+    .search-icon {
+        margin-top: -6px;
+    }
+    .yotpo-review-search {
+        display: block !important;                       /* block */
+        width: 100% !important;                          /* w-full */
+        background-color: white !important;              /* bg-white */
+        border-width: 2px !important;                     /* border-2 */
+        border-color: #6B7280 !important;                 /* border-gray-500 */
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important; /* shadow-sm */
+        color: #374151 !important;                         /* text-gray-700 */
+        border-radius: 0.375rem !important;               /* rounded */
+        padding-left: 1.75rem !important;                  /* pl-7 */
+        padding-right: 1rem !important;                     /* pr-4 */
+        padding-top: 0.75rem !important;                    /* py-3 */
+        padding-bottom: 0.75rem !important;
+        font-size: 1rem !important;
+        height: auto !important;
+        border-radius: 0.25rem !important;
+        line-height: 1.5rem !important;
+    }
+
+</style>

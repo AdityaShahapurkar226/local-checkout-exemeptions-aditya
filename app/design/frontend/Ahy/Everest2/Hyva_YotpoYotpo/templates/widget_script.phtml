@@ -1,0 +1,40 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+declare(strict_types=1);
+
+use Yotpo\Yotpo\Block\Yotpo;
+
+/** @var Yotpo $block */
+
+if (!$block->isEnabled()) {
+    return;
+}
+?>
+<!-- Yotpo - Add body class -->
+<script defer>
+    (() => {
+        window.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('yotpo-yotpo-is-enabled');
+        });
+    })();
+</script>
+<!--/ Yotpo - Add body class -->
+
+<!-- Yotpo - Widget Script -->
+<script defer>
+    (function e() {
+        var e = document.createElement('script');
+        e.type = 'text/javascript';
+        e.async = true;
+        e.src = '<?= $block->getYotpoWidgetUrl() ?>';
+        e.defer = true;
+        var t = document.getElementsByTagName('script')[0];
+        t.parentNode.insertBefore(e, t);
+    })();
+</script>
+<!--/ Yotpo - Widget Script -->

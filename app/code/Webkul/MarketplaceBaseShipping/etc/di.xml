@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceBaseShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Webkul\MarketplaceBaseShipping\Api\Data\ShippingSettingInterface" type="Webkul\MarketplaceBaseShipping\Model\ShippingSetting" />
+    <preference for="Webkul\MarketplaceBaseShipping\Api\Data\ShippingSettingSearchResultInterface"
+                type="Magento\Framework\Api\SearchResults" />
+    <preference for="Webkul\MarketplaceBaseShipping\Api\ShippingSettingRepositoryInterface" type="Webkul\MarketplaceBaseShipping\Model\ShippingSettingRepository" />
+    <type name="Webkul\MarketplaceBaseShipping\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Webkul\MarketplaceBaseShipping\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">mpBaseShippingLogHandler</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Webkul\MarketplaceBaseShipping\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Quote\Model\Quote\Address\Total\Shipping">
+        <plugin name="Webkul_MarketplaceBaseShipping::shipping_totals" type="Webkul\MarketplaceBaseShipping\Plugin\Quote\Model\Quote\Address\Total\Shipping" sortOrder="1" />
+    </type>
+
+    <type name="Webkul\Marketplace\Controller\Order\View">
+      <plugin name="Webkul_MarketplaceBaseShipping::view_order" type="Webkul\MarketplaceBaseShipping\Plugin\Marketplace\Controller\Order\View" sortOrder="1" />
+    </type>
+    <type name="Webkul\Marketplace\Block\Account\Navigation\ShippingMenu">
+      <plugin name="Webkul_MarketplaceBaseShipping::origin_address" type="Webkul\MarketplaceBaseShipping\Plugin\Marketplace\Block\Account\Navigation\ShippingMenu" sortOrder="1" />
+    </type>
+
+    <type name="Magento\Multishipping\Controller\Checkout\CheckItems">
+        <plugin name="Webkul_MarketplaceBaseShipping::check_items" type="Webkul\MarketplaceBaseShipping\Plugin\Multishipping\Controller\Checkout\CheckItems" sortOrder="1" />
+    </type>
+
+    <type name="Magento\Multishipping\Controller\Checkout\Overview">
+        <plugin name="Webkul_MarketplaceBaseShipping::overview" type="Webkul\MarketplaceBaseShipping\Plugin\Multishipping\Controller\Checkout\Overview" sortOrder="1" />
+    </type>
+</config>

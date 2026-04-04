@@ -1,0 +1,33 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Bss_ProductStockAlert
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2015-2017 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+// Override bundle button
+// Disable button slide on bundle page
+// Reason: We catch event load data from this button
+// If user click this before data complete load, form will be empty
+?>
+
+<?php $_product = $block->getProduct() ?>
+<?php if ($_product->isSaleable() && $block->hasOptions()):?>
+    <div class="bundle-actions">
+        <button id="bundle-slide"
+                class="action primary customize"
+                type="button" disabled="disabled">
+            <span><?= $block->escapeHtml(__('Customize and Add to Cart')) ?></span>
+        </button>
+    </div>
+<?php endif;?>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Created by Q-Solutions Studio
+ * Date: 09.12.2019
+ *
+ * @category    DataFeedWatch
+ * @package     DataFeedWatch_Connector
+ * @author      Wojciech M. Wnuk <wojtek@qsolutionsstudio.com>
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/magento_version" method="GET">
+        <service class="DataFeedWatch\Connector\Api\MagentoVersionInterface" method="getVersionData"/>
+        <resources>
+            <resource ref="DataFeedWatch_Connector::config"/>
+        </resources>
+    </route>
+    <route url="/V1/datafeedwatch_version" method="GET">
+        <service class="DataFeedWatch\Connector\Api\ModuleVersionInterface" method="getVersionData"/>
+        <resources>
+            <resource ref="DataFeedWatch_Connector::config"/>
+        </resources>
+    </route>
+</routes>

@@ -1,0 +1,126 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMultiShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+    <?php
+    $multishippingBlock =  $block->getViewModel();
+    $curencyCode = $multishippingBlock->getCurrentCurrencyCode();
+    $orderId = $block->getRequest()->getParam('id');
+    ?>
+<form method="POST" id="item-wise-packaging-form" 
+action='<?= /* @noEscape */ $block->getUrl("baseshipping/order_shipment/save/")."order_id/".$orderId?>'
+>
+    <input type="hidden" id="item_id">
+    <input type="hidden" name="shipment[create_shipping_label]" value="1">
+    <table class="data-table admin__control-table">
+        <thead>
+            <tr>
+                <th class="col-type">Type</th>
+                <th class="col-custom">
+                    Customs Value
+                </th>
+                <th class="col-total-weight">Total Weight</th>
+                <th class="col-length">Length</th>
+                <th class="col-width">Width</th>
+                <th class="col-height">Height</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-type">
+                    <select name="package_container" disabled="" class="admin__control-select disabled">
+                    </select>
+                </td>
+                    <td class="col-custom">
+                    <div class="admin__control-addon">
+                        <input type="text" name="packages[1][params][customs_value]" 
+                        class="customs-value input-text admin__control-text  validate-zero-or-greater " required>
+                        <span class="admin__addon-suffix">
+                            <span class="customs-value-currency"><?= /* @noEscape */ $curencyCode;?></span>
+                        </span>
+                    </div>
+                </td>
+                <td class="col-total-weight">
+                    <div class="admin__control-addon">
+                    <input type="text" name="packages[1][params][weight]" 
+                    class="options-weight input-text admin__control-text required-entry validate-greater-than-zero">
+                            <select name="packages[1][params][weight_units]" 
+                            class="options-units-weight measures admin__control-select" required>
+                                <option value="POUND" selected="selected">lb</option>
+                                <option value="KILOGRAM">kg</option>
+                            </select>
+                        <span class="admin__addon-prefix"></span>
+                    </div>
+                </td>
+                <td class="col-length">
+                    <input type="text" name="packages[1][params][length]"
+                     class="input-text admin__control-text validate-greater-than-zero" required>
+                </td>
+                <td class="col-width">
+                    <input type="text" name="packages[1][params][width]"
+                     class="input-text admin__control-text validate-greater-than-zero" required>
+                </td>
+                <td class="col-height">
+                    <input type="text" name="packages[1][params][height]" 
+                    class="input-text admin__control-text validate-greater-than-zero" required>
+                </td>
+                <td class="col-measure">
+                    <select name="packages[1][params][dimension_units]" 
+                    class="options-units-dimensions measures admin__control-select" required>
+                        <option value="INCH" selected="selected">in</option>
+                        <option value="CENTIMETER">cm</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="package-extra-content" style="display:none">
+        <table class="data-table admin__control-table" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Contents</th>
+                    <th>Explanation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="container-types">
+
+                    </td>
+                    <td>
+                        <input name="packages[1][params][content_type_other]" type="text" 
+                        class="multiship-reason input-text admin__control-text options-content-type disabled" 
+                        disabled="disabled">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <input type="hidden" id="package_item_qty">
+    <input type="hidden" id="package_item_customs_value">
+    <input type="hidden" id="package_item_price">
+    <input type="hidden" id="package_item_name">
+    <input type="hidden" id="package_item_weight">
+    <input type="hidden" id="package_item_product_id">
+    <input type="hidden" id="package_item_order_item_id">
+</form>
+
+<style>
+.options-weight{
+    width:53% !important;
+}
+.customs-value {
+    width:53% !important;
+}
+.modal-popup._inner-scroll .modal-inner-wrap {
+    width: 92%
+}
+</style>

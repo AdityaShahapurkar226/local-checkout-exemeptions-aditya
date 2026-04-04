@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMultiShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Quote\Model\ShippingMethodManagement" type="Webkul\MpMultiShipping\Model\ShippingMethodManagement" />
+    <preference for="Magento\Quote\Model\Quote\Address" type="Webkul\MpMultiShipping\Plugin\Quote\Model\QuoteAddress" />
+
+    <type name="Magento\Quote\Model\Cart\CartTotalRepository">
+        <plugin name="carttotalrepository_core_issuesfix" type="Webkul\MpMultiShipping\Plugin\Quote\CartTotalRepository" sortOrder="1"/>
+    </type>
+    <type name="Magento\Checkout\Model\ShippingInformationManagement">
+        <plugin name="seller_method_in_checkout" type="Webkul\MpMultiShipping\Plugin\Checkout\Model\ShippingInformationManagement" sortOrder="1"/>
+    </type>
+    <type name="Webkul\Marketplace\Block\Account\Navigation\ShippingMenu">
+        <plugin name="multiship_shipping_avl" type="Webkul\MpMultiShipping\Plugin\Seller\AllowedShipping" sortOrder="1"/>
+    </type>
+    <type name="Webkul\Marketplace\Block\Order\Items">
+        <plugin name="multiship_extra_columns" type="Webkul\MpMultiShipping\Plugin\Order\Items" sortOrder="1"/>
+    </type>
+    <type name="Webkul\MpMultiShipping\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Webkul\MpMultiShipping\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">customLogHandler</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Webkul\MpMultiShipping\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

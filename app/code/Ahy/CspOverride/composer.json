@@ -1,0 +1,13 @@
+{
+  "name": "ahy/csp-override",
+  "description": "CSP override for Bubble House module",
+  "require": {
+    "php": "~8.1.0||~8.2.0"
+  },
+  "type": "magento2-module",
+  "version": "1.0.0",
+  "license": "proprietary",
+  "autoload": {
+    "files": ["registration.php"]
+  }
+}

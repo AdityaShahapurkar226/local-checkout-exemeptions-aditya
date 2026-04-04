@@ -1,0 +1,55 @@
+.image-con {
+    margin: 5px 0;
+ }
+.field-tooltip-action:before {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 21px;
+    line-height: inherit;
+    color: #bbbbbb;
+    content: '\e60c';
+    font-family: 'luma-icons';
+    vertical-align: middle;
+    display: inline-block;
+    font-weight: normal;
+    overflow: hidden;
+    speak: none;
+    text-align: center;
+    cursor: pointer;
+}
+.field-tooltip-content {
+    background: #f4f4f4;
+    border: 1px solid #999999;
+    border-radius: 1px;
+    padding: 12px;
+    width: 166px;
+    display: none;
+    left: -41px;
+    position: absolute;
+    text-transform: none;
+    top: 81px;
+    word-wrap: break-word;
+    z-index: 2;
+    line-height: 26px;
+}
+.field-tooltip-content:after,.field-tooltip-content:before{
+    border: 10px solid transparent;
+    height: 0;
+    width: 0;
+    left: 106px;
+    top: -21px;
+    content: '';
+    display: block;
+    position: absolute;
+    z-index: 3;
+}
+.italic-info {
+    font-style: italic;
+    font-size: 10px;
+}
+@media all and (min-width: 768px) {
+    .marketplace-seller-collection .toolbar-products,
+    .marketplace-seller-profile .toolbar-products {
+        position: relative !important;
+    }
+}

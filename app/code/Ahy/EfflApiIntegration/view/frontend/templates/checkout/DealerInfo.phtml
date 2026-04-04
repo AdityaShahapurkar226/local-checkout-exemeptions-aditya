@@ -1,0 +1,32 @@
+<div 
+    x-data="{
+        selectedDealer: null,
+        currentStep: null,
+        nextStepLabel: ''
+    }"
+    @ffl:dealer:selected.window="
+        selectedDealer = $event.detail.dealer;
+        currentStep = $event.detail.step ?? currentStep;
+    "
+    @checkout:next-step.window="
+        nextStepLabel = $event.detail.label;
+        if (currentStep < 2) {
+            selectedDealer = null;
+        }
+    "
+    class="rounded text-gray-700 text-sm"
+>
+    <!-- Dealer info -->
+    <template x-if="selectedDealer && nextStepLabel === 'REVIEW & ORDER'">
+        <div class="p-3 border rounded bg-green-50 mt-4">
+            <p class="mb-2 font-semibold text-green-800">Selected FFL Dealer:</p>
+            <p x-text="selectedDealer.name" class="text-sm"></p>
+            <p x-text="[
+                selectedDealer.street,
+                selectedDealer.city,
+                selectedDealer.state,
+                selectedDealer.zip_code
+            ].filter(Boolean).join(', ')"></p>
+        </div>
+    </template>
+</div>

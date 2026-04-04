@@ -1,0 +1,85 @@
+button.gpay-card-info-container {
+    width: 100% !important;
+}
+
+button.braintree-googlepay-button {
+    background-origin: content-box;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border: 0;
+    border-radius: 100vh;
+    box-shadow: rgba(60, 64, 67, 0.3) 0 1px 1px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
+    cursor: pointer;
+    height: 3rem;
+    /* min-height: 40px; */
+    padding: 1rem;
+}
+
+button.braintree-googlepay-button.black {
+    background-color: #000000;
+    box-shadow: none;
+}
+
+button.braintree-googlepay-button.white {
+    background-color: #ffffff;
+}
+
+button.braintree-googlepay-button.short {
+    min-width: 90px;
+    width: 160px;
+}
+
+button.braintree-googlepay-button.black.short {
+    background-image: url(https://www.gstatic.com/instantbuy/svg/dark_gpay.svg);
+}
+
+button.braintree-googlepay-button.white.short {
+    background-image: url(https://www.gstatic.com/instantbuy/svg/light_gpay.svg);
+}
+
+button.braintree-googlepay-button.black:active {
+    background-color: #5f6368;
+}
+
+button.braintree-googlepay-button.black:hover {
+    background-color: #3c4043;
+}
+
+button.braintree-googlepay-button.white:active {
+    background-color: #ffffff;
+}
+
+button.braintree-googlepay-button.white:focus {
+    box-shadow: #e8e8e8 0 1px 1px 0, #e8e8e8 0 1px 3px;
+}
+
+button.braintree-googlepay-button.white:hover {
+    background-color: #f8f8f8;
+}
+
+button.braintree-googlepay-button.long {
+    min-width: 240px;
+    width: 100%;
+}
+
+button.braintree-googlepay-button.white.long {
+    background-image: url(https://www.gstatic.com/instantbuy/svg/light/en.svg);
+}
+
+button.braintree-googlepay-button.black.long {
+    background-image: url(https://www.gstatic.com/instantbuy/svg/dark/en.svg);
+}
+
+.googlepay-minicart-logo {
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.braintreeGooglePayButton .gpay-button {
+    width: 100%;
+}
+
+button.braintree-googlepay-button:nth-child(2) {
+ display:none
+}

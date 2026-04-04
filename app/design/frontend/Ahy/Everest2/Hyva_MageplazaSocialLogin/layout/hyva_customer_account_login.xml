@@ -1,0 +1,11 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="hyva_modal"></update>
+    <update handle="hyva_form_validation"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="Mageplaza\SocialLogin\Block\Popup\Social" after="customer.login.container" ifconfig="sociallogin/general/enabled" name="social-login-popup-authentication-social-login" template="Hyva_MageplazaSocialLogin::form/social.phtml">
+                <block class="Mageplaza\SocialLogin\Block\Popup" name="social-login-request-info" before="-" as="hyva.request.info" template="Hyva_MageplazaSocialLogin::popup/form/email.phtml"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>
+        <css src="Webkul_MpSellerBuyerCommunication::css/mpsellerbuyercomm.css"/>
+    </head>
+    <body>
+    	<referenceBlock name="marketplace_sellerprofile22">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Webkul_MpSellerBuyerCommunication::wk_block.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

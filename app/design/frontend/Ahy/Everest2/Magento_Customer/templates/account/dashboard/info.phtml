@@ -1,0 +1,72 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Customer\Block\Account\Dashboard\Info;
+use Magento\Framework\Escaper;
+
+/** @var Info $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+?>
+<div class="mb-6 text-2xl text-ahy-blue font-extrabold pb-4 border-b border-ahy-yellow-card block-title"><?= $escaper->escapeHtml(__('Account Information')) ?></div>
+<div class="flex flex-wrap justify-between -m-4">
+    <div class="w-full p-4 lg:w-1/2">
+        <div class="flex flex-col h-full p-8 sm:flex-row bg-ahy-yellow-card card">
+            <div class="grow">
+                <h2 class="mb-3 text-lg font-extrabold text-ahy-blue title-font">
+                    <span><?= $escaper->escapeHtml(__('MY CONTACT')) ?></span>
+                </h2>
+                <p>
+                    <?= $escaper->escapeHtml($block->getName()) ?><br>
+                    <?= $escaper->escapeHtml($block->getCustomer()->getEmail()) ?><br>
+                </p>
+                <?= $block->getChildHtml('customer.account.dashboard.info.extra'); ?>
+                <a
+                    class="inline-flex items-center w-full mt-3 md:text-sm text-ahy-blue-light hover:text-ahy-blue"
+                    href="<?= $escaper->escapeUrl($block->getUrl('customer/account/edit')) ?>">
+                    <span><?= $escaper->escapeHtml(__('Edit')) ?></span>
+                    <?= $heroicons->arrowRightHtml('ml-2', 16, 16); ?>
+                </a>
+                <a
+                    class="inline-flex items-center w-full md:text-sm text-ahy-blue-light hover:text-ahy-blue"
+                    href="<?= $escaper->escapeUrl($block->getChangePasswordUrl()) ?>" class="action change-password">
+                    <?= $escaper->escapeHtml(__('Change Password')) ?>
+                    <?= $heroicons->arrowRightHtml('ml-2', 16, 16); ?>
+                </a>
+            </div>
+        </div>
+    </div>
+    <?php if ($block->isNewsletterEnabled()): ?>
+        <div class="w-full p-4 lg:w-1/2">
+            <div class="flex flex-col h-full p-8 border border-gray-200 sm:flex-row bg-ahy-yellow-card card">
+                <div class="grow"><h2 class="mb-3 text-lg font-extrabold text-ahy-blue title-font">
+                        <span><?= $escaper->escapeHtml(__('NEWSLETTERS')) ?></span></h2>
+                    <p>
+                        <?php if ($block->getIsSubscribed()): ?>
+                            <?= $escaper->escapeHtml(__('You are subscribed to "General Subscription".')) ?>
+                        <?php else: ?>
+                            <?= $escaper->escapeHtml(__('You aren\'t subscribed to our newsletter.')) ?>
+                        <?php endif; ?>
+                    </p>
+                    <a
+                        class="mt-3 w-full inline-flex items-center md:text-sm text-ahy-blue-light
+                            hover:text-ahy-blue"
+                        href="<?= $escaper->escapeUrl($block->getUrl('newsletter/manage')) ?>">
+                        <span><?= $escaper->escapeHtml(__('Edit')) ?></span>
+                        <?= $heroicons->arrowRightHtml('ml-2', 16, 16); ?>
+                    </a>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>

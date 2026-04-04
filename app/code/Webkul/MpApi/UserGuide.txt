@@ -1,0 +1,1585 @@
+Magento2 Marketplace Rest Api Calls:
+
+Admin Api Calls : needs admin authorization
+
+==============================================================================================================================================================
+
+1. api resource : rest/V1/mpapi/admin/sellers
+method: GET
+response: [
+  {
+    total_count: int,
+    items: [
+      {
+        entity_id: string,
+        is_seller: string,
+        seller_id: string,
+        payment_source: string,
+        twitter_id: string,
+        facebook_id: string,
+        gplus_id: string,
+        youtube_id: string,
+        vimeo_id: string,
+        instagram_id: string,
+        pinterest_id: string,
+        moleskine_id: string,
+        tw_active: string,
+        fb_active: string,
+        gplus_active: string,
+        youtube_active: string,
+        vimeo_active: string,
+        instagram_active: string,
+        pinterest_active: string,
+        moleskine_active: string,
+        others_info: string,
+        banner_pic: string,
+        shop_url: string,
+        shop_title: string,
+        logo_pic: string,
+        company_locality: string,
+        country_pic: string,
+        company_description: string,
+        meta_keyword: string,
+        meta_description: string,
+        background_width: string,
+        store_id: string,
+        contact_number: string,
+        return_policy: string,
+        shipping_policy: string,
+        created_at: string,
+        updated_at: string,
+        admin_notification: string,
+        privacy_policy: string,
+        allowed_categories: string
+      }
+    ]
+  }
+]
+description: get all sellers data
+
+2. api resource : rest/V1/mpapi/admin/sellers/:id
+method: GET
+response: [
+  {
+    items: {
+      entity_id: string,
+      is_seller: string,
+      seller_id: string,
+      payment_source: string,
+      twitter_id: string,
+      facebook_id: string,
+      gplus_id: string,
+      youtube_id: string,
+      vimeo_id: string,
+      instagram_id: string,
+      pinterest_id: string,
+      moleskine_id: string,
+      tw_active: string,
+      fb_active: string,
+      gplus_active: string,
+      youtube_active: string,
+      vimeo_active: string,
+      instagram_active: string,
+      pinterest_active: string,
+      moleskine_active: string,
+      others_info: string,
+      banner_pic: string,
+      shop_url: string,
+      shop_title: string,
+      logo_pic: string,
+      company_locality: string,
+      country_pic: string,
+      company_description: string,
+      meta_keyword: string,
+      meta_description: string,
+      background_width: string,
+      store_id: string,
+      contact_number: string,
+      return_policy: string,
+      shipping_policy: string,
+      created_at: string,
+      updated_at: string,
+      admin_notification: string,
+      privacy_policy: string,
+      allowed_categories: string
+    }
+  }
+]
+description: get seller by id
+
+3. api resource : rest/V1/mpapi/admin/sellers/:id/product
+method: GET
+response: [
+  {
+    items: [
+      {
+        name: string,
+        type: string,
+        sku: string,
+        entity_id: string,
+        mageproduct_id: string,
+        adminassign: string,
+        seller_id: string,
+        store_id: string,
+        status: string,
+        created_at: string,
+        updated_at: string,
+        seller_pending_notification: string,
+        admin_pending_notification: string,
+        is_approved: string
+      }
+    ],
+    total_count: int
+  }
+]
+description: get sellers wise products
+
+4. api resource : rest/V1/mpapi/admin/sellers/:id/order
+method: GET
+response: [
+  {
+    total_count: int,
+    items: [
+      {
+        entity_id: string,
+        mageproduct_id: string,
+        order_id: string,
+        order_item_id: string,
+        parent_item_id: string,
+        magerealorder_id: string,
+        magequantity: string,
+        seller_id: string,
+        trans_id: string,
+        cpprostatus: string,
+        paid_status: string,
+        magebuyer_id: string,
+        magepro_name: string,
+        magepro_price: string,
+        total_amount: string,
+        total_tax: string,
+        total_commission: string,
+        actual_seller_amount: string,
+        created_at: string,
+        updated_at: string,
+        is_shipping: string,
+        is_coupon: string,
+        is_paid: string,
+        commission_rate: string,
+        currency_rate: string,
+        applied_coupon_amount: string,
+        is_withdrawal_requested: string
+      }
+    ]
+  }
+]
+get seller wise orders
+
+5. api resource : rest/V1/mpapi/admin/sellers/:id/order/sales
+method: GET
+response: [
+  {
+    total_count: int,
+    items: [
+      {
+        entity_id: string,
+        order_id: string,
+        product_ids: string,
+        seller_id: string,
+        shipment_id: string,
+        invoice_id: string,
+        creditmemo_id: string,
+        is_canceled: string,
+        shipping_charges: string,
+        carrier_name: string,
+        trackingId: string,
+        created_at: string,
+        updated_at: string,
+        tax_to_seller: string,
+        total_tax: string,
+        coupon_amount: string,
+        refunded_coupon_amount: string,
+        refunded_shipping_charges: string,
+        seller_pending_notification: string,
+        order_status: string
+      }
+    ]
+  }
+]
+get seller wise sales details
+
+6. api resource : rest/V1/mpapi/admin/sellers/:id/paytoseller
+method: POST
+response: [
+  {
+    status: int,
+    message: string 
+  }
+]
+
+pay seller his amount after deducting commission
+
+7. api resource : rest/V1/mpapi/admin/sellers/:sellerId/assign
+method: POST
+response: [
+  {
+    status: int,
+    message: [
+      string
+    ]
+  }
+]
+assign product(s) to seller
+
+8. api resource : rest/V1/mpapi/admin/sellers/:sellerId/unassign
+method: POST
+response: [
+  {
+    status: int,
+    message: [
+      string
+    ]
+  }
+]
+unassign product(s) to seller
+-------------------------------------------------------------------------------
+
+Seller Api Calls: needs customer authorization
+
+
+==============================================================================================================================================================
+
+7. api resource : rest/V1/mpapi/sellers/me
+method: GET
+response: [
+  {
+    items: {
+      entity_id: string,
+      is_seller: string,
+      seller_id: string,
+      payment_source: string,
+      twitter_id: string,
+      facebook_id: string,
+      gplus_id: string,
+      youtube_id: string,
+      vimeo_id: string,
+      instagram_id: string,
+      pinterest_id: string,
+      moleskine_id: string,
+      tw_active: string,
+      fb_active: string,
+      gplus_active: string,
+      youtube_active: string,
+      vimeo_active: string,
+      instagram_active: string,
+      pinterest_active: string,
+      moleskine_active: string,
+      others_info: string,
+      banner_pic: string,
+      shop_url: string,
+      shop_title: string,
+      logo_pic: string,
+      company_locality: string,
+      country_pic: string,
+      company_description: string,
+      meta_keyword: string,
+      meta_description: string,
+      background_width: string,
+      store_id: string,
+      contact_number: string,
+      return_policy: string,
+      shipping_policy: string,
+      created_at: string,
+      updated_at: string,
+      admin_notification: string,
+      privacy_policy: string,
+      allowed_categories: string
+    }
+  }
+]
+get self profile details
+
+8. api resource : rest/V1/mpapi/sellers/me/product
+method: GET
+response: [
+  {
+    items: [
+      {
+        name: string,
+        type: string,
+        sku: string,
+        mageproduct_id: string
+      }
+    ],
+    status: int,
+    total_count: int
+  }
+]
+get self products details
+
+9. api resource : rest/V1/mpapi/sellers/me/order
+method: GET
+response: [
+  {
+    total_count: int,
+    items: [
+      {
+        entity_id: string,
+        mageproduct_id: string,
+        order_id: string,
+        order_item_id: string,
+        parent_item_id: string,
+        magerealorder_id: string,
+        magequantity: string,
+        seller_id: string,
+        trans_id: string,
+        cpprostatus: string,
+        paid_status: string,
+        magebuyer_id: string,
+        magepro_name: string,
+        magepro_price: string,
+        total_amount: string,
+        total_tax: string,
+        total_commission: string,
+        actual_seller_amount: string,
+        created_at: string,
+        updated_at: string,
+        is_shipping: string,
+        is_coupon: string,
+        is_paid: string,
+        commission_rate: string,
+        currency_rate: string,
+        applied_coupon_amount: string,
+        is_withdrawal_requested: string
+      }
+    ]
+  }
+]
+get self order details
+
+10. api resource : rest/V1/mpapi/sellers/me/order/sales
+method: GET
+response: [
+  {
+    total_count: int,
+    items: [
+      {
+        entity_id: string,
+        order_id: string,
+        product_ids: string,
+        seller_id: string,
+        shipment_id: string,
+        invoice_id: string,
+        creditmemo_id: string,
+        is_canceled: string,
+        shipping_charges: string,
+        carrier_name: string,
+        trackingId: string,
+        created_at: string,
+        updated_at: string,
+        tax_to_seller: string,
+        total_tax: string,
+        coupon_amount: string,
+        refunded_coupon_amount: string,
+        refunded_shipping_charges: string,
+        seller_pending_notification: string,
+        order_status: string
+      }
+    ]
+  }
+]
+get self order sales details
+
+11. api resource : rest/V1/mpapi/sellers/me/order/invoice
+method: POST
+response: [
+  {
+    status: int,
+    message: string,
+    invoice_id: int
+  }
+]
+create invoice for seller order
+
+12. api resource : rest/V1/mpapi/sellers/me/order/:orderId/invoice/:invoiceId
+method: GET
+response: [
+  {
+    mainHeading: string,
+    sendmailAction: string,
+    sendmailWarning: string,
+    subHeading: string,
+    orderData: {
+      title: string,
+      label: string,
+      statusLabel: string,
+      statusValue: string,
+      dateLabel: string,
+      dateValue: string
+    },
+    buyerData: {
+      title: string,
+      nameLabel: string,
+      nameValue: string,
+      emailLabel: string,
+      emailValue: string
+    },
+    shippingAddressData: {
+      title: string,
+      address: [
+        {
+          name: string,
+          street: string,
+          state: string,
+          country: string,
+          telephone: string
+        }
+      ]
+    },
+    shippingMethodData: {
+      title: string,
+      method: string
+    },
+    billingAddressData: {
+      title: string,
+      address: [
+        {
+          name: string,
+          street: string,
+          state: string,
+          country: string,
+          telephone: string
+        }
+      ]
+    },
+    paymentMethodData: {
+      title: string,
+      method: string
+    },
+    items: [
+      {
+        productName: string,
+        price: string,
+        qty: {
+          Ordered: int,
+          Invoiced: int,
+          Shipped: int,
+          Canceled: int,
+          Refunded: int
+        },
+        subTotal: string,
+        adminComission: string,
+        vendorTotal: string
+      }
+    ],
+    subtotal: {
+      title: string,
+      value: string
+    },
+    shipping: {
+      title: string,
+      value: string
+    },
+    tax: {
+      title: string,
+      value: string
+    },
+    totalOrderedAmount: {
+      title: string,
+      value: string
+    },
+    totalVendorAmount: {
+      title: string,
+      value: string
+    },
+    totalAdminComission: {
+      title: string,
+      value: string
+    },
+    status: int
+  }
+]
+get invoice data
+
+13. api resource : rest/V1/mpapi/sellers/me/order/cancel
+method: POST
+response: [
+  {
+    status: int,
+    message: string
+  }
+]
+cancel the order
+
+14. api resource : rest/V1/mpapi/sellers/me/order/creditmemo
+method: POST
+response: [
+  {
+    id: int,
+    status: int,
+    message: string
+  }
+]
+create credit memo for seller order
+
+15. api resource : rest/V1/mpapi/sellers/me/order/:orderId/creditmemo/:creditmemoId
+method: GET
+response: [
+  {
+    mainHeading: string,
+    sendmailAction: string,
+    sendmailWarning: string,
+    subHeading: string,
+    orderData: {
+      title: string,
+      label: string,
+      statusLabel: string,
+      statusValue: string,
+      dateLabel: string,
+      dateValue: string
+    },
+    buyerData: {
+      title: string,
+      nameLabel: string,
+      nameValue: string,
+      emailLabel: string,
+      emailValue: string
+    },
+    shippingAddressData: {
+      title: string,
+      address: [
+        {
+          name: string,
+          street: string,
+          state: string,
+          country: string,
+          telephone: string
+        }
+      ]
+    },
+    shippingMethodData: {
+      title: string,
+      method: string
+    },
+    billingAddressData: {
+      title: string,
+      address: [
+        {
+          name: string,
+          street: string,
+          state: string,
+          country: string,
+          telephone: string
+        }
+      ]
+    },
+    paymentMethodData: {
+      title: string,
+      method: string
+    },
+    items: [
+      {
+        productName: string,
+        price: string,
+        qty: {
+          Ordered: int,
+          Invoiced: int,
+          Shipped: int,
+          Canceled: int,
+          Refunded: int
+        },
+        subTotal: string,
+        adminComission: string,
+        vendorTotal: string
+      }
+    ],
+    subtotal: {
+      title: string,
+      value: string
+    },
+    shipping: {
+      title: string,
+      value: string
+    },
+    tax: {
+      title: string,
+      value: string
+    },
+    totalOrderedAmount: {
+      title: string,
+      value: string
+    },
+    totalVendorAmount: {
+      title: string,
+      value: string
+    },
+    totalAdminComission: {
+      title: string,
+      value: string
+    },
+    status: int
+  }
+]
+get credit memo details
+
+16. api resource : rest/V1/mpapi/sellers/me/mailtoadmin
+method: POST
+response: [
+  {
+    status: int,
+    message: string
+  }
+]
+ask questions to admin
+
+17. api resource : rest/V1/mpapi/sellers/me/mailtoseller
+method: POST
+response: [
+  {
+    status: int,
+    message: string
+  }
+]
+contact seller
+
+18. api resource : rest/V1/mpapi/sellers/me/becomepartner
+method: POST
+response: [
+  {
+    status: int,
+    message: string
+  }
+]
+request to become partner
+
+19 api resource : rest/V1/mpapi/sellers/me/order/ship
+method: POST
+response: [
+  {
+    status: int,
+    message: string
+  }
+]
+request to create shipment
+
+20. api resource : rest/V1/mpapi/sellers/me/order/:orderId/ship/:shipmentId
+method: GET
+response: [
+  {
+    mainHeading: string,
+    sendmailAction: string,
+    sendmailWarning: string,
+    subHeading: string,
+    orderData: {
+      title: string,
+      label: string,
+      statusLabel: string,
+      statusValue: string,
+      dateLabel: string,
+      dateValue: string
+    },
+    buyerData: {
+      title: string,
+      nameLabel: string,
+      nameValue: string,
+      emailLabel: string,
+      emailValue: string
+    },
+    shippingAddressData: {
+      title: string,
+      address: [
+        {
+          name: string,
+          street: string,
+          state: string,
+          country: string,
+          telephone: string
+        }
+      ]
+    },
+    shippingMethodData: {
+      title: string,
+      method: string
+    },
+    billingAddressData: {
+      title: string,
+      address: [
+        {
+          name: string,
+          street: string,
+          state: string,
+          country: string,
+          telephone: string
+        }
+      ]
+    },
+    paymentMethodData: {
+      title: string,
+      method: string
+    },
+    shippingCarriers: [
+      {
+        carrier: string,
+        title: string,
+        number: string
+      }
+    ],
+    items: [
+      {
+        productName: string,
+        sku: string,
+        qty: int
+      }
+    ],
+    status: int
+  }
+]
+get shipment details
+
+21. api resource : rest/V1/mpapi/sellers/me/addproduct
+method: POST
+response: [
+  {
+    status: int,
+    message: string
+  }
+]
+request to create seller product
+
+-------------------------------------------------------------------------------
+
+Guest User Accessable resources: no authorization needed
+
+==============================================================================================================================================================
+
+22. api resource : rest/V1/mpapi/marketplace
+method: GET
+response: [
+  {
+    icons: [
+      {
+        image: string,
+        label: string
+      }
+    ],
+    labels: [
+      {
+        label: string
+      }
+    ],
+    aboutImage: string
+    bannerImage: string,
+    banner: [
+      {
+        label: string,
+        content: string
+      }
+    ],
+    sellers: [
+      {
+        products: [
+          {
+            id: string,
+            name: string,
+            type: string,
+            thumbnail: string
+          }
+        ],
+        shopTitle: string,
+        profileurl: string,
+        sellerIcon: string,
+        sellerProductCount: int
+      }
+    ]
+  }
+]
+returns marketplace landing page details
+
+23. api resource : rest/V1/mpapi/sellers
+method: GET
+response: [
+  {
+    total_count: int,
+    items: [
+      {
+        entity_id: string,
+        is_seller: string,
+        seller_id: string,
+        payment_source: string,
+        twitter_id: string,
+        facebook_id: string,
+        gplus_id: string,
+        youtube_id: string,
+        vimeo_id: string,
+        instagram_id: string,
+        pinterest_id: string,
+        moleskine_id: string,
+        tw_active: string,
+        fb_active: string,
+        gplus_active: string,
+        youtube_active: string,
+        vimeo_active: string,
+        instagram_active: string,
+        pinterest_active: string,
+        moleskine_active: string,
+        others_info: string,
+        banner_pic: string,
+        shop_url: string,
+        shop_title: string,
+        logo_pic: string,
+        company_locality: string,
+        country_pic: string,
+        company_description: string,
+        meta_keyword: string,
+        meta_description: string,
+        background_width: string,
+        store_id: string,
+        contact_number: string,
+        return_policy: string,
+        shipping_policy: string,
+        created_at: string,
+        updated_at: string,
+        admin_notification: string,
+        privacy_policy: string,
+        allowed_categories: string
+      }
+    ]
+  }
+]
+get all sellers list
+
+24. api resource : rest/V1/mpapi/sellers/:id/reviews
+method: GET
+response: [
+  {
+    total_count: int,
+    items: [
+      {
+        entity_id: string,
+        seller_id: string,
+        buyer_id: string,
+        buyer_email: string,
+        status: string,
+        feed_price: string,
+        feed_value: string,
+        feed_quality: string,
+        feed_nickname: string,
+        feed_summary: string,
+        feed_review: string,
+        created_at: string,
+        updated_at: string,
+        seller_pending_notification: string,
+        admin_notification: string
+      }
+    ]
+  }
+]
+get reviews of the seller.
+
+25. api resource : rest/V1/mpapi/sellers/reviews
+method: POST
+Note: The value of feed_price, feed_quality and feed_value is any one from 20, 40, 60, 80 and 100
+20  -  1 star
+40  -  2 star
+60  -  3 star
+80  -  4 star
+100 -  5 star
+response: [
+  {
+    status: int,
+    message: string,
+    review_id: int
+  }
+]
+make seller review
+
+26. api resource : rest/V1/mpapi/sellers/:review_id/review
+method: GET
+response: [
+  {
+    total_count: int,
+    items: {
+      entity_id: string,
+      seller_id: string,
+      buyer_id: string,
+      buyer_email: string,
+      status: string,
+      feed_price: string,
+      feed_value: string,
+      feed_quality: string,
+      feed_nickname: string,
+      feed_summary: string,
+      feed_review: string,
+      created_at: string,
+      updated_at: string,
+      seller_pending_notification: string,
+      admin_notification: string
+    }
+  }
+]
+
+24. api resource : rest/V1/mpapi/sellers/create
+method: post
+response: [
+  {
+    status: int,
+    message: string,
+    id: string,
+    group_id: string,
+    default_billing: string,
+    default_shipping: string,
+    confirmation: string,
+    created_at: string,
+    updated_at: string,
+    created_in: string,
+    dob: string,
+    email: string,
+    firstname: string,
+    lastname: string,
+    middlename: string,
+    prefix: string,
+    suffix: string,
+    gender: string,
+    store_id: string,
+    taxvat: string,
+    website_id: string,
+    disable_auto_group_change: string,
+    is_seller: string,
+    profileurl: string,
+  }
+]
+request to create seller
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Magento2 Marketplace GraphQl Api Calls: 
+
+Guest User Accessable resources: no authorization needed
+
+==============================================================================================================================================================
+api resource : graphql
+
+1. To get marketplace landing page details
+query {
+  marketplaceLangingPage {
+    banner {
+      label
+      content
+    }
+    bannerImage
+    aboutImage
+    labels {
+      label
+    }
+    icons {
+      image
+      label
+    }
+    sellers {
+      products {
+        id
+        name
+        type
+        thumbnail
+      }
+      shopTitle
+      profileurl
+      sellerIcon
+      sellerProductCount
+    }
+  }
+}
+response: json
+
+2. get all sellers list
+query {
+	sellersList(
+		filter:{
+			<field name to filter data>: {
+				<condition>: <value>
+			}
+		}
+	) {
+		total_count
+		items {  
+			entity_id  
+			is_seller  
+			seller_id  
+			payment_source  
+			twitter_id  
+			facebook_id  
+			gplus_id  
+			youtube_id  
+			vimeo_id  
+			instagram_id  
+			pinterest_id  
+			moleskine_id  
+			tw_active  
+			fb_active  
+			gplus_active  
+			youtube_active  
+			vimeo_active  
+			instagram_active  
+			pinterest_active  
+			moleskine_active  
+			others_info  
+			banner_pic  
+			shop_url  
+			shop_title  
+			logo_pic  
+			company_locality  
+			country_pic  
+			company_description  
+			meta_keyword 
+			meta_description  
+			background_width  
+			store_id  
+			contact_number  
+			return_policy  
+			shipping_policy  
+			created_at  
+			updated_at  
+			admin_notification 
+			privacy_policy  
+			allowed_categories
+		}
+	}
+}
+response: json
+
+3. get reviews of the seller
+query {
+  getSellerReview(id: <Seller Id>) {
+    total_count
+    items {
+      entity_id
+      seller_id
+      buyer_id
+      buyer_email
+      status
+      feed_price
+      feed_value
+      feed_quality
+      feed_nickname
+      feed_summary
+      feed_review
+      created_at
+      updated_at
+      seller_pending_notification
+      admin_notification
+    }
+  }
+}
+response: json
+
+4. get review details by review id
+query {
+  getSellerReviewDetails(id: <review id>) {
+    total_count
+    items {
+      entity_id
+      seller_id
+      buyer_id
+      buyer_email
+      status
+      feed_price
+      feed_value
+      feed_quality
+      feed_nickname
+      feed_summary
+      feed_review
+      created_at
+      updated_at
+      seller_pending_notification
+      admin_notification
+    }
+  }
+}
+response: json
+
+-------------------------------------------------------------------------------
+
+Seller Api Calls: needs customer authorization
+
+==============================================================================================================================================================
+api resource : graphql
+
+5. get self profile details
+query {
+  sellerSelf {
+    entity_id
+    is_seller
+    seller_id
+    payment_source
+    twitter_id
+    facebook_id
+    gplus_id
+    youtube_id
+    vimeo_id
+    instagram_id
+    pinterest_id
+    moleskine_id
+    tw_active
+    fb_active
+    gplus_active
+    youtube_active
+    vimeo_active
+    instagram_active
+    pinterest_active
+    moleskine_active
+    others_info
+    banner_pic
+    shop_url
+    shop_title
+    logo_pic
+    company_locality
+    country_pic
+    company_description
+    meta_keyword
+    meta_description
+    background_width
+    store_id
+    contact_number
+    return_policy
+    shipping_policy
+    created_at
+    updated_at
+    admin_notification
+    privacy_policy
+    allowed_categories
+    status
+  }
+}
+response: json
+
+6. get self products details
+query {
+  sellerSelfProduct {
+    total_count
+    items {
+      entity_id
+      mageproduct_id
+      adminassign
+      seller_id
+      store_id
+      status
+      created_at
+      updated_at
+      seller_pending_notification
+      admin_pending_notification
+      is_approved
+    }
+  }
+}
+response: json
+
+7. get self order details
+query {
+  sellerOrderList(filter: {
+    <field to filter>: {
+      <filter type>: <order id>
+    }
+  }) {
+    total_count
+    items {
+      entity_id
+      mageproduct_id
+      order_id
+      order_item_id
+      parent_item_id
+      magerealorder_id
+      magequantity
+      seller_id
+      trans_id
+      cpprostatus
+      paid_status
+      magebuyer_id
+      magepro_name
+      magepro_price
+      total_amount
+      total_tax
+      total_commission
+      actual_seller_amount
+      created_at
+      updated_at
+      is_shipping
+      is_coupon
+      is_paid
+      commission_rate
+      currency_rate
+      applied_coupon_amount
+      is_withdrawal_requested
+    }
+  }
+}
+response: json
+
+8. get self order sales details
+query {
+  sellerOrderSales {
+    total_count
+    items {
+      entity_id
+      order_id
+      product_ids
+      seller_id
+      shipment_id
+      invoice_id
+      creditmemo_id
+      is_canceled
+      shipping_charges
+      carrier_name
+      trackingId
+      created_at
+      updated_at
+      tax_to_seller
+      total_tax
+      coupon_amount
+      refunded_coupon_amount
+      refunded_shipping_charges
+      seller_pending_notification
+      order_status
+    }
+  }
+}
+response: json
+
+9. create invoice for seller order
+mutation {
+  sellerCreateInvoice(orderId: <order id>) {
+    message
+  }
+}
+response: json
+
+10. get invoice data
+query {
+  sellerGetInvoiceDetails(orderId: <order id>, invoiceId: <invoice id>) {
+    mainHeading
+    sendmailAction
+    sendmailWarning
+    subHeading
+    orderData {
+      title
+      label
+      statusLabel
+      statusValue
+      dateLabel
+      dateValue
+    }
+    buyerData {
+      title
+      nameLabel
+      nameValue
+      emailLabel
+      emailValue
+    }
+    shippingAddressData {
+      title
+      address {
+        name
+        street
+        state
+        country
+        telephone
+      }
+    }
+    shippingMethodData {
+      title
+      method
+    }
+    billingAddressData {
+      title
+      address {
+        name
+        street
+        state
+        country
+        telephone
+      }
+    }
+    paymentMethodData {
+      title
+      method
+    }
+    items {
+      productName
+      price
+      qty {
+        Ordered
+        Invoiced
+        Shipped
+        Canceled
+        Refunded
+      }
+      subTotal
+      adminComission
+      vendorTotal
+    }
+    subtotal {
+      title
+      value
+    }
+    shipping {
+      title
+      value
+    }
+    tax {
+      title
+      value
+    }
+    totalOrderedAmount {
+      title
+      value
+    }
+    totalVendorAmount {
+      title
+      value
+    }
+    totalAdminComission {
+      title
+      value
+    }
+  }
+}
+response: json
+
+11. cancel the order
+mutation {
+  sellerCancelOrder(orderId: <order_id>) {
+    message
+  }
+}
+response: json
+
+12. create credit memo for seller order
+mutation {
+  sellerCreateCreditmemo(
+    orderId: <order id>,
+    invoiceId: <invoice id>,
+    creditmemo: {
+      shipping_amount: <shipping amount>
+      adjustment_positive: <adjustment positive>
+      adjustment_negative: <adjustment negative>
+	    do_offline: <1 for true>
+      items: {
+        itemid: <order item id>
+        qty: <item quantity>
+        back_to_stock: <item to return to stock>
+      }
+    }
+  ) {
+    id
+    message
+  }
+}
+response: json
+
+13. get credit memo details
+query {
+  sellerGetCreditmemoDetails(
+	  orderId: <order id>,
+	  creditmemoId: <creditmemo id>
+  ) {
+    mainHeading
+    sendmailAction
+    sendmailWarning
+    subHeading
+    orderData {
+      title
+      label
+      statusLabel
+      statusValue
+      dateLabel
+      dateValue
+    }
+    buyerData {
+      title
+      nameLabel
+      nameValue
+      emailLabel
+      emailValue
+    }
+  	shippingAddressData {
+  	  title
+      address {
+        name
+        street
+        state
+        country
+        telephone
+      }
+  	}
+    shippingMethodData {
+      title
+      method
+    }
+    billingAddressData {
+      title
+      address {
+        name
+        street
+        state
+        country
+        telephone
+      }
+    }
+    paymentMethodData {
+      title
+      method
+    }
+    items {
+      productName
+      price
+      qty {
+        Ordered
+        Invoiced
+        Shipped
+        Canceled
+        Refunded
+      }
+      subTotal
+      adminComission
+      vendorTotal
+    }
+    subtotal {
+      title
+      value
+    }
+    shipping {
+      title
+      value
+    }
+    tax {
+      title
+      value
+    }
+    totalOrderedAmount {
+      title
+      value
+    }
+    totalVendorAmount {
+      title
+      value
+    }
+    totalAdminComission {
+      title
+      value
+    }
+  }
+}
+response: json
+
+14. ask questions to admin
+mutation {
+  sellerMailToAdmin(
+    query: <query data>,
+    subject: <subject data>
+  ) {
+	message
+  }
+}
+response: json
+
+15. contact seller
+mutation {
+  sellerMailToSeller(
+    customerName: <customer name>,
+    customerEmail: <customer email>,
+    productId: <product id>
+    query: <customer query>,
+    subject: <query subject>
+  ) {
+		message
+  }
+}
+response: json
+
+16. request to become partner
+mutation {
+  sellerBecomePartner(
+    shopUrl: <shop url>,
+    isSeller: <if want to be seller or not - 1 or 0>
+  ) {
+    message
+  }
+}
+response: json
+
+17 request to create shipment
+mutation {
+  sellerCreateShipment(
+    orderId: <order id>,
+    trackingId: <tracking number>,
+    carrier: <carrier name>
+  ) {
+    message
+  }
+}
+response: json
+
+18 get shipment details
+query {
+  sellerGetShipmentDetails(
+    orderId: <order id>,
+    shipmentId: <shipment id>
+  ) {
+    mainHeading
+    sendmailAction
+    sendmailWarning
+    subHeading
+    orderData {
+      dateLabel
+      dateValue
+      label
+      statusLabel
+      statusValue
+      title
+    }
+    buyerData {
+      emailLabel
+      emailValue
+      nameLabel
+      nameValue
+      title
+    }
+    shippingAddressData {
+      title
+      address {
+        country
+        name
+        state
+        street
+        telephone
+      }
+    }
+    shippingMethodData {
+      method
+      title
+    }
+    billingAddressData {
+      title
+      address {
+        country
+        name
+        state
+        street
+        telephone
+      }
+    }
+    paymentMethodData {
+      method
+      title
+    }
+    shippingCarriers {
+      carrier
+      number
+      title
+    }
+    items {
+      productName
+      qty
+      sku
+    }
+  }
+}
+response: json

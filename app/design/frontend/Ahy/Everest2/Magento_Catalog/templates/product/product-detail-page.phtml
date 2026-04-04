@@ -1,0 +1,269 @@
+<?php
+    /**
+     * Hyvä Themes - https://hyva.io
+     * Copyright © Hyvä Themes 2020-present. All rights reserved.
+     * This product is licensed per Magento install
+     * See https://hyva.io/license
+     */
+
+    declare(strict_types=1);
+
+    use Magento\Catalog\Block\Product\View;
+    use Webkul\Marketplace\Helper\data;
+
+    /** @var View $block */
+
+    $product = $block->getProduct();
+
+    $userPostalCode = isset($_COOKIE["postalCode"]) ? $_COOKIE["postalCode"] : 'Not set';
+    $country = isset($_COOKIE["country"]) ? $_COOKIE["country"] : 'Not set';
+    $colo = isset($_COOKIE["colo"]) ? $_COOKIE["colo"] : 'Not set';
+    $latitude = isset($_COOKIE["latitude"]) ? $_COOKIE["latitude"] : 'Not set';
+    $longitude = isset($_COOKIE["longitude"]) ? $_COOKIE["longitude"] : 'Not set';
+    $city = isset($_COOKIE["city"]) ? $_COOKIE["city"] : 'Not set';
+    $region = isset($_COOKIE["region"]) ? $_COOKIE["region"] : 'Not set';
+
+    $_helper = $this->helper('Webkul\Marketplace\Helper\data');
+    $seller = $_helper->getSellerProductDataByProductId($product->getId());
+    $sellerId = 0;
+    if(isset($seller->getData()[0]) && $seller->getData()[0]){
+        $sellerObj = $seller->getData()[0];
+        $sellerId = $sellerObj['seller_id'];
+        $sellerDataObj = $_helper->getSellerDataBySellerId($sellerId);
+        $shopTitle = '';
+        $shopUrl = '';
+        $sellerData = $sellerDataObj->getData()[0];
+        $shopTitle = ($sellerData['shop_title'] !== null && $sellerData['shop_title'] !== '') ? $sellerData['shop_title'] : (($sellerData['name'] !== null && $sellerData['name'] !== '') ? $sellerData['name'] : null);
+        $shopUrl = $sellerData['shop_url'];
+    }
+    $productName = $product->getData('name');
+
+?>
+<section class="flex-col gap-4 flex md:hidden">
+    <?php if(isset($seller->getData()[0]) && $seller->getData()[0] && $shopTitle !== '' && $shopTitle !== null): ?>
+        <div class="seller-details text-sm" x-data="">
+            <span class="capitalize">
+                Sold and Shipped by <span class="!text-ahy-blue-light font-bold hover:underline underline-offset-6 cursor-pointer" @click.prevent="goToSellerTab()"> <?= __($shopTitle) ?> </span>
+            </span>
+        </div>
+    <?php endif; ?>
+    <h1 class="text-ahy-blue page-title !font-extrabold title-font uppercase text-3xl lg:text-4xl ">
+        <span class="base" data-ui-id="page-title-wrapper" itemprop="name">
+            <?= html_entity_decode($escaper->escapeHtmlAttr(__($productName))) ?>
+        </span>        
+    </h1>
+    <div class="product.reviews flex gap-2 pb-4 items-center min-h-8" x-data="yotpoReview()" x-init="initReview()" class="flex cursor-pointer gap-2" @click.prevent="goToReview()">
+        <div class="yotpo-review-stars cursor-pointer items-center" 
+            x-bind:style="'--rating: ' + getAverageReviewScore() + '; display: ' + (getAverageReviewScore() === null || getAverageReviewScore() === 0 ? 'none' : 'flex') + ' !important;' " 
+            style="display: none"
+        ></div>
+        <div class="flex gap-2  cursor-pointer text-ahy-blue text-xs" >
+            <template x-if="totalReviewCount">
+                <span x-text="totalReviewCount"></span>
+            </template>
+            <template x-if="totalReviewCount == 0">
+                <span class="hover:underline underline-offset-6 capitalize"><?= __('write review')?></span>
+            </template>
+            <template x-if="totalReviewCount > 0">
+                <span class="hover:underline underline-offset-6 capitalize"><?= __('read reviews')?></span>
+            </template>
+        </div>
+    </div>
+    <style>
+        .yotpo-review-stars::before{
+            font-size: .625rem;
+        }
+    </style>
+</section>
+<section class="text-gray-700 body-font">
+    <div class="flex lg:pt-6 lg:flex-row flex-col items-center">
+        <div class="flex flex-wrap order-first w-full">
+            <?= $block->getChildHtml('product.media') ?>
+            <?= $block->getChildHtml('product.info') ?>
+        </div>
+    </div>
+</section>
+<section class="complete-the-situation">
+    <?= $block->getChildHtml('product.complete.situation') ?>
+</section>
+<section>
+    <?= $block->getChildHtml('product_options_wrapper_bottom') ?>
+</section>
+<section class="">
+    <div 
+        x-data="{ 
+            isMobile: (window.innerWidth < 768) ? true : false,
+        }"
+        x-on:resize.window="isMobile = (window.innerWidth < 768) ? true : false" 
+    >
+        <template x-if="isMobile"><?= $block->getChildHtml('product.info.details'); ?></template>
+    </div>
+</section>
+<div class="w-full flex md:hidden flex-wrap flex-col gap-10 py-4">
+    <!-- <a href="/search/?q=Dirwin%20Bike&productListFilters=product_brand%3ADirwin%20Bike" class="" >
+        <img src="/media/wysiwyg/ads/Dirwin-PDP-ad.jpg" alt="dirwin ebikes">
+    </a> -->
+    <a href="/The-Everest-Collection" class="" >
+        <img src="/media/wysiwyg/ads/Everest-PDP-ad.jpg" width="840" height="688" class="w-full h-full" alt="everest collection">
+    </a>
+</div>
+<?= $block->getChildHtml('product.yotpo.review.details'); ?>
+<?= $block->getChildHtml('sponsored_products') ?>
+<?= $block->getChildHtml('related.seller.items') ?>
+<section class="you-may-also-like relative pb-8 h-[630px] !hidden">
+    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 h-full w-screen bg-ahy-bg z-[-1]"></div>
+    <div style="display: none !important">
+        <?php
+            echo $this->getLayout()
+            ->createBlock('Magento\Cms\Block\Block')
+            ->setBlockId('pdp-you-may-also-like')
+            ->toHtml();
+        ?>
+    </div>
+</section>
+<section class="news-section relative pt-6">
+    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 h-full w-screen bg-ahy-bg z-[-1]"></div>
+    <?php // $block->getChildHtml('news_section') ?>
+    <?php
+        echo $this->getLayout()
+        ->createBlock('Magento\Cms\Block\Block')
+        ->setBlockId('homepage-newsletter')
+        ->toHtml();
+    ?>
+</section>
+<?= $block->getChildHtml('related.category') ?>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<style>
+    .swiper-scrollbar-drag {
+        background-color: #064f84;
+    }
+
+    .swiper-scrollbar.swiper-scrollbar-horizontal {
+        height: 10px;
+        background-color: #ccc;
+        left: 0;
+        right: 0;
+        width: 100%;
+    }
+    .swiper-wrapper {
+        padding-bottom: 50px;
+    }
+</style>
+<script>
+    function initializeSwiper() {
+        const swiper = new Swiper(".swiper", {
+            // Optional parameters
+            direction: "horizontal",
+            loop: false,
+            // If we need pagination
+            pagination: {
+                el: ".swiper-pagination",
+            },
+            allowTouchMove: true,
+            noSwiping: false,
+            mousewheel: {
+                forceToAxis: true,
+            },
+            // Navigation arrows
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+
+            // And if we need scrollbar
+            scrollbar: {
+                el: ".swiper-scrollbar",
+                hide: false,
+                enabled: true,
+                draggable: true,
+            },
+            freeMode: true,
+            slidesPerView: 4, // Set the number of slides to show in the view
+            grabCursor: true,
+            // Responsive breakpoints
+            breakpoints: {
+                // when window width is >= 320px
+                0: {
+                    slidesPerView: 1,
+                },
+                // when window width is >= 640px
+                480: {
+                    slidesPerView: 2,
+                },
+                // when window width is >= 1024
+                1024: {
+                    slidesPerView: 3,
+                },
+                // when window width is >= 1280
+                1280: {
+                    slidesPerView: 4,
+                },
+            },
+        });
+    }
+    function checkAndInitialize() {
+        const elementsExist = document.querySelectorAll(".kuRECS-itemWrap.kuRECSItem.border.border-ahy-bg.swiper-slide").length >= 1 ;
+        if (elementsExist) {
+            clearInterval(interval);
+            initializeSwiper();
+        }
+    }
+    // Check every second
+    const interval = setInterval(checkAndInitialize, 1000);
+</script>
+<script>
+    // Declare intervalId in the outer scope
+    var intervalId;
+
+    // Define the hasChildElements function
+    function hasChildElements(elementId) {
+        // Get the element by its ID or any other selector
+        var element = document.querySelector(elementId);
+
+        // Check if the element exists
+        if (element) {
+            // Check if the element has any child elements
+            return element.childElementCount > 0;
+        } else {
+            // If the element doesn't exist, return false
+            return false;
+        }
+    }
+
+    // Function to run your code
+    function checkAndUpdateElementDisplay() {
+        var hasChildren = hasChildElements("#k-cdbb96a3-dd65-498c-b4c1-355e713b380d .kuRECSContainer");
+        var youMayAlsoLikeElement = document.querySelector(".you-may-also-like");
+
+        if (!hasChildren) {
+            if (youMayAlsoLikeElement) {
+                youMayAlsoLikeElement.style.display = "none";
+            }
+        } else {
+            if (youMayAlsoLikeElement) {
+                youMayAlsoLikeElement.style.display = "block";
+                // If hasChildren is true, clear the interval
+                clearInterval(intervalId);
+            }
+            
+        }
+    }
+
+    // Add an event listener to run the code on page load
+    document.addEventListener("DOMContentLoaded", function () {
+        // Start the interval
+        intervalId = setInterval(function () {
+        checkAndUpdateElementDisplay();
+        }, 1000);
+    });
+
+    function goToSellerTab() {
+        const sellerTabEl = document.getElementById('tab_wrapper');
+        const sellerTabTitleEl = document.getElementById('meet seller-1');
+        if (sellerTabEl && sellerTabTitleEl) {
+            sellerTabTitleEl.click();
+            sellerTabEl.scrollIntoView({ behavior: "smooth" });
+        }
+    }
+</script>

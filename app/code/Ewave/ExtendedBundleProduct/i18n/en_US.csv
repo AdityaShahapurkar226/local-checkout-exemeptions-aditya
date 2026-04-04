@@ -1,0 +1,20 @@
+No,No
+Yes,Yes
+"Use config","Use config"
+"The stock item for Product in option is not valid.","The stock item for Product in option is not valid."
+"The stock validation should be skipped.","The stock validation should be skipped."
+"Error: Configurable products cannot be used as part of multiselect option","Error: Configurable products cannot be used as part of multiselect option"
+"Configurable products cannot be used as part of multiselect option","Configurable products cannot be used as part of multiselect option"
+"This product is disabled.","This product is disabled."
+"Configurable Options","Configurable Options"
+"You're trying to add a bundle that has configurable product in its options. This could be done only on storefront.","You're trying to add a bundle that has configurable product in its options. This could be done only on storefront."
+"Choose an Option...","Choose an Option..."
+"Buy %1 for %2 each and","Buy %1 for %2 each and"
+save,save
+None,None
+Quantity,Quantity
+"Choose a selection...","Choose a selection..."
+"Ewave Extensions","Ewave Extensions"
+"Configurable Products in Bundles","Configurable Products in Bundles"
+"Count Bundle Items Separately","Count Bundle Items Separately"
+"Show Bundle Option's Images on PDP","Show Bundle Option's Images on PDP"

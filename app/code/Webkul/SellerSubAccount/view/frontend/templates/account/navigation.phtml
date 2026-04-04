@@ -1,0 +1,51 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_SellerSubAccount
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$helper = $block->getLayout()->createBlock(
+    \Webkul\SellerSubAccount\Block\SubAccount::class
+)->getSubAccountHelper();
+
+if ($helper->manageSubAccounts()) {
+    $marketplaceHelper = $block->getLayout()->createBlock(
+        \Webkul\SellerSubAccount\Block\SubAccount::class
+    )->getMarketplaceHelperInstance();
+    $isPartner= $marketplaceHelper->isSeller();
+    $magentoCurrentUrl = $block->getCurrentUrl();
+    $isSellerGroup = $marketplaceHelper->isSellerGroupModuleInstalled();
+    ?>
+    <style type="text/css">
+        @media only screen and (max-width: 767px){
+
+            .block-collapsible-nav.wk-mp-main{
+                top: 20px;
+            }
+        }
+    </style>
+<nav class="account-nav">
+    <ul class="nav items">
+    <?php
+    if ($isPartner) { ?>
+        <?php if (($isSellerGroup &&
+        $marketplaceHelper->isAllowedAction('sellersubaccount/account/')) ||
+    !$isSellerGroup) { ?>
+<li class="nav item <?=strpos($magentoCurrentUrl, 'sellersubaccount/account/manage')? "current":"";?>">
+<a href="<?=$block->escapeUrl($block->getUrl(
+    'sellersubaccount/account/manage',
+    ['_secure' => $block->getRequest()->isSecure()]
+)); ?>">
+    <?=$block->escapeHtml(__('Manage Sub-Accounts')); ?>
+</a>
+</li>
+    <?php } ?>
+    <?php } ?>
+        </ul>
+</nav>
+    <?php
+} ?>

@@ -1,0 +1,26 @@
+{
+    "name": "ahy/module-barcodelookup",
+    "description": "module will update the product details with the help of barcode lookup api",
+    "type": "magento2-module",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Mage2Gen",
+            "email": "info@mage2gen.com"
+        },
+        {
+            "name": "Ahy Consulting",
+            "email": "info@ahyconsulting.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ahy\\BarcodeLookup\\": ""
+        }
+    }
+}

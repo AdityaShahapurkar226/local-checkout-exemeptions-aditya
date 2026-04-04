@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Magento\Customer\CustomerData\SectionPool">
+        <arguments>
+            <argument name="sectionSourceMap" xsi:type="array">
+                <item name="cart-extra-actions-googlepay"
+                      xsi:type="string">
+                    Ahy\GooglePay\CustomerData\CartExtraActions
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+</config>

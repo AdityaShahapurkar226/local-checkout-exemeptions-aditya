@@ -1,0 +1,84 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\Theme\ViewModel\StoreConfig;
+use Magento\Framework\Escaper;
+
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+
+$storeConfig = $viewModels->require(StoreConfig::class);
+$heroIcons = $viewModels->require(HeroiconsOutline::class);
+$storePhoneNumber = $storeConfig->getStoreConfig('general/store_information/phone') ?? '';
+$storeEmail = $storeConfig->getStoreConfig('trans_email/ident_general/email') ?? '';
+
+?>
+<h2 class="uppercase text-5xl font-extrabold title-font mb-4 text-ahy-blue">
+    <span><?= $escaper->escapeHtml(__('We’re here for you')) ?></span>
+</h2>
+<ul class="flex flex-col gap-3 pt-4 text-ahy-blue">
+    <li >
+        Email us at 
+        <a class="font-bold" href="mailto:<?= $escaper->escapeHtmlAttr($storeEmail); ?>">
+            <?= $escaper->escapeHtml($storeEmail); ?>
+        </a>
+    </li>
+</ul>
+<div class="flex sm:hidden" x-data="">
+    <button class="border-3 mt-8 border-ahy-blue rounded-full font-bold text-sm w-full h-12 hover:shadow-[#0d2f47_0px_0px_0px_1px_inset]"
+        @click.prevent="goToSellerTab()"
+    >
+        Write Us
+    </button>
+    <script>
+        function goToSellerTab() {
+            const sellerTabEl = document.getElementById('write-us');
+            if (sellerTabEl ) {
+                sellerTabEl.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+    </script>
+</div>
+<div class="font-bold my-8 text-ahy-blue">
+    Online Checkout Open 24/7
+</div>
+<div class="py-8 border-y border-white text-ahy-blue">
+    <div class="font-extrabold text-2xl pb-4 uppercase">
+        Customer service hours
+    </div>
+    <?php if ($storePhoneNumber): ?>
+    <div>
+        Call us at 
+        <a class="inline font-bold" href="tel:<?= $escaper->escapeHtmlAttr(preg_replace("/[^0-9+]/", "", $storePhoneNumber)) ?>">
+            <?= $escaper->escapeHtml($storePhoneNumber); ?>
+        </a>
+    </div>
+    <?php endif; ?>
+    <div class="flex gap-4">
+        <span>Mon-Fri</span> <span>8am-6pm CT</span>
+    </div>
+    <div class="flex gap-4">
+        <span>Sat-Sun</span> <span>Closed</span>
+    </div>
+</div>
+<!-- <h3 class="title-font font-bold"><?= $escaper->escapeHtml($storeConfig->getStoreConfig('general/store_information/name') ?? ''); ?></h3> -->
+<h3 class="title-font text-ahy-blue text-2xl py-8 font-bold">HQ in Texas</h3>
+<address class="text-ahy-blue">
+    <?= $escaper->escapeHtml($storeConfig->getStoreConfig('general/store_information/street_line1') ?? ''); ?><br/>
+    <?= $escaper->escapeHtml($storeConfig->getStoreConfig('general/store_information/city') ?? ''); ?><br/>
+    <?= $escaper->escapeHtml($storeConfig->getStoreConfig('general/store_information/postcode') ?? ''); ?><br/>
+</address>
+<div class="pt-8">
+    <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3450.0878308895417!2d-95.45105792399318!3d30.14890481361299!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8647369a8dd337eb%3A0xd067ee83c84fb4dc!2s26619%20I-45%2C%20Spring%2C%20TX%2077380%2C%20USA!5e0!3m2!1sen!2sin!4v1688477195772!5m2!1sen!2sin" 
+         height="250" style="border:5px solid white; width:100%;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div>

@@ -1,0 +1,33 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var ViewModelRegistry $viewModels */
+/** @var AddressRenderer $addressRenderer */
+
+use Hyva\Checkout\ViewModel\Checkout\AddressRenderer;
+use Hyva\Theme\Model\ViewModelRegistry;
+
+$addressRenderer = $viewModels->require(AddressRenderer::class);
+?>
+<div>
+    <?php if ($addressRenderer->canRenderBillingAddress()): ?>
+        
+        <?php 
+            /**
+             ** Removed the address from the billing section on checkout page
+             */
+        ?>
+        <!-- <address>
+            <?//= /* @noEscape */ $addressRenderer->renderBillingAddress() ?>
+        </address> -->
+    <?php else: ?>
+        <!-- Billing address placeholder -->
+    <?php endif ?>
+</div>

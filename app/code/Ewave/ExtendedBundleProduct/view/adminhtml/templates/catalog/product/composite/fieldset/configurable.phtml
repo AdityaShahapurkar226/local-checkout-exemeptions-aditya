@@ -1,0 +1,64 @@
+<?php
+/**
+ * @var $block \Ewave\ExtendedBundleProduct\Block\Adminhtml\Product\Composite\Fieldset\Configurable
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ * @var \Magento\Catalog\Helper\Product $productHelper
+ */
+?>
+<?php
+$_helper = $this->helper('Ewave\ExtendedBundleProduct\Helper\Product');
+$productHelper = $block->getData('productHelper');
+
+$jsonData = $block->getOptionJsonData();
+$_product = $block->getProduct();
+$_attributes = $block->decorateArray($block->getAllowAttributes());
+$_bundleOption = $block->getOption();
+$_skipSaleableCheck = $productHelper->getSkipSaleableCheck();
+$configurableOptions = $block->getJson($_helper->getSelectionConfigurableOptions($_product));
+?>
+
+<?php if (($_product->isSaleable() || $_skipSaleableCheck) && count($_attributes)):?>
+    <fieldset id="catalog_product_composite_configure_fields_configurable_<?= $_product->getSelectionId()?>" class="fieldset admin__fieldset">
+        <div class="product-options fieldset admin__fieldset">
+            <?php foreach ($_attributes as $_attribute): ?>
+                <div class="field admin__field">
+                    <label class="label admin__field-label"
+                           for="attribute<?= $block->escapeHtmlAttr($_attribute->getAttributeId()) ?>-<?= $_product->getSelectionId()?>">
+                        <?= $block->escapeHtml($_attribute->getProductAttribute()->getStoreLabel($_product->getStoreId()));?>
+                    </label>
+                    <div class="control admin__field-control">
+                        <select name="bundle_super_attribute[<?= /* @escapeNotVerified */ $_product->getSelectionId() ?>][<?= $block->escapeHtmlAttr($_attribute->getAttributeId()) ?>]"
+                                data-rule-required="false"
+                                data-attribute-id="<?= $block->escapeHtmlAttr($_attribute->getAttributeId()) ?>"
+                                id="attribute<?= $block->escapeHtmlAttr($_attribute->getAttributeId()) ?>-<?= $_product->getSelectionId()?>"
+                                class="admin__control-select super-attribute-select">
+                            <option><?= $block->escapeHtml(__('Choose an Option...')) ?></option>
+                        </select>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </fieldset>
+
+<?php
+$config = /* @noEscape */ $block->getJsonConfig();
+$scriptString = <<<script
+require([
+    'jquery',
+    'Ewave_ExtendedBundleProduct/js/type/configurable'
+], function($, bundleConfigurable){
+    var options = {
+        spConfig: {$block->getJsonConfig()},
+        bundleOption: "{$_bundleOption->getOptionId()}",
+        selectionId: "{$_product->getSelectionId()}",
+        configurableOptions: '{$configurableOptions}',
+        selectedOptions: '{$block->getOptionJsonData()}',
+        containerId: '#catalog_product_composite_configure_fields_configurable_{$_product->getSelectionId()}'
+    };
+
+    bundleConfigurable(options);
+});
+script;
+?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
+<?php endif;?>

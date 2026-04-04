@@ -1,0 +1,974 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */
+use Magento\Catalog\Pricing\Price\FinalPrice;
+use Hyva\Theme\ViewModel\ProductPage;
+use Hyva\Theme\Model\ViewModelRegistry;
+
+// @codingStandardsIgnoreFile
+
+/** @var ViewModelRegistry $viewModels */
+/** @var \Amasty\Mostviewed\Block\Product\BundlePack $block */
+/** @var \Amasty\Mostviewed\Api\Data\PackInterface $pack */
+/** @var \Magento\Framework\Escaper $escaper */
+
+/** @var ProductPage $productViewModel */
+$productViewModel = $viewModels->require(ProductPage::class);
+/** @var Product $product */
+$product = $productViewModel->getProduct();
+
+$templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+$isEmpty = true;
+?>
+
+<?php foreach ($block->getBundles() as $pack): ?>
+    <?php if ($childIds = $pack->getProductIds()):?>
+        <?php
+            $packKey = $pack->getPackId() . '-' . uniqid();
+            $items = $block->getProductItems($childIds);
+            if (!$block->isPackVisible($pack, $items)) {
+                continue;
+            }
+            $itemsCount = count($items);
+            $isWideLayout = $itemsCount <= 3 && !$block->isCheckoutPage();
+            $isMultirowLayout = $itemsCount >= 5 && !$block->isCheckoutPage();
+            $itemClass = $isWideLayout ? '-wide' : '-narrow';
+            $multipleRowClass = $isMultirowLayout ? '-second-row' : '';
+            $config = $block->getPackJsonConfig($pack, $items);
+            $discountResult = $block->getDiscountResult($config);
+        ?>
+        <?php $iterator = 1;  ?>
+        <?php foreach ($items as $item): ?>
+            <?php
+                $isParent = $iterator === 1;
+                if ($isParent) {
+                    $creatorImg = $productViewModel->productAttributeHtml($product, $product->getCreatorImage(), 'Creator Images');
+                    $creatorName = $item->getCreatorName() ?? 'Everest';
+                    $creatorDescription = $item->getCreatorDescription() ?? 'No description available';
+                    $creatorBundleProductLink = $item->getCreatorBundleProductLink() ?? 'javascript:void(0);';
+                }
+                ?>
+            <?php  $iterator++ ?>
+        <?php endforeach; ?>
+        <div
+            id="ahy-bundle-packs-container"
+            style="display:none;"
+            x-data="initBundlePack()"
+            x-bind="eventListeners"
+            class="amrelated-pack-wrapper" data-amrelated-js="pack-wrapper" data-pack-id="<?= $escaper->escapeHtmlAttr($pack->getPackId()) ?>" id="amrelated-pack-<?= /* @noEscape */ $packKey;?>">
+            <!-- configurable product sidebar start-->
+            <form id="ammostviewed-add-to-cart-form" method="post" action="/ammostviewed/cart/add/">
+                <input type="hidden" name="form_key" value="<?php echo $block->getFormKey(); ?>" />
+                <div id="simple-product-pack-data" style="display:none">
+                    <!-- simple product pack input -->
+                </div>
+                <div id="configurable-product-pack-data" style="display:none">
+                    <!-- configurable product pack input -->
+                </div>
+                <input type="hidden" value="7" name="product">
+                <input type="hidden" value="7" name="item">
+                <input type="hidden" value="1" name="ajax_cart">
+                <input type="hidden" value="true" name="product_page">
+                <input type="hidden" value="1" name="pack_id">
+
+            </form>
+            <div class="flex flex-col xl:grid xl:grid-cols-3 bg-ahy-bg p-4 ">
+                <div class="flex items-center justify-center">
+                    <?php if($creatorImg !== null): ?>
+                        <?= $creatorImg ?>
+                    <?php else: ?>
+                        <img src="/static/frontend/Ahy/Ahy_Everest2/en_US/Magento_Catalog/images/product/placeholder/image.jpg" alt="place holder image" >
+                    <?php endif;?>
+                </div>
+                <div class="col-span-2 flex flex-col pb-4 md:p-8">
+                    <div class="flex justify-between pb-2 border-b-2 border-ahy-blue">
+                        <div class="uppercase text-2xl font-extrabold text-ahy-blue">complete the situation</div>
+                        <div class="capitalize">
+                            <?php if($creatorBundleProductLink !== null): ?>
+                                <a
+                                    href="<?= $creatorBundleProductLink ?>" 
+                                    class="underline underline-offset-4"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                > see full details </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <div class="flex flex-col lg:grid lg:grid-cols-2 pt-4">
+                        <div class="bundle-pack-details flex flex-col gap-4 pb-6 p-0 md:pr-6">
+                            <div class="creators-details">
+                                <?= $creatorDescription ?>
+                            </div>
+                            <div class="creators-name capitalize">
+                                <div class="font-black">creator name</div>
+                                <div class="capitalize">@<?= $creatorName ?></div>
+                            </div>
+                            <div class="bundle-pack-price">
+                                <div class="font-black capitalize bundle-pack-pricing-title">
+                                    <span class="text-black">buy bundle </span>
+                                    <span class="text-red-600">+ save</span>
+                                </div>
+                                <div class="bundle-pack-pricing relative">
+                                    <div class="main price" data-amrelated-js="bundle-final-price">
+                                        <span x-html="hyva.formatPrice(totalPrice)" class="font-extrabold text-2xl text-ahy-blue final_price"></span>
+                                        <template x-if="totalPrice !== oldTotalPrice">
+                                            <span x-html="hyva.formatPrice(oldTotalPrice)" class="text-lg font-normal line-through text-ahy-blue regular_price"></span>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bundle-pack-add-to-cart">
+                                <?php $isEmpty = false;?>
+                                <button @click="addToCartAlpine(0)"
+                                    title="<?= $escaper->escapeHtml(__('Add to Cart')) ?>"
+                                    class="btn bg-ahy-red hover:bg-ahy-red-light rounded-full focus:ring-transparent w-full md:w-52 lg:w-64 xl:w-72"
+                                >
+                                    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 ml-4 md:ml-0 lg:ml-2 hover:text-black" viewBox="0 0 30.61 25.71">
+                                        <defs>
+                                            <style>
+                                                .stroke-2{stroke-width: 2!important;} .cls-1,.cls-2{fill:none !important;stroke:#0d2f47;}.cls-1{stroke-linecap:round;stroke-linejoin:round;} .cls-2{stroke-miterlimit:10;}
+                                            </style>
+                                        </defs>
+                                        <polyline class="cls-1 stroke-2" points="0.75 0.75 5.51 0.75 10.82 15.88 25.24 15.88 29.86 3.3 10.84 3.3"></polyline>
+                                        <circle class="cls-2 stroke-2" cx="11.98" cy="22.46" r="2.5"></circle>
+                                        <circle class="cls-2 stroke-2" cx="24.48" cy="22.46" r="2.5"></circle>
+                                    </svg>
+                                    <span class="w-full font-bold py-3 md:py-0 relative md:left-0 add-to">
+                                        <?= $escaper->escapeHtml(__('Add to Cart')) ?>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Carousel -->
+                        <div class="bundle-product-pack-carousel hidden md:block">
+                            <div class="relative" >
+                                <div class="slide-container overflow-hidden w-full flex relative amrelated-pack-list-ahy items-start" x-ref="slideContainer">
+                                    <?php
+                                        $iterator = 1;
+                                        $additionalItemDataArr = [];
+                                        $countIncrement = 0;
+                                    ?>
+                                    <?php foreach ($items as $item): ?>
+                                        <div class="slide-item flex-shrink-0 flex items-center justify-center p-4">
+                                        <?php $isParent = $iterator === 1; ?>
+                                        <?php if ($iterator === 2 && $isWideLayout): ?>
+                                            <div class="amrelated-pack-items -selected" data-amrelated-js="pack-container">
+                                                <div class="amrelated-background" data-amrelated-js="selected-background"></div>
+                                        <?php endif;?>
+                                                <div class="flex flex-col relative !w-full <?= /* @noEscape */ $isParent ? ' -discount-applied -main' : ' -discount-applied -selected !w-full'?>"
+                                                    data-amrelated-js="pack-item"
+                                                    <?php if ($isParent): ?>data-item-role="main"<?php endif; ?>
+                                                    data-product-id="<?= /* @noEscape */ $item->getId()?>"
+                                                >
+                                                    <div class="amrelated-info relative">
+                                                        <div class="bg-white">
+                                                            <?php if (!$isParent): ?>
+                                                                <?php $productQty = $pack->getChildProductQty($item->getId()) ?>
+                                                                <input type="checkbox"
+                                                                    class="amrelated-checkbox absolute left-1.5 top-1.5"
+                                                                    @change="calculateTotalPrice(<?= $item->getId() ?>); setSimpleProductPackFormData()"
+                                                                    id="amrelated-checkbox<?= /* @noEscape */ $item->getId() . '-' . $packKey ?>"
+                                                                    name="amrelated_products[<?= /* @noEscape */ $item->getId() ?>]"
+                                                                    data-amrelated-js="checkbox"
+                                                                    checked="checked"
+                                                                    value="<?= (int) $productQty  ?>"
+                                                                    data-product-id="<?= /* @noEscape */ $item->getId() ?>"
+                                                                    data-product-type="<?= /* @noEscape */ $item->getTypeId() ?>"
+                                                                />
+                                                                <label for="amrelated-checkbox<?= /* @noEscape */ $item->getId() . '-' . $packKey ?>"
+                                                                    class="amrelated-label"></label>
+                                                            <?php endif; ?>
+                                                            <?php $image = $block->getImageModel($item); ?>
+                                                            <img src="<?= $escaper->escapeUrl($image->getUrl()) ?>"
+                                                                class="aspect-3/3 h-[185px] object-contain ahy-product-image"
+                                                                alt="<?= $escaper->escapeHtml($image->getLabel()) ?>"
+                                                                @click="updateCheckBoxFromImage(event)"
+                                                            >
+                                                            <?php if (!$isParent && $productQty > 1): ?>
+                                                                <span class="amrelated-qty"><?= (int) $productQty ?></span>
+                                                            <?php endif; ?>
+                                                            <?php $discountHtml = $block->getProductDiscount($config, (int) $item->getId(), $isParent); ?>
+                                                            <?php if ($discountHtml): ?>
+                                                                <div class="amrelated-discount text-xs right-1.5 top-1.5 flex" data-amrelated-js="item-price-discount">
+                                                                    <?= /* @noEscape */ $discountHtml ?>
+                                                                    <?php if (!$isParent && $productQty > 1): ?>
+                                                                        <span class="amrelated-text"><?= $escaper->escapeHtml(__('each')) ?></span>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                        <?php
+                                                            $additionalItemDataArr[$item->getId()]['name'] = $item->getName();
+                                                            $additionalItemDataArr[$item->getId()]['imageUrl'] = $image->getUrl();
+                                                        ?>
+                                                        <div class="amrelated-details">
+                                                            <div class="product-rating h-6" @click="updateCheckBoxFromDetails(event)">
+                                                                <?php if ($templateType): ?>
+                                                                    <?= /* @noEscape */ $block->getReviewsSummaryHtml($item, $templateType) ?>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                            <div class="amrelated-name">
+                                                                <span 
+                                                                    class="amrelated-link font-bold line-clamp-2 text-ahy-blue h-12"
+                                                                    @click="updateCheckBoxFromDetails(event)"
+                                                                >
+                                                                    <?= $escaper->escapeHtml($item->getName()) ?>
+                                                                </span>
+                                                            </div>
+                                                            <div class="h-12" @click="updateCheckBoxFromDetails(event)">
+                                                                <?= /* @noEscape */ $block->getProductPriceHtml($item, FinalPrice::PRICE_CODE) ?>
+                                                            </div>
+                                                            <?php if (!$isParent): ?>
+                                                                <div class="product-link  w-32">
+                                                                    <a title="<?= $escaper->escapeHtml($item->getName()) ?>"
+                                                                        href="<?= $escaper->escapeUrl($block->getProductUrl($item)) ?>"
+                                                                        class="amrelated-link w-32"
+                                                                        target="_blank" rel="noopener noreferrer"
+                                                                    >
+                                                                        <button class="capitalize !flex justify-center items-center w-32 !rounded-full !bg-transparent !text-ahy-blue hover:shadow-[#0d2f47_0px_0px_0px_1px_inset] !text-sm !py-1.5 !px-2.5 font-bold !border-2 !border-ahy-blue">
+                                                                            <?= $escaper->escapeHtml('details') ?>
+                                                                        </button>
+                                                                    </a>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php $countIncrement++ ?>
+                                        <?php if ($iterator++ !== $itemsCount):?>
+                        
+                                        <?php elseif ($isWideLayout):?>
+                                            </div>
+                                        <?php endif;?>
+                                        </div>
+                                    <?php endforeach; ?>
+                                    <?php $additionalItemDataJson = json_encode($additionalItemDataArr); ?>
+                                </div>
+                                <button :class="{'pointer-events': currentIndex === 0}" @click="prev()" class="absolute left-0 top-1/3 transform -translate-y-1/2 bg-white rounded-full w-10 h-10 ring-1 ring-gray-300 flex justify-center items-center rotate-90 shadow-xl">
+                                    <img src="/media/icons/arrow-nav.svg" alt="navigational arrow" :class="{ 'opacity-25' : currentIndex === 0 }">
+                                </button>
+                                <button :class="{'pointer-events': lastIndex === true}" @click="next()" class="absolute right-0 top-1/3 transform -translate-y-1/2 bg-white rounded-full w-10 h-10 ring-1 ring-gray-300 flex justify-center items-center rotate-270 shadow-xl">
+                                    <img src="/media/icons/arrow-nav.svg" alt="navigational arrow" :class="{ 'opacity-25' : lastIndex === true }">
+                                </button>
+                            </div>
+                        </div>
+                        <!-- carousel ends -->
+
+                        <!-- mobile product showcase -->
+                        <div class="bundle-product-pack-mobile-show-case md:hidden">
+                            <div class="relative" x-data="{ expanded: false }">
+                                <div class="overflow-hidden w-full flex flex-col relative amrelated-pack-list-ahy" x-bind:class="{'max-h-[25.5rem]': !expanded, 'text-ahy-blue' : expanded}" x-ref="container" x-bind:style="expanded ? 'height: ' + ($refs.container.offsetHeight) + 'px' : ''">
+                                    <?php
+                                        $iterator = 1;
+                                        $additionalItemDataArr = [];
+                                        $countIncrement = 0;
+                                    ?>
+                                    <?php foreach ($items as $item): ?>
+                                        <div class="product-items py-4">
+                                        <?php $isParent = $iterator === 1; ?>
+                                        <?php if ($iterator === 2 && $isWideLayout): ?>
+                                            <div class="amrelated-pack-items -selected" data-amrelated-js="pack-container">
+                                                <div class="amrelated-background" data-amrelated-js="selected-background"></div>
+                                        <?php endif;?>
+                                                <div class="flex flex-col relative !w-full <?= /* @noEscape */ $isParent ? ' -discount-applied -main' : ' -discount-applied -selected !w-full'?>"
+                                                    data-amrelated-js="pack-item"
+                                                    <?php if ($isParent): ?>data-item-role="main"<?php endif; ?>
+                                                    data-product-id="<?= /* @noEscape */ $item->getId()?>"
+                                                >
+                                                    <div class="amrelated-info relative flex gap-4">
+                                                        <div class="bg-white w-1/3 flex items-center">
+                                                            <?php if (!$isParent): ?>
+                                                                <?php $productQty = $pack->getChildProductQty($item->getId()) ?>
+                                                                <input type="checkbox"
+                                                                    class="amrelated-checkbox absolute left-1.5 top-1.5"
+                                                                    @change="calculateTotalPrice(<?= $item->getId() ?>); setSimpleProductPackFormData()"
+                                                                    id="amrelated-checkbox<?= /* @noEscape */ $item->getId() . '-' . $packKey ?>"
+                                                                    name="amrelated_products[<?= /* @noEscape */ $item->getId() ?>]"
+                                                                    data-amrelated-js="checkbox"
+                                                                    checked="checked"
+                                                                    value="<?= (int) $productQty  ?>"
+                                                                    data-product-id="<?= /* @noEscape */ $item->getId() ?>"
+                                                                    data-product-type="<?= /* @noEscape */ $item->getTypeId() ?>"
+                                                                />
+                                                                <label for="amrelated-checkbox<?= /* @noEscape */ $item->getId() . '-' . $packKey ?>"
+                                                                    class="amrelated-label"></label>
+                                                            <?php endif; ?>
+                                                            <?php $image = $block->getImageModel($item); ?>
+                                                            <img src="<?= $escaper->escapeUrl($image->getUrl()) ?>"
+                                                                class="object-contain ahy-product-image sm:aspect-ratio-3/2"
+                                                                alt="<?= $escaper->escapeHtml($image->getLabel()) ?>"
+                                                                @click="updateCheckBoxFromImage(event)"
+                                                            >
+                                                            <?php if (!$isParent && $productQty > 1): ?>
+                                                                <span class="amrelated-qty"><?= (int) $productQty ?></span>
+                                                            <?php endif; ?>
+                                                            <?php $discountHtml = $block->getProductDiscount($config, (int) $item->getId(), $isParent); ?>
+                                                            <?php if ($discountHtml): ?>
+                                                                <div class="amrelated-discount text-xs right-1.5 -top-1.5 flex" data-amrelated-js="item-price-discount">
+                                                                    <?= /* @noEscape */ $discountHtml ?>
+                                                                    <?php if (!$isParent && $productQty > 1): ?>
+                                                                        <span class="amrelated-text"><?= $escaper->escapeHtml(__('each')) ?></span>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                        <?php
+                                                            $additionalItemDataArr[$item->getId()]['name'] = $item->getName();
+                                                            $additionalItemDataArr[$item->getId()]['imageUrl'] = $image->getUrl();
+                                                        ?>
+                                                        <div class="amrelated-details w-2/3">
+                                                            <div class="product-rating h-6" @click="updateCheckBoxFromDetails(event)">
+                                                                <?php if ($templateType): ?>
+                                                                    <?= /* @noEscape */ $block->getReviewsSummaryHtml($item, $templateType) ?>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                            <div class="amrelated-name" @click="updateCheckBoxFromDetails(event)">
+                                                                <span class="amrelated-link font-bold line-clamp-2 text-ahy-blue h-12">
+                                                                    <?= $escaper->escapeHtml($item->getName()) ?>
+                                                                </span>
+                                                            </div>
+
+                                                            <div class="h-12" @click="updateCheckBoxFromDetails(event)">
+                                                                <?= /* @noEscape */ $block->getProductPriceHtml($item, FinalPrice::PRICE_CODE) ?>
+                                                            </div>
+                                                            <?php if (!$isParent): ?>
+                                                                <div class="product-link w-32">
+                                                                    <a title="<?= $escaper->escapeHtml($item->getName()) ?>"
+                                                                        href="<?= $escaper->escapeUrl($block->getProductUrl($item)) ?>"
+                                                                        class="amrelated-link"
+                                                                        target="_blank" rel="noopener noreferrer"
+                                                                    >
+                                                                        <button class="capitalize !flex justify-center items-center w-32 !rounded-full !bg-transparent !text-ahy-blue hover:shadow-[#0d2f47_0px_0px_0px_1px_inset] !text-sm !py-1.5 !px-2.5 font-bold !border-2 !border-ahy-blue">
+                                                                            <?= $escaper->escapeHtml('details') ?>
+                                                                        </button>
+                                                                    </a>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php $countIncrement++ ?>
+                                        <?php if ($iterator++ !== $itemsCount):?>
+                                            
+                                        <?php elseif ($isWideLayout):?>
+                                            </div>
+                                        <?php endif;?>
+                                        </div>
+                                    <?php endforeach; ?>
+                                    <div class="text-primary-500 p-1 absolute left-0 right-0 bottom-0 bg-ahy-bg z-20 mx-auto cursor-pointer text-center" @click="expanded = !expanded" x-bind:style="expanded ? 'display:none' : 'height: 55px'" style="height: 55px">
+                                        <button x-text="expanded ? '' : 'show all items' " class="test-ahy-blue capitalize h-12 ring-1 ring-gray-300 w-full rounded-full bg-white text-center text-sm capitalize text-ahy-blue hover:bg-[#d1d1d1]">show all items</button>
+                                    </div>
+                                    <?php $additionalItemDataJson = json_encode($additionalItemDataArr); ?>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- mobile product showcase ends-->
+
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div x-show="showConfigurablePackSidebar"
+                    x-init="watchShowConfigurablePackSidebar()"
+                    style="display:none;"
+                    id="product-pack-configurable-sidebar"
+                >
+                    <div class="fixed inset-0 overflow-hidden z-[500]" x-ref="slideOutModal"
+                        x-on:click.self="showConfigurablePackSidebar=false;"
+                        >
+                        <div class="absolute inset-0 overflow-hidden">
+                            <div class="absolute inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true" x-on:click.self="showConfigurablePackSidebar=false"></div>
+                            <section class="absolute inset-y-0 right-0 pl-10 max-w-full flex" aria-labelledby="slide-over-title">
+                                <div class="relative w-screen max-w-md">
+                                    <div class="h-full flex flex-col p-6 bg-white shadow-xl overflow-y-scroll">
+                                        <div class="flex items-start justify-between py-6">
+                                            <div class="font-bold text-ahy-blue">Configurable product swatches</div>
+                                            <div class="ml-3 h-7 flex items-center">
+                                                <button class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                                    x-on:click="showConfigurablePackSidebar=false">
+                                                    <span class="sr-only">Close panel</span>
+                                                    <!-- Heroicon name: x -->
+                                                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="rounded transition duration-300 ease-in-out mb-20" id="configurable-product-data">
+
+                                        </div>
+                                        <div class="kuAddtocart quickview-sidecart !m-0 z-30 bg-white absolute right-0 left-0 bottom-0 p-8" style="display: block;">
+                                            <button disabled="disabled" @click="addPackToCart(true, false)" title="Please choose your options" class="btn bg-ahy-red hover:bg-ahy-red-light rounded-full focus:ring-transparent w-full" id="product-addtocart-button">
+                                                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 ml-4 md:ml-0 lg:ml-2 hover:text-black" viewBox="0 0 30.61 25.71">
+                                                    <defs>
+                                                        <style>
+                                                            .stroke-2{stroke-width: 2!important;} .cls-1,.cls-2{fill:none !important;stroke:#0d2f47;}.cls-1{stroke-linecap:round;stroke-linejoin:round;} .cls-2{stroke-miterlimit:10;}
+                                                        </style>
+                                                    </defs>
+                                                    <polyline class="cls-1 stroke-2" points="0.75 0.75 5.51 0.75 10.82 15.88 25.24 15.88 29.86 3.3 10.84 3.3"></polyline>
+                                                    <circle class="cls-2 stroke-2" cx="11.98" cy="22.46" r="2.5"></circle>
+                                                    <circle class="cls-2 stroke-2" cx="24.48" cy="22.46" r="2.5"></circle>
+                                                </svg>
+                                                <span class="w-full font-bold py-3 md:py-0 relative md:left-0 add-to">Please Select Options</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- configurable product sidebar end -->
+        </div>
+    <?php endif;?>
+<?php endforeach;?>
+
+<script>
+        function initBundlePack(){
+            return {
+                itemConfig: '',
+                additionalItemConfig: '',
+                totalPrice: 0,
+                oldTotalPrice: 0,
+                basePrice: 0,
+                configurableProductPrice: 0,
+                showConfigurablePackSidebar: false,
+                swatchItemData: [],
+                configurableProductCount: 0,
+                currentSlide: 0,
+                totalSlides: 0,
+                slideWidth: 0,
+                infiniteScroll: true,
+                itemsPerSlide: 2,
+                slides: [],
+                currentIndex: 0,
+                lastIndex: false,
+                isMobile: false,
+                init(){
+                    this.movePackContainerPosition();
+                    this.itemConfig = '<?= $block->encode($config)?>';
+                    this.additionalItemDataJson = '<?= $additionalItemDataJson; ?>';
+                    this.setSimpleProductPackFormData();
+                    this.updateTotalPrice(this.itemConfig);
+                    if(this.$refs.slideContainer){
+                        this.slides = this.$refs.slideContainer.children;
+                        this.$refs.slideContainer.addEventListener('touchstart', this.touchStart.bind(this));
+                        this.$refs.slideContainer.addEventListener('touchend', this.touchEnd.bind(this));
+                        this.slideWidth = 100/this.itemsPerSlide;
+                        this.setSlideWidth(this.slides, this.slideWidth);
+                        this.totalSlides = this.slides.length / this.itemsPerSlide;
+                    }
+                    this.handleResize();
+                    window.addEventListener('resize', this.handleResize);
+                },
+                movePackContainerPosition(){
+                    const bundleEl = document.getElementById('ahy-bundle-packs-container');
+                    if(bundleEl){
+                        const bundleSection = document.querySelector('section.complete-the-situation');
+                        if (bundleSection) {
+                            bundleSection.appendChild(bundleEl);
+                            bundleEl.style.display = '';
+                        }
+                    }
+                },
+                watchShowConfigurablePackSidebar(){
+                    this.$watch('showConfigurablePackSidebar', (newValue, oldValue) => {
+                        if (newValue !== oldValue) {
+                            if(newValue === false){
+                                // Sidebar Closed
+                                this.configurableProductPrice = 0;
+                                this.configurableProductCount = 0;
+                                this.swatchItemData = [];
+                                this.updateTotalPrice();
+                                console.log('Sidebar Closed');
+                                this.disableSidebarAddToCartBtn();
+                                this.unsetConfigurableProductPackFormData();
+                            } else{
+                                // Sidebar Opened
+                            }
+
+                        }
+                    });
+                },
+                setSlideWidth(slides, slideWidth) {
+                    for (let i = 0; i < slides.length; i++) {
+                        slides[i].style.width = slideWidth + '%';
+                    }
+                },
+                next() {
+                    if ((this.currentIndex/this.itemsPerSlide) < this.slides.length - this.itemsPerSlide) {
+                        this.currentIndex += this.itemsPerSlide;
+                        this.updateSlides();
+                    } else {
+
+                    }
+                },
+                prev() {
+                    if (this.currentIndex > 0) {
+                        this.currentIndex -= this.itemsPerSlide;
+                        this.updateSlides();
+                    }
+                },
+                touchStart(event) {
+                    this.touchStartX = event.touches[0].clientX;
+                },
+                touchEnd(event) {
+                    const touchEndX = event.changedTouches[0].clientX;
+                    const touchDiff = touchEndX - this.touchStartX;
+                    if (touchDiff > 0) {
+                        this.prev();
+                    } else if (touchDiff < 0) {
+                        this.next();
+                    }
+                },
+                updateSlides() {
+                    const slides = this.slides;
+                    const position = -this.currentIndex * this.slideWidth;
+                    for (let i = 0; i < slides.length; i++) {
+                        slides[i].style.transform = `translateX(${position}%)`;
+                        slides[i].style.transition = 'transform 0.5s ease-in-out';
+                    }
+                    const lastIndexPercentile = 100 * (this.slides.length - this.itemsPerSlide);
+                    if(lastIndexPercentile + position === 0){
+                        this.lastIndex = true;
+                    } else {
+                        this.lastIndex = false;
+                    }
+                },
+                disableSidebarAddToCartBtn(){
+                    const addToCartBtnEl = document.querySelector('#product-pack-configurable-sidebar #product-addtocart-button');
+                    const addToCartSpanEl = document.querySelector('#product-addtocart-button span.add-to');
+                    if(addToCartSpanEl){
+                        addToCartSpanEl.innerHTML = 'Please Select Options';
+                    }
+                    if(addToCartBtnEl){
+                        addToCartBtnEl.disabled = true;
+                    }
+                },
+                enableSideBarAddToCartBtn(){
+                    const addToCartBtnEl = document.querySelector('#product-pack-configurable-sidebar #product-addtocart-button');
+                    const addToCartSpanEl = document.querySelector('#product-addtocart-button span.add-to');
+                    if(addToCartSpanEl){
+                        addToCartSpanEl.innerHTML = 'Add to Cart';
+                    }
+                    if(addToCartBtnEl){
+                        addToCartBtnEl.removeAttribute('disabled');
+                        addToCartBtnEl.disabled = false;
+                    }
+                },
+                updateTotalPrice(itemConfig = this.itemConfig){
+                    const itemData = JSON.parse(itemConfig);
+                    this.basePrice = itemData.parent_info.price;
+                    this.totalPrice = this.basePrice;
+                    this.oldTotalPrice = this.basePrice;
+                    this.configurableProductCount = 0;
+
+                    const packList = document.querySelector('.amrelated-pack-list-ahy');
+                    if(packList){
+                        const checkedInputs = packList.querySelectorAll('input[type="checkbox"]:checked');
+
+                        if(checkedInputs){
+                            checkedInputs.forEach((input) => {
+                                const productId = input.getAttribute('data-product-id');
+                                const productPrice = itemData.products[productId].price;
+                                const productOldPrice = itemData.products[productId].old_price;
+                                const productType = input.getAttribute('data-product-type');
+                                this.totalPrice += productPrice;
+                                this.oldTotalPrice += productOldPrice;
+                                if(productType === 'configurable'){
+                                    this.configurableProductCount++;
+                                } else if(productType === 'simple') {
+                                    //
+                                }
+                            });
+                        }
+                    }
+                },
+                setSimpleProductPackFormData(){
+                    const packList = document.querySelector('.amrelated-pack-list-ahy');
+                    if(packList){
+                        const checkedInputs = packList.querySelectorAll('input[type="checkbox"]:checked');
+
+                        const simpleProductPackEl = document.getElementById('simple-product-pack-data');
+                        if(simpleProductPackEl){
+                            simpleProductPackEl.innerHTML = '';
+                        }
+                        if(checkedInputs){
+                            checkedInputs.forEach((input) => {
+                                const productId = input.getAttribute('data-product-id');
+                                const productType = input.getAttribute('data-product-type');
+                                if(productType === 'simple') {
+                                    // loop through the array of selected simple options
+                                    if(simpleProductPackEl){
+
+                                        const simpleProductPackOptionInput = document.createElement('input');
+                                        simpleProductPackOptionInput.name = `amrelated_products[${productId}]`;
+                                        simpleProductPackOptionInput.type = 'hidden';
+                                        simpleProductPackOptionInput.value = 1;
+
+                                        const simpleProductPackInputs = simpleProductPackEl.querySelectorAll('input');
+                                        // Create a Set to keep track of unique input names
+                                        const uniqueSimpleInputNames = new Set();
+                                        // Loop through the inputs and remove any duplicates
+                                        simpleProductPackInputs.forEach(input => {
+                                            // Get the input name attribute
+                                            const inputName = input.getAttribute('name');
+                                            // If the input name is already in the set, remove the input element
+                                            if (uniqueSimpleInputNames.has(inputName)) {
+                                                input.remove();
+                                            }
+                                            // Add the input name to the set
+                                            uniqueSimpleInputNames.add(inputName);
+                                        });
+
+                                        // Check if the input name is already in the set before adding the new input element
+                                        if (!uniqueSimpleInputNames.has(simpleProductPackOptionInput.name)) {
+                                            simpleProductPackEl.appendChild(simpleProductPackOptionInput);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                },
+                setConfigurableProductPackFormData(){
+                    this.unsetConfigurableProductPackFormData();
+                    const configurableProductPackEl = document.getElementById('configurable-product-pack-data');
+                    if(configurableProductPackEl){
+                        this.swatchItemData.forEach((option) => {
+                            // loop through the array of selected configurable options
+                            const configurableProductPackOptionInput = document.createElement('input');
+                            configurableProductPackOptionInput.name = 'amrelated_products_popup[]';
+                            configurableProductPackOptionInput.type = 'hidden';
+                            configurableProductPackOptionInput.id = `product-${option.configurableProductId}`;
+                            configurableProductPackOptionInput.value = `product=${option.configurableProductId}&selected_configurable_option=&related_product=&item=0&form_key=${hyva.getFormKey()}&super_attribute[144]=${option.attributes.sizeAttrId}&super_attribute[93]=${option.attributes.colorAttrId}&qty=1`;
+
+                            const configurableProductPackInputs = configurableProductPackEl.querySelectorAll('input');
+                            // Create a Set to keep track of unique input names
+                            const uniqueConfigurableInputNames = new Set();
+                            // Loop through the inputs and remove any duplicates
+                            configurableProductPackInputs.forEach(input => {
+                                // Get the input name attribute
+                                const inputName = input.getAttribute('id');
+                                // If the input name is already in the set, remove the input element
+                                if (uniqueConfigurableInputNames.has(inputName)) {
+                                    input.remove();
+                                }
+                                // Add the input name to the set
+                                uniqueConfigurableInputNames.add(inputName);
+                            });
+
+                            // Check if the input name is already in the set before adding the new input element
+                            if (!uniqueConfigurableInputNames.has(configurableProductPackOptionInput.name)) {
+                                configurableProductPackEl.appendChild(configurableProductPackOptionInput);
+                            }
+                        });
+                    }
+                },
+                unsetSimpleProductPackFormData(){
+
+                },
+                unsetConfigurableProductPackFormData(){
+                    const configurableProductPackEl = document.getElementById('configurable-product-pack-data');
+                    if(configurableProductPackEl){
+                        configurableProductPackEl.innerHTML = '';
+                    }
+                },
+                calculateTotalPrice(itemId){
+                    this.updateTotalPrice();
+                    const checkboxEl = document.querySelector(`input[name="amrelated_products[${itemId}]"]`);
+                    if(checkboxEl){
+                        if (checkboxEl.checked) {
+                            const productType = checkboxEl.getAttribute('data-product-type');
+                            if(productType === 'configurable'){
+                                // this.getConfigurableSwatches(itemId);
+                            }
+                        } else {
+                            // If Checkbox is unchecked
+                        }
+                    }
+                },
+                addPackToCart(shouldShowCartSidebar = false, isSimpleOnly = true){
+
+                    const addToCartBtnAmasty = document.getElementById('ammostviewed-add-to-cart-form');
+                    // addToCartBtnAmasty.submit();return false;
+                    if(addToCartBtnAmasty){
+                        const formData = new FormData(addToCartBtnAmasty);
+
+                        if(!isSimpleOnly){
+                            // Get all input fields inside the parent element with id "simple-product-pack-data"
+                            const ignoredFields = document.querySelectorAll('#simple-product-pack-data input');
+
+                            // Filter out the ignored fields from the form data
+                            for (const field of ignoredFields) {
+                                formData.delete(field.name);
+                            }
+                        }
+
+                        if(formData){
+                            const options = {
+                                method: 'POST',
+                                body: formData
+                            };
+
+                            fetch(BASE_URL + 'ammostviewed/cart/add/', options)
+                            .then(response => response.json())
+                            .then(data => {
+                                if(data.is_add_to_cart){
+                                    window.dispatchEvent(new CustomEvent('product-addtocart-success'));
+                                    window.dispatchEvent(new CustomEvent('reload-customer-section-data'));
+                                    if(shouldShowCartSidebar){
+                                        this.showConfigurablePackSidebar = false;
+                                        this.unsetSimpleProductPackFormData();
+                                        window.dispatchEvent(new CustomEvent("toggle-cart"));
+                                    }
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                        }
+                    }
+                },
+                addToCartAlpine(itemId){
+                    const itemData = JSON.parse(this.itemConfig);
+                    const packList = document.querySelector('.amrelated-pack-list-ahy');
+                    if(packList){
+                        const checkedInputs = packList.querySelectorAll('input[type="checkbox"]:checked');
+
+                        var hasConfigurable = false;
+                        const configurableProductIdArr = [];
+                        if(checkedInputs){
+                            checkedInputs.forEach((input) => {
+                                const productType = input.getAttribute('data-product-type');
+                                const productId = input.getAttribute('data-product-id');
+                                if(productType === 'configurable'){
+                                    hasConfigurable = true;
+                                    configurableProductIdArr.push(productId);
+                                }
+                            });
+                        }
+                        if(hasConfigurable){
+                            this.getConfigurableSwatches(configurableProductIdArr);
+                            //Silently Add simple products to cart
+                            var shouldShowCartSidebar = false;
+                            this.addPackToCart(shouldShowCartSidebar, true);
+                        } else {
+                            //Add All checked simple products to cart
+                            this.addPackToCart(true, true);
+                        }
+                    }
+                },
+                getConfigurableSwatches(configurableProductIdArr = []){
+                    //ajax call to the controller to fetch swatches
+                    //Use this function to get swatches of a configurable product
+                    if (configurableProductIdArr.length > 0){
+                        this.showConfigurablePackSidebar = true;
+                        const parentEl = document.getElementById('configurable-product-data');
+                        parentEl.innerHTML = '';
+                        configurableProductIdArr.forEach(async (configurableProductId) => {
+                            const itemNames = JSON.parse(this.additionalItemDataJson);
+                            const productName = itemNames[configurableProductId]['name'];
+                            const productImageUrl = itemNames[configurableProductId]['imageUrl'];
+                            const productNameHtml = '<h2 class="product-name text-3xl font-bold pb-4">'+productName+'</h2>';
+                            console.log(productNameHtml);
+                            const productImageHtml = `<img src="${productImageUrl}" alt="${productName}">`;
+
+                            const configurableProductSwatchesEl = document.createElement('div');
+                            configurableProductSwatchesEl.setAttribute('data-product-id', configurableProductId);
+                            configurableProductSwatchesEl.setAttribute('id', 'configurable-product-swatches' + configurableProductId);
+
+                            const configurableProductNameEl = document.createElement('div');
+                            configurableProductNameEl.setAttribute('data-product-id', configurableProductId);
+                            configurableProductNameEl.setAttribute('id', 'configurable-product-name' + configurableProductId);
+
+                            const configurableProductPriceEl = document.createElement('div');
+                            configurableProductPriceEl.setAttribute('data-product-id', configurableProductId);
+                            configurableProductPriceEl.setAttribute('id', 'configurable-product-price' + configurableProductId);
+
+                            const configurableProductGalleryEl = document.createElement('div');
+                            configurableProductGalleryEl.setAttribute('data-product-id', configurableProductId);
+                            configurableProductGalleryEl.setAttribute('id', 'configurable-product-gallery' + configurableProductId);
+                            configurableProductGalleryEl.style.display = 'flex';
+                            configurableProductGalleryEl.style.justifyContent = 'center';
+
+                            if (parentEl) {
+                                parentEl.appendChild(configurableProductNameEl);
+                                parentEl.appendChild(configurableProductGalleryEl);
+                                parentEl.appendChild(configurableProductPriceEl);
+                                parentEl.appendChild(configurableProductSwatchesEl);
+                            } else {
+                                console.error('Parent element not found');
+                            }
+                            try {
+                                const response = await fetch(`${BASE_URL}ahy_themecustomization/index/GetProductSwatchesDetails?product_id=` + configurableProductId);
+                                const data = await response.json();
+                                const parentEl = document.getElementById('configurable-product-data');
+                                if (data.success === true) {
+                                    const oldScriptElem = document.getElementById('swatchesScriptContentDynamic-' + configurableProductId);
+                                    if (!oldScriptElem) {
+                                        const scriptElem = document.createElement('script');
+                                        scriptElem.type = 'text/javascript';
+                                        scriptElem.id = 'swatchesScriptContentDynamic-' + configurableProductId;
+                                        scriptElem.innerHTML = data.swatch_script;
+                                        document.body.appendChild(scriptElem);
+                                    }
+
+                                    const oldPriceScriptElem = document.getElementById('swatchesPriceScript-' + configurableProductId);
+                                    if (!oldPriceScriptElem) {
+                                        const scriptPriceElem = document.createElement('script');
+                                        scriptPriceElem.type = 'text/javascript';
+                                        scriptPriceElem.id = 'swatchesPriceScript-' + configurableProductId;
+                                        scriptPriceElem.innerHTML = data.product_price_script;
+                                        document.body.appendChild(scriptPriceElem);
+                                    }
+
+                                    const oldScriptSwatchGalleryElem = document.getElementById('swatchesGalleryScript-' + configurableProductId);
+                                    if (!oldScriptSwatchGalleryElem) {
+                                        const scriptSwatchGalleryElem = document.createElement('script');
+                                        scriptSwatchGalleryElem.type = 'text/javascript';
+                                        scriptSwatchGalleryElem.id = 'swatchesGalleryScript-' + configurableProductId;
+                                        scriptSwatchGalleryElem.innerHTML = data.product_swatch_gallery_script;
+                                        document.body.appendChild(scriptSwatchGalleryElem);
+                                    }
+
+                                    const productNameEl = document.getElementById('configurable-product-name' + configurableProductId);
+                                    productNameEl.innerHTML = productNameHtml;
+
+                                    const productPriceSwatchEl = document.getElementById('configurable-product-price' + configurableProductId);
+                                    productPriceSwatchEl.innerHTML = data.product_price_html;
+
+                                    const swatchHtmlEl = document.getElementById('configurable-product-swatches' + configurableProductId);
+                                    swatchHtmlEl.innerHTML = data.swatch_html;
+
+                                    const productSwatchGalleryHtml = document.getElementById('configurable-product-gallery' + configurableProductId);
+                                    productSwatchGalleryHtml.innerHTML = productImageHtml;
+
+                                     // append the new div to the parent element
+                                    if (parentEl) {
+                                        parentEl.appendChild(productNameEl);
+                                        parentEl.appendChild(productSwatchGalleryHtml);
+                                        parentEl.appendChild(productPriceSwatchEl);
+                                        parentEl.appendChild(swatchHtmlEl);
+                                    } else {
+                                        console.error('Parent element not found');
+                                    }
+
+                                } else {
+                                    console.log('in else');
+                                }
+
+                            } catch (error) {
+                                console.error('Error fetching swatches:', error);
+                            }
+                        });
+                    }
+                },
+                updateTotalPriceWithConfigurableOptions(configurableProductId){
+
+                    console.log('The number of checked Configurable products are ', this.configurableProductCount);
+                    console.log('The number of selected configurable products are ', this.swatchItemData.length)
+
+                    this.totalPrice = 0;
+                    var simpleProductsPrice = this.basePrice;
+                    this.configurableProductPrice = 0;
+
+                    const packList = document.querySelector('.amrelated-pack-list-ahy');
+                    const checkedInputs = packList.querySelectorAll('input[type="checkbox"]:checked');
+                    if(checkedInputs){
+                        checkedInputs.forEach((input) => {
+                            const productId = input.getAttribute('data-product-id');
+                            const productType = input.getAttribute('data-product-type');
+                            if(productType === 'configurable'){
+                                //
+                            } else if (productType === 'simple'){
+                                // If Checkbox is unchecked
+                                const itemData = JSON.parse(this.itemConfig);
+                                simpleProductsPrice += itemData.products[productId].price;
+                            }
+
+                        });
+                    }
+                    this.totalPrice = simpleProductsPrice;
+
+                    // Code below to calculate price of this configurable product and add to totalprice
+                    this.swatchItemData.forEach((item) => {
+                        this.configurableProductPrice += item.productOptionPrices.basePrice.amount;
+                    });
+                    this.totalPrice += this.configurableProductPrice;
+
+                    if(this.configurableProductCount === this.swatchItemData.length){
+                        //Enable Add to Cart Button
+                        this.enableSideBarAddToCartBtn();
+                    }
+                },
+                handleResize() {
+                    const width = window.innerWidth;
+                    this.isMobile = (width < 768) ? true : false;
+                    if (this.isMobile) {
+                        // Wait for the element to be fully loaded
+                        window.onload = () => {
+                            const desktopBundlePackEl = document.querySelector('.bundle-product-pack-carousel');
+                            if (desktopBundlePackEl) {
+                            // Check if the element exists before removing it
+                                desktopBundlePackEl.remove();
+                                console.log('isMobile:', this.isMobile);
+                            }
+                            console.log(`Screen width is ${width}px`);
+                        };
+                    }
+                },
+                updateCheckBoxFromImage(event){
+                    const clickedElement = event.target;
+                    if(clickedElement){
+                        const bundlePackCheckBoxElChecked = clickedElement.parentElement.parentElement.querySelector('.amrelated-checkbox');
+                        const isChecked = clickedElement.checked || bundlePackCheckBoxElChecked.checked;
+                        if(!isChecked){
+                            bundlePackCheckBoxElChecked.checked = true;
+                            this.updateTotalPrice(this.itemConfig);
+                            this.setSimpleProductPackFormData();
+                        } else {
+                            bundlePackCheckBoxElChecked.checked = false;
+                            this.updateTotalPrice(this.itemConfig);
+                            this.setSimpleProductPackFormData();
+                        }
+                    }
+                },
+                updateCheckBoxFromDetails(event){
+                    const clickedElement = event.target;
+                    if(clickedElement){
+                        const bundlePackCheckBoxElChecked = clickedElement.parentElement.parentElement.parentElement.querySelector('.amrelated-checkbox');
+                        const isChecked = clickedElement.checked || bundlePackCheckBoxElChecked.checked;
+                        if(!isChecked){
+                            bundlePackCheckBoxElChecked.checked = true;
+                            this.updateTotalPrice(this.itemConfig);
+                            this.setSimpleProductPackFormData();
+                        } else {
+                            bundlePackCheckBoxElChecked.checked = false;
+                            this.updateTotalPrice(this.itemConfig);
+                            this.setSimpleProductPackFormData();
+                        }
+                    }
+                },
+                eventListeners: {
+                    ['@update-bundle-pack-configurable-selection.window'](event) {
+                        const configurableIndex = this.swatchItemData.findIndex(option => option.configurableProductId === event.detail.configurableProductId);
+
+                        if (configurableIndex >= 0) {
+                            this.swatchItemData[configurableIndex] = event.detail;
+                        } else {
+                            this.swatchItemData.push(event.detail);
+                        }
+                        // console.log('this.swatchItemData in eventListener: ', this.swatchItemData);
+                        var configurableProductId = event.detail.configurableProductId;
+                        this.updateTotalPriceWithConfigurableOptions(configurableProductId);
+                        this.setConfigurableProductPackFormData();
+                    }
+                },
+            }
+        }
+</script>

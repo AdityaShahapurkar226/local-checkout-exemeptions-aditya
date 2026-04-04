@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <!-- Existing Table -->
+    <table name="ahy_authorizenet_ahyauthorizenet" resource="default" engine="innodb" comment="ahy_authorizenet_ahyauthorizenet Table">
+        <column xsi:type="int" name="ahyauthorizenet_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
+        <column name="EncryptionKey" nullable="true" xsi:type="varchar" comment="Encryption key for the Authorize Net" length="255"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="ahyauthorizenet_id"/>
+        </constraint>
+    </table>
+
+    <!-- New Table: Authorize.Net Customer Profile Mapping -->
+    <table name="ahy_authorizenet_customer_profile" resource="default" engine="innodb" comment="Authorize.Net Customer Profile Mapping">
+        <column name="entity_id" xsi:type="int" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column name="customer_id" xsi:type="int" unsigned="true" nullable="false" comment="Magento Customer ID"/>
+        <column name="customer_profile_id" xsi:type="varchar" length="255" nullable="false" comment="Authorize.Net Customer Profile ID"/>
+        <column name="created_at" xsi:type="timestamp" on_update="false" default="CURRENT_TIMESTAMP" nullable="false" comment="Created At"/>
+        
+        <constraint xsi:type="primary" referenceId="PRIMARY_CUSTOMER_PROFILE">
+            <column name="entity_id"/>
+        </constraint>
+
+        <constraint xsi:type="unique" referenceId="UNQ_CUSTOMER_ID">
+            <column name="customer_id"/>
+        </constraint>
+    </table>
+
+</schema>

@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="marketplace_massupload_profile" resource="default" engine="innodb" comment="Mass Upload Profile Table">
+        <column xsi:type="int" name="id" unsigned="true" nullable="false" padding="11" identity="true" comment="Id"/>
+        <column xsi:type="int" name="customer_id" nullable="false" padding="11" comment="Customer Id"/>
+        <column xsi:type="int" name="attribute_set_id" nullable="false" padding="11" comment="Attribute Set Id"/>
+        <column xsi:type="text" name="csv_file" nullable="false"  disabled="true" comment="Csv File"/>
+        <column xsi:type="varchar" name="profile_name" length="255" nullable="false" comment="Profile Name"/>
+        <column xsi:type="varchar" name="product_type" length="255" nullable="false" comment="Product Type"/>
+        <column xsi:type="text" name="time" nullable="false" disabled="true" comment="Time"/>
+        <column xsi:type="int" name="status" nullable="false" padding="11"  disabled="true" comment="Status"/>
+        <column xsi:type="timestamp" name="created_date" nullable="false" comment="Created Date"/>
+        <column xsi:type="text" name="image_file" nullable="false" comment="Image Folder Name"/>
+        <column xsi:type="text" name="link_file" nullable="false" comment="Link Folder Name"/>
+        <column xsi:type="text" name="sample_file" nullable="false" comment="Sample Folder Name"/>
+        <column xsi:type="longblob" name="data_row" nullable="false" comment="Uploaded File Whole Row Serialed Data"/>
+        <column xsi:type="text" name="file_type" nullable="false" comment="File Type"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+    <table name="marketplace_massupload_attribute_profile" resource="default" engine="innodb" comment="Mass Upload Attribute Mapping Profile Table">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" padding="11" identity="true" comment="Id"/>
+        <column xsi:type="int" name="seller_id" nullable="false" padding="11" comment="Seller Id"/>
+        <column xsi:type="varchar" name="profile_name"  length="255" nullable="false" comment="Profile Name to uniquely identify each uploaded file"/>
+        <column xsi:type="int" name="attribute_set_id" nullable="false" padding="11" comment="Attribute Set Id"/>
+        <column xsi:type="timestamp" name="created_date" nullable="false" default="NULL" comment="Creation Date"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+    <table name="marketplace_massupload_attribute_mapping" resource="default" engine="innodb" comment="Mass Upload Attribute Mapping Table">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" padding="11" identity="true" comment="Id"/>
+        <column xsi:type="int" name="profile_id" unsigned="true" nullable="false" padding="11" default="0" comment="Profile Id"/>
+        <column xsi:type="varchar" name="file_attribute" length="255" nullable="false" comment="Uploaded File Attribute"/>
+        <column xsi:type="varchar" name="mage_attribute" length="255" nullable="false" comment="Mage Origional Attribute Name"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="MARKETPLACE_MASSUPLOAD_ATTRIBUTE_MAPPING_PROFILE_ID_MASSUPLOAD_ATTRIBUTE_PROFILE_ENTITY_ID" table="marketplace_massupload_attribute_mapping" column="profile_id" referenceTable="marketplace_massupload_attribute_profile" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <index referenceId="MARKETPLACE_MASSUPLOAD_ATTRIBUTE_PROFILE_ID_MAPPING" indexType="btree">
+            <column name="profile_id"/>
+        </index>
+    </table>
+    <table name="marketplace_massupload_profile_run_api" resource="default" engine="innodb" comment="Mass Upload Profile Run Api">
+        <column xsi:type="int" name="id" unsigned="true" nullable="false" padding="11" identity="true" comment="Id"/>
+        <column xsi:type="int" name="profile_id" nullable="false" padding="11" comment="profile Id"/>
+        <column xsi:type="text" name="error_message" nullable="false"  comment="Csv File"/>
+        <column xsi:type="int" name="status" nullable="false" padding="11" comment="Status"/>
+        <column xsi:type="text" name="profiler_name" nullable="false"  comment="Csv File Name"/>
+        <column xsi:type="timestamp" name="created_date" nullable="false" comment="Created Date"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+</schema>

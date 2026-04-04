@@ -1,0 +1,29 @@
+<?php
+    /**
+     * Webkul Software.
+     *
+     * @category  Webkul
+     * @package   Webkul_MpFixedRateshipping
+     * @author    Webkul
+     * @copyright Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+     * @license   https://store.webkul.com/license.html
+     */
+?>
+<?php
+    $fixedRateBlock = $block->getLayout()->createBlock(\Webkul\MpFixedRateshipping\Block\ManageFixrateShipping::class);
+    $mpHelper = $fixedRateBlock->getHelperObject('marketplaceHelper');
+    $helper = $fixedRateBlock->getHelperObject('mpFixedRateHelper');
+    $isPartner = $mpHelper->isSeller();
+    $magentoCurrentUrl = $block->getCurrentUrl();
+    $isSellerGroup = $mpHelper->isSellerGroupModuleInstalled();
+?>
+<?php
+if ($isPartner && $helper->getConfigData('active')) { ?>
+        <?php if (($isSellerGroup && $mpHelper->isAllowedAction('mpfixrate/shipping/view')) || !$isSellerGroup) { ?>
+        <li class="nav item <?= /* @noEscape */ strpos($magentoCurrentUrl, 'mpfixrate/shipping/view')? "current":"";?>">
+            <a href="<?= /* @noEscape */ $block->getUrl('mpfixrate/shipping/view'); ?>">
+                <?= /* @noEscape */ __('Fixed Rate Shipping') ?>
+            </a>
+        </li> 
+        <?php } ?>
+<?php } ?>

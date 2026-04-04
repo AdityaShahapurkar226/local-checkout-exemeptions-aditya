@@ -1,0 +1,79 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Bss_ProductStockAlert
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2015-2017 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+// @codingStandardsIgnoreFile
+?>
+<?php
+/** @var $block \Bss\ProductStockAlert\Block\Product\View */
+/** @var $stockAlertHelper \Bss\ProductStockAlert\Helper\Data */
+$stockAlertHelper = $block->getStockAlertHelper();
+$btnText = $stockAlertHelper->getButtonText();
+$stopBtnText = $stockAlertHelper->getStopButtonText();
+$btnTextColor = $stockAlertHelper->getButtonTextColor();
+$btnColor = $stockAlertHelper->getButtonColor();
+?>
+<?php if($block->checkCustomer()): ?>
+    <?php if(!$block->getStatusAvailable() && !$block->getDisableStock()): ?>
+        <?php if (!$block->hasEmail($block->getProductIdController())): ?>
+            <?php $message = $block->getNotificationMessage(); ?>
+        <?php else: ?>
+            <?php $message = $block->getStopNotificationMessage(); ?>
+        <?php endif; ?>
+        <div class="stockalert" id="block-stockalert">
+            <div class="title" data-role="title">
+                <strong id="block-stockalert-heading" role="heading" aria-level="2"><?php /* @escapeNotVerified */ echo $message ?></strong>
+            </div>
+            <div class="content" id="form-container" data-role="content" aria-labelledby="block-stockalert-heading">
+                <form id="stockalert-form"
+                      action="<?php /* @escapeNotVerified */ echo $block->getAction(); ?>"
+                      method="post"
+                      data-mage-init='{"productStockalert":{
+                            "stockAlertEmail": "#stockalert_email",
+                            "applyButton": "button.action.notify",
+                            "cancelButton": "button.action.cancel"
+                        }
+                      }'>
+                    <?php if (!$block->hasEmail($block->getProductIdController())): ?>
+                    <div class="bss_productstockaler applied">
+                        <div class="field">
+                            <div class="control">
+                                <input type="text" class="input-text" id="stockalert_email" name="stockalert_email" value="<?php echo $block->escapeHtml($block->getCustomerEmail()) ?>" placeholder="<?php echo $block->escapeHtml(__('Your Email'));?>" />
+                            </div>
+                        </div>
+                        <div class="actions-toolbar padding">
+                            <div >
+                                <button class="action notify primary" type="button" value="<?php /* @escapeNotVerified */ echo $btnText ?>" style="background-color: <?= $btnColor ?>">
+                                    <span style="color: <?= $btnTextColor ?>"><?php /* @escapeNotVerified */ echo $btnText ?></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <?php else: ?>
+                        <div class="bss_productstockaler">
+                            <button  type="button" class="action cancel primary" value="<?php /* @escapeNotVerified */ echo $stopBtnText ?>" style="background-color: <?= $btnColor ?>">
+                                <span style="color: <?= $btnTextColor ?>"><?php /* @escapeNotVerified */ echo $stopBtnText ?></span>
+                            </button>
+                        </div>
+                    <?php endif; ?>
+                </form>
+            </div>    
+        </div>
+    <?php else: ?>
+        <div class="container-child-product">
+        </div>
+    <?php endif; ?>
+<?php endif; ?>

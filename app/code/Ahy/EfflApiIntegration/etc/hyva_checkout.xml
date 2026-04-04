@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Hyva_Checkout:etc/hyva_checkout.xsd">
+
+    <!-- Register FFL Step in Custom Checkout -->
+<checkout name="ahy" label="Ahy Custom Checkout" layout="2columns">
+        <step name="login" label="Customer Login" route="login" layout="1column">
+            <!-- Show login step when guest checkout is not allowed -->
+            <condition name="is_customer_required" if="is_customer" method="required" />
+            <!-- Show login step when the current customer is actually a guest -->
+            <condition name="is_guest" if="is_guest"/>
+        </step>
+
+        <step name="shipping" label="BILLING &amp; SHIPPING" route="shipping">
+            <!-- Only show this step when the cart isn't fully virtual -->
+            <condition name="is_physical" if="is_physical"/>
+        </step>
+
+        <step name="verify" label="VERIFY AGE">
+            Show this step when the second condition is true
+            <condition name="is_age_required" if="is_age_required" />
+        </step>
+
+        <step name="ffl" label="SELECT FFL">
+            <condition name="is_ffl_required" if="is_ffl_required"/>
+            <!-- <block name="ffl.verification"
+                   template="Ahy_EfflApiIntegration::checkout/verification/ffl.phtml"/> -->
+        </step>
+
+        <step name="payment" label="REVIEW &amp; ORDER" route="payment">
+            <!-- Remove all the stuff related to shipping when the cart is fully virtual -->
+            <update handle="hyva_checkout_default_virtual" if="is_virtual"/>
+        </step>
+    </checkout>
+
+</config>

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+<!-- Centerlization -->
+    <route url="/V1/product/restricted" method="POST">
+        <service class="Ahy\EstateApiIntegration\Api\RestrictedProductCheckerInterface" method="isRestricted"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route url="/V1/product/validate-zip" method="POST">
+        <service class="Ahy\EstateApiIntegration\Api\ProductZipValidatorInterface" method="validate"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route url="/V1/quote/orchid-restriction" method="POST">
+        <service class="Ahy\EstateApiIntegration\Api\OrchidRestrictionManagementInterface" method="saveRestriction" />
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+     <route url="/V1/checkout/set-ffl-required" method="POST">
+        <service class="Ahy\EstateApiIntegration\Api\FflInterface" method="setFflRequired"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+     <route url="/V1/restriction/validate" method="POST">
+        <service class="Ahy\EstateApiIntegration\Api\RestrictionValidatorInterface" method="validate"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/get-available-cities" method="GET">
+    <service class="Ahy\EstateApiIntegration\Api\CityInterface" method="getCities"/>
+    <resources>
+        <resource ref="anonymous"/>
+    </resources>
+</route>
+</routes>

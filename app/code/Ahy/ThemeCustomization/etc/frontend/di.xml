@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2017 MageWorx. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Sales\Model\Order">
+        <plugin name="update_payment_donation_order" type="Ahy\ThemeCustomization\Plugin\AddDonationPaypal"/>
+    </type>
+    <type name="Magento\Paypal\Model\Cart">
+        <plugin name="update_paypal_donation_order" type="Ahy\ThemeCustomization\Plugin\AddDonationPaypal"/>
+    </type>
+        <type name="Magento\Customer\CustomerData\SectionPool">
+        <arguments>
+            <argument name="sectionSourceMap" xsi:type="array">
+                <item name="pdp-hover-map" xsi:type="string">
+                    Ahy\ThemeCustomization\CustomerData\HoverMapSection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>

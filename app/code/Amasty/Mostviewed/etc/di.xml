@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Amasty\Mostviewed\Model\Group">
+        <arguments>
+            <argument name="resource" xsi:type="object">Amasty\Mostviewed\Model\ResourceModel\Group</argument>
+            <argument name="data" xsi:type="array">
+                <item name="combineFactory" xsi:type="object">Amasty\Mostviewed\Model\Rule\Condition\CombineFactory</item>
+                <item name="whereCombineFactory" xsi:type="object">Amasty\Mostviewed\Model\Rule\Condition\WhereCombineFactory</item>
+                <item name="sameAsCombineFactory" xsi:type="object">Amasty\Mostviewed\Model\Rule\Condition\SameAsCombineFactory</item>
+                <item name="amastySerializer" xsi:type="object">Amasty\Base\Model\Serializer</item>
+                <item name="actionFactory" xsi:type="object">Magento\CatalogRule\Model\Rule\Condition\CombineFactory</item>
+                <item name="ruleProcessor" xsi:type="object">Amasty\Mostviewed\Model\Indexer\RuleProcessor</item>
+                <item name="layoutUpdater" xsi:type="object">Amasty\Mostviewed\Model\Layout\Updater</item>
+                <item name="stockResource" xsi:type="object">Magento\CatalogInventory\Model\ResourceModel\Stock\Status</item>
+                <item name="moduleManager" xsi:type="object">Magento\Framework\Module\Manager</item>
+                <item name="sqlBuilder" xsi:type="object">Amasty\Mostviewed\Model\Rule\Condition\SqlBuilder</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="amasty_mostviewed_product_group_listing_data_source" xsi:type="string">Amasty\Mostviewed\Model\ResourceModel\Group\Grid\Collection</item>
+                <item name="amasty_mostviewed_pack_listing_data_source" xsi:type="string">Amasty\Mostviewed\Model\ResourceModel\Pack\Grid\Collection</item>
+                <item name="amasty_mostviewed_product_group_form_data_source" xsi:type="string">amastyMostviewedGroupSearchResult</item>
+                <item name="amasty_mostviewed_pack_sales_listing_data_source" xsi:type="string">Amasty\Mostviewed\Model\ResourceModel\Pack\Sales\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Mostviewed\Ui\Component\Listing\Columns\Store">
+        <arguments>
+            <argument name="storeKey" xsi:type="string">stores</argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Mostviewed\Model\ResourceModel\Group\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">amasty_mostviewed_group</argument>
+            <argument name="eventPrefix" xsi:type="string">amasty_mostviewed_group_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">group_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Amasty\Mostviewed\Model\ResourceModel\Group</argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Mostviewed\Model\ResourceModel\Pack\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">amasty_mostviewed_pack</argument>
+            <argument name="eventPrefix" xsi:type="string">amasty_mostviewed_pack_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">pack_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Amasty\Mostviewed\Model\ResourceModel\Pack</argument>
+        </arguments>
+    </type>
+    <virtualType name="amastyMostviewedGroupSearchResult" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">amasty_mostviewed_group</argument>
+            <argument name="resourceModel" xsi:type="string">Amasty\Mostviewed\Model\ResourceModel\Group</argument>
+        </arguments>
+    </virtualType>
+    <preference for="Amasty\Mostviewed\Api\Data\GroupInterface" type="Amasty\Mostviewed\Model\Group"/>
+    <preference for="Amasty\Mostviewed\Api\GroupRepositoryInterface" type="Amasty\Mostviewed\Model\Repository\GroupRepository"/>
+
+    <virtualType name="Amasty\Mostviewed\Model\Store\Ui\Component\Listing\Column\Store" type="Magento\Store\Ui\Component\Listing\Column\Store">
+        <arguments>
+            <argument name="storeKey" xsi:type="string">stores</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Amasty\Mostviewed\Model\Store\Ui\Component\Listing\Column\Pack\Store" type="Magento\Store\Ui\Component\Listing\Column\Store">
+        <arguments>
+            <argument name="storeKey" xsi:type="string">store_id</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Amasty\Mostviewed\Model\Analytics\Collector">
+        <arguments>
+            <argument name="collectors" xsi:type="array">
+                <item name="view" xsi:type="object">Amasty\Mostviewed\Model\Analytics\Collector\ViewCollector</item>
+                <item name="click" xsi:type="object">Amasty\Mostviewed\Model\Analytics\Collector\ClickCollector</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Sales\Model\Service\OrderService">
+        <plugin name="Amasty_Mostviewed::after-place-order" type="Amasty\Mostviewed\Plugin\Sales\Model\Service\OrderService" />
+    </type>
+
+    <type name="Magento\SalesRule\Model\RulesApplier">
+        <plugin name="Amasty_Mostviewed::bundle-pack-discount" type="Amasty\Mostviewed\Plugin\SalesRule\Model\RulesApplier"/>
+    </type>
+
+    <type name="Magento\SalesRule\Model\Validator">
+        <plugin name="Amasty_Mostviewed::bundle-pack-discount"
+                type="Amasty\Mostviewed\Plugin\SalesRule\Model\Validator\AdditionalApplier"/>
+    </type>
+
+    <type name="Magento\Catalog\Cron\RefreshSpecialPrices">
+        <plugin name="Amasty_Mostviewed::refresh-bundle-pack" type="Amasty\Mostviewed\Plugin\Catalog\Cron\Refresh"/>
+    </type>
+
+    <type name="Magento\CatalogRule\Model\Rule\Condition\Product">
+        <plugin name="Amasty_Mostviewed::fix-static-attributes-sql-aliases" type="Amasty\Mostviewed\Plugin\CatalogRule\Model\Rule\Condition\ProductPlugin"/>
+    </type>
+
+    <type name="Amasty\Mostviewed\Model\Pack">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="amasty_serializer" xsi:type="object">Amasty\Base\Model\Serializer</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Mostviewed\Model\Rule\Condition\Product">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="config_helper" xsi:type="object">Amasty\Mostviewed\Helper\Config</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
+        <arguments>
+            <argument name="extensionActions" xsi:type="array">
+                <item name="Amasty\Mostviewed\Api\Data\PackInterface" xsi:type="array">
+                    <item name="read" xsi:type="array">
+                        <item name="stores" xsi:type="string">Amasty\Mostviewed\Model\Extensions\Stores\ReadHandler</item>
+                        <item name="conditional_discounts" xsi:type="string">Amasty\Mostviewed\Model\Extensions\ConditionalDiscounts\ReadHandler</item>
+                    </item>
+                    <item name="create" xsi:type="array">
+                        <item name="stores" xsi:type="string">Amasty\Mostviewed\Model\Extensions\Stores\SaveHandler</item>
+                        <item name="conditional_discounts" xsi:type="string">Amasty\Mostviewed\Model\Extensions\ConditionalDiscounts\SaveHandler</item>
+                    </item>
+                    <item name="update" xsi:type="array">
+                        <item name="stores" xsi:type="string">Amasty\Mostviewed\Model\Extensions\Stores\SaveHandler</item>
+                        <item name="conditional_discounts" xsi:type="string">Amasty\Mostviewed\Model\Extensions\ConditionalDiscounts\SaveHandler</item>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Mostviewed\Block\Adminhtml\System\Config\Element\AmCartField">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="module_manager" xsi:type="object">Magento\Framework\Module\Manager</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Mostviewed\Model\Pack\Discount\RetrieveDiscountAmount\Pool">
+        <arguments>
+            <argument name="retrievers" xsi:type="array">
+                <item name="default" xsi:type="object">Amasty\Mostviewed\Model\Pack\Discount\RetrieveDiscountAmount\DefaultStrategy</item>
+                <item name="2" xsi:type="object">Amasty\Mostviewed\Model\Pack\Discount\RetrieveDiscountAmount\ConditionalStrategy</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Mostviewed\Model\Pack\QuoteItemProcessor">
+        <arguments>
+            <argument name="calculators" xsi:type="array">
+                <item name="0" xsi:type="object">Amasty\Mostviewed\Model\Pack\Discount\FixedCalculator</item>
+                <item name="1" xsi:type="object">Amasty\Mostviewed\Model\Pack\Discount\PercentCalculator</item>
+                <item name="2" xsi:type="object">Amasty\Mostviewed\Model\Pack\Discount\PercentCalculator</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!--Add possibility for apply patches before DS start-->
+    <virtualType name="Magento\Framework\Setup\Patch\DeclarativeSchemaApplyBeforeReader" type="Magento\Framework\Setup\Patch\PatchReader">
+        <arguments>
+            <argument name="type" xsi:type="string">declarativeSchemaApplyBefore</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Amasty\Mostviewed\Setup\Patch\PatchApplier" type="Magento\Framework\Setup\Patch\PatchApplier">
+        <arguments>
+            <argument name="dataPatchReader" xsi:type="object">Magento\Framework\Setup\Patch\DeclarativeSchemaApplyBeforeReader</argument>
+            <argument name="schemaPatchReader" xsi:type="object">Magento\Framework\Setup\Patch\DeclarativeSchemaApplyBeforeReader</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Amasty\Mostviewed\Plugin\Setup\Model\DeclarationInstaller\ApplyPatchesBeforeDeclarativeSchema">
+        <arguments>
+            <argument name="patchApplier" xsi:type="object">Amasty\Mostviewed\Setup\Patch\PatchApplier</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Setup\Model\DeclarationInstaller">
+        <plugin name="Amasty_Mostviewed::execute-patches-before-schema-apply"
+                type="Amasty\Mostviewed\Plugin\Setup\Model\DeclarationInstaller\ApplyPatchesBeforeDeclarativeSchema"/>
+    </type>
+    <!--Add possibility for apply patches before DS end-->
+
+    <type name="Amasty\Mostviewed\Model\Rule\Condition\Combine">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="amasty_sorting" xsi:type="array">
+                    <item name="bestseller" xsi:type="object">Amasty\Mostviewed\Model\Rule\Condition\Bestsellers</item>
+                </item>
+                <item name="module_manager" xsi:type="object">Magento\Framework\Module\Manager</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <preference for="Amasty\Mostviewed\Api\Data\ViewInterface" type="Amasty\Mostviewed\Model\Analytics\View" />
+    <preference for="Amasty\Mostviewed\Api\ViewRepositoryInterface" type="Amasty\Mostviewed\Model\Repository\ViewRepository" />
+    <preference for="Amasty\Mostviewed\Api\Data\ClickInterface" type="Amasty\Mostviewed\Model\Analytics\Click" />
+    <preference for="Amasty\Mostviewed\Api\Data\ConditionalDiscountInterface" type="Amasty\Mostviewed\Model\Pack\ConditionalDiscount" />
+    <preference for="Amasty\Mostviewed\Api\ClickRepositoryInterface" type="Amasty\Mostviewed\Model\Repository\ClickRepository" />
+    <preference for="Amasty\Mostviewed\Api\Data\AnalyticInterface" type="Amasty\Mostviewed\Model\Analytics\Analytic" />
+    <preference for="Amasty\Mostviewed\Api\AnalyticRepositoryInterface" type="Amasty\Mostviewed\Model\Repository\AnalyticRepository" />
+
+    <preference for="Amasty\Mostviewed\Api\Data\PackInterface" type="Amasty\Mostviewed\Model\Pack" />
+    <preference for="Amasty\Mostviewed\Api\PackRepositoryInterface" type="Amasty\Mostviewed\Model\Repository\PackRepository" />
+    <preference for="Amasty\Mostviewed\Model\Pack\ConditionalDiscount\Query\GetListInterface" type="Amasty\Mostviewed\Model\Pack\ConditionalDiscount\Query\GetList" />
+    <preference for="Amasty\Mostviewed\Model\Pack\ConditionalDiscount\Query\GetByIdInterface" type="Amasty\Mostviewed\Model\Pack\ConditionalDiscount\Query\GetByIdCache" />
+    <preference for="Amasty\Mostviewed\Model\Pack\ConditionalDiscount\Query\GetNewInterface" type="Amasty\Mostviewed\Model\Pack\ConditionalDiscount\Query\GetNew" />
+    <preference for="Amasty\Mostviewed\Model\Pack\ConditionalDiscount\Command\SaveInterface" type="Amasty\Mostviewed\Model\Pack\ConditionalDiscount\Command\Save" />
+    <preference for="Amasty\Mostviewed\Model\Pack\ConditionalDiscount\Command\RemoveByPackIdInterface" type="Amasty\Mostviewed\Model\Pack\ConditionalDiscount\Command\RemoveByPackId" />
+</config>

@@ -1,0 +1,21 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$requestType = $block->getRequest()->getParam('multiple');
+if (!empty($requestType)) {
+    return;
+}
+?>
+<button id="multi_import" title="Import Products for multiple seller(s)" type="button" 
+class="action-default scalable primary wk-multi-import">
+    <span><?= $block->escapeHtml(__('Import Products for multiple seller(s)'));?></span>
+</button>

@@ -1,0 +1,147 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$id = (int)$block->getRequest()->getParam('id');
+if ($id) {
+    $dataflowProfile = $block->getDataflowProfileById($id);
+    $mappedProfileFields = $block->getMappedProfileFields($id);
+    $attributeSetId = $dataflowProfile->getAttributeSetId();
+    $attributeIds = $block->getAllAttributes($attributeSetId);
+    ?>
+    <script id="fieldmapTemplate" type="text/x-jquery-tmpl">
+        <tr class="field-row">
+            <td class="wk-dataflow-column"><?= $block->escapeHtml(__("In Database")); ?>:</td>
+            <td class="wk-dataflow-column">
+                <select name="mage_attribute[<%- data.fieldIndex %>]"
+                class=" required-entry _required select admin__control-select wk-fieldmap-attr-select"
+                data-validate="{'validate-select':true}">
+                    <option value=""><?= $block->escapeHtml(__("Choose an attribute")); ?></option>
+                    <?php
+                    foreach ($attributeIds as $attributeId) {
+                        $attribute = $block->getCatalogResourceEavAttribute($attributeId);
+                        ?>
+                        <option value="<?= $block->escapeHtml($attribute['attribute_code']); ?>">
+                            <?= $block->escapeHtml($attribute['attribute_code']); ?>
+                        </option>
+                        <?php
+                    } ?>
+                </select>
+            </td>
+            <td class="wk-dataflow-column">
+                &lt;--&gt;
+            </td>
+            <td class="wk-dataflow-column">
+                <?= $block->escapeHtml(__("In File")); ?>:
+            </td>
+            <td class="wk-dataflow-column">
+                <input class="wk-fieldmap-attr-input input-text admin__control-text required-entry _required"
+                type="text"
+                name="file_attribute[<%- data.fieldIndex %>]"
+                data-validate="{required:true}">
+            </td>
+            <td class="wk-dataflow-column">
+                <button title="Remove" type="button" class="scalable delete wk-fieldmap-row-delete">
+                    <span>
+                        <span>
+                            <?= $block->escapeHtml(__("Remove")); ?>
+                        </span>
+                    </span>
+                </button>
+            </td>
+        </tr>
+    </script>
+    <div class="admin__field field field-profile_name  required _required"
+    id="wk-dataflow-profile-field-wrapper" style="display:none;">
+        <label for="profile_name" class="admin__field-label">
+            <span><?= $block->escapeHtml(__("Field Mapping")); ?></span>
+        </label>
+        <fieldset>
+            <legend><?= $block->escapeHtml(__("Field Mapping")); ?></legend>
+            <div class="profile_entity_type_product">
+                <table id="wk-fieldmap-container">
+                    <?php
+                    $i = 0;
+                    foreach ($mappedProfileFields as $mappedProfileField) {
+                        $mageAttribute = $mappedProfileField['mage_attribute'];
+                        $fileAttribute = $block->escapeHtml($mappedProfileField['file_attribute']);
+                        ?>
+                        <tr class="field-row">
+                            <td class="wk-dataflow-column"><?= $block->escapeHtml(__("In Database")); ?>:</td>
+                            <td class="wk-dataflow-column">
+                                <select name="mage_attribute[<?= $block->escapeHtml($i)?>]"
+                                class=" required-entry _required select admin__control-select wk-fieldmap-attr-select"
+                                data-validate="{'validate-select':true}" aria-required='true'>
+                                    <option value=""><?= $block->escapeHtml(__("Choose an attribute")); ?></option>
+                                    <?php
+                                    foreach ($attributeIds as $attributeId) {
+                                        $attribute = $block->getCatalogResourceEavAttribute($attributeId);
+                                        ?>
+                                        <option value="<?= $block->escapeHtml($attribute['attribute_code']); ?>"
+                                        <?php if ($mageAttribute == $attribute['attribute_code']): ?>selected
+                                        <?php endif; ?>>
+                                            <?= $block->escapeHtml($attribute['attribute_code']); ?>
+                                        </option>
+                                        <?php
+                                    } ?>
+                                </select>
+                            </td>
+                            <td class="wk-dataflow-column">
+                                &lt;--&gt;
+                            </td>
+                            <td class="wk-dataflow-column">
+                                <?= $block->escapeHtml(__("In File")); ?>:
+                            </td>
+                            <td class="wk-dataflow-column">
+                                <input type="text"
+                                class="wk-fieldmap-attr-input input-text admin__control-text required-entry _required"
+                                name="file_attribute[<?= $block->escapeHtml($i)?>]"
+                                data-validate="{required:true}"
+                                value="<?= $block->escapeHtml($fileAttribute); ?>"
+                                aria-required='true'>
+                            </td>
+                            <td class="wk-dataflow-column">
+                                <button title="Remove" type="button" class="scalable delete wk-fieldmap-row-delete">
+                                    <span>
+                                        <span>
+                                            <?= $block->escapeHtml(__("Remove")); ?>
+                                        </span>
+                                    </span>
+                                </button>
+                            </td>
+                        </tr>
+                        <?php
+                        $i = $i+1;
+                    } ?>
+                </table>
+            </div>
+            <button title="Remove" type="button" class="scalable wk-fieldmap-row-add">
+                <span>
+                    <span>
+                        <?= $block->escapeHtml(__("Add Field Mapping")); ?>
+                    </span>
+                </span>
+            </button>
+        </fieldset>
+    </div>
+    <?php
+    $data = [
+        "fieldIndex" => $i
+    ];
+    $data = $block->jsonEncode($data);
+    ?>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "dataflowprofile":  <?= /* @noEscape */ $data ?>
+            }
+        }
+    </script>
+    <?php
+} ?>

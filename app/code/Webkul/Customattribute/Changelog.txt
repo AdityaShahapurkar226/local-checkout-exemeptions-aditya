@@ -1,0 +1,45 @@
+Legend
+
++ Features
+- Bugs
+-------------------------------- Version 5.0.2 --------------------------------------
+	- Fixed bugs.
+	
+-------------------------------- Version 5.0.1 --------------------------------------
+	+ Added separate submenu for the module in "marketplace management" menu at Admin end.
+
+-------------------------------- Version 4.0.1 -------------------------------------- 
+    + Compatible with Magento 2.4.x EE & Mp 4.0.x.
+
+-------------------------------- Version 5.0.0 --------------------------------------
+	+ Compatible with Magento 2.4.x & Mp 5.0.x.
+
+-------------------------------- Version 4.0.0 -------------------------------------- 
+    + Compatible with Magento 2.4.x EE & Mp 4.0.x.
+
+-------------------------------- Version 3.0.1 --------------------------------------
+	+ Compatible with Media Image, Price, Text Editor, Text swatch, Fixed Product Tax 
+	types of attributes.
+
+-------------------------------- Version 3.0.0 --------------------------------------
+	+ Compatible with Magento 2.3.* version.
+	- Fixed bugs.
+
+-------------------------------- Version 2.2.0 --------------------------------------
+	+ Compatible with Magento 2.2.* version.
+	- Improve coding standards.
+	- Fixed some bugs.
+
+-------------------------------- Version 2.0.2 --------------------------------------
+
+	+ Compatible with Magento 2.2.* version. 
+	- Fixed bugs.
+
+-------------------------------- Version 2.0.1 --------------------------------------
+
+	+ Compatible with Magento 2.1.* version. 
+
+-------------------------------- Version 2.0.0 --------------------------------------
+
+	+ Allow to add product with custom attribute (created from admin panel) at seller dashboard
+	+ show/hide selected attributes on the front end for adding product at seller end by admin.

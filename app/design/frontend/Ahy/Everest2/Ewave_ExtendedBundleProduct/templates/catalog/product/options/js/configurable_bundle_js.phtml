@@ -1,0 +1,22 @@
+<script id="configurable_bundle_js" defer>
+    function configurableBundleProduct(){
+        return {
+            productId: null,
+            configurableProductJsonData:{},
+            selectedOption: [],
+            init(id, json){
+                // init functions
+                // console.log(json)
+            },
+            setProductId(id){
+                this.productId = id;
+                return this.productId;
+            },
+            setConfigurableJsonConfig(json){
+                this.configurableProductJsonData = json;
+                return this.configurableProductJsonData;
+            },
+            
+        }
+    }
+</script>

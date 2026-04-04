@@ -1,0 +1,7 @@
+<body>
+    <referenceBlock name="order_info">
+        <action method="setTemplate">
+            <argument name="template" xsi:type="string">Ahy_EfflApiIntegration::order/view/info.phtml</argument>
+        </action>
+    </referenceBlock>
+</body>

@@ -1,0 +1,173 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+// phpcs:disable Magento2.Templates.ThisInTemplate
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Cart\ItemOutput;
+use Hyva\Theme\ViewModel\Modal;
+use Magento\Checkout\Block\Cart\Grid;
+use Magento\Checkout\ViewModel\Cart as CartViewModel;
+use Magento\Framework\Escaper;
+
+/** @var Grid $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+
+/** @var CartViewModel $cartViewModel */
+$cartViewModel = $viewModels->require(CartViewModel::class);
+
+/** @var Modal $modalViewModel */
+$modalViewModel = $viewModels->require(Modal::class);
+
+/** @var ItemOutput $cartItemOutputViewModel */
+$cartItemOutputViewModel = $viewModels->require(ItemOutput::class);
+?>
+<?php $mergedCells = ($cartItemOutputViewModel->isItemPriceDisplayBoth() ? 2 : 1); ?>
+<?= $block->getChildHtml('form_before') ?>
+<form action="<?= $escaper->escapeUrl($block->getUrl('checkout/cart/updatePost')) ?>"
+      x-data="{}"
+      @submit.prevent="hyva.postCart($event.target)"
+      method="post"
+      id="form-validate"
+      class="form form-cart w-full float-left"
+>
+    <?= $block->getBlockHtml('formkey') ?>
+    <div class="cart table-wrapper<?= $mergedCells == 2 ? ' detailed' : '' ?>">
+        <?php if ($block->getPagerHtml()): ?>
+            <div class="cart-products-toolbar cart-products-toolbar-top toolbar">
+                <?= $block->getPagerHtml() ?>
+            </div>
+        <?php endif ?>
+        <table id="shopping-cart-table"
+               class="cart items data table w-full table-row-items"
+        >
+            <caption class="table-caption sr-only">
+                <?= $escaper->escapeHtml(__('Shopping Cart Items')) ?>
+            </caption>
+            <!-- <div class="cart mb-6 rounded-3xl text-white bg-ahy-blue ">
+                <div class="p-6 flex flex-col md:flex-row lg:flex-col xl:flex-row w-full">
+                    <div class="w-full md:w-3/4 lg:w-full xl:w-3/4 flex gap-4">
+                        <div class="flex w-1/4 justify-center items-center">
+                            <img src="/media/icons/caliber-icon-tab-brown.svg" alt="caliber-icon-tab-brown" width="" height="" class="p-3 sm:p-4 caliber-icon-tab-brown">
+                        </div>
+                        <style>
+                            @media screen and (min-width: 380px) and (max-width: 430px) {
+                                .caliber-icon-tab-brown {
+                                    padding: 0.5rem !important;
+                                }
+                            }
+                            @media screen and (max-width: 379px) {
+                                .caliber-icon-tab-brown {
+                                    padding: 0 !important;
+                                }
+                            }
+                        </style>
+                        <div class="flex w-3/4 flex-col justify-center ">
+                            <div class="free-shipping-heading">
+                                <p class="flex flex-col font-extrabold text-xl sm:text-3xl py-2">
+                                    <span class="text-white">
+                                        Want FREE Shipping and
+                                    </span>
+                                    <span class="text-ahy-khaki">
+                                        Save $200.00?
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="caliber-nation-description hidden md:flex lg:hidden xl:flex items-center">
+                                <p class="flex flex-col">
+                                    <span class="font-bold">
+                                        Add Caliber Nation for FREE
+                                    </span>
+                                    <span>
+                                        Discounts, Points, FREE Shipping, Outdoor Content and More!
+                                        <span class="text-ahy-khaki font-bold capitalize">
+                                            Start free 30 days trial & save $50.00 today!
+                                        </span>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="caliber-nation-description w-full flex md:hidden lg:flex xl:hidden items-center">
+                        <p class="flex flex-col">
+                            <span class="font-bold">
+                                Add Caliber Nation for FREE
+                            </span>
+                            <span>
+                                Discounts, Points, FREE Shipping, Outdoor Content and More!
+                                <span class="text-ahy-khaki font-bold capitalize">
+                                    Start free 30 days trial & save $50.00 today!
+                                </span>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="w-full md:w-1/4 lg:w-full xl:w-1/4 flex items-end justify-end md:justify-center lg:justify-end xl:justify-center px-4">
+                        <a href="javascript:void()" class="w-32 md:w-full lg:w-1/4 xl:w-full">
+                            <button class="border-3 border-white w-full h-12 text-white rounded-full font-bold text-sm hover:shadow-[#fffff_0px_0px_0px_1px_inset]">
+                                Add to cart                              
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div> -->
+            <?php foreach ($block->getItems() as $item): ?>
+                <?= $block->getItemHtml($item) ?>
+            <?php endforeach ?>
+        </table>
+        <?php if ($block->getPagerHtml()): ?>
+            <div class="cart-products-toolbar cart-products-toolbar-bottom toolbar">
+                <?= $block->getPagerHtml() ?>
+            </div>
+        <?php endif ?>
+    </div>
+    <!-- <div class="cart actions flex flex-col sm:flex-row justify-end gap-4 items-center my-4">
+        <?php if ($cartViewModel->isClearShoppingCartEnabled()): ?>
+            <script>
+                function initClearShoppingCartModal() {
+                    return Object.assign(
+                        hyva.modal(),
+                        {
+                            postData: {
+                                action: '<?= $escaper->escapeUrl($block->getUrl('checkout/cart/updatePost')) ?>',
+                                data: {update_cart_action: 'empty_cart'}
+                            }
+                        }
+                    );
+                }
+            </script>
+            <div x-data="initClearShoppingCartModal()">
+                <?= /** @noEscape */ ($confirmation = $modalViewModel
+                    ->confirm(__('Are you sure?'))
+                    ->withDetails(__('Are you sure you want to remove all items from your shopping cart?'))
+                ) ?>
+                <button @click="<?= /** @noEscape */ $confirmation->getShowJs() ?>.then(result => result && hyva.postForm(postData))"
+                        type="button" title="<?= $escaper->escapeHtmlAttr(__('Clear Shopping Cart')) ?>"
+                        class="action clear" id="empty_cart_button">
+                    <span><?= $escaper->escapeHtml(__('Clear Shopping Cart')) ?></span>
+                </button>
+            </div>
+
+        <?php endif ?>
+        <button type="submit"
+                name="update_cart_action"
+                data-cart-item-update=""
+                value="update_qty"
+                title="<?= $escaper->escapeHtmlAttr(__('Update Shopping Cart')) ?>"
+                class="action update btn btn-secondary"
+        >
+            <?= $escaper->escapeHtml(__('Update Shopping Cart')) ?>
+        </button>
+    </div> -->
+</form>
+
+<?= $block->getChildHtml('checkout.cart.order.actions') ?>
+<?= $block->getChildHtml('shopping.cart.table.after') ?>
+

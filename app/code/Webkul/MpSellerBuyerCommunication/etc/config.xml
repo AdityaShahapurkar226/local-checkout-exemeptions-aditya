@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <mpsellerbuyercommunication>
+            <admin_settings>
+                <autoapproval>1</autoapproval>
+            </admin_settings>
+            <email>
+                <askproductquery_customer_template>mpsellerbuyercommunication_email_askproductquery_customer_template</askproductquery_customer_template>
+                <askproductquery_admin_template>mpsellerbuyercommunication_email_askproductquery_admin_template</askproductquery_admin_template>
+                <conversation_admin_template>mpsellerbuyercommunication_email_conversation_admin_template</conversation_admin_template>
+                <conversation_template>mpsellerbuyercommunication_email_conversation_template</conversation_template>
+            </email>
+        </mpsellerbuyercommunication>
+    </default>
+</config>
+

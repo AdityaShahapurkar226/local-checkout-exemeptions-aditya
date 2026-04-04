@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <container name="checkout.ahy.ffl.selection" htmlTag="div" htmlClass="ffl-selection">
+        <!-- <block name="checkout.age.varification" template="Hyva_Checkout::page/messenger.phtml">
+            <arguments>
+                <argument name="event_prefix" xsi:type="string">ffl:selection</argument>
+            </arguments>
+        </block> -->
+        <block name="checkout.ffl.verification" template="Ahy_Ffl::checkout/verification/ffl.phtml">
+            <arguments>
+                <argument name="magewire" xsi:type="object">
+                    \Ahy\Ffl\Magewire\HyvaCheckout\AhyFflSelection
+                </argument>
+            </arguments>
+        </block>
+        </container>
+        <move element="checkout.ahy.ffl.selection" destination="column.main" before="-"/>
+
+    </body>
+</page>

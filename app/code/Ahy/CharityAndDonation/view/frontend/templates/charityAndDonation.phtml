@@ -1,0 +1,51 @@
+<div 
+    class="flex items-center gap-2 hover:underline underline-offset-4 cursor-pointer"
+    x-data="{
+        donationCheckbox: <?= $magewire->getDonationAmountFromQuote() > 0 ? "true" : "false" ?>,
+        donationCalculation: function (event) {
+            var inputEl = document.getElementById('conservationDonation');
+            // Check if the checkbox element exists
+            if (inputEl) {
+                // Update the corresponding data property based on the input name
+                this.donationCheckbox = !inputEl.checked;
+                // Emit the corresponding event based on the input name
+                Magewire.emit('updateCheckboxChecked', this.donationCheckbox);
+                console.log('this.donationCheckbox ', this.donationCheckbox); 
+                console.log('this.checkbox ', inputEl.checked); 
+            }
+        },
+        checkbox: function(event){
+            var inputEl = document.getElementById('conservationDonation');
+            // Check if the checkbox element exists
+            if (inputEl) {
+                // Update the corresponding data property based on the input name
+                this.donationCheckbox = !inputEl.checked;
+                // Emit the corresponding event based on the input name
+                Magewire.emit('updateCheckboxChecked', !this.donationCheckbox);
+                console.log('this.donationCheckbox ', this.donationCheckbox); 
+                console.log('this.checkbox ', inputEl.checked); 
+            }
+        }
+    }"
+>
+    <?php
+        $isDonationMoreThanZero = $magewire->getDonationAmountFromQuote() > 0 ? "checked" : "";
+    ?>
+    <input
+        type="checkbox"
+        name="conservationDonation"
+        id="conservationDonation"
+        x-model="donationCheckbox"
+        wire:model="checkboxChecked"
+        <?= $isDonationMoreThanZero?>
+        class="cursor-pointer"
+        @click="checkbox(event)"
+    >
+    <div class="" @click="donationCalculation(event)">Add $1 for Conservation</div>
+    <span class="relative group">
+        <span class="hidden group-hover:flex justify-center items-center px-2 py-1 text-xs absolute -right-2 transform translate-x-full -translate-y-1/2 w-min top-1/2 bg-black text-white">Give $1 for Conservation</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+    </span>
+</div>

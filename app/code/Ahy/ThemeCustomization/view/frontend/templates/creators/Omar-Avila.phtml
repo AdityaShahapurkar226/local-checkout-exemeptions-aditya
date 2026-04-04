@@ -1,0 +1,311 @@
+<section
+	class="omar-avila h-full text-ahy-blue container relative text-white before:bg-[#081721] before:absolute before:-inset-1 before:left-1/2 before:z-[-1] before:-translate-x-1/2 before:w-screen h-full"
+>
+	<div class="hero-section text-center text-white sm:text-left flex flex-col mb-6 items-center justify-center gap-3 relative w-full h-[600px] sm:h-[660px] md:h-[510px] lg:h-[550px] xl:h-[600px] 2xl:h-[720px] before:bg-[url(/media/wysiwyg/creators/Omar/omar-hero_background_mobile.png)] before:md:bg-[url(/media/wysiwyg/creators/Omar/omar-hero_background_desktop.png)] before:bg-no-repeat before:bg-left-top before:md:bg-[center_0] before:bg-cover before:absolute before:-inset-1 before:left-1/2 before:z-[-1] before:-translate-x-1/2 before:w-screen before:h-full">
+		<img src="/media/wysiwyg/creators/Omar/omar_logo.png" alt="Omar "Crispy" Avila Logo" height="144" width="144" class="" />
+		<h1 class="text-[44px] sm:text-5xl md:text-6xl text-center leading-none sm:leading-none lg:text-7xl font-extrabold uppercase xl:w-3/4 2xl:w-2/3">
+			Burn Barriers with Omar "Crispy" Avila
+		</h1>
+		<div class="flex justify-center items-center pt-2"><span class="border border-white w-32 lg:w-72"></span></div>
+		<p class="text-center pt-2 sm:pt-6 text-sm md:text-lg w-[260px] md:w-[330px]">
+			Gear Curated by Omar "Crispy" Avila <br> - Just For You
+		</p>
+		<div x-data="scrollSmoothOnClick()" id="tab_wrapper" class="absolute -bottom-10 w-full">
+			<div class="tab-bg-line-desktop relative pb-4 flex justify-center">
+				<div class="bg-[#2E424A] tab-bg-mobile relative flex shadow-[4px_4px_40px_0px_rgba(0,0,0,0.5)] justify-center w-full md:w-[30rem] rounded-full">
+					<button	
+						@click.prevent="scrollToRecommendation()"
+						class="mx-2 sm:mx-4 text-white uppercase h-16 text-xs sm:text-sm flex items-center hover:underline hover:decoration-2 hover:underline-offset-6 font-bold"
+					>
+						My Picks
+					</button>
+					<button
+						@click.prevent="scrollToAboutUs()"
+						class="mx-2 sm:mx-4 text-white uppercase h-16 text-xs sm:text-sm flex items-center hover:underline hover:decoration-2 hover:underline-offset-6 font-bold"
+					>
+						About
+					</button>
+
+
+
+					<button
+						@click.prevent="scrollToFeatured()"
+						class="mx-2 sm:mx-4 text-white uppercase h-16 text-xs sm:text-sm flex items-center hover:underline hover:decoration-2 hover:underline-offset-6 font-bold"
+					>
+						gear up
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="curated-just-for-you flex flex-col lg:flex-row gap-6 py-12 my-12 justify-between relative">
+		<div class="absolute -translate-x-1/2 top-[-16%] left-[-9%]">
+			<img src="/media/wysiwyg/creators/Omar/background_element_left_desktop.png" alt="Omar "Crispy" Avila Curated Just For You" class="w-full" />
+		</div>
+		<div class="curated-products flex flex-col lg:flex-row gap-6 lg:gap-4 lg:w-[55%] order-2 lg:order-1 py-4">
+			<a href="https://www.everest.com/burn-barriers-rise-stronger-omar-crispy-avila-everest-shirt.html" class="curated-main-product flex flex-col w-full lg:w-8/12 text-ahy-blue">
+				<div class="w-full flex justify-center items-center bg-white py-6">
+					<img src="/media/wysiwyg/creators/Omar/Curated-Just-For-You/burn_barriers_omar_hero_oxblood_black.png" alt="Curated Main Product" class="w-full max-w-[400px] max-h-[400px] aspect-3/3 object-contain" />
+				</div>
+				<div class="flex justify-center items-center py-4 bg-white px-6"><span class="border-2 border-ahy-blue w-full px-6"></span></div>
+				<div class="curated-main-product-text bg-white px-6 pb-6 xl:pb-11">
+					<h1 class="font-bold pt-4 line-clamp-2 overflow-hidden h-16 xl:h-24 capitalize">THE "BURN BARRIERS, RISE STRONGER" TSHIRT INSPIRED BY OMAR "CRISPY" AVILA</h1>
+					<!-- <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p> -->
+				</div>
+			</a>
+			<div class="curated-thumb-product flex lg:flex-col gap-6 w-full lg:w-[30%] justify-between lg:justify-start items-center overflow-scroll lg:overflow-auto">
+				<a href="https://www.everest.com/montana-decoy-purr-fect-pair-xd-3d-combo.html">
+					<img src="/media/wysiwyg/creators/Omar/Curated-Just-For-You/mtd_box_purrfect_pair_xd.png" class="aspect-3/3 bg-white object-contain" width="192" height="192" alt="Curated Thumb Product" />
+				</a>
+				<a href="https://www.everest.com/crispy-s-mango-habanero.html">
+					<img src="/media/wysiwyg/creators/Omar/Curated-Just-For-You/crispy-mango_1200x.jpg" class="aspect-3/3 bg-white object-contain" width="192" height="192" alt="Curated Thumb Product" />
+				</a>
+				<a href="https://www.everest.com/the-distinguished-bullion-box-by-bullionbox-subscriptions.html">
+					<img src="/media/wysiwyg/creators/Omar/Curated-Just-For-You/bbs_1_1.png" class="aspect-3/3 bg-white object-contain" width="192" height="192" alt="Curated Thumb Product" />
+				</a>
+			</div>
+		</div>
+		<div class="curated-content lg:w-2/5 order-1 lg:order-2 py-4">
+			<div class="flex flex-row items-center justify-start gap-6 pb-6">
+				<img src="/media/wysiwyg/creators/Omar/omar_logo.png" alt="Omar "Crispy" Avila Logo" height="87" width="87" class="" />
+				<div class="font-bold text-4xl">X</div>
+				<div class="font-bold text-3xl">everest</div>
+			</div>
+			<h1 class="text-3xl lg:4xl xl:text-5xl lg:max-w-[400px] font-extrabold">CURATED JUST <br> FOR YOU.</h1>
+			<div class="flex justify-start items-center py-4"><span class="border border-ahy-white w-32 lg:w-44"></span></div>
+			<p class="text-sm lg:max-w-[420px]">
+				We understand that every adventure is unique, and so is every adventurer. That's why we've chosen to partner with a creator that truly understands the outdoors. We have worked closely with Omar "Crispy" Avila to curate a selection of gear tailored specifically for your next adventure, ensuring you're well-equipped for whatever challenges you face. Our experts have handpicked items based on Omar's preferences for durability, adaptibility, and efficiency. From the latest in ultralight gear to weather-resistant apparel and high-tech gadgets, each piece is chosen to enhance your experience and performance. Our goal is to help you elevate your next journey with gear that's as ready as you are to explore the great outdoors, so you can forget the rest and focus on your next adventure.
+			</p>
+			<div class="hidden lg:flex mt-6 pt-6" x-data="scrollSmoothOnClick()">
+				<button class="rounded-full bg-white h-16 w-full lg:w-52 text-ahy-blue font-extrabold hover:bg-ahy-blue-light hover:text-white duration-300 transition ease-in-out"	@click.prevent="scrollToRecommendation()">
+					Shop Now
+				</button>
+			</div>
+		</div>
+		<div class="lg:hidden order-3 w-full py-4" x-data="scrollSmoothOnClick()">
+			<button class="rounded-full bg-white h-16 w-full lg:w-52 text-ahy-blue font-extrabold hover:bg-ahy-blue-light hover:text-white duration-300 transition ease-in-out"	@click.prevent="scrollToRecommendation()">
+				Shop Now
+			</button>
+		</div>
+	</div>
+	<div class="about-omar flex flex-col lg:flex-row gap-4 lg:justify-between pb-12 mb-12" id="about-us">
+		<div class="about-content order-2 lg:order-1 w-full lg:w-[55.3%] xl:w-[43.8%] 2xl:w-[36.3%]">
+			<h1 class="text-3xl lg:4xl xl:text-5xl max-w-[500px] uppercase font-extrabold">ABOUT Omar “Crispy” Avila.</h1>
+			<div class="flex justify-start items-center py-4"><span class="border border-ahy-white w-32 lg:w-44"></span></div>
+			<p class="text-sm">
+				Sgt. Omar "Crispy" Avila has had a life of service dedicated to his country and his fellow veterans. Sgt. Avila joined the U.S. Army in 2004 as an Infantryman, deploying to Iraq in 2007. On May 14, 2007, his vehicle was struck with a 200 lb IED, resulting in burns to 75% of his body and amputation below the knee of his right leg. Upon retiring from the U.S. Army in 2010, Sgt. Avila never allowed his injuries to slow his success. Powering through his injuries, he became the current world record holder for the World Association of Bench and Deadlift in the Paralympics category. He also started his own consulting firm, 5 Toes, and dedicated his life to serving his fellow veterans. Sgt. Avila now serves as a board member for warfighter scuba helping other wounded warriors through their recovery process. Crispy continues to motivate wounded veterans and seeks to educate the public about veteran issues through numerous public speaking events and is a sought after motivational speaker. A lifelong avid hunter, Omar spreads his passion for the outdoors by assisting wounded veterans get outdoors. Sgt. Avila was raised in Brownsville, Texas and currently resides in New Braunfels, Texas.
+			</p>
+		</div>
+		<div class="omar-avila-image order-1 lg:order-2 w-full lg:w-5/12 flex justify-center lg:justify-end">
+			<img src="/media/wysiwyg/creators/Omar/omar-secondary_image_desktop@2x.png" alt="Omar "Crispy" Avila" height="610" width="610" class="" />
+		</div>
+	</div>
+	<div class="featured-product pb-8 md:pb-12 relative" id="featured">
+		<!-- <div class="absolute top-[-16%] right-0">
+			<img src="/media/wysiwyg/creators/Omar/background_element_right_desktop.png" alt="Omar "Crispy" Avila Curated Just For You" class="w-full" />
+		</div> -->
+		<div class="featured-product-heading flex gap-6 items-center justify-between">
+			<div class="flex justify-center hidden lg:block">
+				<img src="/media/wysiwyg/creators/Omar/omar_logo.png" alt="Omar "Crispy" Avila Logo" height="192" width="192" class="" />
+			</div>
+			<div class="lg:w-1/2 xl:w-3/5 2xl:w-8/12 hidden lg:block">
+				<div class="flex justify-start items-center py-4"><span class="border border-ahy-white w-full"></span></div>
+			</div>
+			<div class="flex justify-end">
+				<h1 class="font-bold text-lg uppercase">
+					featured products
+				</h1>
+			</div>
+		</div>
+		<div class="featured-products-klevu">
+			<!-- Klevu Smart Recommendation products -->
+			<!-- <div class="klevu-recs h-[610px] klevuTarget" id="k-c4e4fe37-883e-4318-aad0-11efa4333d80" x-data="{ shown: false }" x-intersect="shown = true"></div> -->
+			<div class="klevu-recs h-[610px] klevuTarget" id="k-458633fc-528a-45c9-bc33-ed13cdc515cc" x-data="{ shown: false }" x-intersect="shown = true"></div>
+			<!-- initialization code for the swiper JS -->
+			<?php
+				echo $this->getLayout()
+				->createBlock('Magento\Cms\Block\Block')
+				->setBlockId('swiperjs-init-code')
+				->toHtml();
+			?>
+			<!-- get product swatches for configurable products in lightbox  -->
+			<?php
+				echo $this->getLayout()
+				->createBlock('Magento\Cms\Block\Block')
+				->setBlockId('get_product_swatches')
+				->toHtml();
+			?>
+		</div>
+	</div>
+	<div class="quote md:py-12 mb-12 flex flex-col items-center justify-center gap-8">
+		<div class="">
+			<h1 class="font-league-gothic text-center pb-5 w-full md:w-4/5 lg:w-full xl:w-4/5 2xl:w-[74%] m-auto leading-none text-[42px] uppercase lg:text-[88px]">"The outdoors is earth's way of grounding us - giving us peace and harmony - centering us at our core."</h1>
+            <h3 class="text-center font-poppins text-white">- Omar "Crispy" Avila</h3>
+		</div>
+		<iframe 
+			width="1027" 
+			height="578" 
+			class="max-w-[1027px] w-full shadow-[4px_4px_40px_0px_rgba(0,0,0,0.5)] "
+			src="https://www.youtube.com/embed/GDANPI3ps8I?si=9GP68q41SEUg6cqo" 
+			title="YouTube video player" 
+			frameborder="0" 
+			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+			referrerpolicy="strict-origin-when-cross-origin" 
+			allowfullscreen
+		>
+		</iframe>
+	</div>
+	<div class="complete-the-situation flex flex-col lg:flex-row justify-between items-start gap-8 pb-12 mb-12 relative">
+		<div class="absolute -translate-x-1/2 top-[-16%] left-[-9%]">
+			<img src="/media/wysiwyg/creators/Omar/background_element_left_desktop.png" alt="Omar "Crispy" Avila Curated Just For You" class="w-full" />
+		</div>
+		<div class="complete-the-situation-heading lg:w-3/5">
+			<div class="flex gap-6 items-center py-6 lg:pt-12 lg:pb-8">
+				<h1 class="font-extrabold text-lg md:text-xl uppercase w-full">
+					Complete The Situation
+				</h1>
+				<div class="lg:w-8/12 xl:w-full 2xl:w-[160%] hidden lg:block">
+					<div class="flex justify-start items-center py-4"><span class="border border-ahy-white w-full"></span></div>
+				</div>
+			</div>
+			<p class="text-sm pb-6 mb-6 md:pb-8 md:mb-8 lg:w-4/6">
+				Check out these top picks curated just for you to help complete the situation.  These picks will help you conquer your goals and make getting outdoors more exciting!
+			</p>
+			<div class="thumb-products flex gap-6 w-full items-start overflow-scroll md:overflow-auto  ">
+				<a href="https://www.everest.com/burn-barriers-rise-stronger-everest-coffee-mug-omar-crispy-avila.html" class="flex flex-col gap-8 w-1/3 items-center justify-center">
+					<div class="flex justify-center items-center bg-white w-full"><img src="/media/wysiwyg/creators/Omar/Complete-The-Situation/black-glossy-mug-black-11-oz-handle-on-left.png" class="aspect-3/3 bg-white object-contain" width="225" height="225" alt="Curated Thumb Product" /></div>
+					<div class="font-bold line-clamp-2 max-sm:hidden overflow-hidden h-12 capitalize w-full">THE BURN BARRIERS, RISE STRONGER COFFEE MUG INSPIRED BY OMAR "CRISPY" AVILA</div>
+				</a>
+				<a href="https://www.everest.com/walkers-razor-slim-shooter-folding-muff-23db-nrr-black.html" class="flex flex-col gap-8 w-1/3 items-center justify-center">
+					<div class="flex justify-center items-center bg-white w-full"><img src="/media/wysiwyg/creators/Omar/Complete-The-Situation/WALKGWPRSEM-0.jpg" class="aspect-3/3 bg-white object-contain" width="225" height="225" alt="Curated Thumb Product" /></div>
+					<div class="font-bold line-clamp-2 max-sm:hidden overflow-hidden h-12 capitalize w-full">WALKERS RAZOR SLIM SHOOTER FOLDING MUFF-23DB NRR-BLACK</div>
+				</a>
+				<a href="https://www.everest.com/crispy-s-mango-habanero-n.html" class="flex flex-col gap-8 w-1/3 items-center justify-center">
+					<div class="flex justify-center items-center bg-white w-full"><img src="/media/wysiwyg/creators/Omar/Complete-The-Situation/crispys-mango-habanero.jpg" class="aspect-3/3 bg-white object-contain" width="225" height="225" alt="Curated Thumb Product" /></div>
+					<div class="font-bold line-clamp-2 max-sm:hidden overflow-hidden h-12 capitalize w-full">CRISPY'S MANGO HABANERO™</div>
+				</a>
+			</div>
+		</div>
+		<div class="w-full lg:w-2/5 flex justify-end">
+			<div class="complete-the-situation-main-product flex flex-col w-full lg:w-10/12 text-ahy-blue">
+				<div class="w-full flex justify-center items-center bg-white py-6">
+					<img src="/media/wysiwyg/creators/Omar/Complete-The-Situation/unisex-premium-hoodie-black-front.png" alt="complete-the-situation Main Product" class="w-full max-w-[400px] max-h-[400px] aspect-3/3 object-contain" />
+				</div>
+				<div class="flex justify-center items-center py-4 bg-white px-6"><span class="border-2 border-ahy-blue w-full px-6"></span></div>
+				<div class="complete-the-situation-main-product-text bg-white px-6 pb-11">
+					<h1 class="font-bold py-4 capitalize">THE BURN BARRIERS, RISE STRONGER HOODIE INSPIRED BY OMAR "CRISPY" AVILA</h1>
+					<a href="https://www.everest.com/burn-barriers-rise-stronger-everest-hoodie-omar-crispy-avilia.html"
+						><button class="rounded-full bg-black h-16 w-full lg:w-52 text-white font-extrabold hover:bg-ahy-blue-light hover:text-white duration-300 transition ease-in-out">
+							Explore
+						</button></a
+					>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="other-recommendations pb-48 md:pb-56 lg:pb-60" >
+		<div class="other-recommendations-heading flex gap-6 items-center justify-between">
+			<div class="w-full lg:w-1/2 xl:w-3/5 2xl:w-8/12">
+				<div class="flex justify-start items-center py-4"><span class="border border-ahy-white w-full"></span></div>
+			</div>
+			<div class="flex justify-center">
+				<img src="/media/wysiwyg/creators/Omar/omar-avatar.png" alt="Omar "Crispy" Avila Logo" height="192" width="192" class="" />
+			</div>
+			<div class="w-full lg:w-1/2 xl:w-3/5 2xl:w-8/12">
+				<div class="flex justify-start items-center py-4"><span class="border border-ahy-white w-full"></span></div>
+			</div>
+		</div>
+		<div class="py-8" id="recommendation">
+			<h1 class="text-center pb-5 w-full lg:w-3/5 m-auto text-[26px] font-extrabold md:text-[38px]">OTHER RECOMMENDATIONS FROM CRISPY</h1>
+			<p class="text-sm text-center text-white lg:w-[58%]  2xl:w-[45%] md:w-[69%] xl:w-[47%] w-[88%] m-auto">
+				Gear specifically chosen so you can meet your potential in your passion outdoors.  The below handpicked gear will help you find your Everest.
+			</p>
+		</div>
+		<div class="other-recommendations-klevu">
+			<!-- Klevu Smart Recommendation products -->
+			<!-- <div class="klevu-recs h-[610px] klevuTarget" id="k-c4e4fe37-883e-4318-aad0-11efa4333d80" x-data="{ shown: false }" x-intersect="shown = true"></div> -->
+			<div class="klevu-recs h-[610px] klevuTarget" id="k-487b6b5f-9dcc-461c-8cbf-2f29c39e8e1b" x-data="{ shown: false }" x-intersect="shown = true"></div>
+			<!-- initialization code for the swiper JS -->
+			<?php
+				echo $this->getLayout()
+				->createBlock('Magento\Cms\Block\Block')
+				->setBlockId('swiperjs-init-code')
+				->toHtml();
+			?>
+			<!-- get product swatches for configurable products in lightbox  -->
+			<?php
+				echo $this->getLayout()
+				->createBlock('Magento\Cms\Block\Block')
+				->setBlockId('get_product_swatches')
+				->toHtml();
+			?>
+		</div>
+	</div>
+</section>
+<script id="smooth-scroll">
+	function scrollSmoothOnClick() {
+		return {
+			scrollToAboutUs() {
+				const aboutUsEl = document.getElementById("about-us");
+				if (aboutUsEl) {
+					aboutUsEl.scrollIntoView({
+						behavior: "smooth",
+					});
+				}
+			},
+			scrollToFeatured() {
+				const featuredEl = document.getElementById("featured");
+				if (featuredEl) {
+					featuredEl.scrollIntoView({
+						behavior: "smooth",
+					});
+				}
+			},
+			scrollToRecommendation() {
+				const recommendationEl = document.getElementById("recommendation");
+				if (recommendationEl) {
+					recommendationEl.scrollIntoView({
+						behavior: "smooth",
+					});
+				}
+			},
+		};
+	}
+</script>
+
+<style>
+	.featured-products-klevu h3.kuRECSTitle.uppercase.text-ahy-blue,
+	.other-recommendations-klevu h3.kuRECSTitle.uppercase.text-ahy-blue 
+	{
+		display: none;
+	}
+	[data-pb-style="NDRAL2K"]>div,
+	[data-pb-style="DRI0V0M"],
+	[data-pb-style="OIXNYXR"]
+	{
+		padding: 0 !important;
+	}
+</style>
+
+<script>
+	// Get all elements with the class "capitalize"
+	var elements = document.querySelectorAll('.capitalize');
+
+	// Function to capitalize the first letter of each word
+	function capitalizeFirstLetter(str) {
+		return str.toLowerCase().replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+	}
+
+	// Iterate over each element
+	elements.forEach(function(element) {
+		// Get the text content of the element
+		var text = element.textContent || element.innerText;
+
+		// Capitalize the text
+		var capitalizedText = capitalizeFirstLetter(text);
+
+		// Set the capitalized text as the new content of the element
+		element.textContent = capitalizedText;
+	});
+
+</script>

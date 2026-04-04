@@ -1,0 +1,55 @@
+//
+// Admin section block styles
+// _______________________________________________
+
+//
+//  Variables
+//  ----------------------------------------------
+
+@amrelated-section__text__color: #333;
+@amrelated-section__border-color: #ccc;
+
+@message-amrelated-section__color: @amrelated-section__text__color;
+@message-amrelated-section__background: #f4fbff;
+@message-amrelated-section__border-color: @message-amrelated-section__background;
+
+@message-amrelated-section-link__color: inherit;
+@message-amrelated-section-link__color-hover: inherit;
+@message-amrelated-section-link__color-active: inherit;
+
+@message-amrelated-section-icon: @icon-info;
+@message-amrelated-section-icon__color-lateral: #01a7ff;
+@message-amrelated-section-icon__background: transparent;
+@message-amrelated-section-icon__top: 23px;
+@message-amrelated-section-icon__right: false;
+@message-amrelated-section-icon__bottom: false;
+@message-amrelated-section-icon__left: 0;
+
+//
+//  Common
+//  ----------------------------------------------
+
+& when (@media-common = true) {
+    .amrelated-admin-section {
+        & {
+            .lib-message-icon-lateral(amrelated-section, left);
+        }
+
+        .amrelated-title {
+            margin-bottom: 15px;
+            padding: 5px 0 10px;
+            border-bottom: 1px solid @amrelated-section__border-color;
+            font-size: 1.6rem;
+        }
+
+        .amrelated-content {
+            margin: 0 0 5px;
+            color: @amrelated-section__text__color;
+            list-style-type: none;
+        }
+
+        .amrelated-item {
+            margin: 10px 0 0;
+        }
+    }
+}

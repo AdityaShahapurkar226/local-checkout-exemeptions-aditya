@@ -1,0 +1,125 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$uploadModel = $block->getUploadHelper();
+$isPartner = $uploadModel->isSeller();
+$sampleCsv = $block->getSampleCsv();
+$sampleXls = $block->getSampleXls();
+$profiles = $block->getProfiles();
+?>
+<?php if ($isPartner == 1): ?>
+    <div class="wk-mu-sample-files" style="margin-bottom:0;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;">
+                    <a href="<?= $block->escapeUrl($sampleCsv[0]); ?>">
+                        <?= $block->escapeHtml(__("Sample Simple Csv File")); ?>
+                    </a>
+                </td>            
+            </tr>
+            <tr>
+                <td style="padding: 5px;">
+                    <a href="<?= $block->escapeUrl($sampleXls[0]); ?>">
+                        <?= $block->escapeHtml(__("Sample Simple XLS File")); ?>
+                    </a>
+                </td>              
+            </tr>
+        </table>
+    </div>
+    <form method="post" action="<?= $block->escapeHtml($block->getUrl('mpassignproduct/upload/save')); ?>"
+        id="wk_massupload_form"
+        enctype="multipart/form-data"
+        class="wk-massupload-container"
+        data-mage-init='{"validation":{}}'
+    >
+        <fieldset class="fieldset">
+            <?= $block->getBlockHtml('formkey') ?>
+            <?= $block->getBlockHtml('seller.formkey')?>
+            <legend class="legend">
+                <span><?= $block->escapeHtml(__("Upload")); ?></span>
+                <button class="button wk-mp-btn" type="submit">
+                    <span><span><?= $block->escapeHtml(__("Upload")); ?></span></span>
+                </button>
+            </legend>
+            <div class="field required">
+                <label for="massupload_csv" class="label">
+                    <span><?= $block->escapeHtml(__("Upload CSV/XLS File")); ?></span>
+                </label>
+                <div class="control">
+                    <input type="file"
+                    data-validate="{required:true}"
+                    class="input-text required-entry"
+                    title="<?= $block->escapeHtml(__("CSV/XLS")); ?>"
+                    name="massupload_csv"
+                    id="massupload_csv"
+                    aria-required="true">
+                </div>
+            </div>
+            <div class="field">
+                <label for="massupload_image" class="label">
+                    <span><?= $block->escapeHtml(__("Upload Images Zip")); ?></span>
+                </label>
+                <div class="control">
+                    <input type="file"
+                    class="input-text"
+                    title="<?= $block->escapeHtml(__("Images Zip")); ?>"
+                    name="massupload_image"
+                    id="massupload_image"
+                    aria-required="true">
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <div class="wk-massupload-container">
+    <form method="post" action="<?= $block->escapeHtml($block->getUrl('mpassignproduct/upload/profile')); ?>"
+        id="wk_saveassign_product_form"
+        enctype="multipart/form-data"
+        class="wk-massupload-container"
+        data-mage-init='{"validation":{}}'
+    >
+        <fieldset class="fieldset">
+            <?= $block->getBlockHtml('formkey') ?>
+            <?= $block->getBlockHtml('seller.formkey')?>
+            <legend class="legend">
+                <span><?= $block->escapeHtml(__("Run Profile")); ?></span>
+            </legend>
+            <div class="field required">
+                <label class="label">
+                    <span><?= $block->escapeHtml(__("Select Profile")); ?></span>
+                </label>
+                <div class="control">
+                    <select data-validate="{'validate-select':true}"
+                        title="Profile"
+                        class="required-entry"
+                        id="profile"
+                        name="profile"
+                        aria-required="true">
+                        <?php foreach ($profiles as $profileId => $name): ?>
+                            <option value="<?= $block->escapeHtml($profileId); ?>">
+                                <?= $block->escapeHtml($name); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <button id="run-profile" class="button wk-mp-btn" type="submit">
+                <span><span><?= $block->escapeHtml(__("Run Profile")); ?></span></span>
+            </button>
+        </fieldset>
+        </form>
+    </div>
+    <?= $block->getChildHtml()?>
+<?php else: ?>
+    <h2 class="wk-mp-error-msg">
+        <?= $block->escapeHtml(__("To Become Seller Please Contact to Admin.")); ?>
+    </h2>
+<?php endif; ?>
+

@@ -1,0 +1,199 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$isPartner = $block->isSeller();
+$attributeSetCollection = $block->getAttributeSetCollection();
+$id = (int)$block->getRequest()->getParam('id');
+$dataflowProfile = $block->getDataflowProfileById($id);
+$mappedProfileFields = $block->getMappedProfileFields($id);
+$attributeSetId = $dataflowProfile->getAttributeSetId();
+$attributeIds = $block->getAllAttributes($attributeSetId);
+?>
+<?php if ($isPartner == 1): ?>
+    <form action="<?= $block->escapeHtml($block->getUrl('mpmassupload/dataflow_profile/save'))?>"
+        enctype="multipart/form-data"
+        method="post" id="form-dataflow-profile"
+        data-mage-init='{"validation":{}}'>
+        <div class="fieldset">
+            <?= $block->getBlockHtml('formkey') ?>
+            <?= $block->getBlockHtml('seller.formkey')?>
+            <input type="hidden" name="id" value="<?= $block->escapeHtml($id) ?>">
+            <legend class="legend">
+                <span><?= $block->escapeHtml(__("Add New Profile")); ?></span>
+                <button class="button wk-mp-btn" type="submit">
+                    <span><span><?= $block->escapeHtml(__("Save Profile")); ?></span></span>
+                </button>
+            </legend>
+            <div class="field required">
+                <label for="profile_name" class="label">
+                    <span><?= $block->escapeHtml(__("Profile Name")); ?></span>
+                </label>
+                <div class="control">
+                    <input type="text"
+                    class="input-text required-entry"
+                    name="profile_name"
+                    data-validate="{required:true}"
+                    title="<?= $block->escapeHtml(__("Profile Name"));?>"
+                    id="profile_name"
+                    value="<?= $block->escapeHtml($dataflowProfile['profile_name']) ?>">
+                </div>
+            </div>
+            <div class="field required">
+                <label for="attribute_set" class="label">
+                    <span><?= $block->escapeHtml(__("Attribute Set")); ?></span>
+                </label>
+                <div class="control">
+                    <select data-validate="{'validate-select':true}"
+                        title="<?= $block->escapeHtml(__("Attribute Set")); ?>"
+                        class="required-entry"
+                        id="attribute_set"
+                        name="attribute_set_id"
+                        aria-required="true">
+                        <option value=""><?= $block->escapeHtml(__("Select Attribute Set")); ?></option>
+                        <?php foreach ($attributeSetCollection as $attribute): ?>
+                            <option value="<?= $block->escapeHtml($attribute->getAttributeSetId()); ?>"
+                                <?php if ($dataflowProfile['attribute_set_id'] == $attribute->getAttributeSetId()): ?>
+                                    selected
+                                <?php endif; ?>>
+                                <?= $block->escapeHtml($attribute->getAttributeSetName()); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="field">
+                <label for="profile_name" class="label">
+                    <span><?= $block->escapeHtml(__("Field Mapping")); ?></span>
+                </label>
+                <div class="wk-mu-mapping-wrapper">
+                    <table id="wk-fieldmap-template" style="display:none;">
+                        <tr class="field-row dataflow-profile-row">
+                            <td><?= $block->escapeHtml(__("In Database")); ?>:</td>
+                            <td>
+                                <select name="mage_attribute[]"
+                                    class="required-entry wk-fieldmap-attr-select"
+                                    data-validate="{'validate-select':true}">
+                                    <option value=""><?= $block->escapeHtml(__("Choose an attribute")); ?></option>
+                                    <?php
+                                    foreach ($attributeIds as $attributeId) {
+                                        $attribute = $block->getCatalogResourceEavAttribute($attributeId);
+                                        ?>
+                                        <option value="<?= $block->escapeHtml($attribute['attribute_code']); ?>">
+                                            <?= $block->escapeHtml($attribute['attribute_code']); ?>
+                                        </option>
+                                        <?php
+                                    } ?>
+                                </select>
+                            </td>
+                            <td class = "dataflow-profile-col">
+                                &lt;--&gt;
+                            </td>
+                            <td>
+                                <?= $block->escapeHtml(__("In File")); ?>:
+                            </td>
+                            <td>
+                                <input class="input-text required-entry wk-fieldmap-attr-input"
+                                    type="text"
+                                    name="file_attribute[]"
+                                    data-validate="{required:true}">
+                            </td>
+                            <td class = "dataflow-profile-col">
+                                <button type="button" class="scalable delete wk-fieldmap-row-delete">
+                                    <span>
+                                        <span>
+                                            <?= $block->escapeHtml(__("Remove ")); ?>
+                                        </span>
+                                    </span>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                    <table id="wk-fieldmap-container" style="width: 100%;">
+                        <?php foreach ($mappedProfileFields as $mappedProfileField) {
+                            $mageAttribute = $mappedProfileField['mage_attribute'];
+                            $fileAttribute = $mappedProfileField['file_attribute'];
+                            ?>
+                            <tr class="field-row">
+                                <td><?= $block->escapeHtml(__("In Database")); ?>:</td>
+                                <td>
+                                    <select name="mage_attribute[]"
+                                        class="required-entry wk-fieldmap-attr-select"
+                                        data-validate="{'validate-select':true}">
+                                        <option value=""><?= $block->escapeHtml(__("Choose an attribute")); ?></option>
+                                        <?php
+                                        foreach ($attributeIds as $attributeId) {
+                                            $attribute = $block->getCatalogResourceEavAttribute($attributeId);
+                                            ?>
+                                            <option value="<?= $block->escapeHtml($attribute['attribute_code']); ?>"
+                                                <?php if ($mageAttribute == $attribute['attribute_code']): ?>
+                                                    selected
+                                                <?php endif; ?>>
+                                                <?= $block->escapeHtml($attribute['attribute_code']); ?>
+                                            </option>
+                                            <?php
+                                        } ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    &lt;--&gt;
+                                </td>
+                                <td>
+                                    <?= $block->escapeHtml(__("In File")); ?>:
+                                </td>
+                                <td>
+                                    <input class="input-text required-entry wk-fieldmap-attr-input"
+                                        type="text" name="file_attribute[]"
+                                        data-validate="{required:true}"
+                                        value="<?= $block->escapeHtml($fileAttribute); ?>">
+                                </td>
+                                <td>
+                                    <button type="button" class="scalable delete wk-fieldmap-row-delete">
+                                        <span>
+                                            <span>
+                                                <?= $block->escapeHtml(__("Remove ")); ?>
+                                            </span>
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <?php
+                        } ?>
+                    </table>
+                </div>
+                <button type="button" class="scalable wk-fieldmap-row-add">
+                    <span>
+                        <span>
+                            <?= $block->escapeHtml(__("Add Field Mapping")); ?>
+                        </span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </form>
+    <div class="buttons-set">
+        <p class="back-link">
+            <a href="<?= /* @noEscape */  $block->getUrl('mpmassupload/dataflow/profile/')?>" class="left">
+                &laquo; <?= $block->escapeHtml(__('Back')) ?>
+            </a>
+        </p>
+    </div>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "dataflowprofile": {}
+            }
+        }
+    </script>
+<?php else: ?>
+    <h2 class="wk-mp-error-msg">
+        <?= $block->escapeHtml(__("To Become Seller Please Contact to Admin.")); ?>
+    </h2>
+<?php endif; ?>

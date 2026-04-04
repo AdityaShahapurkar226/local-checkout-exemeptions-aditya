@@ -1,0 +1,48 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Magento\Customer\Block\Form\Login\Info;
+use Magento\Framework\Escaper;
+
+/** @var Info $block */
+/** @var Escaper $escaper */
+?>
+<?php if ($block->getRegistration()->isAllowed()): ?>
+    <div class="flex flex-col w-full md:w-1/2 justify-between">
+        <!-- new customer -->
+        <div class="block-new-customer card my-8 p-6 md:my-0 bg-ahy-yellow-card">
+            <div class="block-title">
+                <h2 class="text-xl font-extrabold title-font mb-3 text-primary" role="heading" aria-level="2">
+                    <?= $escaper->escapeHtml(__('No account yet?')) ?>
+                </h2>
+            </div>
+            <div class="block-content" aria-labelledby="block-new-customer-heading">
+                <p class="text-ahy-blue text-xs pb-4 font-bold">
+                    <?= $escaper->escapeHtml( // phpcs:disable Generic.Files.LineLength.TooLong
+                        __('Checkout as a guest. Plus, you can create an account for next time.')
+                    ) // phpcs:enable ?>
+                </p>
+            </div>
+            <div class="flex justify-center">
+                <a class="block w-full font-bold text-ahy-blue" href="<?= $escaper->escapeUrl($block->getCreateAccountUrl()) ?>">
+                    <button class="rounded-full p-2 px-10 hover:shadow-[#0d2f47_0px_0px_0px_1px_inset] border-ahy-blue border-3 text-ahy-blue w-full">
+                        <span><?= $escaper->escapeHtml(__('Create an Account')) ?></span>
+                    </button>
+                </a>
+            </div>
+        </div>
+        <?php
+            echo $this->getLayout()
+            ->createBlock('Magento\Cms\Block\Block')
+            ->setBlockId('creator_testimonial')
+            ->toHtml();
+        ?>
+    </div>
+<?php endif; ?>

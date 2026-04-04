@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Change validation for Cart Price Rules related to qty of items in a cart -->
+    <type name="Magento\Rule\Model\Condition\AbstractCondition">
+        <plugin name="Ewave_ExtendedBundleProduct::Magento\Rule\Model\Condition\AbstractCondition"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\Rule\Model\Condition\AbstractConditionPlugin" />
+    </type>
+</config>

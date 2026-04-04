@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_SellerSubAccount
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="adminhtml_customer_save_after">
+        <observer name="webkul_sellersubaccount_adminhtml_customer_save_after_observer" instance="Webkul\SellerSubAccount\Observer\AdminhtmlCustomerSaveAfterObserver" />
+    </event>
+    <event name="mp_processing_seller">
+        <observer name="webkul_sellersubaccount_adminhtml_seller_status_change" instance="Webkul\SellerSubAccount\Observer\SellerStatusChange" />
+    </event>
+     <event name="mp_disapprove_seller">
+        <observer name="webkul_sellersubaccount_adminhtml_seller_status_change" instance="Webkul\SellerSubAccount\Observer\SellerStatusChange" />
+    </event>
+</config>

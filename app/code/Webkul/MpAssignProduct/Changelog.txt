@@ -1,0 +1,103 @@
+Legend
+
++ Features
+- Bugs
+-------------------------------- Version 5.1.0-p2 --------------------------------------
+
+	- Fixed category page issue in admin end.
+	- Fixed Product deletion issue while uploading products through CSV.
+	- Fixed tax calculation issue for configuable products.
+
+-------------------------------- Version 5.1.0-p1 --------------------------------------
+
+	- Fixed minimum price issue on catalog category pages.
+	
+-------------------------------- Version 5.1.0 --------------------------------------
+
+	+ Added Assigned product in Seller Profile/Collection.
+	+ Admin can assign products to seller single or using CSV.
+	+ Frontend manage assigned list using Ui component.
+	+ Proper email if any product is assigned by any seller/ or if main product is deleted 
+	then seller who has assigned that product should receive an email notification.
+	+ There should be an option that the admin set to show Out of Stock assigned product at front-end or not.
+	+Tax class selection should be there in the assigned product form.
+
+-------------------------------- Version 5.0.0 --------------------------------------
+
+	+ Compatible with Magento 2.4.x and Marketplace version 5.0.x.
+
+-------------------------------- Version 4.1.0 --------------------------------------
+
+	+ Added Assigned product in Seller Profile/Collection For enterprise.
+	+ Admin can assign products to seller single or using CSV For enterprise.
+	+ Frontend manage assigned list using Ui component For enterprise.
+	+ Proper email if any product is assigned by any seller/ or if main product is deleted 
+	then seller who has assigned that product should receive an email notification.
+	+ There should be an option that the admin set to show Out of Stock assigned product at front-end or not.
+
+-------------------------------- Version 4.0.0 --------------------------------------
+
+	+ Compatible with Magento 2.4.x Enterprise edition and Marketplace version 4.0.x.
+
+-------------------------------- Version 3.0.2 --------------------------------------
+
+	+ Added Assign product using CSV/XML at seller end.
+	+ Added search product SKU at seller end.
+	- Fixed Bugs
+-------------------------------- Version 3.0.1 --------------------------------------
+
+	+ Fixed Compatiblity issue with other modules.
+	+ Updated according to the duplicate product concept of Magento.
+	- Fixed Bugs
+
+-------------------------------- Version 3.0.0 --------------------------------------
+
+	+ Updated according to Magento 2.3.x and Marketplace 3.x.x version
+	+ Support Marketplace Per Country Per Product Shipping Module
+	+ Assign products have own per Country/Continent wise shipping price.
+	- Fixed Bugs
+
+-------------------------------- Version 2.2.0 --------------------------------------
+
+	+ Updated according to Magento 2.2.x and Marketplace 2.3.x version
+	- Fixed Bugs
+
+-------------------------------- Version 2.1.0 --------------------------------------
+	+ Compatible with magento 2.3.x and Marketplace 2.2.x
+
+-------------------------------- Version 2.0.4 --------------------------------------
+	+ Minimum price product added to cart from category or product page.
+	+ Product displayed with minimum price at category and product page.
+
+-------------------------------- Version 2.0.3 --------------------------------------
+
+	+ Compatible with Marketplace Version 2.1.* and Magento v2.2.*
+	- Bug fixes.
+
+-------------------------------- Version 2.0.2 --------------------------------------
+
+	+ Assign product information added in admin product page.
+	+ Multiple images feature added.
+	+ Galley view added for assign product on product page.
+	+ Compatible with marketplace seller group module.
+	- Image saving issue fixed.
+	- Stock issue fixed.
+
+
+-------------------------------- Version 2.0.1 --------------------------------------
+
+	+ Configurable product feature added.
+	+ Admin product can be assigned.
+	+ Designed changed
+	- Cart update issue fixed.
+	- Price update issue fixed.
+
+
+-------------------------------- Version 2.0.0 --------------------------------------
+
+	+ Marketplace Seller Comparision Magento2 allow simple, virtual products.
+	+ Sellers can assign products with new price, quantity and conditions.
+	+ Sellers can update their assigned products and also delete them.
+	+ Multiple sellers can assign single product with different price and quantity.
+	+ Display different seller in product page with their price.
+	+ Seller can create multiple assign products.

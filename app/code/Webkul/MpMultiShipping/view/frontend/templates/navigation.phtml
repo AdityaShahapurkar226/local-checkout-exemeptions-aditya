@@ -1,0 +1,25 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMultiShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$active = strpos($block->getCurrentUrl(), 'multiship/shipping/view');
+?>
+<?php if ($block->getViewModel()->isAllowedAction()): ?>
+    <li class="nav item <?= /* @noEscape */ $active ? "current":"";?>">
+        <?php if ($active): ?>
+            <strong><?= /* @noEscape */ __('Manage Multi Shipping') ?></strong>
+        <?php else: ?>
+            <a href="<?= /* @noEscape */ $block->getViewModel()->getActionUrl('multiship/shipping/view'); ?>">
+                <?= /* @noEscape */ __('Manage Multi Shipping') ?>
+            </a>
+        <?php endif; ?>
+    </li>
+<?php endif;?>

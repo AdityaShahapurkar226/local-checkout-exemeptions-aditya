@@ -1,0 +1,72 @@
+<section class="sponsored-products relative hidden">
+    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 h-full w-screen bg-ahy-bg z-[-1]"></div>
+    <div class="more-items-to-explore flex justify-between pb-2 pt-8">
+        <div class="title capitalize font-bold text-ahy-blue text-xl">more items to  explore</div>
+        <div class="sponsored text-base text-gray-500 capitalize">sponsored</div>
+    </div>
+    <div class="ahy-scrollbar flex lg:grid grid-cols-3 gap-4 pb-8 test flex w-screen ml-[-50vw] mr-[-50vw] right-1/2 left-1/2 relative overflow-auto lg:overflow-visible lg:ml-0 lg:mr-0 lg:right-auto lg:left-auto px-6 lg:px-0 lg:w-full">
+        <?php
+            $categoryId = 44; // Replace with the ID of the category for which you want to display the products
+            // $productCollection = $category->getProductCollection();
+            $productCollection = $block->getCategoryDetails($categoryId);
+            $count = 0;
+        ?>
+        <?php foreach ($productCollection as $product) : ?>
+        <?php 
+            $reviews = $block->getReviews($product);
+            $specialPrice = $product->getSpecialPrice();
+            $originalPrice = $product->getPrice();
+            $starCount = 0;
+            $classHidden = '';
+            if ($reviews['count'] !== 0){
+                $starCount = 5;
+            } else{
+                $classHidden = 'hidden';
+            }
+        ?>    
+            <div class="sponsored-product-cards bg-white w-full p-4">
+                <a href="<?php echo $product->getProductUrl()?>" alt="<?php echo $product->getName(); ?>" class="sponsored-product-cards-links">
+                    <div class="product-details flex ">
+                        <div class="product-image-section min-w-[100px] lg:w-[35%] flex justify-center">
+                            <img src="<?php echo $block->getImageUrl($product, 'product_small_image'); ?>" alt="<?php echo $product->getName(); ?>" class="product-image">
+                        </div>
+                        <div class="product-info min-w-[220px] lg:w-[65%] lg:min-w-min flex flex-col grow justify-center">
+                            <div class="product-rating flex text-xs items-center h-4">
+                                <span class="review-star pr-1 text-ahy-blue text-base <?= $classHidden ?>"><?php echo str_repeat('&#9733;', $starCount);//$reviews['rating']) ; ?></span>
+                                <span class="total-ratings text-ahy-blue <?= $classHidden ?>"> <span class="text-gray-300"> | </span><?php echo $reviews['count']; ?></span>
+                            </div>
+                            <h2 class="product-name font-semibold text-lg h-14 line-clamp-2 box-orient-vertical text-ahy-blue"><?php echo $product->getName(); ?></h2>
+                            <div class="product-price pt-2 text-ahy-blue">
+                                <?php if ($product->getSpecialPrice()): ?>
+                                    <span class="special-price font-bold text-lg">$<?php echo number_format((float)$specialPrice, 2, '.', '') ?></span>
+                                    <span class="regular-price  line-through text-xs ">$<?php echo number_format((float)$originalPrice, 2, '.', '') ?></span>
+                                <?php else: ?>
+                                    <span class="regular-price font-bold text-lg" >$<?php echo number_format((float)$originalPrice, 2, '.', '') ?></span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <?php 
+                $count++;
+                if ($count == 3) {
+                    break;
+                }
+            ?>
+        <?php endforeach; ?>
+
+    </div>
+</section>
+
+<style>
+    .ahy-scrollbar::-webkit-scrollbar {
+        width: 1px;
+        background-color: #ccc;
+        border-radius: 17px;
+    }
+    .ahy-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #064f84;
+        border-radius: 17px;
+    }
+</style>

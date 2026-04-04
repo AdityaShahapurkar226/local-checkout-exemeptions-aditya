@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */--><!--
+/**
+* Copyright © 2015 Amasty. All rights reserved.
+*/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Page\Config\Renderer">
+        <plugin name="Amasty_Mostviewed::make-css" type="Amasty\Mostviewed\Plugin\View\Page\Config\Renderer" />
+    </type>
+    <type name="Magento\Catalog\Block\Product\ProductList\Related">
+        <plugin name="Amasty_Mostviewed::collectionRelated" type="Amasty\Mostviewed\Plugin\Community\Related"/>
+    </type>
+    <type name="Magento\Checkout\Block\Cart\Crosssell">
+        <plugin name="Amasty_Mostviewed::collectionCrosssell" type="Amasty\Mostviewed\Plugin\Community\Crosssell"/>
+    </type>
+    <type name="Magento\Catalog\Block\Product\ProductList\Upsell">
+        <plugin name="Amasty_Mostviewed::collectionUpsell" type="Amasty\Mostviewed\Plugin\Community\Upsell"/>
+    </type>
+    <type name="Magento\TargetRule\Block\Product\AbstractProduct">
+        <plugin name="Amasty_Mostviewed::collection" type="Amasty\Mostviewed\Plugin\Enterprise\Product"/>
+    </type>
+
+    <type name="Amasty\Mostviewed\Block\Widget\Related">
+        <plugin name="Amasty_Mostviewed::mostviewed-ctr" type="Amasty\Mostviewed\Plugin\Analytics\Ctr"/>
+    </type>
+    <type name="Magento\Catalog\Block\Product\ProductList\Related">
+        <plugin name="Amasty_Mostviewed::magento-related-ctr" type="Amasty\Mostviewed\Plugin\Analytics\Ctr"/>
+    </type>
+    <type name="Magento\Checkout\Block\Cart\Crosssell">
+        <plugin name="Amasty_Mostviewed::magento-crosssell-ctr" type="Amasty\Mostviewed\Plugin\Analytics\Ctr"/>
+    </type>
+    <type name="Magento\Catalog\Block\Product\ProductList\Upsell">
+        <plugin name="Amasty_Mostviewed::magento-upsell-ctr" type="Amasty\Mostviewed\Plugin\Analytics\Ctr"/>
+    </type>
+    <type name="Magento\TargetRule\Block\Catalog\Product\ProductList\Related">
+        <plugin name="Amasty_Mostviewed::magento-ee-related-ctr" type="Amasty\Mostviewed\Plugin\Analytics\Ctr"/>
+    </type>
+    <type name="Magento\TargetRule\Block\Checkout\Cart\Crosssell">
+        <plugin name="Amasty_Mostviewed::magento-ee-crosssell-ctr" type="Amasty\Mostviewed\Plugin\Analytics\Ctr"/>
+    </type>
+    <type name="Magento\TargetRule\Block\Catalog\Product\ProductList\Upsell">
+        <plugin name="Amasty_Mostviewed::magento-ee-upsell-ctr" type="Amasty\Mostviewed\Plugin\Analytics\Ctr"/>
+    </type>
+    <type name="Magento\Theme\Block\Html\Topmenu">
+        <plugin name="Amasty_Mostviewed::TopMenuFirst"
+                type="Amasty\Mostviewed\Plugin\Theme\Block\Html\Topmenu" sortOrder="-1" />
+        <plugin name="Amasty_Mostviewed::TopMenuLast"
+                type="Amasty\Mostviewed\Plugin\Theme\Block\Html\TopmenuLast" sortOrder="999" />
+    </type>
+    <type name="Infortis\UltraMegamenu\Block\Navigation">
+        <plugin name="Amasty_Mostviewed::TopMenuUltimo"
+                type="Amasty\Mostviewed\Plugin\Theme\Block\Html\TopmenuThemes" sortOrder="999" />
+    </type>
+    <type name="Smartwave\Megamenu\Block\Topmenu">
+        <plugin name="Amasty_Mostviewed::TopMenuPorto"
+                type="Amasty\Mostviewed\Plugin\Theme\Block\Html\TopmenuThemes" sortOrder="999" />
+    </type>
+    <type name="Amasty\MegaMenuLite\Model\Menu\TreeResolver">
+        <plugin name="Amasty_Mostviewed::AmastyMegaMenu"
+                type="Amasty\Mostviewed\Plugin\MegaMenu\Model\Menu\TreeResolverPlugin" />
+    </type>
+    <type name="Amasty\Mostviewed\Plugin\SalesRule\Model\RulesApplier">
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\View\Element\Message\MessageConfigurationsPool">
+        <arguments>
+            <argument name="configurationsMap" xsi:type="array">
+                <item name="addPackSuccessMessage" xsi:type="array">
+                    <item name="renderer" xsi:type="const">\Magento\Framework\View\Element\Message\Renderer\BlockRenderer::CODE</item>
+                    <item name="data" xsi:type="array">
+                        <item name="template" xsi:type="string">Amasty_Mostviewed::messages/addPackSuccessMessage.phtml</item>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Checkout\Controller\Cart\CouponPost">
+        <plugin name="Amasty_Mostviewed::check-pack-with-coupon" type="Amasty\Mostviewed\Plugin\Checkout\Controller\Cart\CouponPostPlugin" />
+    </type>
+
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="bundle_pack_config_provider" xsi:type="object">Amasty\Mostviewed\Model\Checkout\BundlePackConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="GenerateAmastyCartResponse" type="Amasty\Mostviewed\Model\Di\Wrapper">
+        <arguments>
+            <argument name="name" xsi:type="string">Amasty\Cart\Model\Cart\Add\GenerateResponse</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Amasty\Mostviewed\Controller\Cart\Add">
+        <arguments>
+            <argument name="generateAmastyCartResponse" xsi:type="object">GenerateAmastyCartResponse</argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Mostviewed\Model\Cart\Add\MessageManager">
+        <arguments>
+            <argument name="messagePool" xsi:type="array">
+                <item name="addPackSuccessMessage"
+                      xsi:type="object">Amasty\Mostviewed\Model\Cart\Add\Message\PackSuccessMessage</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="SortingMethodsProvider" type="Amasty\Mostviewed\Model\Di\Wrapper">
+        <arguments>
+            <argument name="name" xsi:type="string">Amasty\Sorting\Model\MethodProvider</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Amasty\Mostviewed\Model\ProductProvider">
+        <arguments>
+            <argument name="sortingMethodsProvider" xsi:type="object">SortingMethodsProvider</argument>
+        </arguments>
+    </type>
+
+    <!-- fix error product.price.render.default not exist -->
+    <type name="Magento\Catalog\Block\Product\View\Options\AbstractOptions">
+        <plugin name="Amasty_Mostviewed::inject-layout-for-option-render"
+                type="Amasty\Mostviewed\Plugin\Catalog\Block\Product\View\Options\AbstractOptions\FixNonExistBlockError" />
+    </type>
+</config>

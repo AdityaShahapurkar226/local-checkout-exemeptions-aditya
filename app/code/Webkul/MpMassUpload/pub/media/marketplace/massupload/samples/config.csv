@@ -1,0 +1,69 @@
+status,type,category,name,description,short_description,sku,price,special_price,special_from_date,special_to_date,tax_class_id,is_in_stock,stock,weight,meta_title,meta_keyword,meta_description,_super_attribute_code,_super_attribute_option,images,color,manufacturer,custom_option,tier_price,attribute_mapping_category,related_skus,crosssell_skus,upsell_skus,seller_id
+1,configurable,"Men,Women",Config Product1,Config Product1,Config Product1,Config Product1,100,90,2017-05-26,2018-05-28,Taxable Goods,In Stock,,1,Test Meta title,Test Meta Keyword,Test Meta Description,"color,size",,"1.jpg,2.jpg",Red,Nike,"[
+  {
+    ""is_require"": 1,
+    ""title"": ""Color"",
+    ""type"": ""drop_down"",
+    ""sort_order"": 0,
+    ""sku"": ""co01"",   
+    ""values"": [
+ {""title"":""cream"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co011"",""sort_order"": 5},{""title"":""cream1"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co012"",""sort_order"": 5}  ]
+  }, {
+    ""is_require"": 1,
+    ""title"": ""Color2"",
+    ""type"": ""drop_down"",
+    ""sort_order"": 0,
+    ""sku"": ""co02"",   
+    ""values"": [
+ {""title"":""cream"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co021"",""sort_order"": 5},{""title"":""cream1"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co022"",""sort_order"": 5}  ]
+  }]","[
+  {
+    ""cust_group"": ""ALL GROUPS"",
+    ""price_qty"": ""2"",
+    ""price"": ""10""
+  }, {
+    ""cust_group"":""Wholesale"" ,
+    ""price_qty"": ""10"",
+    ""price"": ""40""
+  }]",Men,,,,
+1,simple,"Men,Women",Associated Product1,Associated Product1,Associated Product1,Associated Product1,100,90,2017-05-25,2018-05-27,Taxable Goods,In Stock,1000,1,Test Meta title,Test Meta Keyword,Test Meta Description,"color,size","White,S","3.jpg,4.jpg",Red,Nike,,,Men,,,,
+1,simple,"Men,Women",Associated Product2,Associated Product2,Associated Product2,Associated Product2,100,90,2017-05-24,2018-05-26,Taxable Goods,In Stock,1000,1,Test Meta title,Test Meta Keyword,Test Meta Description,"color,size","Red,M","5.jpg,6.jpg",Red,Nike,,,Men,,,,
+1,configurable,"Men,Women",Config Product2,Config Product2,Config Product2,Config Product2,100,90,2017-05-26,2018-05-28,Taxable Goods,In Stock,,1,Test Meta title,Test Meta Keyword,Test Meta Description,"color,size",,"1.jpg,6.jpg",Red,Nike,"[
+  {
+    ""is_require"": 1,
+    ""title"": ""Color"",
+    ""type"": ""drop_down"",
+    ""sort_order"": 0,
+    ""sku"": ""co01"",   
+    ""values"": [
+ {""title"":""cream"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co011"",""sort_order"": 5},{""title"":""cream1"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co012"",""sort_order"": 5}  ]
+  }, {
+    ""is_require"": 1,
+    ""title"": ""Color2"",
+    ""type"": ""drop_down"",
+    ""sort_order"": 0,
+    ""sku"": ""co02"",   
+    ""values"": [
+ {""title"":""cream"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co021"",""sort_order"": 5},{""title"":""cream1"", ""price"": 50,
+        ""price_type"": ""fixed"",""sku"":""co022"",""sort_order"": 5}  ]
+  }]","[
+  {
+    ""cust_group"": ""ALL GROUPS"",
+    ""price_qty"": ""2"",
+    ""price"": ""10""
+  }, {
+    ""cust_group"":""Wholesale"" ,
+    ""price_qty"": ""10"",
+    ""price"": ""40""
+  }]",Women,Config Product1,Config Product1,Config Product1,
+1,simple,"Men,Women",Associated Product21,Associated Product21,Associated Product21,Associated Product21,100,90,2017-05-25,2018-05-27,Taxable Goods,In Stock,1000,1,Test Meta title,Test Meta Keyword,Test Meta Description,"color,size","Black,S","2.jpg,7.jpg",Red,Nike,,,Women,,,,
+1,simple,"Men,Women",Associated Product22,Associated Product22,Associated Product22,Associated Product22,100,90,2017-05-24,2018-05-26,Taxable Goods,In Stock,1001,1,Test Meta title,Test Meta Keyword,Test Meta Description,"color,size","Black,M","3.png,8.png",Red,Nike,,,Women,,,,
+1,simple,"Men,Women",Associated Product23,Associated Product23,Associated Product23,Associated Product23,100,90,2017-05-23,2018-05-25,Taxable Goods,In Stock,1002,1,Test Meta title,Test Meta Keyword,Test Meta Description,"color,size","Black,L","4.png,9.png",Red,Nike,,,Women,,,,
+1,simple,"Men,Women",Associated Product24,Associated Product24,Associated Product24,Associated Product24,100,90,2017-05-22,2018-05-24,Taxable Goods,In Stock,1003,1,Test Meta title,Test Meta Keyword,Test Meta Description,"color,size","Black,XL","5.png,10.png",Red,Nike,,,Women,,,,

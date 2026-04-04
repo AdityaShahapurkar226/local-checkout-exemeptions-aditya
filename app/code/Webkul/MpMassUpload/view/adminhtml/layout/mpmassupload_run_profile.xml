@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Webkul_MpMassUpload::css/styles.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Webkul\MpMassUpload\Block\Adminhtml\Run\Run" name="massupload_run" template="Webkul_MpMassUpload::product/profile.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

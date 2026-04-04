@@ -1,0 +1,174 @@
+"Update Status","Update Status"
+"Assigned Product","Assigned Product"
+"Product Information","Product Information"
+"Assign Product","Assign Product"
+"My Assigned Product List","My Assigned Product List"
+"My Product List","My Product List"
+Seller,Seller
+Rating,Rating
+Availability,Availability
+Information,Information
+Price,Price
+Admin,Admin
+New,New
+Used,Used
+"IN STOCK","IN STOCK"
+"OUT OF STOCK","OUT OF STOCK"
+"Invalid Sku: "" %1""","Invalid Sku: "" %1"""
+"Product from same seller can't be Assigned, 
+                        Product Sku is %1","Product from same seller can't be Assigned, 
+                        Product Sku is %1"
+"Assign product is available for Simple, Configurable and Virtual type products.","Assign product is available for Simple, Configurable and Virtual type products."
+"Mass Upload","Mass Upload"
+Product,Product
+"New Image","New Image"
+"Manage Assign Products","Manage Assign Products"
+"A total of %1 Product(s) have been approved.","A total of %1 Product(s) have been approved."
+"Product deleted successfully.","Product deleted successfully."
+"Something went wrong.","Something went wrong."
+"Edit Product","Edit Product"
+"A total of %1 record(s) have been deleted.","A total of %1 record(s) have been deleted."
+"A total of %1 record(s) haven't been deleted.","A total of %1 record(s) haven't been deleted."
+"Assigned Product List","Assigned Product List"
+msg,msg
+"Product is saved successfully.","Product is saved successfully."
+"There was some error while processing your request.","There was some error while processing your request."
+"Total %1 Product(s) Imported.","Total %1 Product(s) Imported."
+"Finished Execution.","Finished Execution."
+"Profile doesn't exists.","Profile doesn't exists."
+"Marketplace Mass Upload","Marketplace Mass Upload"
+"Something wrong with the uploaded file format","Something wrong with the uploaded file format"
+"Your file was uploaded and unpacked.","Your file was uploaded and unpacked."
+"Mass Assigned Product Upload","Mass Assigned Product Upload"
+"Product is currently not available from seller.","Product is currently not available from seller."
+"Quantities are not available from seller.","Quantities are not available from seller."
+"Update Product","Update Product"
+"Your assigned product for '%1' is approved.","Your assigned product for '%1' is approved."
+"Your assigned product for '%1' is disapproved.","Your assigned product for '%1' is disapproved."
+"Select Profile","Select Profile"
+"With Minimum Price","With Minimum Price"
+"With Maximum Price","With Maximum Price"
+"With Minimum Quantity","With Minimum Quantity"
+"With Maximum Quantity","With Maximum Quantity"
+Disapproved,Disapproved
+Approved,Approved
+"The CMS block with the ""%1"" ID doesn't exist.","The CMS block with the ""%1"" ID doesn't exist."
+View,View
+"View Customer","View Customer"
+"View Product","View Product"
+"Product Name","Product Name"
+"Product Owner","Product Owner"
+"Assigned By","Assigned By"
+"Associated Products","Associated Products"
+Quantity,Quantity
+Status,Status
+"Seller Info","Seller Info"
+Condition,Condition
+"Associated Product","Associated Product"
+"No assigned products","No assigned products"
+"Manage Assign Product","Manage Assign Product"
+Menu,Menu
+"Add Image","Add Image"
+"Base Image","Base Image"
+"Delete Showcase","Delete Showcase"
+"Product Condition","Product Condition"
+Description,Description
+"Note: Set Quantity and Price 0, in case you don't want to assign the product.","Note: Set Quantity and Price 0, in case you don't want to assign the product."
+Qty,Qty
+"Save Product","Save Product"
+"Please select associated product.","Please select associated product."
+"To Become Seller Please Contact to Admin.","To Become Seller Please Contact to Admin."
+"Sold by %1 more Seller(s)","Sold by %1 more Seller(s)"
+"Set Descending Direction","Set Descending Direction"
+"Set Ascending Direction","Set Ascending Direction"
+"Be the first to review","Be the first to review"
+"Add to Cart","Add to Cart"
+"View Products","View Products"
+Delete,Delete
+"Assign New Product","Assign New Product"
+Thumbnail,Thumbnail
+Name,Name
+Action,Action
+Unapproved,Unapproved
+"No Product Found","No Product Found"
+"Do you want to edit?","Do you want to edit?"
+"Do you want to delete product?","Do you want to delete product?"
+"Please select products to delete.","Please select products to delete."
+"Sold By","Sold By"
+"Visit Shop","Visit Shop"
+"Available from %1 more seller(s)","Available from %1 more seller(s)"
+"Availabe from other sellers","Availabe from other sellers"
+view,view
+"Product Images","Product Images"
+"Browse Files...","Browse Files..."
+"Click here or drag and drop to add images.","Click here or drag and drop to add images."
+"Delete video","Delete video"
+"Delete image","Delete image"
+"Make Base","Make Base"
+Hidden,Hidden
+"Alt Text","Alt Text"
+Role,Role
+"Hide from Product Page","Hide from Product Page"
+"Deleting Profile","Deleting Profile"
+Completed,Completed
+"No Product Imported","No Product Imported"
+"Starting Execution...","Starting Execution..."
+"Please don't close or refresh the window while importing products.","Please don't close or refresh the window while importing products."
+"Total %1 Product(s) to import.","Total %1 Product(s) to import."
+Importing,Importing
+"No Product to import.","No Product to import."
+"Per Country Per Product Shipping:","Per Country Per Product Shipping:"
+"Select Apply on","Select Apply on"
+"Select Country/Region","Select Country/Region"
+"Shipping Cost","Shipping Cost"
+Add,Add
+"Not available for this product type.","Not available for this product type."
+"Select Option","Select Option"
+Region,Region
+Country,Country
+"Select Country","Select Country"
+"Select Region","Select Region"
+"Search For Product","Search For Product"
+Search,Search
+Image,Image
+Sku,Sku
+"Check Associated Products","Check Associated Products"
+"Sample Simple Csv File","Sample Simple Csv File"
+"Sample Simple XLS File","Sample Simple XLS File"
+Upload,Upload
+"Upload CSV/XLS File","Upload CSV/XLS File"
+CSV/XLS,CSV/XLS
+"Upload Images Zip","Upload Images Zip"
+"Images Zip","Images Zip"
+"Run Profile","Run Profile"
+"Sell Yours","Sell Yours"
+Hello,Hello
+"Thank you","Thank you"
+"We could not detect a size.","We could not detect a size."
+"We don't recognize or support this file extension type.","We don't recognize or support this file extension type."
+Close,Close
+"Are you sure, you want to delete these product(s)?","Are you sure, you want to delete these product(s)?"
+Adding...,Adding...
+Added,Added
+Webkul,Webkul
+"Assign Product Settings","Assign Product Settings"
+"Show minimum price on product page","Show minimum price on product page"
+"Product Approval Required","Product Approval Required"
+"Product Edit Approval Required","Product Edit Approval Required"
+"Assign Product to Seller with","Assign Product to Seller with"
+"This setting will be used when main seller deletes the product","This setting will be used when main seller deletes the product"
+"Admin Name","Admin Name"
+"Admin Email","Admin Email"
+"Add Product Message For Email","Add Product Message For Email"
+"Edit Product Message For Email","Edit Product Message For Email"
+"Assigned Product Information","Assigned Product Information"
+Disapprove,Disapprove
+"Are you sure you wan't to disapprove selected items?","Are you sure you wan't to disapprove selected items?"
+Approve,Approve
+"Are you sure you wan't to approve selected items?","Are you sure you wan't to approve selected items?"
+"Assigned Product Id","Assigned Product Id"
+"Product ID","Product ID"
+"Seller Name","Seller Name"
+"Marketplace Assigned Product","Marketplace Assigned Product"
+"Marketplace Assigned Product List","Marketplace Assigned Product List"
+"Marketplace Assign Product","Marketplace Assign Product"

@@ -1,0 +1,91 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var HeroiconsOutline $heroiconsViewModel */
+/** @var Escaper $escaper */
+
+use Hyva\Checkout\ViewModel\Breadcrumbs;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\Escaper;
+
+$viewModel = $viewModels->require(Breadcrumbs::class);
+$config = $viewModel->getCheckoutConfig();
+$current = $config->getCurrentStep();
+$settingShowWaypoints = $viewModel->getSystemConfig()->showBreadcrumbsWaypoints();
+$settingShowBreadcrumbsCart = $viewModel->getSystemConfig()->showBreadcrumbsCart();
+$heroiconsViewModel = $viewModels->require(HeroiconsOutline::class);
+?>
+<?php $stepCount = count($config->getSteps()) ?>
+<ul class="breadcrumbs items-center space-x-4 flex py-6 justify-center">
+    <?php if ($settingShowBreadcrumbsCart): ?>
+        <li class="space-x-4 inline-flex items-center">
+            <a href="<?= $escaper->escapeUrl($block->getUrl('checkout/cart', ['_secure' => true])) ?>"
+            class="item completed"
+            >
+                <span itemprop="name">
+                    <?= $heroiconsViewModel->shoppingCartHtml('w-5 h-5 text-gray-400') ?>
+                </span>
+            </a>
+        </li>
+    <?php endif ?>
+    <?php $stepCounter = 1 ?>
+    <?php foreach ($config->getSteps() as $step): ?>
+        <li class="space-x-4 inline-flex items-center">
+            <?php if (($settingShowWaypoints || $step['position'] <= $current['position']) && $step['position'] !== $config->getFirstStep('position')): ?>
+                <?php $stepCounter++ ?>
+            <?php endif ?>
+            
+            <?php if ($config->canStepTo($step['name'])): ?>
+                <button type="button"
+                    <?php if ($step['position'] === $current['position']): ?>
+                        class="item active !text-white"
+                    <?php else: ?>
+                        class="item completed font-bold !text-white"
+                    <?php endif ?>
+                        onclick="hyvaCheckout.navigation.stepTo('<?= $escaper->escapeHtmlAttr($step['route']) ?>', false)"
+                >   
+                    <div class="flex flex-col items-center justify-center gap-2">
+                    <?php if ($step['position'] === $current['position']): ?>
+                        <span class="p-2 bg-white w-10 text-ahy-blue rounded-full leading-[normal]">
+                            <?= $stepCounter; ?>
+                        </span>
+                    <?php else: ?>
+                        <span class="p-2 bg-ahy-blue w-10 text-white rounded-full"
+                            style="box-shadow: #fff 0px 0px 0px 4px inset;"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                            </svg>
+                        </span>
+                    <?php endif ?>
+                        <span class="text-center leading-[1.2]"><?= $escaper->escapeHtml(__($step['label'])) ?></span>
+                    </div>
+                </button>
+            <?php elseif ($settingShowWaypoints): ?>
+                <span class="item locked">
+                    <div class="flex flex-col items-center justify-center gap-2 font-bold text-ahy-khaki">
+                        <span 
+                            class="p-2 bg-ahy-blue w-10 text-ahy-khaki rounded-full flex justify-center shadow-[#dfb897_0px_0px_0px_4px_inset] leading-[normal]"
+                            style="box-shadow: #dfb897 0px 0px 0px 4px inset;"
+                        >
+                            <?= $stepCounter; ?>
+                        </span>
+                        <span class="text-center leading-[1.2]"><?= $escaper->escapeHtml(__($step['label'])) ?></span>
+                    </div>
+                </span>
+            <?php endif ?>
+        </li>
+        
+    <?php endforeach ?>
+</ul>

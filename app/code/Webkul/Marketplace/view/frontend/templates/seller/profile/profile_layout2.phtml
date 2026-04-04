@@ -1,0 +1,53 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+// die('d');
+// $viewModel = $block->getViewModel();
+// $helper = $viewModel->getHelper();
+$partner=$block->getProfileDetail();
+if ($partner['shop_url']) {?>
+    <?php if ($detailedInfoGroup = $block->getGroupChildNames('microsite_details', 'getChildHtml')):?>
+        <div class="product info detailed wk-supplier-tabs">
+            <?php $layout = $block->getLayout(); ?>
+            <div class="product data items" data-mage-init='{"tabs":{"openedState":"active"}}'>
+                <?php
+            //   die;
+                // $detailedInfoGroup = ['marketplace_sellercollection', 'supplier_review_info',
+                // 'marketplace_sellerprofile_tab','supplier_policies', 'marketplace_contact'];
+                foreach ($detailedInfoGroup as $name):?>
+                    <?php
+                        $html = $layout->renderElement($name);
+                        // print_r($html);
+                    
+                        $alias = $layout->getElementAlias($name);
+                        $label = $block->getChildData($alias, 'title');
+                    ?>
+                    <div class="data item title"
+                        aria-labeledby="tab-label-<?= /* @noEscape */ $alias ?>-title"
+                        data-role="collapsible" id="tab-label-<?= /* @noEscape */ $alias ?>">
+                       
+                        <a class="data switch"
+                        tabindex="-1"
+                        data-toggle="switch"
+                        href="#<?= /* @noEscape */ $alias ?>"
+                        id="tab-label-<?= /* @noEscape */ $alias ?>-title">
+                            <?= /* @noEscape */ $label ?>
+                        </a>
+                        
+                    </div>
+                    <div class="data item content wk-display-none" id="<?= /* @noEscape */ $alias ?>"
+                     data-role="content">
+                        <?= /* @noEscape */ $html ?>
+                    </div>
+                <?php endforeach;?>
+            </div>
+        </div>
+    <?php endif?>
+<?php }?>

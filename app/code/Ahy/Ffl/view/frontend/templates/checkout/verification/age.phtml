@@ -1,0 +1,266 @@
+<div class="container mx-auto bg-ahy-yellow-card p-4 md:p-12">
+    <?php if ($magewire->getAge() == null || $magewire->getAge() < 18): ?>
+        <div class="component-messenger message pl-6 mb-4 relative warning"
+            x-data="{
+                component: null,
+                show: false,
+                message: {
+                    type: 'error',
+                    text: 'Something\u0020went\u0020wrong.'
+                },
+                dispatched: 0
+            }"
+            @age:validation:error.window="
+                component = null
+                show = true
+                message = Object.assign(message, $event.detail.message)
+                if ($event.detail.component) {
+                    component = $event.detail.component.id || null
+                }
+                dispatched++
+                Magewire.hook('message.received', (message, component) => {
+                    if (component.id === $event.detail.component.id) {
+                        show = false
+                        dispatched = 0
+                    }
+                })
+            "
+            x-on:age:validation:success.window="show = false"
+            x-bind:class="message.type"
+            x-bind:data-testid="component ? `${component}-message` : ''"
+            x-show="show" x-transition:enter="transition ease-in duration-300"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-out duration-300" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0" data-testid="checkout.ffl.verification-message" style=""
+        >
+            <span x-text="message.text"></span>
+            <div class="absolute -left-1.5 -top-1.5" x-show="dispatched >= 2 &amp;&amp; message.type !== 'success'" x-transition.opacity="" x-transition:enter.scale.0.duration.600ms="" x-transition:leave.scale.0.duration.300ms="" style="display: none;">
+                <span class="flex h-4 w-4">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-white shadow-xl"></span>
+                </span>
+            </div>
+            <button class="close cursor-pointer" title="Close" x-on:click.prevent="show = false; dispatched = 0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="fill-current" width="18" height="18">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    <?php endif; ?>
+
+    <form class="space-y-2 address-form" id="ahyVerificationStepForm">
+        <input type="hidden" data-validate-hidden required aria-invalid="true" name="isAgeVerified" value="<?= $magewire->getIsAgeVerified(); ?>" />
+        <input type="hidden" data-validate-hidden required aria-invalid="true" name="isFflSelected" value="<?= $magewire->hasSelectedFflCentreAddressHtml(); ?>" />
+        <input type="hidden" data-validate-hidden required aria-invalid="true" name="fflCentreName" value="<?= $magewire->getSelectedFflCentreName(); ?>" />
+        <input type="hidden" data-validate-hidden required aria-invalid="true" name="fflCentreAddress" value="<?= $magewire->getSelectedFflCentreAddressHtml(); ?>" />
+        <div class="error-msg-verify  text-ahy-blue " style="display:none">Verification Step Failed!</div>
+    </form>    
+    
+    <strong class="text-2xl text-ahy-blue font-bold mb-3">Age and Compliance Verification </strong>
+    <p class="pb-4 pt-2 text-ahy-blue ">Your order contains items that require you to be 18 years of age to purchase.</p>
+
+    <div class="flex flex-col md:flex-row items-baseline gap-2 md:items-center">
+        <div class="mr-2 flex flex-col">
+            <label for="year" class="mr-2 mb-2 font-bold text-ahy-blue ">Year:</label>
+            <select wire:model="selectedYear" id="year" wire:change="calculateAge" class="w-36 h-12 px-4 py-1 border border-gray-300 rounded">
+                <option value="">Select Year</option>
+                <?php
+                    $currentYear = (int)date('Y');
+                    $startYear = $currentYear - 100;
+                    $endYear = $currentYear - 15;
+                    echo $currentYear;
+                ?>
+                <?php for ($year = $endYear; $year >= $startYear; $year--): ?>
+                    <option value="<?= $year ?>"><?= $year ?></option>
+                <?php endfor; ?>
+            </select>
+        </div>
+
+        <div class="mr-2 flex flex-col">
+            <label for="month" class="mr-2 mb-2 font-bold text-ahy-blue ">Month:</label>
+            <select wire:model="selectedMonth" id="month" wire:change="calculateAge" class="w-40 h-12 px-4 py-1 border border-gray-300 rounded">
+                <option value="">Select Month</option>
+                <?php for ($i = 1; $i <= 12; $i++): ?>
+                    <option value="<?= $i ?>"><?= date('F', mktime(0, 0, 0, $i, 1)) ?></option>
+                <?php endfor; ?>
+            </select>
+        </div>
+
+        <div class="mr-2 flex flex-col">
+            <label for="day" class="mr-2 mb-2 font-bold text-ahy-blue ">Day:</label>
+            <select wire:model="selectedDay" id="day" wire:change="calculateAge" class="w-36 h-12 px-4 py-1 border border-gray-300 rounded">
+                <option value="">Select Day</option>
+                <?php if ($magewire->getSelectedMonth() && $magewire->getSelectedYear()): ?>
+                    <?php
+                        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $magewire->getSelectedMonth(), $magewire->getSelectedYear());
+                    ?>
+                    <?php for ($i = 1; $i <= $daysInMonth; $i++): ?>
+                        <option value="<?= $i ?>"><?= $i ?></option>
+                    <?php endfor; ?>
+                <?php endif; ?>
+            </select>
+        </div>
+    </div>
+
+    <?php if ($magewire->getAge() !== null && $magewire->getAge() >= 18): ?>
+        
+        <div class="mt-4" 
+            x-data="{
+                agreeComplianceValue: false,
+                asPurchaserValue: false,
+                fireArmsWarrantyValue: false, 
+                fireArmsReturnPolicyValue: false,
+                agreementCompliances: function (event) {
+                    var inputId = (event.currentTarget.querySelector('input').id); // Output the ID of the input element that triggered the event
+                    var inputEl = document.getElementById(inputId);
+                    var inputName = inputEl.getAttribute('name'); // Get the name attribute of the input element
+                    var inputXmodelName = inputEl.getAttribute('x-model'); // Get the x-model name attribute of the input element
+
+                    // Update the corresponding data property based on the input name
+                    this[inputXmodelName] = !inputEl.checked;
+
+                    // Emit the corresponding event based on the input name
+                    switch (inputName) {
+                    case 'agree-compliance':
+                        Magewire.emit('updateAgreeCompliance', this[inputXmodelName]);
+                        break;
+                    case 'as-purchaser':
+                        Magewire.emit('updateAsPurchaser', this[inputXmodelName]);
+                        break;
+                    case 'fire-arms-warranty':
+                        Magewire.emit('updateFireArmsWarranty', this[inputXmodelName]);
+                        break;
+                    case 'fire-arms-return-policy':
+                        Magewire.emit('updateFireArmsReturnPolicy', this[inputXmodelName]);
+                        break;
+                    default:
+                        break;
+                    }
+                }
+            }"
+        >
+            <div class="terms-condition">
+                <h2 class="pt-6 font-bold text-ahy-blue ">By proceeding with the order of restricted items, you confirm and verify that:</h2>
+                <ul class="p-6 font-semibold text-ahy-red">
+                    <li class="list-disc pb-4">You are of age to purchase.</li>
+                    <li class="list-disc pb-4">You have no felony convictions.</li>
+                    <li class="list-disc pb-4">You are in full compliance with Federal law 18 U.S.C. 922(D)-(1)-(9), as well as all applicable Federal and State regulations.</li>
+                    <?php if($magewire->getCheckoutStepCount() == 4): ?>
+                        <li class="list-disc pb-4">You are not prohibited by local, state, or federal laws from legally purchasing or possessing any firearms.</li>
+                    <?php endif; ?>
+                </ul>
+                <?php if (!$magewire->getAsPurchaser() || !$magewire->getFireArmsWarranty() || !$magewire->getFireArmsReturnPolicy() || !$magewire->getAgreeCompliance()): ?>
+                    <div class="component-messenger message pl-6 mb-4 relative warning"
+                        x-data="{
+                            component: null,
+                            show: false,
+                            message: {
+                                type: 'error',
+                                text: 'Something\u0020went\u0020wrong.'
+                            },
+                            dispatched: 0
+                        }"
+                        @age:validation:error.window="
+                            component = null
+                            show = true
+                            message = Object.assign(message, $event.detail.message)
+                            if ($event.detail.component) {
+                                component = $event.detail.component.id || null
+                            }
+                            dispatched++
+                            Magewire.hook('message.received', (message, component) => {
+                                if (component.id === $event.detail.component.id) {
+                                    show = false
+                                    dispatched = 0
+                                }
+                            })
+                        "
+                        x-on:age:validation:success.window="show = false"
+                        x-bind:class="message.type"
+                        x-bind:data-testid="component ? `${component}-message` : ''"
+                        x-show="show" x-transition:enter="transition ease-in duration-300"
+                        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                        x-transition:leave="transition ease-out duration-300" x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0" data-testid="checkout.ffl.verification-message" style=""
+                    >
+                        <span x-text="message.text"></span>
+                        <div class="absolute -left-1.5 -top-1.5" x-show="dispatched >= 2 &amp;&amp; message.type !== 'success'" x-transition.opacity="" x-transition:enter.scale.0.duration.600ms="" x-transition:leave.scale.0.duration.300ms="" style="display: none;">
+                            <span class="flex h-4 w-4">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-white shadow-xl"></span>
+                            </span>
+                        </div>
+                        <button class="close cursor-pointer" title="Close" x-on:click.prevent="show = false; dispatched = 0">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="fill-current" width="18" height="18">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                <?php endif; ?>
+                <div class="compliance flex p-6 bg-white items-start hover:bg-[#fafafa] cursor-pointer" @click="agreementCompliances(event)" >
+                    <input 
+                        type="checkbox" 
+                        name="agree-compliance" 
+                        id="agree-compliance" 
+                        class="mt-1" 
+                        x-model="agreeComplianceValue"
+                        wire:model="agreeCompliance"
+                        required
+                    >
+                    <p class="agree-compliance-content ml-4 text-ahy-blue ">
+                        I agree that I am in compliance *
+                    </p>
+                </div>
+            </div>
+            <?php if($magewire->getCheckoutStepCount() == 4): ?>
+                <div class="fire-arms-purchase-agreement flex flex-col gap-2">
+                    <h2 class="py-6 font-bold text-ahy-blue ">
+                        Fire arms purchase agreement *
+                    </h2>
+                    <div class="flex p-6 bg-white items-start hover:bg-[#fafafa] cursor-pointer" @click="agreementCompliances(event)">
+                        <input 
+                            type="checkbox" 
+                            name="as-purchaser" 
+                            id="as-purchaser" 
+                            class="mt-1" 
+                            wire:model="asPurchaser"
+                            x-model="asPurchaserValue"
+                            required
+                        >
+                        <p class=" ml-4 text-ahy-blue ">I, as the purchaser, am designated as the bill-to customer and am responsible for personally picking up the firearm from the FFL selected at checkout. *</p>
+                    </div>
+                    <div class="flex p-6 bg-white items-start hover:bg-[#fafafa] cursor-pointer" @click="agreementCompliances(event)">
+                        <input 
+                            type="checkbox" 
+                            name="fire-arms-warranty" 
+                            id="fire-arms-warranty" 
+                            class="mt-1"
+                            wire:model="fireArmsWarranty" 
+                            x-model="fireArmsWarrantyValue"
+                            required
+                        >
+                        <p class=" text-ahy-blue  ml-4">I acknowledge that once the transfer of the firearm is finalized, the manufacturer's warranty becomes active. Any issues or complications with the firearm will be the responsibility of the manufacturer, and I will need to contact them for assistance.*</p>
+                    </div>
+                    <div class="flex p-6 bg-white items-start hover:bg-[#fafafa] cursor-pointer" @click="agreementCompliances(event)">
+                        <input 
+                            type="checkbox" 
+                            name="fire-arms-return-policy" 
+                            id="fire-arms-return-policy" 
+                            class="mt-1" 
+                            wire:model="fireArmsReturnPolicy" 
+                            x-model="fireArmsReturnPolicyValue"
+                            required
+                        >
+                        <p class=" text-ahy-blue  ml-4">Please note that a 15% fee, collected by the seller, will be charged for any cancelled or returned firearm. However, once the firearm has been transferred through your chosen FFL dealer, returns will no longer be accepted.</p>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+    <?php elseif ($magewire->getAge() !== null && $magewire->getAge() < 18): ?>
+        <div class="mt-4 text-ahy-blue ">
+            You are <?= $magewire->getAge() ?> year old and you are not allowed to buy this product. Kindly remove restricted items from cart and come back again.
+        </div>
+    <?php endif; ?>
+
+</div>
+

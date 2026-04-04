@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+  Webkul Software.
+ 
+  @category  Webkul
+  @package   Webkul_SellerSubAccount
+  @author    Webkul
+  @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+  @license   https://store.webkul.com/license.html
+  -->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+<!-- Create table 'marketplace_sub_accounts'' -->
+    <table name="marketplace_sub_accounts" resource="default" engine="innodb" comment="Seller Sub Accounts Table">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" comment="Customer Id"/>
+        <column xsi:type="text" name="permission_type" nullable="true"  comment="Account Permission Type"/>
+        <column xsi:type="int" name="status" padding="10" unsigned="true" nullable="false" comment="status"/>
+        <column xsi:type="int" name="seller_id" padding="10" unsigned="true" nullable="false" comment="Seller ID"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Creation Time"/>       
+        <column xsi:type="timestamp" name="updated_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Update Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="MARKETPLACE_SUB_ACCOUNTS_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID" table="marketplace_sub_accounts" column="customer_id" referenceTable="customer_entity" referenceColumn="entity_id"/>
+         <index referenceId="marketplace_sub_accounts" indexType="btree">
+            <column name="seller_id"/>
+        </index>
+        <constraint xsi:type="foreign" referenceId="MARKETPLACE_SUB_ACCOUNTS_SELLER_ID_CUSTOMER_ENTITY_ENTITY_ID" table="marketplace_sub_accounts" column="seller_id" referenceTable="customer_entity" referenceColumn="entity_id"/>
+    </table>
+
+    <table name="marketplace_userdata" resource="default" engine="innodb">
+        <column xsi:type="text" name="sub_account_permission" nullable="false" comment="Permissions to Sub Seller Account"/>
+    </table>
+  </schema>

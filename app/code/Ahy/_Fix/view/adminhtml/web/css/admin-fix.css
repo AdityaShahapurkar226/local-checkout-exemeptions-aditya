@@ -1,0 +1,19 @@
+/* =====================================================
+   FIX: Frontend CSS leaking into Magento Admin
+   ===================================================== */
+
+body.adminhtml .page-wrapper,
+body.adminhtml .page-main,
+body.adminhtml .page-columns,
+body.adminhtml .admin__content {
+    max-width: none !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Ensure admin grids always stretch full width */
+body.adminhtml .admin__data-grid-wrap {
+    width: 100% !important;
+    max-width: none !important;
+}

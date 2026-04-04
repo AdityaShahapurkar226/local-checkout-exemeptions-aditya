@@ -1,0 +1,664 @@
+<?php
+
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Ahy\Authorizenet\ViewModel\CustomerAddressHelper|null $addressHelper */
+
+use Magento\Customer\Block\Address\Edit;
+use Magento\Customer\ViewModel\Address as AddressViewModel;
+
+// Ensure escaper exists
+$escaper        = $escaper ?? new \Magento\Framework\Escaper();
+$addressHelper  = $block->getData('address_helper');
+$hasAddress     = $addressHelper ? (bool) $addressHelper->hasBillingAddress() : false;
+$addresses      = $addressHelper ? (array) $addressHelper->getCustomerAddresses() : [];
+$formKey        = (string) $block->getFormKey();
+
+/**
+ * Formats an address into a single line.
+ *
+ * @param \Magento\Customer\Api\Data\AddressInterface $address
+ * @return string
+ */
+function formatAddressLine(\Magento\Customer\Api\Data\AddressInterface $address): string
+{
+    $regionName = $address->getRegion() ? (string) $address->getRegion()->getRegion() : '';
+    $parts = [
+        (string) $address->getFirstname(),
+        (string) $address->getLastname(),
+        implode(', ', array_filter((array) $address->getStreet())),
+        (string) $address->getCity(),
+        $regionName,
+        (string) $address->getPostcode(),
+        (string) $address->getCountryId(),
+    ];
+    return implode(', ', array_values(array_filter($parts, static fn($p) => $p !== '')));
+}
+
+?>
+
+<div x-data="initCustomerAddressEdit(<?= $hasAddress ? 'true' : 'false' ?>)" class="space-y-6">
+    <!-- Address Modal -->
+    <div x-show="showAddressModal">
+        <?php if (!$hasAddress): ?>
+            <?php
+            /** @var Edit $addressBlock */
+            $addressBlock = $block->getLayout()->createBlock(Edit::class);
+            $addressBlock->setAddressId(null);
+            $addressBlock->getAddress();
+
+            /** @var AddressViewModel $addressViewModel */
+            $addressViewModel   = $addressBlock->getViewModel();
+            $directoryViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Directory::class);
+
+            $streetAttr         = $addressBlock->getAttributeData('street');
+            $regionAttr         = $addressBlock->getAttributeData('region');
+            $streetLabel        = $streetAttr ? (string) $streetAttr->getFrontendLabel() : '';
+            $regionLabel        = $regionAttr ? (string) $regionAttr->getFrontendLabel() : '';
+            $showOptionalRegions = (bool) $addressBlock->getConfig('general/region/display_all');
+            ?>
+            <div class="text-sm font-normal block text-red-600 italic px-4 py-3">
+                <?= $escaper->escapeHtml(__('You do not have any saved address. Please add an address first to proceed with adding a card.')) ?>
+            </div>
+            <div class="address-form-wrapper">
+
+
+                <form
+                    class="form-address-edit p-6 rounded pt-0 pb-0"
+                    @private-content-loaded.window="onPrivateContentLoaded($event.detail?.data || {})"
+                    @submit.prevent="submitAddressForm"
+                    action="<?= $escaper->escapeUrl($addressBlock->getSaveUrl()) ?>"
+                    method="post"
+                    id="form-validate"
+                    data-hasrequired="<?= $escaper->escapeHtmlAttr(__('* Required Fields')) ?>">
+                    <?= $addressBlock->getBlockHtml('formkey') ?>
+                    <input type="hidden" name="success_url" value="<?= $escaper->escapeUrl($addressBlock->getSuccessUrl()) ?>">
+                    <input type="hidden" name="error_url" value="<?= $escaper->escapeUrl($addressBlock->getErrorUrl()) ?>">
+
+                    <!-- First & Last Name -->
+                    <div class="md:grid grid-cols-2 gap-4">
+                        <?= $addressBlock->getNameBlockHtml() ?>
+                    </div>
+
+                    <!-- Street -->
+                    <div class="mt-4">
+                        <label for="street_1" class="font-bold"><?= $escaper->escapeHtml($streetLabel) ?> Street Address</label>
+                        <input
+                            type="text"
+                            name="street[]"
+                            required
+                            value="<?= $escaper->escapeHtmlAttr($addressBlock->getStreetLine(1)) ?>"
+                            id="street_1"
+                            class="form-input w-full focus:ring-transparent !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue required-entry" />
+                    </div>
+
+                    <!-- City -->
+                    <div class="mt-4">
+                        <label for="city" class="font-bold">
+                            City <?= $escaper->escapeHtml($addressBlock->getAttributeData('city')?->getFrontendLabel() ?? '') ?>
+                        </label>
+                        <input
+                            type="text"
+                            name="city"
+                            required
+                            value="<?= $escaper->escapeHtmlAttr($addressBlock->getAddress()->getCity()) ?>"
+                            id="city"
+                            class="form-input w-full focus:ring-transparent !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue required-entry" />
+                    </div>
+
+                    <!-- Region + Zip -->
+                    <div class="flex flex-col lg:flex-row gap-4 mt-4">
+                        <div class="w-full">
+                            <label for="region_id" class="font-bold">
+                                <?= $escaper->escapeHtml($regionLabel) ?> State/Province
+                            </label>
+                            <select
+                                id="region_id"
+                                name="region_id"
+                                class="form-select w-full focus:ring-transparent !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue required-entry"
+                                x-ref="region_id"
+                                x-model="selectedRegion"
+                                @change="$refs.region.value = availableRegions[selectedRegion]?.name || ''"
+                                required>
+                                <option value=""><?= $escaper->escapeHtml(__('Please select a region, state or province.')) ?></option>
+                            </select>
+                            <input
+                                type="hidden"
+                                id="region"
+                                name="region"
+                                x-ref="region"
+                                value="<?= $escaper->escapeHtmlAttr($addressBlock->getRegion()) ?>" />
+                        </div>
+
+                        <div class="w-full">
+                            <label for="zip" class="font-bold">
+                                Zip <?= $escaper->escapeHtml($addressBlock->getAttributeData('postcode')?->getFrontendLabel() ?? '') ?>
+                            </label>
+                            <input
+                                type="text"
+                                name="postcode"
+                                value="<?= $escaper->escapeHtmlAttr($addressBlock->getAddress()->getPostcode()) ?>"
+                                id="zip"
+                                required
+                                class="form-input w-full focus:ring-transparent !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue required-entry">
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="country_id" value="US" />
+
+                    <!-- Phone -->
+                    <div class="mt-4">
+                        <label for="telephone" class="font-bold">
+                            Phone Number <?= $escaper->escapeHtml($addressBlock->getAttributeData('telephone')?->getFrontendLabel() ?? '') ?>
+                        </label>
+                        <input
+                            type="text"
+                            name="telephone"
+                            value="<?= $escaper->escapeHtmlAttr($addressBlock->getAddress()->getTelephone()) ?>"
+                            id="telephone"
+                            required
+                            class="form-input w-full focus:ring-transparent !text-ahy-blue h-16 !border border-ahy-gray focus:border-ahy-blue required-entry">
+                    </div>
+
+                    <input type="hidden" name="default_billing" value="1" />
+                    <input type="hidden" name="default_shipping" value="1" />
+
+                    <div class="flex justify-start mt-6">
+                        <button
+                            type="submit"
+                            class="bg-transparent cursor-pointer px-6 py-2 rounded-full transition-colors border-2 border-ahy-blue text-ahy-blue font-medium hover:shadow-[#0d2f47_0px_0px_0px_1px_inset]">
+                            <?= $escaper->escapeHtml(__('Save')) ?>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Card Modal -->
+    <div
+        x-show="showCardModal"
+        x-data="{
+            cardNumber: '',
+            cardType: 'Unknown',
+            expireMonth: '',
+            expireYear: '',
+            expiryError: '',
+            isSubmitting: false,
+            today: new Date(),
+            detectCardType(cardNumber) {
+                const patterns = {
+                        Visa: /^4/,
+                        Mastercard: /^5[1-5]/,
+                        'American Express': /^3[47]/,
+                        Discover: /^6(?:011|5[0-9]{2})/,
+                        JCB: /^(?:2131|1800|35\\d{3})/,
+                        'Diners Club/ Carte Blanche': /^3(?:0[0-5]|[68])/,
+                    };
+                for (const [type, regex] of Object.entries(patterns)) {
+                        if (regex.test(cardNumber)) return type;
+                }
+                return 'Unknown';
+            },
+            getCardImage() {
+                const map = {
+                    'Visa': '/media/icons/visa.svg',
+                    'Mastercard': '/media/icons/mastercard.svg',
+                    'American Express': '/media/icons/amex.svg',
+                    'Discover': '/media/icons/discover.svg',
+                    'JCB': '/media/icons/jcb.svg',
+                    'Diners Club/ Carte Blanche': '/media/icons/diners.svg',
+                    'Unknown': '/media/icons/unknown-code.svg',
+                };
+                return map[this.cardType] || map['Unknown'];
+            },
+            checkCardType() {
+                this.cardType = this.detectCardType(this.cardNumber);
+            },
+            validateExpiry() {
+                this.expiryError = '';
+                if (!this.expireMonth || !this.expireYear) return;
+                const exp = new Date(Number(this.expireYear), Number(this.expireMonth), 0); // last day of month
+                if (isNaN(exp.getTime()) || exp < new Date(this.today.getFullYear(), this.today.getMonth(), 1)) {
+                    this.expiryError = 'Card expiry date must be in the future.';
+                }
+            },
+          
+        }"
+        class="w-full">
+        <form
+            method="POST"
+            @submit.prevent="isSubmitting = true; onSubmitForm($event)"
+            action="<?= $escaper->escapeUrl($block->getUrl('customer/account/createSavedCard')) ?>"
+            class="flex flex-wrap gap-3 w-full px-0 sm:px-4 py-5 max-height-media">
+            <input type="hidden" name="form_key" value="<?= $escaper->escapeHtmlAttr($formKey) ?>" />
+
+            <!-- Billing Address Dropdown -->
+            <label class="w-full flex flex-col">
+                <span class="font-bold mb-3 text-ahy-blue">Select Billing Address</span>
+                <select
+                    id="billing-address-select"
+                    name="billing_address_id"
+                    x-ref="billingSelect"
+                    @change="
+                        if ($refs.billingSelect.value === '__add__') {
+                            window.location.href = '<?= $block->getUrl("customer/address/new") ?>';
+                        }
+                    "
+                    class="!rounded-md peer pl-4 pr-2 py-2 placeholder-gray-300 focus:ring-transparent !text-ahy-blue !h-16 !border border-ahy-gray focus:border-ahy-blue"
+                    required>
+                    <option value="" disabled selected><?= $escaper->escapeHtml(__('-- Select an address --')) ?></option>
+                    <?php foreach ($addresses as $address): ?>
+                        <option value="<?= (int) $address->getId() ?>">
+                            <?= $escaper->escapeHtml(formatAddressLine($address)) ?>
+                        </option>
+                    <?php endforeach; ?>
+                    <option value="__add__">
+                        <?= $escaper->escapeHtml(__('Add New Address')) ?>
+                    </option>
+                </select>
+            </label>
+
+            <!-- Card Number -->
+            <label class="relative w-full flex flex-col">
+                <span class="font-bold mb-3 text-ahy-blue">Card Number</span>
+                <input
+                    type="text"
+                    maxlength="19"
+                    name="card_number"
+                    x-model="cardNumber"
+                    @input="cardNumber = $event.target.value.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ').trim(); checkCardType()"
+                    oninput="this.value = this.value.replace(/[^0-9\\s]/g, '')"
+                    class="rounded-md pl-14 md:pl-16 pr-2 py-2 border-2 placeholder-gray-300 focus:ring-transparent !text-ahy-blue !h-16 !border border-ahy-gray focus:border-ahy-blue"
+                    placeholder="xxxx xxxx xxxx xxxx"
+                    required />
+                <img :src="getCardImage()" alt="Card Type" class="absolute bottom-0 left-0 -mb-0.5 transform translate-x-1/3 -translate-y-full w-8" />
+            </label>
+
+            <!-- Expiration Fields -->
+            <div class="expire-date flex flex-col w-full md:w-1/2">
+                <div class="font-bold mb-3 text-ahy-blue">Expire Date</div>
+                <div class="flex items-center gap-2">
+                    <label class="relative flex m-0 flex-col w-1/2">
+                        <select
+                            name="expiration_month"
+                            x-model="expireMonth"
+                            @change="validateExpiry()"
+                            class="!rounded-md peer pl-4 pr-2 py-2 placeholder-gray-300 focus:ring-transparent !text-ahy-blue !h-16 !border border-ahy-gray focus:border-ahy-blue"
+                            required>
+                            <option disabled value="">Month</option>
+                            <?php for ($i = 1; $i <= 12; $i++): ?>
+                                <option value="<?= str_pad((string) $i, 2, '0', STR_PAD_LEFT) ?>">
+                                    <?= str_pad((string) $i, 2, '0', STR_PAD_LEFT) ?>
+                                </option>
+                            <?php endfor; ?>
+                        </select>
+                    </label>
+
+                    <label class="relative flex m-0 flex-col w-1/2">
+                        <select
+                            name="expiration_year"
+                            x-model="expireYear"
+                            @change="validateExpiry()"
+                            class="!rounded-md peer pl-4 pr-2 py-2 placeholder-gray-300 focus:ring-transparent !text-ahy-blue !h-16 !border border-ahy-gray focus:border-ahy-blue"
+                            required>
+                            <option disabled value="">Year</option>
+                            <?php $currentYear = (int) date('Y'); ?>
+                            <?php for ($y = $currentYear; $y <= $currentYear + 20; $y++): ?>
+                                <option value="<?= (int) $y ?>"><?= (int) $y ?></option>
+                            <?php endfor; ?>
+                        </select>
+                    </label>
+                </div>
+                <template x-if="expiryError">
+                    <p class="text-red-600 text-sm mt-2 min-w-[270px]" x-text="expiryError"></p>
+                </template>
+            </div>
+
+            <!-- CVV -->
+            <label class="relative flex-1 flex flex-col">
+                <span class="font-bold flex text-ahy-blue items-center gap-3 mb-3">CVV</span>
+                <input
+                    type="password"
+                    maxlength="4"
+                    name="cvv"
+                    placeholder="•••"
+                    oninput="this.value = this.value.replace(/[^0-9\\s]/g, '')"
+                    class="!rounded-md peer w-full !pl-12 !pr-2 !py-2 border-2 placeholder-gray-300 focus:ring-transparent !text-ahy-blue !h-16 !border border-ahy-gray focus:border-ahy-blue"
+                    required />
+            </label>
+
+            <!-- Submit -->
+            <div class="w-full">
+                <button type="submit" class="bg-transparent cursor-pointer px-6 py-2 rounded-full transition-colors border-2 border-ahy-blue text-ahy-blue font-medium hover:shadow-[#0d2f47_0px_0px_0px_1px_inset]">
+                    <?= $escaper->escapeHtml(__('Save Card')) ?>
+                </button>
+            </div>
+            <div
+                x-show="isSubmitting"
+                class="absolute inset-0 flex items-center justify-center bg-white/70 backdrop-blur-sm z-20"
+                style="display: none;">
+                <svg class="animate-spin h-10 w-10 text-ahy-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
+            </div>
+        </form>
+    </div>
+    <!-- Toast Notification Top Center -->
+    <div
+        x-show="showToastMessage"
+        x-transition
+        class="fixed top-5 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded shadow-lg z-50"
+        x-text="toastMessage">
+    </div>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script>
+    function initCustomerAddressEdit(hasAddress = false) {
+        return {
+            // UI state
+            showAddressModal: !hasAddress,
+            showCardModal: hasAddress,
+            toastMessage: '',
+            showToastMessage: false,
+            directoryData: {},
+            availableRegions: {},
+            selectedRegion: '',
+            isZipRequired: true,
+            isRegionRequired: true,
+
+            // Lifecycle
+            init() {
+                this.observeAddCardButton();
+                this.loadUSRegions();
+
+                // If card modal is shown on init, load billing addresses
+                if (this.showCardModal) {
+                    setTimeout(() => this.loadBillingAddresses(), 300);
+                }
+            },
+
+            // Attach click behavior to the Add Card button
+            observeAddCardButton() {
+                const attachListener = () => {
+                    const addCardBtn = document.querySelector('#add-new-card-btn');
+                    if (!addCardBtn) return;
+
+                    if (addCardBtn.dataset.addrListenerAttached === '1') return;
+
+                    addCardBtn.addEventListener('click', () => {
+                        const billingSelect = document.querySelector('#billing-address-select');
+                        const hasAddresses = !!(billingSelect && billingSelect.querySelectorAll('option').length > 1);
+
+                        if (hasAddresses) {
+                            this.showAddressModal = false;
+                            this.showCardModal = true;
+                            setTimeout(() => this.loadBillingAddresses(), 300);
+                        } else {
+                            this.showCardModal = false;
+                            this.showAddressModal = true;
+                        }
+                    }, {
+                        passive: true
+                    });
+
+                    addCardBtn.dataset.addrListenerAttached = '1';
+                };
+
+                attachListener();
+
+                const observer = new MutationObserver(() => attachListener());
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            },
+
+            // Load US regions without country select
+            loadUSRegions() {
+                fetch('/rest/V1/directory/countries/US')
+                    .then(res => res.json())
+                    .then(data => {
+                        this.availableRegions = data.available_regions || [];
+                        const regionSelect = this.$refs.region_id;
+                        if (regionSelect) {
+                            regionSelect.innerHTML = '';
+                            const placeholder = document.createElement('option');
+                            placeholder.value = '';
+                            placeholder.textContent = '<?= $escaper->escapeJs(__('Please select a state.')) ?>';
+                            regionSelect.appendChild(placeholder);
+
+                            this.availableRegions.forEach((r) => {
+                                const opt = document.createElement('option');
+                                opt.value = String(r.id ?? r.code ?? r.name ?? '');
+                                opt.textContent = String(r.name ?? '');
+                                regionSelect.appendChild(opt);
+                            });
+                        }
+                    })
+                    .catch(err => console.error('Error loading US regions', err));
+            },
+
+            // Populate billing addresses in the card modal
+            loadBillingAddresses() {
+                const waitForBillingSelect = (cb) => {
+                    const maxWaitMs = 4000;
+                    const start = Date.now();
+                    const tick = () => {
+                        const sel = document.querySelector('#billing-address-select');
+                        if (sel) return cb(sel);
+                        if (Date.now() - start > maxWaitMs) return;
+                        setTimeout(tick, 150);
+                    };
+                    tick();
+                };
+
+                fetch('/rest/V1/customers/me', {
+                        method: 'GET',
+                        credentials: 'same-origin',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then((res) => {
+                        if (!res.ok) throw new Error('Failed to load customer data');
+                        return res.json();
+                    })
+                    .then((data) => {
+                        waitForBillingSelect((billingSelect) => {
+                            const addrs = Array.isArray(data?.addresses) ? data.addresses : [];
+                            const defaultOption = document.createElement('option');
+                            defaultOption.value = '';
+                            defaultOption.disabled = true;
+                            defaultOption.selected = true;
+                            defaultOption.textContent = '<?= $escaper->escapeJs(__('-- Select an address --')) ?>';
+
+                            const frag = document.createDocumentFragment();
+                            frag.appendChild(defaultOption);
+
+                            addrs.forEach((addr) => {
+                                const opt = document.createElement('option');
+                                opt.value = String(addr.id ?? '');
+                                const line = [
+                                    addr.firstname,
+                                    addr.lastname,
+                                    Array.isArray(addr.street) ? addr.street.join(', ') : addr.street,
+                                    addr.city,
+                                    addr?.region?.region,
+                                    addr.postcode,
+                                    addr.country_id
+                                ].filter(Boolean).join(', ');
+                                opt.textContent = line;
+                                frag.appendChild(opt);
+                            });
+
+                            billingSelect.innerHTML = '';
+                            billingSelect.appendChild(frag);
+                            const addNewOpt = document.createElement('option');
+                            addNewOpt.value = '__add__';
+                            addNewOpt.textContent = '<?= $escaper->escapeJs(__('Add New Address')) ?>';
+                            billingSelect.appendChild(addNewOpt);
+                            // const defaultBilling = addrs.find((a) => a.default_billing || a.defaultBilling);
+                            // if (defaultBilling) billingSelect.value = String(defaultBilling.id);
+                        });
+                    })
+                    .catch((err) => {
+                        console.error('Error fetching customer data:', err);
+                    });
+            },
+
+            submitAddressForm() {
+                const form = document.getElementById('form-validate');
+                if (!form) return;
+
+                const formData = new FormData(form);
+
+                fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'same-origin'
+                    })
+                    .then((res) => res.text())
+                    .then((html) => {
+                        const isSuccess =
+                            html.includes('message-success') ||
+                            (!html.includes('form-address-edit') && !html.includes('validation-failed'));
+
+                        if (isSuccess) {
+                            this.showToast('Address saved successfully');
+                            this.showAddressModal = false;
+                            this.showCardModal = true;
+                            setTimeout(() => this.loadBillingAddresses(), 300);
+                            return;
+                        }
+
+                        // If not successful, try to extract validation errors from the returned HTML
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const errors = doc.querySelectorAll('.mage-error');
+
+                        // Clear old errors
+                        form.querySelectorAll('.mage-error').forEach(e => e.remove());
+
+                        // Append new errors to matching fields
+                        errors.forEach(err => {
+                            const fieldId = err.getAttribute('for');
+                            if (fieldId) {
+                                const field = form.querySelector(`#${fieldId}`);
+                                if (field && field.parentNode) {
+                                    field.parentNode.appendChild(err);
+                                }
+                            }
+                        });
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        alert('Something went wrong');
+                    });
+            },
+            showToast(message) {
+                this.toastMessage = message;
+                this.showToastMessage = true;
+                setTimeout(() => this.showToastMessage = false, 3000); // hide after 3s
+            }
+
+        };
+    }
+
+    function encryptPanWithPhpCompatibleAes(pan, secretKeyString) {
+        const shaHex = CryptoJS.SHA256(secretKeyString).toString(CryptoJS.enc.Hex);
+        const phpStyleKeyAscii = shaHex.substring(0, 32);
+        const keyWA = CryptoJS.enc.Utf8.parse(phpStyleKeyAscii);
+        const iv = CryptoJS.lib.WordArray.random(16);
+        const encrypted = CryptoJS.AES.encrypt(
+            CryptoJS.enc.Utf8.parse(pan),
+            keyWA, {
+                iv: iv,
+                mode: CryptoJS.mode.CBC,
+                padding: CryptoJS.pad.Pkcs7
+            }
+        );
+
+        const combined = iv.clone().concat(encrypted.ciphertext);
+        return CryptoJS.enc.Base64.stringify(combined);
+    }
+
+    function onSubmitForm(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        if (!form) return;
+        // Get Alpine scope from the nearest x-data wrapper
+        const alpine = Alpine.$data(form.closest('[x-data]'));
+        alpine.isSubmitting = true; // show blur + loader
+        const cardInput = form.querySelector('[name="card_number"]');
+        const cvvInput = form.querySelector('[name="cvv"]');
+        const cardExpirationMonthInput = form.querySelector('[name="expiration_month"]');
+        const cardExpirationYearInput = form.querySelector('[name="expiration_year"]');
+
+        if (!cardInput || !cvvInput) {
+            alert('Card number or CVV input not found');
+            return;
+        }
+
+        const panRaw = (cardInput.value || '').replace(/\s+/g, '');
+        const cvvRaw = (cvvInput.value || '').trim();
+
+        if (!panRaw || !cvvRaw) {
+            alert('Please fill all required credit card fields.');
+            alpine.isSubmitting = false;
+            return;
+        }
+
+        try {
+            const SECRET_KEY = 'my_static_secret_key';
+            const encCard = encryptPanWithPhpCompatibleAes(panRaw, SECRET_KEY);
+            cardInput.value = encCard;
+
+            const encCvv = encryptPanWithPhpCompatibleAes(cvvRaw, SECRET_KEY);
+            cvvInput.value = encCvv;
+            const encExpirationMonth = encryptPanWithPhpCompatibleAes(cardExpirationMonthInput.value, SECRET_KEY);
+            const option = document.createElement("option");
+            option.text = encExpirationMonth;
+            option.value = encExpirationMonth;
+            cardExpirationMonthInput.appendChild(option);
+            cardExpirationMonthInput.value = encExpirationMonth;
+
+            const encExpirationYear = encryptPanWithPhpCompatibleAes(cardExpirationYearInput.value, SECRET_KEY);
+            const optionYear = document.createElement("option");
+            optionYear.text = encExpirationYear;
+            optionYear.value = encExpirationYear;
+            cardExpirationYearInput.appendChild(optionYear);
+            cardExpirationYearInput.value = encExpirationYear;
+
+
+            console.log('Encrypted Expiration Month:', encExpirationMonth);
+            console.log('Encrypted Expiration Year:', encExpirationYear);
+
+            // Submit form
+            form.submit();
+        } catch (err) {
+            console.error('Encryption failed', err);
+            alert('Something went wrong while encrypting your card details. Please try again.');
+            alpine.isSubmitting = false;
+        }
+    }
+</script>
+
+<style>
+    @media (max-width:768px) {
+
+        .address-form-wrapper {
+            overflow-y: auto;
+
+        }
+
+        .max-height-modal {
+            max-height: 80vh;
+        }
+    }
+</style>

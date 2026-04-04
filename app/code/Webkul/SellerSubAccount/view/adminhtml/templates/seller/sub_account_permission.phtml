@@ -1,0 +1,38 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_SellerSubAccount
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$allPermission = $block->getAllPermissionsObject();
+$sellerModel = $block->getSellerSubAccountPermissionList();
+?>
+ <h3><?=$block->escapeHtml(__("Sub Account Permissions")); ?></h3>
+<div style="margin-top:50px;">
+    <label class="control-label" colspan="top" style="margin-left:6%; margin-right:10px;">
+    <?=$block->escapeHtml(__("Select sub seller account permissions list")); ?>
+    </label>
+    <select style="padding:5px; width:40%;" name="subaccountpermission[]"
+    multiple="multiple" size="10" data-form-part="customer_form">
+        <?php foreach ($allPermission as $keys => $values): ?>
+            <option style="padding:5px;" value="<?=$block->escapeHtmlAttr(($keys)); ?>"
+            <?php foreach ($sellerModel as $key => $value):
+                if ($value == $keys):
+                    echo ("selected");
+                    endif;
+                endforeach;
+            ?>
+            ><?=$block->escapeHtml(__($values->getText())); ?></option>
+        <?php endforeach; ?>
+    </select>
+    <br>
+</div>
+<style>
+.control-label { 
+    vertical-align: top; 
+}
+</style>

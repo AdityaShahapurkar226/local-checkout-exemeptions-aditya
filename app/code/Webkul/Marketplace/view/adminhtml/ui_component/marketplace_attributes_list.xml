@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Ui/etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">marketplace_attributes_list.marketplace_attributes_list_data_source</item>
+            <item name="deps" xsi:type="string">marketplace_attributes_list.marketplace_attributes_list_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">marketplace_attributes_list_columns</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="add">
+                <url path="catalog/product_attribute/new"/>
+                <class>primary</class>
+                <label translate="true">Add New Attribute</label>
+            </button>
+        </buttons>
+        <spinner>marketplace_attributes_list_columns</spinner>
+        <deps>
+            <dep>marketplace_attributes_list.marketplace_attributes_list_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="marketplace_attributes_list_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Webkul\Marketplace\Ui\DataProvider\Attributes</argument>
+            <argument name="name" xsi:type="string">marketplace_attributes_list_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">attribute_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">attribute_id</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+    <container name="listing_top">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="template" xsi:type="string">ui/grid/toolbar</item>
+            </item>
+        </argument>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="columnsProvider" xsi:type="string">marketplace_attributes_list.marketplace_attributes_list.marketplace_attributes_list_columns</item>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="provider" xsi:type="string">marketplace_attributes_list.marketplace_attributes_list.listing_top.bookmarks</item>
+                        <item name="namespace" xsi:type="string">current.filters</item>
+                    </item>
+                    <item name="templates" xsi:type="array">
+                        <item name="filters" xsi:type="array">
+                            <item name="select" xsi:type="array">
+                                <item name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</item>
+                                <item name="template" xsi:type="string">ui/grid/filters/elements/ui-select</item>
+                            </item>
+                        </item>
+                    </item>
+                    <item name="childDefaults" xsi:type="array">
+                        <item name="provider" xsi:type="string">marketplace_attributes_list.marketplace_attributes_list.listing_top.listing_filters</item>
+                        <item name="imports" xsi:type="array">
+                            <item name="visible" xsi:type="string">marketplace_attributes_list.marketplace_attributes_list.marketplace_attributes_list_columns.${ $.index }:visible</item>
+                        </item>
+                    </item>
+                </item>
+                <item name="observers" xsi:type="array">
+                    <item name="column" xsi:type="string">column</item>
+                </item>
+            </argument>
+        </filters>
+         <massaction name="listing_massaction">
+             <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="selectProvider" xsi:type="string">marketplace_attributes_list.marketplace_attributes_list.marketplace_attributes_list_columns.ids</item>
+                    <item name="indexField" xsi:type="string">attribute_id</item>
+                </item>
+            </argument>
+            <action name="disable">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you want to disable selected items?</message>
+                        <title translate="true">Disable for seller</title>
+                    </confirm>
+                    <url path="*/*/massStatus">
+                        <param name="status">0</param>
+                    </url>
+                    <type>disable</type>
+                    <label translate="true">Disable for seller</label>
+                </settings>
+            </action>
+            <action name="enable">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you want to enable selected items?</message>
+                        <title translate="true">Enable for seller</title>
+                    </confirm>
+                    <url path="*/*/massStatus">
+                        <param name="status">1</param>
+                    </url>
+                    <type>enable</type>
+                    <label translate="true">Enable for seller</label>
+                </settings>
+            </action>
+           
+        </massaction>
+        <paging name="listing_paging"/>
+    </container>
+    <columns name="marketplace_attributes_list_columns">
+        <selectionsColumn name="ids">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="resizeEnabled" xsi:type="boolean">false</item>
+                    <item name="resizeDefaultWidth" xsi:type="string">55</item>
+                    <item name="indexField" xsi:type="string">attribute_id</item>
+                    <item name="sortOrder" xsi:type="number">0</item>
+                </item>
+            </argument>
+        </selectionsColumn>
+        <column name="attribute_code">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Attribute Code</label>
+                
+                <!-- <sorting>asc</sorting> -->
+            </settings>
+        </column>
+        <column name="frontend_label">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Attribute Label</label>
+            </settings>
+        </column>
+          <column name="seller_id" class="Webkul\Marketplace\Ui\Component\Listing\Columns\Ownership">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="label" xsi:type="string" translate="true">Created By</item>
+                     <item name="sortOrder" xsi:type="number">5</item>
+                </item>
+            </argument>
+        </column>
+        <column name="is_required" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Required</label>
+            </settings>
+        </column>
+        <column name="is_user_defined" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">System</label>
+            </settings>
+        </column>
+        <column name="is_visible" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Visible</label>
+            </settings>
+        </column>
+        <column name="is_global" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Magento\Catalog\Model\Attribute\Source\Scopes"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Scope</label>
+            </settings>
+        </column>
+        <column name="is_searchable" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Searchable</label>
+            </settings>
+        </column>
+        <column name="is_comparable" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Comparable</label>
+            </settings>
+        </column>
+        <column name="visible_to_seller" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Allow For Seller</label>
+            </settings>
+        </column>
+    </columns>
+</listing>

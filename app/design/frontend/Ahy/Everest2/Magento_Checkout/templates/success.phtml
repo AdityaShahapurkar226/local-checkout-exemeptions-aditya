@@ -1,0 +1,81 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Checkout\Block\Onepage\Success;
+
+/** @var Success $block */
+/** @var Escaper $escaper */
+?>
+<div class="checkout-success container flex flex-col justify-center items-center py-4 px-6">
+    <?php if ($block->getOrderId()): ?>
+        <?php if ($block->getCanViewOrder()): ?>
+            <div class="container flex mt-0 justify-center pt-8 md:pt-12 pb-4 md:pb-8 ">
+                <h1 class="text-ahy-blue page-title !font-extrabold title-font uppercase text-3xl md:text-6xl">
+                    <span class="base" data-ui-id="page-title-wrapper">Thank you for your purchase!</span>
+                </h1>
+            </div>
+            <p class="text-center">
+                <?= $escaper->escapeHtml(
+                    __(
+                        'Your order number is: %1.',
+                        sprintf(
+                            '<a href="%s" class="order-number"><strong>%s</strong></a>',
+                            $escaper->escapeUrl($block->getViewOrderUrl()),
+                            $block->getOrderId()
+                        )
+                    ),
+                    ['a', 'strong']
+                ) ?>
+            </p>
+        <?php  else: ?>
+            <div class="container flex mt-0 justify-center pt-8 md:pt-12 pb-4 md:pb-8 ">
+                <h1 class="text-ahy-blue page-title text-center !font-extrabold title-font uppercase text-3xl md:text-6xl">
+                    <span class="base" data-ui-id="page-title-wrapper">Thank you for your purchase!</span>
+                </h1>
+            </div>
+            <p class="text-center"><?= $escaper->escapeHtml(__('Your order # is: <span class="font-bold">%1</span>.', $block->getOrderId()), ['span']) ?></p>
+        <?php endif;?>
+        <p class="text-center">
+            <?= $escaper->escapeHtml(
+                __('We\'ll email you an order confirmation with details and tracking info.')
+            ) ?>
+        </p>
+    <?php endif; ?>
+
+    <?= $block->getAdditionalInfoHtml() ?>
+
+    <div class="my-4">
+        <a class="" href="<?= $escaper->escapeUrl($block->getContinueUrl()) ?>">
+            <button class="border-3 border-ahy-blue rounded-full font-bold text-sm w-56 h-12 hover:shadow-[#0d2f47_0px_0px_0px_1px_inset]">
+                <span class="font-bold"><?= $escaper->escapeHtml(__('Keep Shopping')) ?></span>
+            </button>
+        </a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    (function e() {
+        var e = document.createElement("script");
+        e.type = "text/javascript", e.async = true, e.src = "//staticw2.yotpo.com/NUJogmcy1Rt0zI1mKiVaZY2BjAk7Lh11NmBbS1T9/widget.js";
+        var t = document.getElementsByTagName("script")[0];
+        t.parentNode.insertBefore(e, t)
+    })();
+</script>
+<script>
+    yotpoTrackConversionData = {
+        orderId: "<?= $block->getOrderId()?>",
+        orderAmount: "<?= $block->getGrandTotal() ?>",
+        orderCurrency: "USD"
+    }
+</script>
+<noscript>
+    <img src="//api.yotpo.com/conversion_tracking.gif?app_key=NUJogmcylRtOZIlmKiVaZzY2BjAk7Lh11NmBbS1T9&order_id=<?= $block->getOrderId() ?>&order_amount=<?= $block->getGrandTotal() ?>&order_currency=USD" width="1" height="1">
+</noscript>

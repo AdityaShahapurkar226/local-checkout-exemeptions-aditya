@@ -1,0 +1,155 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_SellerSubAccount
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$helper = $block->getLayout()->createBlock(
+    \Webkul\SellerSubAccount\Block\SubAccount::class
+)->getSubAccountHelper();
+if (empty($block->getRequest()->getParam('id'))) {
+    $sellerId = $block->getRequest()->getParam('seller_id');
+} else {
+    $sellerId = $block->getSellerId();
+}
+$flag1=0;
+$flag=0;
+$prefix="";
+$suffix="";
+$middlename="";
+$dob="";
+$gender="";
+$customerDob="";
+$tax="";
+$address=null;
+$country_id="";
+$postalcode="";
+$vatid="";
+$city="";
+$region="";
+$company="";
+$fax="";
+$telephone="";
+$birthday="";
+
+if (!empty($block->getRequest()->getParam('id'))) {
+    $id=$block->getRequest()->getParam('id');
+    if (!empty($id)) {
+        $subAccountData = $helper->getSubAccountById($id);
+        $customerData = $helper->getCustomerById($subAccountData->getCustomerId());
+
+        if ($customerData) {
+            if ($customerData->getDob()) {
+                $timestamp = strtotime($birthday);
+                $customerDob = date("m/d/Y", $timestamp);
+            }
+            $prefix=$customerData->getPrefix();
+            $suffix=$customerData->getSuffix();
+            $middlename=$customerData->getMiddleName();
+            $gender=$customerData->getGender();
+            $tax=$customerData->getTaxVat();
+            $flag1=1;
+        }
+        if ($customerData->getAddresses()) {
+            foreach ($customerData->getAddresses() as $ad) {
+                 $address=$ad;
+                 $flag=1;
+            }
+            if ($address) {
+                 $company=$address->getCompany();
+                 $postalcode=$address->getPostCode();
+                 $city=$address->getCity();
+                 $telephone=$address->getTelephone();
+                 $region=$address->getRegionId();
+                 $fax=$address->getFax();
+                 $country_id=$address->getCountryId();
+                 $vatid=$address->getVatId();
+            }
+        }
+    } else {
+        $customerData=null;
+        $flag1=0;
+    }
+
+} else {
+    
+    $customerData=null;
+    $flag1=0;
+}
+
+?>
+<input type="hidden" name="sub_account[seller_id]" 
+value="<?=$block->escapeHtmlAttr($sellerId);?>" data-form-part="sellersubaccount_accounts_form"/>
+<input type="hidden" name="sub_account[create_address]" 
+       value="<?=$escaper->escapeHtmlAttr($helper->isReqAddressEnable())?>" />
+<input type="hidden" name="sub_account[default_billing]" value="1">
+<input type="hidden" id="lastelement" name="sub_account[default_shipping]" value="1">
+
+<script>
+  require([
+    'jquery',
+    'mage/translate',
+    'mage/calendar'
+    ], function ($, $t) {
+
+        $("input[name='sub_account[dob]']").calendar({
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        currentText: $t('Go Today'),
+        closeText: $t('Close'),
+        showWeek: true,
+        showsTime: false,
+        dateFormat: "M/d/Y",
+        yearRange: "-120y:c+nn",
+        buttonText: "Select Date", maxDate: "-1d", changeMonth: true, changeYear: true, showOn: "both"
+
+      });
+        $(document).ready(function(){
+            $("#lastelement").ready(function(){
+                $chk="<?=$escaper->escapeHtml($flag1)?>";
+                $chk1="<?=$escaper->escapeHtml($flag)?>";
+            setTimeout(() => {
+                if($chk){
+                var genderValue = '<?= $escaper->escapeHtmlAttr($gender)?>';
+                $("input[name='sub_account[prefix]']").val("<?=$escaper->escapeHtmlAttr($prefix);?>").change();
+                $("input[name='sub_account[suffix]']").val("<?=$escaper->escapeHtmlAttr($suffix);?>").change();
+                $("input[name='sub_account[middlename]']").val("<?=$escaper->escapeHtmlAttr($middlename);?>").change();
+                $("input[name='sub_account[dob]']").val("<?=$escaper->escapeHtmlAttr($customerDob);?>").change();
+                $("input[name='sub_account[taxvat]']").val("<?=$escaper->escapeHtmlAttr($tax);?>").change();
+                    if(genderValue){
+                        var subAccountGender = "select[name='sub_account[gender]']";
+                        $(subAccountGender+" option[value="+genderValue+"]").attr('selected','selected');
+                        $(subAccountGender+" option").change();
+                    }
+                }
+            if($chk1)
+            {
+                $("input[name='sub_account[company]']").val("<?=$escaper->escapeHtmlAttr($company)?>").change();
+                $("input[name='sub_account[telephone]']").val("<?=$escaper->escapeHtmlAttr($telephone)?>").change();
+                
+                var countryId = '<?=$escaper->escapeHtmlAttr($country_id)?>';
+                $("select[name='sub_account[country_id]'] option[value="+countryId+"]").attr('selected','selected');
+                $("select[name='sub_account[country_id]'] option").change();
+
+                var subAccountRegionId = "select[name='sub_account[region_id]']";
+                var regionValue = '<?=$escaper->escapeHtmlAttr($region)?>';
+                $(subAccountRegionId+" option[value="+regionValue+"]").attr('selected','selected');
+                $(subAccountRegionId+" option").change();
+                
+                $("input[name='sub_account[postalcode]']").val("<?=$escaper->escapeHtmlAttr($postalcode)?>").change();
+                $("input[name='sub_account[city]']").val("<?=$escaper->escapeHtmlAttr($city)?>").change();
+                $("input[name='sub_account[fax]']").val("<?=$escaper->escapeHtmlAttr($fax);?>").change();
+                $("input[name='sub_account[vat_id]']").val("<?=$escaper->escapeHtmlAttr($vatid)?>").change();
+            }
+
+            }, 1000);
+            });
+        });
+
+    })
+</script>

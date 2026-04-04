@@ -1,0 +1,157 @@
+<?php
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+
+$helperBlock = $block->getLayout()->createBlock(\Webkul\MpSellerBuyerCommunication\Block\Helper::class);
+$helper = $helperBlock->getMpHelper();
+$captchenable = $helper->getCaptchaEnable();
+$partner = $block->getProfileDetail();
+$sellerId = $partner->getSellerId();
+
+$partner = [];
+$_helper = $helperBlock->getCommHelper();
+$respnseRate = $_helper->getResponseRateOfSeller($sellerId);
+$avgResponse = $_helper->getResponseTimeOfSeller($sellerId);
+$guestQueryApproval = $_helper->getGuestQueryApproval();
+?>
+<div class="wk-mp-seller-profile-box wk-mp-collection-header-bottom-txt">
+    <a class="askque"><?= $escaper->escapeHtml(__('Contact')) ?></a>
+    <span class="field-tooltip-action"></span>
+    <div class="field-tooltip-content">
+        <span class="seller-response-rate">
+            <span id="reponseRate">0</span><?= $escaper->escapeHtml(__('% response rate,')) ?>
+            <span id="avgTime">0</span><?= $escaper->escapeHtml(__('-mins response time')) ?>
+        </span>
+    </div>
+    <div class="ask-que">
+        <div id="wk-mp-ask-data" style="display:none">
+            <?php
+            if ($helper->isCustomerLoggedIn()) {
+                $customerData = $_helper->getCustomerData($_helper->getCustomerId());
+                $buyerName = $customerData->getName();
+                $buyerEmail = $customerData->getEmail();
+                $readonly = "readonly='readonly'";
+            } else {
+                $buyerEmail = '';
+                $buyerName = '';
+                $readonly = '';
+            }
+            ?>
+            <form id="ask-form" method="post" action="#" class="fieldset" 
+            data-mage-init='{"validation":{}}' enctype="multipart/form-data">
+                <div class="form-list field required">
+                    <label class="label"><?= $escaper->escapeHtml(__('Support Type')) ?> :</label>
+                    <select name="support_type" class="validate-select required-entry">
+                        <?php foreach ($_helper->getSupportTypes() as $key => $value) { ?>
+                            <option value=<?=$escaper->escapeHtml($key);?>>
+                                    <?= $escaper->escapeHtml($value); ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                    <label class="label"><?= $escaper->escapeHtml(__('Your Name')) ?> :</label>
+                    <input type="text" name="name" 
+                           class="queryemail wk-contact_input_fields validate-no-html-tags required-entry" 
+                           value="<?= $escaper->escapeHtml($buyerName)?>" <?= $escaper->escapeHtml($readonly)?>/>
+                    <label class="label"><?= $escaper->escapeHtml(__('Your Email')) ?> :</label>
+                    <input type="email" name="email" class="queryemail required-entry validate-email 
+                    validate-no-html-tags wk-contact_input_fields" 
+                        value="<?= $escaper->escapeHtml($buyerEmail)?>" 
+                    <?= $escaper->escapeHtml($readonly)?>/>
+                    <label class="label"><?= $escaper->escapeHtml(__('Subject')) ?> :</label>
+                    <input type="text" name="subject" class="wk-contact_input_fields validate-no-html-tags 
+                     required-entry"/>
+                    <label class="label"><?= $escaper->escapeHtml(__('Your Query')) ?> :</label>
+                    <textarea  name="ask" id="queryquestion" class="queryquestion wk-contact_input_fields 
+                    required-entry" style="width:100%;"></textarea>
+                    <input type="hidden" name="seller-id" value="<?= $escaper->escapeHtml($sellerId);?>"/>
+                    <?php if ($captchenable) { ?>
+                        <div>
+                            <span>
+                                <label for="wk-mp-captcha">
+                                    <span id="wk-mp-captchalable1"><?= $escaper->escapeHtml(rand(1, 20))?></span> 
+                                    + <span id="wk-mp-captchalable2"><?= $escaper->escapeHtml(rand(1, 20))?></span>
+                                = </label>
+                            </span>
+                            <input type="text" class="required-entry wk-contact_input_fields" name="wk-mp-captcha" 
+                            id="wk-mp-captcha" />
+                        </div>
+                    <?php } ?>
+                    <label class="file" class=""><?= $escaper->escapeHtml(__('Add Image/File')) ?> :</label>
+                    <div class="input-box">
+                        <div class="image-con">
+                            <input type="file" name="img_attachment[]" class="wk_imagevalidate"/>
+                            <a href="javascript:void(0)" class="remove_attch" style="display:none">
+                                <?= $escaper->escapeHtml(__('Remove')); ?>
+                            </a>
+                        </div>
+                        <div id="otherimages" class="image-con"></div>
+                        <a href="javascript:void(0)" class="product_images">
+                            <?= $escaper->escapeHtml(__("Add More")); ?>
+                        </a><br />
+                    </div>
+                </div>
+            </form>        
+        </div>
+    </div> 
+</div>
+<div id="wk-zcv-login-popup" style="display:none">
+               
+                <?= /* @noEscape */ $block->getLayout()->createBlock(
+                    \Magento\Customer\Block\Form\Login::class
+                )->setData(
+                    'captcha_status',
+                    $captchenable
+                )->setTemplate(
+                    "Webkul_MpSellerBuyerCommunication::customer/login.phtml"
+                )->toHtml();?>
+</div>
+<script id="attachment-template" type="text/x-magento-template">
+    <div id='childDiv<%- fields.index %>' class="image-con">
+        <input type='file' name='img_attachment[]' class='wk_imagevalidate'/>
+        <a href='#' class='remove_attch'><?= $escaper->escapeHtml(__('Remove')); ?></a>
+    </div>
+</script>
+
+<?php
+    $releventFormData = [
+        'targetAjaxUrl' => $block->getUrl(
+            "mpsellerbuyercommunication/seller/sendmail",
+            ["_secure" => $block->getRequest()->isSecure()]
+        ),
+        'captchenable'  => $captchenable,
+        'varificationMsg' => __(' enable to varifiy captcha'),
+        'formValidator' => '#ask-form',
+        'attachmentTemplate' => '#attachment-template',
+        'saveAjaxFileUrl' => $block->getUrl(
+            "mpsellerbuyercommunication/seller/saveFiles",
+            ["_secure" => $block->getRequest()->isSecure()]
+        ),
+        'responseRate' => $respnseRate,
+        'averageResponse' => $avgResponse,
+        'seller_id'=>$sellerId,
+        'wysiwygUrl' => $helperBlock->getWysiwygUrl(),
+        'isLoggedIn' => $_helper->isLoggedIn(),
+        'guestQueryApproval' => $guestQueryApproval,
+        'getResponseAjaxUrl' => $block->getUrl(
+            "mpsellerbuyercommunication/seller/response",
+            ["_secure" => $block->getRequest()->isSecure()]
+        )
+    ];
+
+    $serializedData = $helperBlock->getJsonHelper()->jsonEncode($releventFormData);
+    ?>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "wkSellerProfilePage": <?= $escaper->escapeJsQuote($serializedData); ?>
+        }
+    }
+</script>

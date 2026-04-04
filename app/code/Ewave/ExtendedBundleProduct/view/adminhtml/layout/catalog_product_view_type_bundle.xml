@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="product.info.bundle.options.select" template="Ewave_ExtendedBundleProduct::catalog/product/view/type/bundle/option/select.phtml">
+            <block class="Magento\Framework\View\Element\Template" name="product.info.bundle.option.select.selection" as="product.info.bundle.option.select.selection" template="Ewave_ExtendedBundleProduct::catalog/product/view/type/bundle/selection.phtml">
+                <block class="Ewave\ExtendedBundleProduct\Block\Adminhtml\Product\Composite\Fieldset\Configurable" name="bundle.options.select.selection.configurable" template="Ewave_ExtendedBundleProduct::catalog/product/composite/fieldset/configurable.phtml" />
+            </block>
+        </referenceBlock>
+
+        <referenceBlock name="product.info.bundle.options.multi" template="Ewave_ExtendedBundleProduct::catalog/product/view/type/bundle/option/multi.phtml"/>
+
+        <referenceBlock name="product.info.bundle.options.radio" template="Ewave_ExtendedBundleProduct::catalog/product/view/type/bundle/option/radio.phtml">
+            <block class="Magento\Framework\View\Element\Template" name="product.info.bundle.option.radio.selection" as="product.info.bundle.option.radio.selection" template="Ewave_ExtendedBundleProduct::catalog/product/view/type/bundle/selection.phtml">
+                <block class="Ewave\ExtendedBundleProduct\Block\Adminhtml\Product\Composite\Fieldset\Configurable" name="bundle.options.radio.selection.configurable" template="Ewave_ExtendedBundleProduct::catalog/product/composite/fieldset/configurable.phtml" />
+            </block>
+        </referenceBlock>
+
+        <referenceBlock name="product.info.bundle.options.checkbox" template="Ewave_ExtendedBundleProduct::catalog/product/view/type/bundle/option/checkbox.phtml">
+            <block class="Magento\Framework\View\Element\Template" name="product.info.bundle.option.checkbox.selection" as="product.info.bundle.option.checkbox.selection" template="Ewave_ExtendedBundleProduct::catalog/product/view/type/bundle/selection.phtml">
+                <block class="Ewave\ExtendedBundleProduct\Block\Adminhtml\Product\Composite\Fieldset\Configurable" name="bundle.options.checkbox.selection.configurable" template="Ewave_ExtendedBundleProduct::catalog/product/composite/fieldset/configurable.phtml" />
+            </block>
+        </referenceBlock>
+    </body>
+</page>

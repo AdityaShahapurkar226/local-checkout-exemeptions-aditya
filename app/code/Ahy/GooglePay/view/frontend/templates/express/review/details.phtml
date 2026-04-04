@@ -1,0 +1,82 @@
+<?php
+/**
+ *
+ * @var \Ahy\GooglePay\Block\Paypal\Express\Review\Details $block
+ */
+
+$items = $block->getItems();
+
+if (!$items) {
+    echo '<p class="text-red-600">No items found!</p>';
+    return;
+}
+
+// $imageHelper = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Catalog\Helper\Image::class);
+
+?>
+
+<div id="details-reload mb-4">
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm text-gray-800 border border-b googlepay_review_border mt-4">
+            <thead>
+                <tr>
+                    <th class="p-3 text-left"><?= $block->escapeHtml(__('Product')) ?></th>
+                    <th class="p-3 text-right"><?= $block->escapeHtml(__('Price')) ?></th>
+                    <th class="p-3 text-right"><?= $block->escapeHtml(__('Qty')) ?></th>
+                    <th class="p-3 text-right"><?= $block->escapeHtml(__('Subtotal')) ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($block->getItems() as $item): ?>
+                    <?php
+                        /** @var \Magento\Quote\Model\Quote\Item $item */
+                        $product = $item->getProduct();
+                        $productName = $item->getName();
+                        $price = $item->getCalculationPrice();
+                        $qty = $item->getQty();
+                        $subtotal = $item->getRowTotal();
+                        $imageUrl = $block->getProductImageUrl($product);
+                    ?>
+                    <tr class="border-t border-b googlepay_review_border">
+                        <td class="p-3 flex items-center gap-4">
+                            <div class="w-16 h-16 flex-shrink-0 border rounded overflow-hidden">
+                                <img src="<?= $block->escapeUrl($imageUrl) ?>"
+                                     alt="<?= $block->escapeHtmlAttr($productName) ?>"
+                                     class="object-cover w-full h-full"
+                                     loading="lazy" />
+                            </div>
+                            <div class="text-sm font-medium">
+                                <?= $block->escapeHtml($productName) ?>
+
+                                <?php if ($options = $block->getProductOptions($item)): ?>
+                                    <ul class="text-xs text-gray-600 mt-1">
+                                        <?php foreach ($options as $option): ?>
+                                            <li>
+                                                <?= $block->escapeHtml($option['label']) ?>:
+                                                <?= $block->escapeHtml($option['value']) ?>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                <?php endif; ?>
+                            </div>
+                        </td>
+
+                        <td class="p-3 text-right whitespace-nowrap">
+                            <?= $block->formatPrice($price) ?>
+                        </td>
+
+                        <td class="p-3 text-right">
+                            <?= (int) $qty ?>
+                        </td>
+
+                        <td class="p-3 text-right whitespace-nowrap">
+                            <?= $block->formatPrice($subtotal) ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <?= $block->getChildHtml('totals') ?>
+</div>

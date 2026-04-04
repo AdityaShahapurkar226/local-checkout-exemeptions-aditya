@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+		<update handle="marketplace_seller_top_header" />
+    <body>
+        <referenceContainer name="content">
+            <block class="Webkul\Marketplace\Block\Location" name="marketplace_sellerlocation" template="Webkul_Marketplace::location.phtml"  after="-">
+            <arguments>
+                    <argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

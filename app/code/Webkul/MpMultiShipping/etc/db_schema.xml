@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software
+ *
+ * @category Webkul
+ * @package Webkul_MpMultiShipping
+ * @author Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license https://store.webkul.com/license.html
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="marketplace_orders" resource="default">
+        <column xsi:type="varchar" name="multiship_method" nullable="true" length="255"/>
+    </table>
+    <table name="marketplace_saleslist" resource="default">
+        <column xsi:type="varchar" name="shipping_method" nullable="true" length="32" default=""/>
+        <column xsi:type="int" name="shipping_price" padding="11" unsigned="false" nullable="true" identity="false"/>
+    </table>
+</schema>

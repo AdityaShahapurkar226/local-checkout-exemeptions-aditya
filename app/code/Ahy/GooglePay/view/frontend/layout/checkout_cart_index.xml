@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <head>
+        <css src="Ahy_GooglePay::css/google-pay.css" defer="defer"/>
+    </head>
+
+    <body>
+        <referenceContainer name="checkout.cart.methods">
+            <block 
+                class="PayPal\Braintree\Block\GooglePay\Shortcut\Button"
+                name="googlepay.cart.button"
+                template="Ahy_GooglePay::express/button.phtml"
+                after="checkout.cart.shortcut.buttons"
+            >
+                <arguments>
+                    <argument name="button_id" xsi:type="string">googlepay-cart</argument>
+                    <argument name="alias" xsi:type="string">cart</argument>
+                    <argument name="viewModel" xsi:type="object">Ahy\GooglePay\ViewModel\RestrictVisibility</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <referenceContainer name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template"
+                name="googlepay.cart.express.js"
+                template="Ahy_GooglePay::express/express-js.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

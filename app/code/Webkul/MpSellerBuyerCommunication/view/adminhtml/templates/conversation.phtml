@@ -1,0 +1,158 @@
+<!--
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+-->
+<?php
+
+$_helper = $block->getHelperSellerView();
+?>
+<div class="wk-mp-design">
+    <fieldset class="fieldset info wk-mp-fieldset">
+        <div class="grid">
+            <div class="hor-scroll">
+                
+                <?php
+                    $collection = $block->getAllCommunicationData();
+                foreach ($collection as $coll): ?>
+                    <div class="wk-sbcom-onereply">
+                        <span class="wk-sbcom-onereply-head 
+                            <?php if ($coll->getSenderType() == 0) {
+                                echo "wk-sbcom-onereply-customer";
+                            } elseif ($coll->getSenderType() == 2) {
+                                echo "wk-sbcom-onereply-admin";
+                            } else {
+                                echo "wk-sbcom-onereply-seller";
+                            } ?>">
+
+                            <span class="wk-sbcom-onereply-head-left">
+                                <?= $block->escapeHtml($_helper->formatDate($coll->getCreatedAt()));?>
+                            </span>
+                            <span class="wk-sbcom-onereply-head-right">
+                                <?php
+                                if ($coll->getSenderType() == 0) {
+                                    if (!$coll->getSender()) {
+                                        echo $block->escapeHtml(__("Guest"));
+                                    } else {
+                                        echo $block->escapeHtml(__("Customer: %1", $coll->getSender()));
+                                    }
+                                } elseif ($coll->getSenderType() == 1) {
+                                    if ($coll->getSender() == 'Administrator') {
+                                        echo $block->escapeHtml(__("Administrator"));
+                                    } else {
+                                        echo $block->escapeHtml(__("Seller: %1", $coll->getSender()));
+                                    }
+                                    
+                                } else {
+                                    echo $block->escapeHtml(__("Administrator"));
+                                }
+                                ?>
+                            </span>
+                        </span>
+                        <div class="wk-sbcom-onereply-cntnt"><?= /* @noEscape */nl2br($coll->getMessage());?>
+                        </div>
+                        <div class = "image-container">
+                        <?php $attachments = explode(',', $coll->getAttachments());
+                        if (!empty(array_filter($attachments))) {
+                            foreach ($attachments as $value) { ?>
+                                <span class="file_image">
+                                    <?php if ($block->isImage(
+                                        $value,
+                                        $coll->getCommId(),
+                                        $coll->getEntityId()
+                                    )): ?>
+                                    <a href="<?= $block->escapeHtml($block->getImageUrl(
+                                        $value,
+                                        $coll->getCommId(),
+                                        $coll->getEntityId()
+                                    )); ?>" download>
+                                        <img src ="<?= $block->escapeHtml($block->getImageUrl(
+                                            $value,
+                                            $coll->getCommId(),
+                                            $coll->getEntityId()
+                                        )); ?>"/>
+                                    </a>
+                                    <?php else: ?>
+                                    <a href="<?= $block->escapeHtml($block->getImageUrl(
+                                        $value,
+                                        $coll->getCommId(),
+                                        $coll->getEntityId()
+                                    )); ?>" download>
+                                        <?= $block->escapeHtml(__($value)) ?>
+                                    </a>
+                                    <?php endif; ?>
+                                </span>
+                        <?php	}
+                        }
+                        ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+                
+            </div>
+        </div>
+    </fieldset>
+    
+    
+</div>
+<div class="load-more">
+    <a href="#" id="loadMore">Load More</a>
+</div>
+<style type="text/css">
+
+.load-more {
+    text-align: center;
+    margin-top: 21px;
+}
+#loadMore {
+    padding: 10px 20px;
+    text-align: center;
+    background-color: #33739E;
+    color: #fff;
+    border-width: 0 1px 1px 0;
+    border-style: solid;
+    border-color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+}
+</style>
+
+    
+<script>
+    require([
+        "jquery",
+        "Magento_Ui/js/modal/alert",
+        "mage/mage"
+    ], function($, alert) {
+        $(function () {
+            var list = $(".wk-sbcom-onereply");
+            var numToShow = 6;
+            var button = $("#loadMore");
+            var numInList = list.length;
+            list.hide();
+              if (numInList <= numToShow) {
+                button.hide();
+              }
+              if (numInList > numToShow) {
+                button.show();
+              }
+            $(".wk-sbcom-onereply").slice(0, numToShow).show();
+            $("#loadMore").on('click', function (e) {
+                e.preventDefault();
+                var showing = list.filter(':visible').length;
+                list.slice(showing - 1, showing + numToShow).fadeIn();
+                var nowShowing = list.filter(':visible').length;
+                if (nowShowing >= numInList ) {
+                    button.hide();
+                }
+            });
+        });
+    });
+       
+</script>

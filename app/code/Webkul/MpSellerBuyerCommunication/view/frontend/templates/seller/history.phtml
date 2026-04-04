@@ -1,0 +1,247 @@
+<!--
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+-->
+<?php
+
+$partner=[];
+$helper = $block->getMpHelperSellerView();
+$_helper = $block->getHelperSellerView();
+$partner = $helper->getSeller();
+$isPartner = $helper->isSeller();
+if ($isPartner == 1) {
+    $filterText = '';
+    $filterBy = null;
+    $paramData = $block->getRequestData();
+    if (isset($paramData['s'])) {
+        $filterText = $paramData['s'] != ""?$paramData['s']:"";
+    }
+    if (isset($paramData['filter_by'])) {
+        $filterBy = $paramData['filter_by'] != ""?$paramData['filter_by']:"";
+    }
+    ?>
+    <div class="wk-mp-design">
+        <fieldset class="fieldset info wk-mp-fieldset">
+            <div class="grid">
+                <div class="hor-scroll">
+                    <form action="<?= $escaper->escapeHtml($block->getCurrentUrl());?>" method="get">
+                        <table cellspacing="0" class="border wk-mp-list-table">
+                            <thead>
+                                <tr id="wk-mp-tr-heading">
+                                    <th colspan="3"><span></span></th>
+                                    <th><span>&nbsp;</span></th>
+                                </tr>
+                            </thead>
+                            <tbody class="wk-mp-body">
+                                <tr>
+                                    <td colspan="3">
+                                        <label><?= $escaper->escapeHtml(__('Filter By ')) ?></label>
+                                        <select  name="filter_by" class="filter_by">
+                                            <?php foreach ($_helper->getSellerFilter() as $key => $optionName) { ?>
+                                                <option value="<?= $escaper->escapeHtml($key); ?>" 
+                                                <?php if ($filterBy == $key) {
+                                                    echo $escaper->escapeHtml(" selected");
+                                                } ?>>
+                                                    <?= $escaper->escapeHtml($optionName); ?>
+                                                </option>
+                                            <?php } ?>
+                                        </select>
+                                        <input type="text" class="input-text filter_text" name="s" 
+                                        placeholder = "<?= $escaper->escapeHtml(__('Search'))?>" 
+                                        value="<?= $escaper->escapeHtml($filterText); ?>"/>
+                                    </td>
+                                    <td class="wk-mp-td-last">
+                                        <button class="button" title="Save" id="save-btn" type="submit">
+                                            <span><span>
+                                            <span>
+                                                <?= $escaper->escapeHtml(__('Submit')) ?>
+                                            </span>
+                                            </span></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                    <?php
+                    if ($block->getAllCommunicationData()->getSize()==0) { ?>
+                        <div class="fieldset wk-mp-fieldset">
+                            <div class="wk-emptymsg">
+                                <?= $escaper->escapeHtml(__('No communication history available.')) ?>
+                            </div>
+                        </div>
+                        <?php
+                    } else { ?>
+                        <table cellspacing="0" class="border wk-mp-list-table wk-mp-list-container-table">
+                            <thead>
+                                <tr class="wk-content">
+                                    <th>
+                                        <span class="label">
+                                            <?= $escaper->escapeHtml(__('Customer Name'))?>
+                                        </span>
+                                    </th>
+                                    <th class="wk-list-th-display">
+                                        <span class="label">
+                                            <?= $escaper->escapeHtml(__('Email Id'))?>
+                                        </span>
+                                    </th>
+                                    <th class="wk-list-th-display">
+                                        <span class="label">
+                                            <?= $escaper->escapeHtml(__('Product Name'))?>
+                                        </span>
+                                    </th>
+                                    <th>
+                                        <span class="label">
+                                            <?= $escaper->escapeHtml(__('Subject'))?>
+                                        </span>
+                                    </th>
+                                    <th>
+                                        <span class="label">
+                                            <?= $escaper->escapeHtml(__('Query Status'))?>
+                                        </span>
+                                    </th>
+                                    <th>
+                                        <span class="label">
+                                            <?= $escaper->escapeHtml(__('Support Type'))?>
+                                        </span>
+                                    </th>
+                                    <th class="wk-list-th-display1">
+                                        <span class="label">
+                                            <?= $escaper->escapeHtml(__('Created At'))?>
+                                        </span>
+                                    </th>
+                                    <th>
+                                        <span class="label">
+                                            <?= $escaper->escapeHtml(__('Action'))?>
+                                        </span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $i=0;
+                                foreach ($block->getAllCommunicationData() as $res) {
+                                    $i++;?>
+                                    <tr class="wk-row-view  <?= $escaper->escapeHtml($class = (
+                                        $i == $block->getAllCommunicationData()->getSize()
+                                    )? 'wk-last_tr':'')?>">
+                                        <td>
+                                            <span class="label">
+                                            <?php $customerName = !empty($res['customer_id'])?
+                                             $escaper->escapeHtml($res['customer_name']):"Guest"?>
+                                            <?= $escaper->escapeHtml($customerName)?>
+                                            </span>
+                                        </td>
+                                        <td class="wk-list-th-display">
+                                            <span class="label">
+                                                <?= $escaper->escapeHtml($res['email_id'])?>
+                                            </span>
+                                        </td>
+                                        <td class="wk-list-th-display">
+                                            <span class="label">
+                                                <?php
+                                                if ($res['product_id']) { ?>
+                                                    <a href="<?= $escaper->escapeHtml($block->getProductUrlById(
+                                                        $res['product_id']
+                                                    )); ?>">
+                                                    <a href="<?= $escaper->escapeHtml($block->getProductUrlById(
+                                                        $res['product_id']
+                                                    )); ?>">
+                                                    <?php if ($productName = $block->getProductNameById(
+                                                        $res['product_id']
+                                                    )): ?>
+                                                                    <?=  $escaper->escapeHtml($productName) ; ?>
+                                                    <?php else:?>
+                                                        <?= $escaper->escapeHtml($res['product_name'])?>
+                                                    <?php endif; ?>
+                                                    </a>
+                                                    </a>
+                                                    <?php
+                                                } else {
+                                                    echo $escaper->escapeHtml(__("None"));
+                                                } ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            $subject = (strlen($res['subject']) > 40) ? substr(
+                                                $res['subject'],
+                                                0,
+                                                40
+                                            ).' ..' : $res['subject'];
+                                            ?>
+                                            <span class="label">
+                                                <?= $escaper->escapeHtml($subject)?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="label">
+                                                <?= $escaper->escapeHtml($_helper->getQueryStatusname(
+                                                    $res['query_status']
+                                                ))?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="label">
+                                                <?= $escaper->escapeHtml($_helper->getSupportTypeName(
+                                                    $res['support_type']
+                                                ))?>
+                                            </span>
+                                        </td>
+                                        <td class="wk-list-th-display1">
+                                            <span class="label">
+                                            
+                                                <?= $escaper->escapeHtml($_helper->formatDate($res['created_at']))?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="label wk-action">
+                                                <a href="<?= $escaper->escapeHtml($block->getUrl(
+                                                    'mpsellerbuyercommunication/seller/view/',
+                                                    ['id'=>$res['entity_id'],
+                                                    '_secure' => $block->isSecureData()]
+                                                )); ?>"><?= ""; ?><?= $escaper->escapeHtml(__('View'))?></a>
+                                            </span>
+                                            <?php
+                                            if ($res['attachment_status']) { ?>
+                                                <img src = <?= $escaper->escapeHtml($block->getViewFileUrl(
+                                                    'Webkul_MpSellerBuyerCommunication::images/attachmenticon.png'
+                                                )); ?> />
+                                            <?php } ?>
+
+                                        </td>
+                                    </tr>
+                                    <?php
+                                }?>
+                            </tbody>
+                        </table>
+                        <?php
+                    }?>
+                </div>
+            </div>
+            <?php if ($block->getPagerHtml()): ?>
+                <div class="order-products-toolbar toolbar bottom"><?= $block->getPagerHtml(); ?></div>
+            <?php endif ?>
+        </fieldset>
+    </div>
+
+    <div class="buttons-set">
+        <p class="back-link">
+            <a href="javascript:;" onclick="javascript: window.history.back();" class="left">
+                &laquo; <?= $escaper->escapeHtml(__('Back')) ?>
+            </a>
+        </p>
+    </div>
+    <?php
+} else { ?>
+    <h2 class="wk-mp-error-msg">
+        <?= $escaper->escapeHtml(__("To Become Seller Please Contact to Admin.")); ?>
+    </h2>
+    <?php
+} ?>

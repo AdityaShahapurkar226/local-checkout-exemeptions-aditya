@@ -1,0 +1,46 @@
+Legend
+
++ Features
+- Bugs
+
+-------------------------------- Version 5.0.2 --------------------------------------
+    + Compatible with Magento 2.4.5 and Marketplace 5.*.*
+    - Fixed Bugs
+    + Implemented graphQl
+
+-------------------------------- Version 5.0.1 --------------------------------------
+    + Compatible with Magento 2.4.* and Marketplace 5.*.*
+    - Fixed Bugs
+    
+-------------------------------- Version 5.0.0 --------------------------------------
+
+    + Compatible with Magento 2.4.* and Marketplace 5.*.*
+    
+-------------------------------- Version 3.0.1 --------------------------------------
+
+    + Compatible with Magento version 2.3.3 or greater version.
+    + Compatible with Marketplace version 3.0.1
+
+-------------------------------- Version 3.0.0 --------------------------------------
+    + Compatible with Magento version 2.3.*
+    + Compatible with Marketplace version 3.0.*
+
+-------------------------------- Version 2.1.0 --------------------------------------
+    + Compatible with Marketplace version 2.2.*
+    + Compatible with Magento version 2.3.*
+
+-------------------------------- Version 2.0.3 --------------------------------------
+    + Allow admin to give permissions for sub seller account by Admin Configuration
+    + Allow admin to give individual seller permission for sub seller account by customer pannel
+
+-------------------------------- Version 2.0.2 --------------------------------------
+    + Compatible with Marketplace version 2.1.5 or greater version.
+
+-------------------------------- Version 2.0.1 --------------------------------------
+    + Compatible with Marketplace 2.1.x.
+    + Compatible with Magento 2.2.0.
+
+-------------------------------- Version 2.0.0 --------------------------------------
+    + Allow sellers to add sub accounts to manage their accounts.
+    + Allow seller to provide account permissions to sub accounts to manage seller's accounts.
+    + Allow admin to manage seller's sub accounts.

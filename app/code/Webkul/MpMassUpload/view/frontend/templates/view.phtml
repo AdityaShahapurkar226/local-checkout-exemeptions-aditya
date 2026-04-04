@@ -1,0 +1,478 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$isPartner = $block->isSeller(); ?>
+<?php if ($isPartner == 1): ?>
+    <?php
+    $dataflowProfileMsg = __('Select Dataflow Profile');
+    $noMatchingProfileMsg = __('No matching Profile Found');
+    $attributeSetCollection = $block->getAttributeSetCollection();
+    $profiles = $block->getProfiles();
+    $attributeSetArray = $attributeSetCollection->getData();
+    $attributeSetIdArray = [];
+    $i=0;
+    foreach ($attributeSetArray as $values) {
+        $attributeSetIdArray[$i] = $values['attribute_set_id'];
+        $i++;
+    }
+    $attributeProfilesCollection = $block->getAttributeProfiles($flag = 1);
+    $attributeProfilesCollection->addFieldToFilter("attribute_set_id", ["in" => $attributeSetIdArray]);
+    /* Get allowed product status */
+    $isSimpleAllowed = $block->isProductTypeAllowed('simple');
+    $isVirtualAllowed = $block->isProductTypeAllowed('virtual');
+    $isDownloadableAllowed = $block->isProductTypeAllowed('downloadable');
+    $isConfigurableAllowed = $block->isProductTypeAllowed('configurable');
+
+    if ($isDownloadableAllowed) {
+        $row = "<div id='link_file' class='field required'><label for='link_files' class='label'><span>";
+        $row .= __("Upload Link Files zip");
+        $row .="</span></label><div class='control'>
+            <input type='file' data-validate='{required:true}'
+            class='input-text required-entry'
+            title='Upload Link Files'
+            name='link_files'
+            id='link_files'
+            aria-required='true'></div></div>";
+        $row .= "<div id='is_link_sample' class='field'>
+            <div class='control'>
+            <input type='checkbox'
+            class='input-text'
+            name='is_link_samples'
+            id='is_link_samples'>".__("Is Links have samples")."</div></div>";
+        $row .= "<div id='is_sample' class='field'>
+            <div class='control'>
+            <input type='checkbox'
+            class='input-text'
+            name='is_samples'
+            id='is_samples'>".__("Is Samples Available")."</div></div>";
+
+        $linkSampleRow = "<div id='link_sample_file' class='field required'>
+            <label for='link_sample_files' class='label'><span>";
+        $linkSampleRow .= __("Upload Link Sample Files zip");
+        $linkSampleRow .="</span></label><div class='control'>
+            <input type='file'
+            data-validate='{required:true}'
+            class='input-text required-entry'
+            title='Upload Link Files'
+            name='link_sample_files'
+            id='link_sample_files'
+            aria-required='true'></div></div>";
+        $sampleRow = "<div id='sample_file' class='field required'><label for='sample_files' class='label'><span>";
+        $sampleRow .= __("Upload Sample Files zip");
+        $sampleRow .="</span></label><div class='control'>
+            <input type='file'
+            data-validate='{required:true}'
+            class='input-text required-entry'
+            title='Upload Link Files'
+            name='sample_files'
+            id='sample_files'
+            aria-required='true'></div></div>";
+    } else {
+        $row = '';
+        $linkSampleRow = '';
+        $sampleRow = '';
+    }
+    $sampleCsv = $block->getSampleCsv();
+    $sampleXml = $block->getSampleXml();
+    $sampleXls = $block->getSampleXls();
+    $url = $block->getUrl('mpmassupload/product/options/');
+    $customAttributeCodes = $block->getAttributeCodes();
+    $attributeSetInfo = $block->getAttributeSetsInfo();
+    $attributeDetails = $block->getAttributeDetails();
+    $data = [
+        "attributeSetInfo" => $attributeSetInfo,
+        "attributeDetails" => $attributeDetails,
+        "defaultUrl" => $block->getUrl('mpmassupload/product/profile').'id/',
+        "infoUrl" => $url,
+        "row" => $row,
+        "linkSampleRow" => $linkSampleRow,
+        "sampleRow" => $sampleRow,
+        "attributeProfilesCollection" => $attributeProfilesCollection->getData(),
+        "dataflowProfileMsg" => $dataflowProfileMsg,
+        "noMatchingProfileMsg" => $noMatchingProfileMsg
+    ];
+
+    $data = $block->jsonEncode($data);
+    $groups = $block->getCustomerGroups();
+    $websites = $block->getAllWebsites();
+    ?>
+    <div class="wk-mu-sample-files" style="margin-bottom:0;">
+        <table style="width: 100%;">
+            <tr>
+                <?php if ($isSimpleAllowed) { ?>
+                    <td style="padding: 5px;">
+                        <a href="<?= $block->escapeHtml($sampleCsv[0]); ?>">
+                            <?= $block->escapeHtml(__("Sample Simple Type Csv File")); ?>
+                        </a>
+                    </td>
+                <?php } ?>
+                <?php if ($isDownloadableAllowed) { ?>
+                    <td style="padding: 5px;">
+                        <a href="<?= $block->escapeHtml($sampleCsv[1]); ?>">
+                            <?= $block->escapeHtml(__("Sample Downloadable Type Csv File")); ?>
+                        </a>
+                    </td>
+                <?php } ?>
+                <?php if ($isConfigurableAllowed) { ?>
+                    <td style="padding: 5px;">
+                        <a href="<?= $block->escapeHtml($sampleCsv[2]); ?>">
+                            <?= $block->escapeHtml(__("Sample Configurable Type Csv File")); ?>
+                        </a>
+                    </td>
+                <?php } ?>
+                <?php if ($isVirtualAllowed) { ?>
+                    <td style="padding: 5px;">
+                        <a href="<?= $block->escapeHtml($sampleCsv[3]); ?>">
+                            <?= $block->escapeHtml(__("Sample Virtual Type Csv File")); ?>
+                        </a>
+                    </td>
+                <?php } ?>
+            </tr>
+            <tr>
+                <?php if ($isSimpleAllowed) { ?>
+                    <td style="padding: 5px;">
+                        <a href="<?= $block->escapeHtml($sampleXml[0]); ?>">
+                            <?= $block->escapeHtml(__("Sample Simple Type XML File")); ?>
+                        </a>
+                    </td>
+                <?php } ?>
+                <?php if ($isDownloadableAllowed) { ?>
+                    <td style="padding: 5px;">
+                        <a href="<?= $block->escapeHtml($sampleXml[1]); ?>">
+                            <?= $block->escapeHtml(__("Sample Downloadable Type XML File")); ?>
+                        </a>
+                    </td>
+                <?php } ?>
+                <?php if ($isConfigurableAllowed) { ?>
+                    <td style="padding: 5px;">
+                        <a href="<?= $block->escapeHtml($sampleXml[2]); ?>">
+                            <?= $block->escapeHtml(__("Sample Configurable Type XML File")); ?>
+                        </a>
+                    </td>
+                <?php } ?>
+                <?php if ($isVirtualAllowed) { ?>
+                    <td style="padding: 5px;">
+                        <a href="<?= $block->escapeHtml($sampleXml[3]); ?>">
+                            <?= $block->escapeHtml(__("Sample Virtual Type XML File")); ?>
+                        </a>
+                    </td>
+                <?php } ?>
+            </tr>
+            <tr>
+                <?php if ($isSimpleAllowed) { ?>
+                    <td style="padding: 5px;">
+                        <a href="<?= $block->escapeHtml($sampleXls[0]); ?>">
+                            <?= $block->escapeHtml(__("Sample Simple Type XLS File")); ?>
+                        </a>
+                    </td>
+                <?php } ?>
+                <?php if ($isDownloadableAllowed) { ?>
+                    <td style="padding: 5px;">
+                        <a href="<?= $block->escapeHtml($sampleXls[1]); ?>">
+                            <?= $block->escapeHtml(__("Sample Downloadable Type XLS File")); ?>
+                        </a>
+                    </td>
+                <?php } ?>
+                <?php if ($isConfigurableAllowed) { ?>
+                    <td style="padding: 5px;">
+                        <a href="<?= $block->escapeHtml($sampleXls[2]); ?>">
+                            <?= $block->escapeHtml(__("Sample Configurable Type XLS File")); ?>
+                        </a>
+                    </td>
+                <?php } ?>
+                <?php if ($isVirtualAllowed) { ?>
+                    <td style="padding: 5px;">
+                        <a href="<?= $block->escapeHtml($sampleXls[3]); ?>">
+                            <?= $block->escapeHtml(__("Sample Virtual Type XLS File")); ?>
+                        </a>
+                    </td>
+                <?php } ?>
+            </tr>
+        </table>
+    </div>
+    <form method="post" action="<?= $block->escapeHtml($block->getUrl('mpmassupload/product/upload')); ?>"
+        id="wk_massupload_form"
+        enctype="multipart/form-data"
+        class="wk-massupload-container"
+        data-mage-init='{"validation":{}}'
+    >
+        <fieldset class="fieldset">
+            <?= $block->getBlockHtml('formkey') ?>
+            <?= $block->getBlockHtml('seller.formkey')?>
+            <legend class="legend">
+                <span><?= $block->escapeHtml(__("Upload Profile")); ?></span>
+                <button class="button wk-mp-btn" type="submit">
+                    <span><span><?= $block->escapeHtml(__("Upload Profile")); ?></span></span>
+                </button>
+            </legend>
+            <?php if ($isDownloadableAllowed) { ?>
+                <div class="field">
+                    <div class="control">
+                        <input type="checkbox" class="input-text" name="downloadable" id="downloadable">
+                        <?= $block->escapeHtml(__("Is Downloadable")); ?>
+                    </div>
+                </div>
+            <?php } ?>
+            <div class="field required">
+                <label for="attribute_set" class="label">
+                    <span><?= $block->escapeHtml(__("Select Attribute Set")); ?></span>
+                </label>
+                <div class="control">
+                    <select data-validate="{'validate-select':true}"
+                        title="<?= $block->escapeHtml(__("Attribute Set")); ?>"
+                        class="required-entry"
+                        id="attribute_set"
+                        name="attribute_set"
+                        aria-required="true">
+                        <option value=""><?= $block->escapeHtml(__("Select Attribute Set")); ?></option>
+                        <?php foreach ($attributeSetCollection as $attribute): ?>
+                            <option value="<?= $block->escapeHtml($attribute->getAttributeSetId()); ?>">
+                            <?= $block->escapeHtml(__($attribute->getAttributeSetName())); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="attribute_set" class="label">
+                    <span><?= $block->escapeHtml(__("Dataflow Profile")); ?></span>
+                </label>
+                <div class="control" id="dataFlow"></div>
+            </div>
+            <div class="field required">
+                <label for="massupload_csv" class="label">
+                    <span><?= $block->escapeHtml(__("Upload CSV/XML/XLS File")); ?></span>
+                </label>
+                <div class="control">
+                    <input type="file"
+                    data-validate="{required:true}"
+                    class="input-text required-entry"
+                    title="<?= $block->escapeHtml(__("CSV/XML/XLS")); ?>"
+                    name="massupload_csv"
+                    id="massupload_csv"
+                    aria-required="true">
+                </div>
+            </div>
+            <div class="field">
+                <label for="massupload_image" class="label">
+                    <span><?= $block->escapeHtml(__("Upload Images Zip")); ?></span>
+                </label>
+                <div class="control">
+                    <input type="file"
+                    class="input-text"
+                    title="<?= $block->escapeHtml(__("Images Zip")); ?>"
+                    name="massupload_image"
+                    id="massupload_image"
+                    aria-required="true">
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <?php if ($isConfigurableAllowed) {
+        $superAttributes = $block->getSuperAttributes();
+        $attributeInfo =  implode(", ", $superAttributes);
+        ?>
+        <div class="wk-mu-info-container wk-mu-super-attributes">
+            <div class="wk-field">
+                <div class="wk-mu-label"><?= $block->escapeHtml(__("Configurable Super Attributes")); ?></div>
+                <div class="wk-mu-content">
+                    <?= $block->escapeHtml($attributeInfo); ?>
+                </div>
+            </div>
+            <div class="wk-field">
+                <div class="wk-mu-sa-overlay wk-display-none">
+                    <div class="wk-mu-sa-loader"></div>
+                </div>
+                <div class="wk-mu-label"><?= $block->escapeHtml(__("Configurable Super Attribute Options")); ?></div>
+                <div class="wk-mu-content">
+                    <select data-validate="{'validate-select':true}"
+                        title="<?=$block->escapeHtml(__("Attribute Info")); ?>"
+                        class="required-entry"
+                        id="attribute_info"
+                        name="attribute_info"
+                        aria-required="true">
+                        <option value=""><?= $block->escapeHtml(__("Select Attribute")); ?></option>
+                        <?php foreach ($superAttributes as $id => $code): ?>
+                            <option value="<?= $block->escapeHtml($id); ?>">
+                                <?= $block->escapeHtml($code); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="wk-mu-options">
+                    <div class="wk-mu-options-title">
+                        <?= $block->escapeHtml(__("Options")); ?>
+                    </div>
+                    <div class="wk-mu-options-content">
+                        <?= $block->escapeHtml(__("No attribute is selected.")); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    } ?>
+    <?php if ($block->canSaveCustomAttribute()):
+        $multiSelectAttributes = $block->getMultiSelectCustomAttribute();?>
+        <div class="wk-mu-info-container wk-mu-super-attributes">
+            <div class="wk-field">
+                <div class="wk-mu-label"><?= $block->escapeHtml(__("CSV column name for custom attribute")); ?></div>
+                <div class="wk-mu-content wk-mu-custom-attribute">
+                    <?= $block->escapeHtml(implode(", ", $customAttributeCodes)); ?>
+                </div>
+            </div>
+        </div>
+        <div class="wk-mu-info-container wk-mu-super-attributes">
+            <div class="wk-field">
+                <div class="wk-mu-label"><?= $block->escapeHtml(__("Multiselect attribute value example")); ?></div>
+                <div class="wk-mu-content">
+                    <span class="wk-tier-price-span">value1</span>
+                    <span class="wk-tier-price-span">value1,value2,value3</span>
+                </div>
+            </div>
+        </div>
+        <div class="wk-mu-info-container wk-mu-super-attributes">
+            <div class="wk-field">
+                <div class="wk-multi-select-overlay wk-display-none">
+                    <div class="wk-mu-sa-loader wk-multi-select-loader"></div>
+                </div>
+                <div class="wk-mu-label">
+                    <?= $block->escapeHtml(__("Multiselect attribute options for custom attribute")); ?>
+                </div>
+                <div class="wk-mu-content">
+                    <select data-validate="{'validate-select':true}"
+                        title="<?=$block->escapeHtml(__("Attribute Info")); ?>"
+                        class="required-entry"
+                        id="multi_select_attribute_info"
+                        name="attribute_info"
+                        aria-required="true">
+                        <option value=""><?= $block->escapeHtml(__("Select Attribute")); ?></option>
+                        <?php foreach ($multiSelectAttributes as $id => $code): ?>
+                            <option value="<?= $block->escapeHtml($id); ?>"><?= $block->escapeHtml($code); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="wk-mu-options">
+                    <div class="wk-mu-options-title">
+                        <?= $block->escapeHtml(__("Options")); ?>
+                    </div>
+                    <div class="wk-multi-select-options-content">
+                        <?= $block->escapeHtml(__("No attribute is selected.")); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wk-mu-info-container wk-mu-super-attributes">
+            <div class="wk-field">
+                <div class="wk-mu-label"><?= $block->escapeHtml(__("Tier price attribute value example")); ?></div>
+                <div class="wk-mu-content ">
+                    <span class="wk-tier-price-span">
+                        [{"cust_group": "ALL GROUPS", "price_qty": "2","price": "10" }]
+                    </span>
+                    <span class="wk-tier-price-span">
+                     [
+                        {"cust_group": "ALL GROUPS", "price_qty": "2","price": "10" },
+                        {"cust_group":"Wholesale" , "price_qty": "10","price": "40"}
+                     ]
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="wk-mu-info-container wk-mu-super-attributes">
+            <div class="wk-field">
+                <div class="wk-mu-label"><?= $block->escapeHtml(__("Tier Price options for custom attribute")); ?></div>
+                <div class="wk-mu-content">
+                    <div class="wk-tier-price-content wk-tier-price-groups">
+                        <div class="wk-mu-label"><?= $block->escapeHtml(__("Customer Groups")); ?></div>
+                        <div class="wk-mu-content">
+                            <div class="wk-tier-price-row wk-tier-price-head">
+                                <div class="wk-tier-price-col"><?= $block->escapeHtml(__("GROUP NAME")); ?></div>
+                                <div class="wk-tier-price-col"><?= $block->escapeHtml(__("GROUP CODE")); ?></div>
+                            </div>
+                            <div class="wk-tier-price-row">
+                                <div class="wk-tier-price-col"><?= $block->escapeHtml(__("All Groups")); ?></div>
+                                <div class="wk-tier-price-col"><?= $block->escapeHtml(__("all")); ?></div>
+                            </div>
+                            <?php foreach ($groups as $groupId => $groupName): ?>
+                                <div class="wk-tier-price-row">
+                                    <div class="wk-tier-price-col"><?= $block->escapeHtml($groupName); ?></div>
+                                    <div class="wk-tier-price-col"><?= $block->escapeHtml($groupId); ?></div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <div class="wk-tier-price-content wk-tier-price-groups">
+                        <div class="wk-mu-label"><?= $block->escapeHtml(__("Websites")); ?></div>
+                        <div class="wk-mu-content">
+                            <div class="wk-tier-price-row wk-tier-price-head">
+                                <div class="wk-tier-price-col"><?= $block->escapeHtml(__("WEBSITE NAME")); ?></div>
+                                <div class="wk-tier-price-col"><?= $block->escapeHtml(__("WEBSITE CODE")); ?></div>
+                            </div>
+                            <div class="wk-tier-price-row">
+                                <div class="wk-tier-price-col"><?= $block->escapeHtml(__("All Websites")); ?></div>
+                                <div class="wk-tier-price-col"><?= $block->escapeHtml(__("all")); ?></div>
+                            </div>
+                            <?php foreach ($websites as $websiteId => $website): ?>
+                                <div class="wk-tier-price-row">
+                                    <div class="wk-tier-price-col"><?= $block->escapeHtml($website); ?></div>
+                                    <div class="wk-tier-price-col"><?= $block->escapeHtml($websiteId); ?></div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+    <div class="wk-massupload-container">
+        <fieldset class="fieldset">
+            <?= $block->getBlockHtml('formkey') ?>
+            <?= $block->getBlockHtml('seller.formkey')?>
+            <legend class="legend">
+                <span><?= $block->escapeHtml(__("Run Profile")); ?></span>
+            </legend>
+            <div class="field required">
+                <label class="label">
+                    <span><?= $block->escapeHtml(__("Select Profile")); ?></span>
+                </label>
+                <div class="control">
+                    <select data-validate="{'validate-select':true}"
+                        title="Profile"
+                        class="required-entry"
+                        id="profile"
+                        name="profile"
+                        aria-required="true">
+                        <?php foreach ($profiles as $profileId => $name): ?>
+                            <option value="<?= $block->escapeHtml($profileId); ?>">
+                                <?= $block->escapeHtml($name); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <button id="run-profile" class="button wk-mp-btn" type="submit">
+                <span><span><?= $block->escapeHtml(__("Run Profile")); ?></span></span>
+            </button>
+        </fieldset>
+    </div>
+    <script type="text/x-magento-init">
+        {
+            "body": {
+                "Webkul_MpMassUpload/js/view": <?= /* @noEscape */ $data ?>
+            }
+        }
+    </script>
+    <!-- to avoid multiple form submission -->
+    
+<?php else: ?>
+    <h2 class="wk-mp-error-msg">
+        <?= $block->escapeHtml(__("To Become Seller Please Contact to Admin.")); ?>
+    </h2>
+<?php endif; ?>

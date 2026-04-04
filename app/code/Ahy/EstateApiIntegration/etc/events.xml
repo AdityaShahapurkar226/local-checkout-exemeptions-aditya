@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+
+    <!-- When a quote item is removed -->
+    <event name="sales_quote_remove_item">
+        <observer name="ahy_orchid_reset_on_remove"
+                  instance="Ahy\EstateApiIntegration\Observer\ResetRestrictionOnRemove"/>
+    </event>
+
+    <!-- Before quote is converted to order -->
+    <event name="sales_model_service_quote_submit_before">
+        <observer name="copy_age_fields_to_order"
+                  instance="Ahy\EstateApiIntegration\Observer\CopyAgeFieldsToOrder"/>
+        <observer name="copy_estate_document_to_order"
+                  instance="Ahy\EstateApiIntegration\Observer\CopyEstateDocumentToOrder"/>
+    </event>
+ <event name="controller_action_predispatch_checkout_index_index">
+        <observer name="disable_ffl_for_aa_products" 
+                  instance="Ahy\EstateApiIntegration\Observer\DisableFflObserver"/>
+    </event>
+</config>

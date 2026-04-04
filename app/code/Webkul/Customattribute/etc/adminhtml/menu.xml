@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Customattribute
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+    <add id="Webkul_Customattribute::customattribute" title="Custom attribute" module="Webkul_Customattribute" sortOrder="12" resource="Webkul_Customattribute::index" parent="Webkul_Marketplace::marketplace"/> 
+    <add id="Webkul_Customattribute::index" title="Manage Custom Attribute" module="Webkul_Customattribute" sortOrder="1" parent="Webkul_Customattribute::customattribute" action="customattribute/index" resource="Webkul_Customattribute::index"/>
+    </menu>
+</config>

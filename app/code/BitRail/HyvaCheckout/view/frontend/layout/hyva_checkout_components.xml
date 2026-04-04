@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.payment.methods">
+            <!-- Block is optional, only if you want to show more content when the Bitrail method is active. -->
+            <block name="checkout.payment.method.bitrail" as="bitrail" template="Bitrail_HyvaCheckout::checkout_component.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        Bitrail\HyvaCheckout\Magewire\Payment\Method\Bitrail
+                    </argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+        <referenceBlock name="head.additional">
+            <block name="nonce_script" template="Bitrail_HyvaCheckout::setup_script.phtml"/>
+        </referenceBlock>
+    </body>
+</page>

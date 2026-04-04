@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">reply_form.reply_form_source</item>
+            <item name="deps" xsi:type="string">reply_form.reply_form_source</item>
+            <item name="namespace" xsi:type="string">reply_form</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Data Information</item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="namespace" xsi:type="string">reply_form</item>
+        </item>
+        <item name="layout" xsi:type="array">
+            <item name="type" xsi:type="string">tabs</item>
+        </item>
+        <item name="buttons" xsi:type="array">
+            <item name="back" xsi:type="string">Webkul\MpSellerBuyerCommunication\Block\Adminhtml\Query\Reply\BackButton</item>
+            <item name="save" xsi:type="string">Webkul\MpSellerBuyerCommunication\Block\Adminhtml\Query\Reply\SaveButton</item>
+        </item>
+    </argument>
+    <dataSource name="reply_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Webkul\MpSellerBuyerCommunication\Model\CommunicationDataProvider</argument>
+            <argument name="name" xsi:type="string">reply_form_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
+            <argument name="requestFieldName" xsi:type="string">comm_id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="submit_url" xsi:type="url" path="*/*/savereply">
+                    </item>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+
+    <fieldset name="reply_form">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="collapsible" xsi:type="boolean">false</item>
+                <item name="label" xsi:type="string" translate="true">Communication Details</item>
+                <item name="sortOrder" xsi:type="number">10</item>
+            </item>
+        </argument>
+        <field name="message">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Message</item>
+                    <item name="formElement" xsi:type="string">textarea</item>
+                    <item name="required" xsi:type="boolean">true</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="query_status">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Webkul\MpSellerBuyerCommunication\Model\Source\QueryStatus</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Query Status</item>
+                    <item name="dataType" xsi:type="string">number</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                </item>
+            </argument>
+        </field>
+        <field name="img_attachment">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string">Attachments</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="formElement" xsi:type="string">fileUploader</item>
+                    <item name="notice" xsi:type="string" translate="true">Allowed file types: jpeg, jpg, png, gif, zip, doc, pdf, rar, xls, xlsx, csv.</item>
+                    <item name="allowedExtensions" xsi:type="string">jpg jpeg gif png csv xls xlsx zip doc pdf rar</item>
+                    <item name="elementTmpl" xsi:type="string">ui/form/element/uploader/uploader</item>
+                    <item name="previewTmpl" xsi:type="string">Magento_Catalog/image-preview</item>
+                    <item name="isMultipleFiles" xsi:type="boolean">true</item>
+                    <item name="uploaderConfig" xsi:type="array">
+                        <item name="url" xsi:type="url" path="mpsellerbuyercommunication/query/savefiles" >
+                            <param name="comm_id">entity_id</param>
+                            <param name="conv_id">entity_id</param>
+                        </item>
+                    </item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">false</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+</form>

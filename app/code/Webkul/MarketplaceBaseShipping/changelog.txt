@@ -1,0 +1,46 @@
+Legend
+
++ Features
+- Bugs
+
+-------------------------------- Version 5.0.0 --------------------------------------
+
+    + Version Upgrade
+
+-------------------------------- Version 4.0.0 --------------------------------------
+
+    + Compatible with Magento 2.4.x
+
+-------------------------------- Version 3.0.2 --------------------------------------
+
+    + Fix some bug
+
+-------------------------------- Version 3.0.1 --------------------------------------
+
+    + Add Multi-address checkout functionality.
+    + Added own observer to manage shipping charges instead of it's shipping module.
+
+-------------------------------- Version 3.0.0 --------------------------------------
+
+    + Version updated for magento 2.3.x
+
+-------------------------------- Version 2.2.0 --------------------------------------
+
+    + Version updated for magento 2.2.
+
+-------------------------------- Version 2.1.1 --------------------------------------
+
+    + Product dimension attribute added at seller product page.
+
+-------------------------------- Version 2.1.0 --------------------------------------
+
+    + Compatible with magento 2.3.x and Marketplace 2.2.x
+
+-------------------------------- Version 2.0.1 --------------------------------------
+
+    + Product dimension attribute added at seller product page.
+
+-------------------------------- Version 2.0.0 --------------------------------------
+
+    + Allow Sellers to add Seller Origin Address
+    + Base module for Marketplace Shipping Add-on

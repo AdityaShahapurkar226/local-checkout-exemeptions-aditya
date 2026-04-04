@@ -1,0 +1,76 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$_helper = $block->getMpHelper();
+$isPartner= $_helper->isSeller();
+$magentoCurrentUrl = $block->getCurrentUrl();
+$allow_pro_type=$_helper->getAllowedProductType();
+$isSellerGroup = $_helper->isSellerGroupModuleInstalled();
+?>
+<style type="text/css">
+    @media only screen and (max-width: 767px){
+
+        .block-collapsible-nav.wk-mp-main{
+            top: 20px;
+        }
+    }
+</style>
+<nav class="account-nav">
+    <ul class="nav items">
+        <?php
+        if ($isPartner) { ?>
+            <?php if (($isSellerGroup && $_helper->isAllowedAction('mpmassupload/dataflow/profile')) ||
+                !$isSellerGroup) { ?>
+            <li class="nav item <?= strpos($magentoCurrentUrl, 'mpmassupload/dataflow/profile')? "current":"";?>">
+                    <a href="<?= $block->escapeHtml($block->getUrl(
+                        'mpmassupload/dataflow/profile',
+                        ['_secure' => $block->getRequest()->isSecure()]
+                    )); ?>">
+                        <?= $block->escapeHtml(__('Mass Upload Dataflow Profile'))?>
+                    </a>
+            </li>
+            <?php } ?>
+            <?php if (($isSellerGroup && $_helper->isAllowedAction('mpmassupload/product/view')) ||
+                !$isSellerGroup) { ?>
+            <li class="nav item <?= strpos($magentoCurrentUrl, 'mpmassupload/product/view')? "current":"";?>">
+                    <a href="<?= $block->escapeHtml($block->getUrl(
+                        'mpmassupload/product/view',
+                        ['_secure' => $block->getRequest()->isSecure()]
+                    ));?>">
+                        <?= $block->escapeHtml(__('Mass Upload Product'))?>
+                    </a>
+            </li>
+            <?php } ?>
+            <?php if (($isSellerGroup && $_helper->isAllowedAction('mpmassupload/profilelisting/profilelist')) ||
+                !$isSellerGroup) { ?>
+            <li class="nav item 
+            <?= strpos($magentoCurrentUrl, 'mpmassupload/profilelisting/profilelist')? "current":"";?>">
+                    <a href="<?= $block->escapeHtml($block->getUrl(
+                        'mpmassupload/profilelisting/profilelist',
+                        ['_secure' => $block->getRequest()->isSecure()]
+                    )); ?>">
+                        <?= $block->escapeHtml(__('Mass Upload Profile Listing'))?>
+                    </a>
+            </li>
+            <?php } ?>
+            <?php if (($isSellerGroup && $_helper->isAllowedAction('mpmassupload/product/export')) ||
+                !$isSellerGroup) { ?>
+            <li class="nav item <?= strpos($magentoCurrentUrl, 'mpmassupload/product/export')? "current":"";?>">
+                    <a href="<?= $block->escapeHtml($block->getUrl(
+                        'mpmassupload/product/export',
+                        ['_secure' => $block->getRequest()->isSecure()]
+                    )); ?>">
+                        <?= $block->escapeHtml(__('MassUpload Product Export'))?>
+                    </a>
+            </li>
+            <?php } ?>
+        <?php } ?>
+    </ul>
+</nav>

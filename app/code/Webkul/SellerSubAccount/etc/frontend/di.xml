@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_SellerSubAccount
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="front_sellersubaccount_accounts_list_data_source" xsi:type="string">Webkul\SellerSubAccount\Model\ResourceModel\SubAccount\FrontGrid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Webkul\SellerSubAccount\Model\ResourceModel\SubAccount\FrontGrid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">marketplace_sub_accounts</argument>
+            <argument name="eventPrefix" xsi:type="string">marketplace_sub_accounts_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">sub_accounts_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Webkul\SellerSubAccount\Model\ResourceModel\SubAccount</argument>
+        </arguments>
+    </type>
+    <type name="\Magento\Framework\App\Action\Action">
+        <plugin name="Webkul_SellerSubAccount::controllerPathValidator"
+            type="Webkul\SellerSubAccount\Plugin\Action\ControllerPathValidator"
+            sortOrder="11" />
+    </type>
+    <type name="Webkul\Marketplace\Block\Account\Becomeseller">
+        <plugin name="becomeseller_override_template" type="Webkul\SellerSubAccount\Plugin\Block\Marketplace\Account\Becomeseller" />
+    </type>
+</config>

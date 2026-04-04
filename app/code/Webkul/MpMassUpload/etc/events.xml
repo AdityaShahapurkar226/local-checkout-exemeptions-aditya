@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="customer_delete_commit_after">
+        <observer name="webkul_mpmassupload_customer_delete_commit_after_observer" instance="Webkul\MpMassUpload\Observer\CustomerDeleteCommitAfterObserver" />
+    </event>
+</config>

@@ -1,0 +1,20 @@
+<?php /** @var Klevu\FrontendJs\Block\Template $block */ ?>
+
+<!-- custom version of the klevuQuickAutoSuggestions template -->
+<script type="template/klevu" id="ahyKlevuQuickAutoSuggestions" defer>
+    <% if(data.suggestions.autosuggestion) { %>
+        <% if(data.suggestions.autosuggestion.length> 0 ) { %>
+            <% var queryParam = klevu.getSetting(klevu, "settings.url.queryParam"); %>
+            <div class="klevuAutoSuggestionsWrap klevuAutosuggestions">
+                <div class="!capitalize klevuSuggestionHeading">
+                    <span class=""> <%=helper.translate("Suggestions")%></span>
+                </div>
+                <ul>
+                    <% helper.each(data.suggestions.autosuggestion,function(key,suggestion){ %>
+                        <li tabindex="-1"><a target="_self" href="<%=helper.buildUrl(data.settings.landingUrl, queryParam , helper.stripHtml(suggestion.suggest))%>" data-content="<%=helper.stripHtml(suggestion.suggest) %>" class="klevu-track-click"> <%=suggestion.suggest %> </a></li>
+                    <% }); %>
+                </ul>
+            </div>
+        <% } %>
+    <% } %>
+</script>

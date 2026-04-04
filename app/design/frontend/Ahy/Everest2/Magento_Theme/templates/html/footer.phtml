@@ -1,0 +1,61 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\Escaper;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+?>
+<div class="pre-footer bg-[url('/media/wysiwyg/footer/footer-background.webp')] bg-cover bg-no-repeat bg-center">
+    <div class="flex justify-center items-center p-8 h-64">
+        <div class="bg-[#dfb897] border-3 border-ahy-blue justify-center flex flex-col items-center p-[1.5em] w-[300px] text-xs m-auto text-ahy-blue">
+            <h2 class="uppercase font-bold md:text-lg text-center pb-2"><?= $escaper->escapeHtml(__('helping people thrive in the outdoors')) ?></h2>
+            <a href="/give-back-fund" class="underline underline-offset-4 text-center"><?= $escaper->escapeHtml(__('View the Give Back Fund')) ?></a>
+        </div>
+    </div>
+</div>
+<div class="text-gray-700 body-font bg-ahy-bg border-t border-ahy-bg shadow">
+    <div class="mx-auto max-w-[88rem] px-6 py-8 lg:px-8">
+        <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+            <?php foreach ($block->getChildNames() as $childName): ?>
+                <?= $childName !== 'footer-copyright' ? $block->getBlockHtml($childName) : '' ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <div class="flex justify-center items-center flex-col">
+        <h2 class="uppercase text-4xl pb-4 font-league-gothic text-ahy-blue"><em><?= $escaper->escapeHtml(__("what's your everest?")) ?></em></h2>
+        <img 
+            src="/media/icons/everest-icon-blue.svg" 
+            alt="everest logo" 
+            class="w-auto h-auto"
+            width="250"
+            height="250"
+            loading="lazy"
+        >
+    </div>
+    <div class="bg-ahy-blue">
+        <div class="container max-w-[88rem] py-6 px-8 mx-auto ">
+            <?= $block->getChildHtml('copyright') ?>
+        </div>
+    </div>
+</div>
+<script>
+    klevu.modifyResponse('quick', function(data, scope){
+        klevu.each(data.template.query, function(key, query){
+            if (key.indexOf('productList') !== -1) {
+                klevu.each(query.result, function(key, item){
+                    query.result[key].shortDesc = ''
+                });
+            }
+        });
+    });
+</script>
+<!-- <script src="https://cdn.attn.tv/everest/dtag.js"></script> -->

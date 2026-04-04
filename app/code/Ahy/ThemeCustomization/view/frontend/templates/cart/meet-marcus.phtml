@@ -1,0 +1,268 @@
+<?php 
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+?>
+<!-- meet marcus start -->
+<div x-data="{
+        open: false,
+    }"
+>
+    <div class="meet-marcus-section text-ahy-blue flex flex-col lg:flex-row py-4 lg:w-[85%] 2xl:w-[75%]">
+        <div class="customer-support gap-4 flex flex-row lg:flex-col card bg-ahy-yellow-card lg:bg-ahy-bg p-5 lg:shadow-none">
+            <div class="customer-support-icon">
+                <img src="/media/icons/contact-us-icon.png" alt="customer support" class="h-12 w-12 rounded-full" />
+            </div>
+            <div class="meet-marcus-content">
+                <div class="customer-support-title text-lg leading-none font-bold pb-1">
+                    <span class="capitalize">customer support</span>
+                </div>
+                <div class="customer-support-description text-[12px]">
+                    <span class="capitalize" >
+                        <a href="tel:1-866-806-0934" class="">1-866-806-0934</a>
+                        meet <span @click="open = true" class="underline-offset-4 cursor-pointer underline">marcus</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <hr class="">
+
+        <div class="shop-secure-promise gap-4 flex flex-row lg:flex-col card bg-ahy-yellow-card lg:bg-ahy-bg p-5 lg:shadow-none">
+            <div class="shop-secure-promise-icon">
+                <img src="/media/icons/shop-secure-promise-icon.png" alt="shop secure promise" class="h-12 w-12" />
+            </div>
+            <div class="meet-marcus-content">
+                <div class="shop-secure-promise-title text-lg leading-none font-bold pb-1">
+                    <span class="capitalize">shop secure promise</span>
+                </div>
+                <div class="shop-secure-promise-description text-[12px]">
+                    <span class="capitalize">securely processed</span>
+                </div>
+            </div>
+        </div>
+
+        <hr class="">
+
+        <div class="give-back-fund flex gap-4 flex-row lg:flex-col card bg-ahy-yellow-card lg:bg-ahy-bg p-5 lg:shadow-none">
+            <div class="give-back-fund-icon">
+                <img src="/media/icons/give-back-fund-icon.png" alt="give back fund" class="h-12 w-12" />
+            </div>
+            <div class="meet-marcus-content">
+                <div class="give-back-fund-title flex 2xl:justify-between items-baseline">
+                    <div class="leading-none pb-1"><span class="capitalize leading-none text-lg font-bold">give back fund</span></div>
+                    <div class="ahy-tooltip">
+                        <img src="/media/icons/info-icon-up.svg" alt="" class="w-8 h-4 img-info-up">
+                        <img src="/media/icons/info-icon-over.svg" alt="" class="w-8 h-4 hidden">
+                        <div class="ahy-tooltip-text bg-white shadow-xl p-4 flex flex-col gap-4">
+                            <div class="ahy-tooltip-header"><span class="capitalize text-lg font-bold">give back fund</span></div>
+                            <div class="ahy-tooltip-description">
+                                <p class="text-xs font-medium">We prioritize serving those who serve nature. Everest represents the boundless outdoors. Find out how we give back.</p>
+                            </div>
+                            <div class="ahy-tooltip-button">
+                                <a href="/give-back-fund" class="">
+                                    <button class="border-ahy-blue border-2 text-[11px] rounded-full px-8 py-1 font-bold">Details</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="give-back-fund-description text-[12px]">
+                    <span class="capitalize">supporting outdoor causes</span>
+                </div>
+            </div>
+        </div>
+
+        <hr class="">
+
+        <div class="price-match-guarantee gap-4 flex flex-row lg:flex-col card bg-ahy-yellow-card lg:bg-ahy-bg p-5 lg:shadow-none">
+            <div class="price-match-guarantee-icon">
+                <img src="/media/icons/price-match-guarantee-icon.png" alt="price match guarantee" class="h-12 w-12" />
+            </div>
+            <div class="meet-marcus-content">
+                <div class="price-match-guarantee-title flex 2xl:justify-between items-baseline">
+                    <div class="lg:leading-none pb-1"><span class="capitalize text-base lg:text-lg lg:leading-none font-bold">price match guarantee</span></div>
+                    <div class="ahy-tooltip">
+                        <img src="/media/icons/info-icon-up.svg" alt="" class="w-8 h-4 img-info-up">
+                        <img src="/media/icons/info-icon-over.svg" alt="" class="w-8 h-4 hidden">
+                        <div class="ahy-tooltip-text bg-white shadow-xl p-4 flex flex-col gap-4">
+                            <div class="ahy-tooltip-header"><span class="capitalize text-lg font-bold">price match guarantee</span></div>
+                            <div class="ahy-tooltip-description">
+                                <p class="text-xs font-medium">Ready to wrestle Yetis over prices? Everest is up for the challenge with our Price Match guarantee.</p>
+                            </div>
+                            <div class="ahy-tooltip-button">
+                                <a href="/price-match-guarantee" class="">
+                                    <button class="border-ahy-blue border-2 text-[11px] rounded-full px-8 py-1 font-bold">Details</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="price-match-guarantee-description text-[12px]">
+                    <span class="">Found a lower price? We'll match it.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- meet marcus end -->
+    <template x-if="true && open">
+        <div role="dialog"
+            aria-labelledby="cart-drawer-title"
+            aria-modal="true"
+            class="fixed inset-y-0 right-0 z-30 flex max-w-full"
+        >
+            <div class="backdrop"
+                x-show="open"
+                x-transition:enter="ease-in-out duration-500"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="ease-in-out duration-500"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                @click="open=false"
+                aria-label="Close panel"
+            >
+            </div>
+            <div class="relative w-screen max-w-lg shadow-2xl"
+                x-show="open"
+                x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700"
+                x-transition:enter-start="translate-x-full"
+                x-transition:enter-end="translate-x-0"
+                x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
+                x-transition:leave-start="translate-x-0"
+                x-transition:leave-end="translate-x-full"
+            >
+                <div
+                    x-show="open"
+                    x-transition:enter="ease-in-out duration-500"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="ease-in-out duration-500"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0" class="absolute top-0 right-0 z-20 flex p-2 mt-2"
+                >
+                    <button @click="open=false" aria-label="Close panel"
+                            class="p-2 card rounded-full text-ahy-blue transition duration-150 ease-in-out hover:text-black">
+                        <?= $heroicons->xHtml(); ?>
+                    </button>
+                </div>
+                <div class="flex flex-col h-full pt-6 overflow-y-scroll bg-white shadow-xl">
+                    <?= $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('meet-marcus-slideout-content')->toHtml();?>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>
+<style>
+    .ahy-tooltip {
+        position: relative;
+        display: inline-block;
+    }
+
+    .ahy-tooltip:hover img.img-info-up {
+        display: none;
+    }
+
+    .ahy-tooltip:hover img.hidden {
+        display: block;
+    }
+
+    .ahy-tooltip .ahy-tooltip-text {
+        display:none;
+        width: 300px;
+        position: absolute;
+        z-index: 1;
+        bottom: 149%;
+        left: 50%;
+        margin-left: -149px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .ahy-tooltip .ahy-tooltip-text::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -15px;
+        border-width: 15px;
+        border-style: solid;
+        border-color: #0d2f47 transparent transparent transparent;
+    }
+
+    .ahy-tooltip:hover .ahy-tooltip-text {
+        display:flex;
+        opacity: 1;
+        border-bottom: 5px solid;
+    }
+
+    .ahy-tooltip-button button:hover{
+        box-shadow: #0d2f47 0px 0px 0px 1px inset;
+    }
+
+    @media screen and (max-width: 319px) {
+        .ahy-tooltip .ahy-tooltip-text {
+            width: 250px;
+            left: -250%;
+        }
+        .ahy-tooltip .ahy-tooltip-text::after {
+            left: 88%;
+        }
+    }
+    @media screen and (min-width: 320px) and (max-width: 339px) {
+        .ahy-tooltip .ahy-tooltip-text {
+            width: 260px;
+            left: -250%;
+        }
+        .ahy-tooltip .ahy-tooltip-text::after {
+            left: 88%;
+        }
+    }
+    @media screen and (min-width: 340px) and (max-width: 369px) {
+        .ahy-tooltip .ahy-tooltip-text {
+            width: 260px;
+            left: -220%;
+        }
+        .ahy-tooltip .ahy-tooltip-text::after {
+            left: 88%;
+        }
+    }
+    @media screen and (min-width: 350px) and (max-width: 369px) {
+        .ahy-tooltip .ahy-tooltip-text {
+            width: 260px;
+            left: -220%;
+        }
+        .ahy-tooltip .ahy-tooltip-text::after {
+            left: 88%;
+        }
+    }
+    @media screen and (min-width: 370px) and (max-width: 399px) {
+        .ahy-tooltip .ahy-tooltip-text {
+            width: 260px;
+            left: -200%;
+        }
+        .ahy-tooltip .ahy-tooltip-text::after {
+            left: 88%;
+        }
+    }
+    @media screen and (min-width: 400px) and (max-width: 449px) {
+        .ahy-tooltip .ahy-tooltip-text {
+            width: 300px;
+            left: -200%;
+        }
+        .ahy-tooltip .ahy-tooltip-text::after {
+            left: 76%;
+        }
+    }
+    @media screen and (min-width: 450px) and (max-width: 499px) {
+        .ahy-tooltip .ahy-tooltip-text {
+            left: -50%;
+        }
+        .ahy-tooltip .ahy-tooltip-text::after {
+            left: 60%;
+        }
+    }
+</style>

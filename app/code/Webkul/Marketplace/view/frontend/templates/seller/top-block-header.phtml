@@ -1,0 +1,18 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$viewModel = $block->getViewModel();
+$helper = $viewModel->getHelper();
+$pageLayout  =    $helper->getSellerProfileLayout();
+if ($pageLayout == 1) {
+    echo $block->getChildHtml('marketplace_seller_top_block_layout1');
+} elseif ($pageLayout == 2) {
+    echo $block->getChildHtml('marketplace_seller_top_block_layout2');
+}

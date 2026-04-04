@@ -1,0 +1,19 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <referenceBlock name="marketplace_sellerprofile">
+        <block class="Webkul\Marketplace\Block\Profile" name="marketplace_sellerprofile_layout1" template="Webkul_Marketplace::seller/profile/profile.phtml" after="-">
+            <arguments>
+                <argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+            </arguments>
+        </block>
+        <block class="Webkul\Marketplace\Block\Profile" name="microsite.details" template="Webkul_Marketplace::seller/profile/profile_layout2.phtml" cacheable="false" after="-">
+            <!-- <arguments>
+						<argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+					</arguments> -->
+        </block>
+        <block class="Webkul\Marketplace\Block\Profile" name="marketplace_sellerprofile_layout_ahy" template="Webkul_Marketplace::seller/profile/profile_ahy.phtml" after="-">
+            <arguments>
+                <argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+            </arguments>
+        </block>
+    </referenceBlock>
+</page>

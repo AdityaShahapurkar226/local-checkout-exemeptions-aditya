@@ -1,0 +1,69 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var HeroiconsOutline $iconsViewModel */
+/** @var Escaper $escaper */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Hyva\CheckoutPayPal\ViewModel\Payment\Method\PPExpress as ViewModel;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\Escaper;
+
+$viewModel = $viewModels->require(ViewModel::class);
+$iconsViewModel = $viewModels->require(HeroiconsOutline::class);
+?>
+<div class="hidden">
+<!-- <div class="flex flex-col space-y-3 xl:space-x-6 xl:flex-row xl:space-y-0 "> -->
+    <div class="p-4 bg-gray-100 rounded-lg xl:w-2/3">
+        <div class="grid grid-cols-6 md:grid-cols-12">
+            <?php if ($block->hasData('paypal_funding_source')): ?>
+                <div class="font-bold col-span-2 md:col-span-6">
+                    <span><?= $escaper->escapeHtmlAttr(__('Funding:'))?></span>
+                </div>
+
+                <div class="col-span-4 md:col-span-6">
+                    <?= $escaper->escapeHtml(ucfirst($block->getData('paypal_funding_source'))) ?>
+                </div>
+            <?php endif ?>
+        </div>
+    </div>
+
+    <div class="p-4 bg-gray-100 rounded-lg xl:w-1/3 space-y-6">
+        <button class="btn btn-secondary w-full justify-center"
+                title="<?= $escaper->escapeHtmlAttr(__('Edit')) ?>"
+                wire:click="edit"
+                wire:loading.attr="disabled"
+                wire:loading.class="disabled"
+        >
+            <?= $escaper->escapeHtml(__('Edit Payment Information')) ?>
+        </button>
+
+        <?php if ($viewModel->canCancel()): ?>
+        <div>
+            <button class="btn btn-secondary w-full justify-center"
+                    title="<?= $escaper->escapeHtmlAttr(__('Cancel')) ?>"
+                    onclick="confirm('<?= $escaper->escapeJs(__('Are you sure you want to cancel this PayPal payment?')) ?>') || event.stopImmediatePropagation()"
+                    wire:click="cancel"
+                    wire:loading.attr="disabled"
+                    wire:loading.class="disabled"
+            >
+                <?= $escaper->escapeHtml(__('Cancel Payment')) ?>
+            </button>
+
+            <p class="bg-yellow-100 text-sm text-yellow-800 p-2 border border-yellow-600 mt-3 rounded-lg text-center italic">
+                <?= $escaper->escapeHtmlAttr(__('Canceling the payment is only visible in PayPal debug mode.'))?>
+            </p>
+        </div>
+        <?php endif ?>
+    </div>
+</div>

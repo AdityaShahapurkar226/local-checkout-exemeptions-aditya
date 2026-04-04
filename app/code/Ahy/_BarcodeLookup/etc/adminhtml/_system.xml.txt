@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+
+    <system>
+        <section id="barcode_lookup" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>BarcodeLookup</label>
+            <tab>general</tab> <!-- To avoid needing custom tab -->
+            <resource>Ahy_BarcodeLookup::config</resource>
+
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+
+                <field 
+                    id="update_interval" 
+                    translate="label" 
+                    type="text" 
+                    sortOrder="20"
+                    showInDefault="1" 
+                    showInWebsite="1" 
+                    showInStore="1"
+                >
+                    <label>Product Update Time Interval (in days)</label>
+                    <comment>How often to update the products via BarcodeLookup API</comment>
+                    <validate>validate-digits</validate>    <!-- Ensures only digits are accepted -->
+                    <frontend_class>required-entry</frontend_class>     <!-- Makes field required -->
+                    <config_path>barcode_lookup/general/update_interval</config_path>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

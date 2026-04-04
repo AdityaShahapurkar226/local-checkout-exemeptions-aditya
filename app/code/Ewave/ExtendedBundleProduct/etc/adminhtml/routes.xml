@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <route frontName="ewave_extendedbundleproduct" id="ewave_extendedbundleproduct">
+            <module before="Magento_Backend" name="Ewave_ExtendedBundleProduct"/>
+        </route>
+    </router>
+</config>

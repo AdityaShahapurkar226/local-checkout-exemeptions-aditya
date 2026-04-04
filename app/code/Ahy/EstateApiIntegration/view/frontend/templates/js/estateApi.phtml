@@ -1,0 +1,424 @@
+<?php
+
+/** @var \Ahy\EstateApiIntegration\ViewModel\CustomerInfo $customerViewModel */
+$customerViewModel = $block->getData('viewModel');
+$isLoggedIn = $customerViewModel ? $customerViewModel->isLoggedIn() : false;
+$customerZip = $customerViewModel ? $customerViewModel->getCustomerZip() : '';
+$retryLimit = $customerViewModel ? (int) $customerViewModel->getZipRetryLimit() : 3;
+?>
+
+<div x-data x-show="$store.estateApi.notify.show && !$store.estateApi.showModal" x-cloak x-transition.opacity
+    class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 rounded-3xl mt-2 toaster"
+    :class="$store.estateApi.notify.type === 'success' ? 'bg-green-500 text-white border-green-300' : 'bg-red-500 text-white border-red-300'">
+    <div class="border px-6 py-4 rounded-3xl shadow-md max-w-2xl w-full">
+        <p class="font-medium" x-text="$store.estateApi.notify.message"></p>
+    </div>
+</div>
+
+<div x-data x-init="$watch('$store.estateApi.showModal', value => {
+    document.body.classList.toggle('overflow-hidden', value);
+    if (value === true) {
+        if (!$store.estateApi.zipRetryLimit || $store.estateApi.zipRetryLimit < 1) {
+            $store.estateApi.zipRetryLimit = <?= $retryLimit ?>;
+        }
+        $store.estateApi.zipRetryCount = 0;
+        $store.estateApi.retryMessage = '';
+    }
+})"
+
+    id="estateModalRoot"
+    x-show="$store.estateApi.showModal" x-cloak x-transition
+    class="fixed inset-0 modal flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div class="bg-white w-full max-w-md mx-auto rounded-2xl shadow-2xl p-6 z-[100]">
+        <h2 class="text-2xl font-semibold mb-3 text-gray-800">Enter Your ZIP Code</h2>
+        <p class="text-sm text-gray-600 mb-4">We need your ZIP code to verify product availability in your area.</p>
+
+        <input type="text" x-model="$store.estateApi.zip"
+            @keydown.enter.prevent="$store.estateApi.submitZip()"
+            class="w-full border border-gray-300 rounded-md px-4 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-ahy-red-light"
+            placeholder="e.g. 21205" />
+
+        <p x-show="$store.estateApi.retryMessage"
+            x-text="$store.estateApi.retryMessage"
+            class="text-red-600 text-sm mb-1"></p>
+
+        <p class="text-gray-600 text-xs mb-4">
+            Attempts remaining:
+            <span x-text="$store.estateApi.zipRetryLimit - $store.estateApi.zipRetryCount"></span>
+        </p>
+
+        <div class="flex justify-end space-x-2">
+            <button
+                type="button"
+                @click.stop.prevent="$store.estateApi.cancel()"
+                class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md text-sm text-gray-700"
+                x-text="$store.estateApi.zipRetryCount >= $store.estateApi.zipRetryLimit ? 'Close' : 'Cancel'">
+                >
+            </button>
+            <button
+                type="button"
+                @click="$store.estateApi.submitZip()"
+                :disabled="$store.estateApi.zipRetryCount >= $store.estateApi.zipRetryLimit"
+                :class="{
+                    '!bg-ahy-red-light opacity-50 cursor-not-allowed': $store.estateApi.zipRetryCount >= $store.estateApi.zipRetryLimit,
+                    'bg-ahy-red-light hover:bg-ahy-red-light': $store.estateApi.zipRetryCount < $store.estateApi.zipRetryLimit
+                }"
+                class="text-white px-4 py-2 rounded-md text-sm transition-colors duration-200 bg-ahy-red ">
+                Submit
+            </button>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        const customerZip = <?= json_encode($customerZip ?: '') ?>;
+        const isLoggedIn = <?= $isLoggedIn ? 'true' : 'false' ?>;
+        let finalZip = '';
+        if (isLoggedIn) {
+            sessionStorage.removeItem('ahy_user_zip');
+        }
+
+        if (customerZip && customerZip.length === 5) {
+            finalZip = customerZip;
+            sessionStorage.setItem('ahy_user_zip', customerZip);
+        } else {
+            const sessionZip = sessionStorage.getItem('ahy_user_zip');
+            if (sessionZip && sessionZip.length === 5) {
+                finalZip = sessionZip;
+            }
+        }
+        Alpine.store('estateApi', {
+            showModal: false,
+            hasRestricted: false,
+            productId: null,
+            resolve: null,
+            zip: finalZip,
+            zipRetryCount: 0,
+            zipRetryLimit: <?= max(1, $retryLimit) ?>,
+            retryMessage: '',
+
+            notify: {
+                show: false,
+                message: '',
+                type: 'success'
+            },
+
+            showNotification(message, type = 'success') {
+                this.notify.message = message;
+                this.notify.type = type;
+                this.notify.show = true;
+                setTimeout(() => {
+                    this.notify.show = false;
+                }, 3000);
+            },
+
+            async checkProductRestriction(productId, zip) {
+                if (!zip || zip.length !== 5) {
+                    const sessionZip = sessionStorage.getItem('ahy_user_zip');
+                    if (sessionZip && sessionZip.length === 5) {
+                        this.zip = sessionZip;
+                    }
+                } else {
+                    this.zip = zip;
+                }
+                this.productId = productId;
+                this.zipRetryCount = 0;
+                this.retryMessage = '';
+
+                try {
+                    const response = await fetch('/rest/V1/product/restricted', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({
+                            productId
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data[0] === true) {
+                        if (this.zip && this.zip.length === 5) {
+                            return await this.submitZip(true);
+                        } else {
+                            return new Promise((resolve) => {
+                                this.resolve = resolve;
+                                this.showModal = true;
+                                this.zipRetryCount = 0;
+                                this.retryMessage = '';
+                            }).then(result => {
+
+                                if (result === 1) {
+                                    return 1;
+                                }
+                                return 0;
+                            });
+                        }
+                    } else {
+                        return 1;
+                    }
+                } catch (error) {
+                    console.error('[estateApi] Error:', error);
+                    this.showNotification('API error occurred. Please try again.', 'error');
+                    return 0;
+                }
+            },
+            async saveOrchidRestriction(code) {
+                
+                try {
+                    await fetch('/rest/V1/quote/orchid-restriction', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({
+                             responseCode: code,
+                            productId: this.productId
+                        })
+                        
+                    });
+                    
+                } catch (e) {
+                    console.error('[estateApi] Failed to save Orchid restriction on quote', e);
+                }
+            },
+
+            async submitZip(skipRetry = false) {
+                const zipTrimmed = this.zip.trim();
+                sessionStorage.setItem('ahy_user_zip', zipTrimmed);
+
+                if (zipTrimmed.length !== 5 || isNaN(zipTrimmed)) {
+                    this.retryMessage = 'Please enter a valid 5-digit ZIP code.';
+                    return 0;
+                }
+
+                if (!this.productId) {
+                    console.error('[estateApi] No productId set.');
+                    this.retryMessage = 'Error: product not found.';
+                    return 0;
+                }
+                try {
+                    const response = await fetch('/rest/V1/product/validate-zip', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({
+                            productId: this.productId,
+                            zip: zipTrimmed
+                        })
+                    });
+                    const resultCode = await response.json();
+                    console.log("Orchid Alphanumeric response", resultCode)
+                    this.retryMessage = '';
+                    const remaining = this.zipRetryLimit - this.zipRetryCount;
+                    const restrictObj = resultCode;
+                    console.log("Kiran testing ", restrictObj)
+                    const responseCode = restrictObj[0] || null;
+                    console.log("Kiran testing response code", responseCode)
+                    if (resultCode) {
+                        // API returns array → take first object
+                        const restrictionData = Array.isArray(resultCode) ? resultCode[0] : resultCode;
+
+                        if (!restrictionData) {
+                            console.error("Invalid Orchid response");
+                            return 0;
+                        }
+
+                        const type = restrictionData.restriction ?? null;
+                        const shippingCode = restrictionData.shipping_restriction ?? null;
+                        const ageCode = restrictionData.age_restriction ?? null;
+
+                        console.log("Parsed:", {
+                            type,
+                            shippingCode,
+                            ageCode
+                        });
+
+                        // -------------------------------
+                        // Orchid Response A Handling
+                        // -------------------------------
+                        if (type === "A") {
+                            this.zipRetryCount++;
+
+                            if (this.zipRetryCount < this.zipRetryLimit) {
+                                this.retryMessage = "This product is restricted for your ZIP. Try another ZIP.";
+                                sessionStorage.removeItem('ahy_user_zip');
+                                this.resolve?.(0);
+                                return 0;
+                            }
+
+                            this.showModal = false;
+                            this.showNotification("Product not allowed in your ZIP.", "error");
+                            this.zip = '';
+                            this.zipRetryCount = 0;
+
+                            await this.saveOrchidRestriction(responseCode);
+                            this.resolve?.(0);
+                            return 0;
+                        }
+
+                        // -------------------------------
+                        // Orchid Response B Handling
+                        // -------------------------------
+                        if (type === "B") {
+                            const blockAddToCart = shippingCode === "FF";
+
+                            if (blockAddToCart) {
+                                this.zipRetryCount++;
+                                this.retryMessage = "This product cannot ship to your ZIP.";
+                                sessionStorage.removeItem('ahy_user_zip');
+
+                                if (this.zipRetryCount >= this.zipRetryLimit) {
+                                    this.showModal = false;
+                                    this.showNotification("Shipping to your ZIP is restricted.", "error");
+                                    this.zip = '';
+                                    this.zipRetryCount = 0;
+                                }
+                                return 0;
+                            }
+
+                            const shippingMessages = {
+                                AA: "Ship to consumer permitted.",
+                                BB: "Ship pending license or permit verification.",
+                                SHI: "Age verification required for shipment.",
+                                SNJ: "Shotgun ammo allowed. Other ammo requires license/permit.",
+                                CC: "Ships to FFL / dealer only."
+                            };
+
+                            // this.showNotification(
+                            //     shippingMessages[shippingCode] || "Shipping rules apply.",
+                            //     "success"
+                            // );
+
+                            this.showModal = false;
+                            await this.saveOrchidRestriction(responseCode);
+                            this.resolve?.(1);
+                            return 1;
+                        }
+
+                    }
+                    switch (resultCode) {
+                        case 0:
+                        case 1:
+                        case 3:
+                        case 5:
+                            this.showModal = false;
+                            this.retryMessage = '';
+
+                            await this.saveOrchidRestriction(String(resultCode));
+                            this.resolve?.(1);
+                            return 1;
+
+                        case 2: // Restricted
+                            await this.saveOrchidRestriction(String(resultCode));
+                            this.showModal = false;
+                            this.showNotification('This product is restricted in your area.', 'warning');
+                            this.resolve?.(0);
+                            return 0;
+
+                        case 4: // UPC not found or error
+                            this.zipRetryCount++;
+                            const remaining = this.zipRetryLimit - this.zipRetryCount;
+                            if (remaining > 0) {
+                                this.retryMessage = 'We\'re having trouble validating this product for your area. Please try another ZIP code or contact support.';
+                                this.showNotification(this.retryMessage, 'warning');
+                                await this.saveOrchidRestriction(String(resultCode));
+                                this.resolve?.(1);
+                                this.showModal = false;
+                                return 1;
+                            } else {
+                                this.showModal = false;
+                                this.showNotification('Maximum attempts reached. Please try again later.', 'error');
+                                this.resolve?.(0);
+                                return 0;
+                            }
+
+                        default:
+                            this.retryMessage = 'Unexpected response from server.';
+                            return 0;
+                    }
+
+
+                } catch (error) {
+                    console.error('[estateApi] ZIP validation error:', error);
+                    this.retryMessage = 'An error occurred while validating the ZIP. Please try again.';
+                    return 0;
+                }
+            },
+            cancel() {
+                this.showModal = false;
+                this.retryMessage = '';
+                this.zipRetryCount = 0;
+                this.zip = '';
+                this.productId = null;
+                this.notify.show = false;
+                this.zipRetryLimit = <?= $retryLimit ?>;
+                this.zipRetryCount = 0;
+                this.resolve?.(0);
+                sessionStorage.removeItem('ahy_user_zip');
+            },
+
+            async addToCartByWishlistItem(item) {
+                const formKey = window.FORM_KEY || document.querySelector('input[name="form_key"]')?.value;
+
+                if (!formKey) {
+                    console.error('Missing form_key');
+                    return;
+                }
+
+                const payload = new URLSearchParams();
+                payload.append('product', item.product_id);
+                payload.append('qty', 1);
+                payload.append('form_key', formKey);
+
+                try {
+                    const response = await fetch('/checkout/cart/add', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: payload
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Failed to add product ${item.product_id}`);
+                    }
+
+                    this.showNotification("Product added to cart successfully", 'success');
+                } catch (error) {
+                    console.error(error);
+                    this.showNotification(`Could not add product ${item.product_id} to cart.`, 'error');
+                }
+            }
+        });
+    });
+</script>
+
+<style>
+    .modal {
+        z-index: 500;
+    }
+
+    /* Blur effect for background */
+    .backdrop-blur-sm {
+        backdrop-filter: blur(5px);
+    }
+
+    /* Disable scroll when modal is open */
+    body.modal-open {
+        overflow: hidden;
+    }
+
+    .toaster {
+        z-index: 500;
+
+    }
+</style>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+		<css src="Webkul_MpAssignProduct::css/styles.css"/>
+	</head>
+    <body>
+        <referenceContainer name="header-wrapper">
+            <block class="Magento\Framework\View\Element\Template" name="assignproduct.default" template="Webkul_MpAssignProduct::default.phtml" before="minicart" />
+        </referenceContainer>
+        <referenceContainer name="layout2_seller_account_navigation">
+            <block class="Webkul\Marketplace\Block\Account\Navigation" name="mpassignproduct_seller_link_layout2" before="-" template="Webkul_MpAssignProduct::account/layout2/navigation.phtml" />
+        </referenceContainer>
+    </body>
+</page>

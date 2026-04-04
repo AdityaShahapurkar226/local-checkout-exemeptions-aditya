@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+<group>
+    <status>0</status>
+    <priority>10</priority>
+    <name>You might also be interested in</name>
+    <block_title>You might also be interested in</block_title>
+    <block_position>cart_content_bottom</block_position>
+    <customer_group_ids>0,1,2,3</customer_group_ids>
+    <stores>0,1</stores>
+    <add_to_cart>1</add_to_cart>
+    <max_products>10</max_products>
+    <same_as>1</same_as>
+    <same_as_conditions_serialized><![CDATA[{"type":"Magento\\CatalogRule\\Model\\Rule\\Condition\\Combine","attribute":null,"operator":null,"value":null,"is_value_processed":null,"aggregator":null,"conditions":[{"type":"Amasty\\Mostviewed\\Model\\Rule\\Condition\\Product","attribute":"material","operator":"==","value":false,"is_value_processed":false}]}]]></same_as_conditions_serialized>
+    <where_conditions_serialized><![CDATA[{"type":"Magento\\CatalogRule\\Model\\Rule\\Condition\\Combine","attribute":null,"operator":null,"value":"1","is_value_processed":null,"aggregator":"all"}]]></where_conditions_serialized>
+    <conditions_serialized><![CDATA[{"type":"Magento\\CatalogRule\\Model\\Rule\\Condition\\Combine","attribute":null,"operator":null,"value":"1","is_value_processed":null,"aggregator":"all"}]]></conditions_serialized>
+</group>

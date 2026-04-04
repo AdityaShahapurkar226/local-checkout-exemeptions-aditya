@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_SellerSubAccount
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Webkul\SellerSubAccount\Api\Data\SubAccountInterface" type="Webkul\SellerSubAccount\Model\SubAccount"/>
+    <preference for="Webkul\SellerSubAccount\Api\SubAccountRepositoryInterface" type="Webkul\SellerSubAccount\Model\SubAccountRepository"/>
+    <preference for="Webkul\Marketplace\Controller\Order\Invoice" type="Webkul\SellerSubAccount\Controller\Order\Invoice"/>
+    <preference for="Webkul\Marketplace\Controller\Order\Shipment" type="Webkul\SellerSubAccount\Controller\Order\Shipment"/>
+    <preference for="Webkul\Marketplace\Controller\Order\Cancel" type="Webkul\SellerSubAccount\Controller\Order\Cancel"/>
+    <preference for="Webkul\Marketplace\Controller\Order\Creditmemo" type="Webkul\SellerSubAccount\Controller\Order\Creditmemo"/>
+    <preference for="Webkul\Marketplace\Controller\Order\Printpdfinfo" type="Webkul\SellerSubAccount\Controller\Order\Printpdfinfo"/>
+    <preference for="Webkul\Marketplace\Controller\Order\Invoice\Printall" type="Webkul\SellerSubAccount\Controller\Order\Invoice\Printall"/>
+    <preference for="Webkul\Marketplace\Controller\Order\Shipment\Printall" type="Webkul\SellerSubAccount\Controller\Order\Shipment\Printall"/>
+    <preference for="Webkul\Marketplace\Ui\DataProvider\Product\RelatedDataProvider" type="Webkul\SellerSubAccount\Ui\DataProvider\Product\RelatedDataProvider"/>
+    <preference for="Webkul\Marketplace\Ui\DataProvider\Product\UpSellDataProvider" type="Webkul\SellerSubAccount\Ui\DataProvider\Product\UpSellDataProvider"/>
+    <preference for="Webkul\Marketplace\Ui\DataProvider\Product\CrossSellDataProvider" type="Webkul\SellerSubAccount\Ui\DataProvider\Product\CrossSellDataProvider"/>
+    <preference for="Magento\Customer\Block\Widget\Dob" type="Webkul\SellerSubAccount\Block\Widget\Dob"/>
+    <preference for="Magento\Quote\Model\Quote\Address\BillingAddressPersister" type="Webkul\SellerSubAccount\Rewrite\Model\Quote\Address\BillingAddressPersister"/>
+    <preference for="Magento\Multishipping\Controller\Checkout\Addresses" type="Webkul\SellerSubAccount\Rewrite\Controller\Checkout\Addresses"/>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="sellersubaccount_accounts_list_data_source" xsi:type="string">Webkul\SellerSubAccount\Model\ResourceModel\SubAccount\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Webkul\SellerSubAccount\Model\ResourceModel\SubAccount\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">marketplace_sub_accounts</argument>
+            <argument name="eventPrefix" xsi:type="string">marketplace_seller_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">sub_account_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Webkul\SellerSubAccount\Model\ResourceModel\SubAccount\Collection</argument>
+        </arguments>
+    </type>
+
+    <type name="\Webkul\Marketplace\Helper\Data">
+        <plugin name="Webkul_SellerSubAccount::MPHelperDataPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Helper\Data"
+                sortOrder="1" />
+    </type>
+
+    <type name="\Webkul\Marketplace\Helper\Orders">
+        <plugin name="Webkul_SellerSubAccount::MPHelperOrdersPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Helper\Orders"
+                sortOrder="1" />
+    </type>
+
+    <type name="\Webkul\Marketplace\Block\Product\Productlist">
+        <plugin name="Webkul_SellerSubAccount::ProductlistBlockPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Block\Product\Productlist"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Block\Order\History">
+        <plugin name="Webkul_SellerSubAccount::OrderHistoryBlockPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Block\Order\History"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Block\Order\Salesdetail">
+        <plugin name="Webkul_SellerSubAccount::SalesdetailBlockPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Block\Order\Salesdetail"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Block\Order\View">
+        <plugin name="Webkul_SellerSubAccount::ViewOrderBlockPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Block\Order\View"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Block\Order\Creditmemo\History">
+        <plugin name="Webkul_SellerSubAccount::CreditmemoHistoryBlockPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Block\Order\Creditmemo\History"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Block\Account\Navigation">
+        <plugin name="Webkul_SellerSubAccount::NavigationBlockPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Block\Account\Navigation"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Block\Account\Dashboard">
+        <plugin name="Webkul_SellerSubAccount::DashboardBlockPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Block\Account\Dashboard"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Block\Account\Dashboard\LocationChart">
+        <plugin name="Webkul_SellerSubAccount::LocationChartBlockPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Block\Account\Dashboard\LocationChart"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Block\Account\Dashboard\Diagrams">
+        <plugin name="Webkul_SellerSubAccount::DiagramsBlockPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Block\Account\Dashboard\Diagrams"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Block\Transaction\History">
+        <plugin name="Webkul_SellerSubAccount::TransactionHistoryBlockPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Block\Transaction\History"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Block\Transaction\View">
+        <plugin name="Webkul_SellerSubAccount::TransactionViewBlockPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Block\Transaction\View"
+                sortOrder="1" />
+    </type>
+
+    <type name="\Webkul\Marketplace\Controller\Account\Becomeseller">
+        <plugin name="Webkul_SellerSubAccount::MPBecomesellerControllerPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Controller\Account\Becomeseller"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Controller\Transaction\DownloadCsv">
+        <plugin name="Webkul_SellerSubAccount::DownloadCsvControllerPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Controller\Transaction\DownloadCsv"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Controller\Transaction\View">
+        <plugin name="Webkul_SellerSubAccount::TransactionViewControllerPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Controller\Transaction\View"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Controller\Product\Delete">
+        <plugin name="Webkul_SellerSubAccount::ProductDeleteControllerPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Controller\Product\Delete"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Controller\Product\MassDelete">
+        <plugin name="Webkul_SellerSubAccount::ProductMassDeleteControllerPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Controller\Product\MassDelete"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Controller\Product\SaveProduct">
+        <plugin name="Webkul_SellerSubAccount::SaveProductControllerPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Controller\Product\SaveProduct"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Controller\Order\Creditmemo\Create">
+        <plugin name="Webkul_SellerSubAccount::SaveProductControllerPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Controller\Order\Creditmemo\Create"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Controller\Account\DeleteSellerLogo">
+        <plugin name="Webkul_SellerSubAccount::DeleteSellerLogoControllerPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Controller\Account\DeleteSellerLogo"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Controller\Account\DeleteSellerBanner">
+        <plugin name="Webkul_SellerSubAccount::DeleteSellerBannerControllerPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Controller\Account\DeleteSellerBanner"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Controller\Account\SavePaymentInfo">
+        <plugin name="Webkul_SellerSubAccount::SavePaymentInfoControllerPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Controller\Account\SavePaymentInfo"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Controller\Account\RewriteUrlPost">
+        <plugin name="Webkul_SellerSubAccount::RewriteUrlPostControllerPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Controller\Account\RewriteUrlPost"
+                sortOrder="1" />
+    </type>
+    <type name="\Webkul\Marketplace\Block\Adminhtml\Customer\Edit\AddSellerTab">
+        <plugin name="Webkul_SellerSubAccount::AddSellerTabAdminhtmlPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Block\Adminhtml\Customer\Edit\AddSellerTab"
+                sortOrder="1" />
+    </type>
+    <type name="Webkul\SellerSubAccount\Logger\SellerSubAccountLogger">
+        <arguments>
+            <argument name="name" xsi:type="string">SellerSubAccount</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Webkul\SellerSubAccount\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="\Magento\Customer\Controller\Adminhtml\Index\Delete">
+        <plugin name="Webkul_SellerSubAccount::SellerDeleteControllerPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Controller\Seller\Delete"
+                sortOrder="1" />
+    </type>
+    <type name="\Magento\Customer\Controller\Adminhtml\Index\MassDelete">
+        <plugin name="Webkul_SellerSubAccount::SellerMassDeleteControllerPlugin"
+                type="Webkul\SellerSubAccount\Plugin\Controller\Seller\MassDelete"
+                sortOrder="1" />
+    </type>
+</config>

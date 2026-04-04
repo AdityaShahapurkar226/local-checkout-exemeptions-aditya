@@ -1,0 +1,1134 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductAttributes;
+use Hyva\Theme\ViewModel\ProductCompare;
+use Hyva\Theme\ViewModel\ProductPage;
+use Hyva\Theme\ViewModel\Wishlist;
+use Magento\Catalog\Model\Product;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+
+/** @var HeroiconsOutline $heroicons */
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var ProductPage $productViewModel */
+$productViewModel = $viewModels->require(ProductPage::class);
+/** @var ProductAttributes $attributesViewModel */
+$attributesViewModel = $viewModels->require(ProductAttributes::class);
+/** @var Product $product */
+$product    = $productViewModel->getProduct();
+$_helper    = $this->helper('Webkul\Marketplace\Helper\data');
+$ahyHelper  = $this->helper('Ahy\ThemeCustomization\Helper\Data');
+$seller     = $_helper->getSellerProductDataByProductId($product->getId());
+$sellerId   = 0;
+$freeShippingFromSeller = false;
+if(isset($seller->getData()[0]) && $seller->getData()[0]){
+    $shopUrl        = '';
+    $shopTitle      = '';
+    $sellerObj      = $seller->getData()[0];
+    $sellerId       = $sellerObj['seller_id'];
+    $sellerDataObj  = $_helper->getSellerDataBySellerId($sellerId);
+    $shippingRate   = $ahyHelper->getCustomerShippingRates($sellerId);
+    $sellerData     = $sellerDataObj->getData()[0];
+    $shopTitle      = ($sellerData['shop_title'] !== null && $sellerData['shop_title'] !== '') ? $sellerData['shop_title'] : (($sellerData['name'] !== null && $sellerData['name'] !== '') ? $sellerData['name'] : null);
+    $shopUrl        = $sellerData['shop_url'];
+    $freeShippingFromSeller = (($shippingRate['mpshipping_fixrate']) === "0") && (($shippingRate['mpshipping_fixrate_upto']) === "0");
+}
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+$restrictedProductsAttributeFfl = $product->hasData('ffl_selection_required') ? $product->getData('ffl_selection_required') : null;
+$restrictedProductsAttributeAge = $product->hasData('age_verification_required') ? $product->getData('age_verification_required') : null;
+$productName = html_entity_decode($escaper->escapeHtmlAttr(__($product->getData('name'))));
+$productMainImage = $product->getImage();
+?>
+<div class="order-2 w-full md:pl-5 md:pb-6 md:pt-4 lg:pt-0 md:w-2/5">
+
+    <section class="flex-col gap-4 hidden md:flex">
+        <?php if(isset($seller->getData()[0]) && $seller->getData()[0] && $shopTitle !== '' && $shopTitle !== null): ?>
+            <div class="seller-details text-sm" x-data="">
+                <span class="capitalize">
+                    Sold and Shipped by <span class="!text-ahy-blue-light font-bold hover:underline underline-offset-6 cursor-pointer" @click.prevent="goToSellerTab()"> <?= __($shopTitle) ?> </span>
+                </span>
+            </div>
+        <?php endif; ?> 
+        <h1 class="text-ahy-blue page-title !font-extrabold title-font uppercase text-3xl lg:text-4xl">
+            <span class="base" data-ui-id="page-title-wrapper" itemprop="name">
+                <?= $productName ?>
+            </span>        
+        </h1>
+        <style>
+            .yotpo-review-stars::before{
+                font-size: .625rem;
+            }
+        </style>
+    </section>
+    <div class="product.reviews flex gap-2 pb-4 items-center mt-4 min-h-[33px]" style="min-height:33px;" x-data="yotpoReview()" x-init="initReview()" class="flex cursor-pointer gap-2" @click.prevent="goToReview()">
+        <div class="yotpo-review-stars cursor-pointer items-center" 
+            x-bind:style="'--rating: ' + getAverageReviewScore() + '; display: ' + (getAverageReviewScore() === null || getAverageReviewScore() === 0 ? 'none' : 'flex') + ' !important;' " 
+            style="display: none"
+        ></div>
+        <div class="flex gap-2  cursor-pointer text-ahy-blue text-xs" >
+            <template x-if="totalReviewCount">
+                <span x-text="totalReviewCount"></span>
+            </template>
+            <template x-if="totalReviewCount == 0">
+                <span class="hover:underline underline-offset-6 capitalize"><?= __('write review')?></span>
+            </template>
+            <template x-if="totalReviewCount > 0">
+                <span class="hover:underline underline-offset-6 capitalize"><?= __('read reviews')?></span>
+            </template>
+        </div>
+    </div>
+    <?php if ($product->getNoLongerAvailable() !== NULL && $product->getNoLongerAvailable()): ?>
+        <?= $block->getChildHtml("no_longer_available") ?>
+        <?= $block->getChildHtml("no_longer_available_related") ?>
+    <?php else: ?>
+        <div 
+            x-data="productStickyCart()" 
+            @scroll.window.throttle.20ms="showStickyCart()" 
+             
+        >
+            <template x-if="showStickyButton">
+                <div class="fixed h-fit product-sticky-cart bg-white w-full bottom-0 md:bottom-full md:top-0 left-0 xl:py-2 py-4 z-[39]">
+                    <div class="container">
+                        <div class="flex justify-center items-center">
+                            <div class="md:w-2/3 lg:w-full items-center hidden md:flex">
+                                <div class="product-image mr-4">
+                                    <img
+                                        x-bind:src="productMainImage"
+                                        class=" shadow-[3px_3px_12px_0px_rgba(0,0,0,0.06)]"
+                                        width="70"
+                                        height="70"
+                                        alt="<?= __($productName); ?>"
+                                        title="<?= __($productName); ?>"
+                                        style="max-width:70px;"
+                                    />
+                                </div>
+                                <div class="product-info w-full lg:flex justify-between items-center">
+                                    <div class="flex flex-col gap-1 p-2 sticky-header-price">
+                                        <p class="h4 font-bold px-0" x-html="productName"></p>
+                                        <div x-html="productPrice"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-full md:w-1/2 lg:w-1/3">
+                                <button 
+                                    type="submit" 
+                                    form="product_addtocart_form" 
+                                    title="Add to Cart" data-name="sticky-add-to-cart" 
+                                    class="btn bg-ahy-red hover:bg-ahy-red-light rounded-full w-full focus:ring-transparent h-16"
+                                    id="product-addtocart-button" 
+                                    x-bind:disabled="addToCartButtonDisabled"
+                                >
+                                    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 ml-4 md:ml-0 lg:ml-2 hover:text-black" viewBox="0 0 30.61 25.71"><defs><style>.stroke-2{stroke-width: 2!important;} .cls-1,.cls-2{fill:none !important;stroke:#0d2f47;}.cls-1{stroke-linecap:round;stroke-linejoin:round;}.cls-2{stroke-miterlimit:10;}</style></defs><polyline class="cls-1 stroke-2" points="0.75 0.75 5.51 0.75 10.82 15.88 25.24 15.88 29.86 3.3 10.84 3.3"></polyline><circle class="cls-2 stroke-2" cx="11.98" cy="22.46" r="2.5"></circle><circle class="cls-2 stroke-2" cx="24.48" cy="22.46" r="2.5"></circle></svg>
+                                    <span class="w-full font-bold py-3 md:py-0 relative -left-2.5 md:left-0 add-to-cart-text">Add to Cart </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+        <script>
+            function productStickyCart() {
+                return {
+                    showStickyButton: false,
+                    productName     : `<?= $productName ?>`,
+                    productMainImage: '',
+                    productPrice    : <?= /* @escapeNotVerified */ json_encode($block->getChildHtml("product.info.price")) ?>,
+                    addToCartButtonDisabled: true,
+                    init() {
+                        this.productMainImage = "/media/catalog/product/<?= $escaper->escapeUrl($productMainImage) ?>"; 
+                        // Check for double slashes and correct them
+                        if (this.productMainImage.includes("//")) {
+                            this.productMainImage = this.productMainImage.replace(/\/{2,}/g, '/');
+                        }
+                        this.showStickyCart();
+                    },
+                    showStickyCart() {
+                        let addToCartButton     = document.querySelector('#addToCartActions');
+                        let addToCartButtonEl   = document.querySelector('#addToCartActions #product-addtocart-button');
+                        let classesToAdd        = Array.from(addToCartButtonEl.classList);
+                        if (addToCartButton) {
+                            // Copy classes from addToCartButton and add to stickyAddToCartButton
+                            let elementRect             = addToCartButton.getBoundingClientRect();
+                            this.showStickyButton       = elementRect.top < -70;
+                            let stickyAddToCartButton   = document.querySelector('[data-name="sticky-add-to-cart"]');
+                            if (stickyAddToCartButton && this.showStickyButton) {
+                                classesToAdd.forEach(function(className) {
+                                    stickyAddToCartButton.classList.add(className);
+                                });
+                                this.addToCartButtonDisabled = addToCartButtonEl.disabled;
+                            }
+                        }
+                    },
+                }
+            }
+        </script>
+        <div>
+            <?= $block->getChildHtml("product.info.price") ?>
+        </div>
+
+        <hr class="">
+
+        <div class="caliber-label-save-today">
+            <?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('caliber-save-today')->toHtml(); ?>
+        </div>
+        <?php if ($restrictedProductsAttributeFfl || $restrictedProductsAttributeAge): ?>
+            <section class="relative pb-4 border-y border-gray-300 md:py-3 w-full"
+            x-data="{
+                    open: false,
+                }"
+            >
+            <div class="flex gap-4 cursor-pointer" @click="open = true">
+                <img src="/media/icons/warning-ahy.svg" alt="restricted icon" width="20" height="20" >
+                <p class="font-bold uppercase text-lg leading-6 !text-ahy-red flex py-4 w-full flex justify-between items-center underline underline-offset-6" >
+                    Restrictions Apply
+                </p>
+            </div>
+            <?php if ($restrictedProductsAttributeFfl ): ?>
+                <template x-if="true">
+                    <div role="dialog"
+                        aria-labelledby="ffl-restriction-title"
+                        aria-modal="true"
+                        class="fixed inset-y-0 right-0 z-[500] flex max-w-full"
+                    >
+                        <div class="backdrop"
+                            x-show="open"
+                            x-transition:enter="ease-in-out duration-500"
+                            x-transition:enter-start="opacity-0"
+                            x-transition:enter-end="opacity-100"
+                            x-transition:leave="ease-in-out duration-500"
+                            x-transition:leave-start="opacity-100"
+                            x-transition:leave-end="opacity-0"
+                            @click="open=false"
+                            aria-label="Close panel"
+                        >
+                        </div>
+                        <div class="relative w-screen max-w-lg shadow-2xl"
+                            x-show="open"
+                            x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700"
+                            x-transition:enter-start="translate-x-full"
+                            x-transition:enter-end="translate-x-0"
+                            x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
+                            x-transition:leave-start="translate-x-0"
+                            x-transition:leave-end="translate-x-full"
+                        >
+                            <div
+                                x-show="open"
+                                x-transition:enter="ease-in-out duration-500"
+                                x-transition:enter-start="opacity-0"
+                                x-transition:enter-end="opacity-100"
+                                x-transition:leave="ease-in-out duration-500"
+                                x-transition:leave-start="opacity-100"
+                                x-transition:leave-end="opacity-0" class="absolute top-0 right-0 flex p-2 mt-2"
+                            >
+                                <button @click="open=false" aria-label="Close panel"
+                                        class="p-2 card rounded-full text-ahy-blue transition duration-150 ease-in-out hover:text-black">
+                                    <?= $heroicons->xHtml(); ?>
+                                </button>
+                            </div>
+                            <div class="flex flex-col h-full pt-6 bg-white shadow-xl">
+                                <header class="px-4 sm:px-6">
+                                    <h2 id="cart-drawer-title" class="capitalize pb-4 border-b border-ahy-blue font-extrabold leading-7 text-ahy-blue">
+                                        restrictions apply
+                                    </h2>
+                                </header>
+                                <div class="relative flex flex-col items-center justify-center gap-6 px-4 py-6 overflow-y-auto text-ahy-blue bg-white sm:gap-8 sm:px-6">
+                                    <p class="">
+                                        To complete the purchase of long guns, you must be 18 years or older, and for handguns, you must be 21 years or older. Some States now require customers to be 21 years of age to purchase long guns. It is important to adhere to Federal, State, and Local Laws during the ordering and ownership transfer process.
+                                    </p>
+
+                                    <p class="">
+                                        According to Federal Law, guns can only be shipped to a Federal Firearms Licensed (FFL) dealer. Before finalizing the transfer of the gun, the dealer will verify that you meet all the legal requirements set by Federal, State, and Local Laws. Please note that most dealers charge a separate fee for this service, which is not included in your purchase transaction on <a href="https://www.Everest.com">https://www.Everest.com</a> Marketplace. This fee should be paid directly to the FFL dealer at the time of transfer. During the checkout process, you will have the option to select the FFL dealer closest to your location.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            <?php elseif ($restrictedProductsAttributeAge && !$restrictedProductsAttributeFfl): ?>
+                <template x-if="true">
+                    <div role="dialog"
+                        aria-labelledby="age-restriction-title"
+                        aria-modal="true"
+                        class="fixed inset-y-0 right-0 z-[500] flex max-w-full"
+                    >
+                        <div class="backdrop"
+                            x-show="open"
+                            x-transition:enter="ease-in-out duration-500"
+                            x-transition:enter-start="opacity-0"
+                            x-transition:enter-end="opacity-100"
+                            x-transition:leave="ease-in-out duration-500"
+                            x-transition:leave-start="opacity-100"
+                            x-transition:leave-end="opacity-0"
+                            @click="open=false"
+                            aria-label="Close panel"
+                        >
+                        </div>
+                        <div class="relative w-screen max-w-lg shadow-2xl"
+                            x-show="open"
+                            x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700"
+                            x-transition:enter-start="translate-x-full"
+                            x-transition:enter-end="translate-x-0"
+                            x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
+                            x-transition:leave-start="translate-x-0"
+                            x-transition:leave-end="translate-x-full"
+                        >
+                            <div
+                                x-show="open"
+                                x-transition:enter="ease-in-out duration-500"
+                                x-transition:enter-start="opacity-0"
+                                x-transition:enter-end="opacity-100"
+                                x-transition:leave="ease-in-out duration-500"
+                                x-transition:leave-start="opacity-100"
+                                x-transition:leave-end="opacity-0" class="absolute top-0 right-0 flex p-2 mt-2"
+                            >
+                                <button @click="open=false" aria-label="Close panel"
+                                        class="p-2 card rounded-full text-ahy-blue transition duration-150 ease-in-out hover:text-black">
+                                    <?= $heroicons->xHtml(); ?>
+                                </button>
+                            </div>
+                            <div class="flex flex-col h-full pt-6 bg-white shadow-xl">
+                                <header class="px-4 sm:px-6">
+                                    <h2 id="cart-drawer-title" class="capitalize pb-4 border-b border-ahy-blue font-extrabold leading-7 text-ahy-blue">
+                                        restrictions apply
+                                    </h2>
+                                </header>
+                                <div class="relative flex flex-col items-center justify-center gap-6 px-4 py-6 text-ahy-blue overflow-y-auto bg-white sm:gap-8 sm:px-6">
+                                    <p class="">
+                                        Due to your local, state and federal laws shipping and age restrictions may be applied at checkout. During the checkout process you will be asked to verify your age and address. Based on your location or your age, some changes may be made to your order. If you have any questions please contact us at <a class="text-ahy-blue-light hover:text-ahy-blue" href="tel:+1-866-806-0934">1-866-806-0934</a> or <a class="text-ahy-blue-light hover:text-ahy-blue" href="mailto:info@everest.com">info@everest.com</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            <?php endif ?>
+            </section>
+        <?php endif ?>
+        
+        <div class="bundle-summary">
+            <?= $block->getChildHtml("bundle.summary.ahy") ?>
+        </div>
+        
+        <div class="product-info-bundle-options">
+            <?= $block->getChildHtml("product.info.bundle.options.ahy") ?>
+        </div>
+        <?= $block->getChildHtml('product.info.form') ?>
+        <div class="flex gap-2 my-4 items-center flex-wrap">
+            <?= $block->getChildHtml("product.info.stockstatus") ?>
+            <?php if($freeShippingFromSeller == true): ?>
+                <span class="capitalize text-ahy-blue font-bold">
+                        <span class="p-1 pr-4 pl-2 mt-0.5 mr-2 ml-2 bg-[url('/media/icons/small-shipping-icon.svg')] bg-contain bg-no-repeat bg-center"></span>
+                        FREE shipping
+                </span>
+            <?php else: ?>
+                <span class="capitalize text-ahy-blue font-bold">
+                        <span class="p-1 pr-4 pl-2 mt-0.5 mr-2 ml-2 bg-[url('/media/icons/express_shipping.svg')] bg-contain bg-no-repeat bg-center"></span>
+                        Express shipping
+                </span>
+            <?php endif; ?>
+            <span class="capitalize text-ahy-blue font-bold">
+                    <span class="p-1 px-4 mt-0.5 mr-2 bg-[url('/media/icons/Free_Returns.svg')] bg-contain bg-no-repeat bg-center"></span>
+                    FREE Returns
+            </span>
+            <span class="capitalize text-ahy-blue font-bold">
+                    <span class="p-4 mt-0.5 mr-2 bg-[url('/media/icons/Free_Gift.svg')] bg-contain bg-no-repeat bg-center"></span>
+                    FREE Gift
+            </span>
+        </div>
+        <div class="flex flex-col md:items-center lg:items-start my-4 gap-4">
+            <div class="flex flex-col mt-4 md:mt-0 gap-4 w-full">
+                <?php if ($product->isSaleable()): ?>
+                    <div class="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-4" id="addToCartActions">
+                        <?= $block->getChildHtml("product.info.quantity") ?>
+                        <?= $block->getChildHtml("product.info.addtocart") ?>
+                    </div>
+                    <div class="ahy-buy-now w-full flex items-center" x-data="ahyBuyNow()">
+                        <button 
+                            class="btn bg-ahy-blue ahy-buy-now-button hover:bg-ahy-blue-light font-bold rounded-full w-full flex justify-center items-center focus:ring-transparent h-16" 
+                            @click="window.setAjaxBuyNow()"
+                            id="ahy-buy-now-button"
+                            @click.prevent="$event.preventDefault();"
+                            type="submit"
+                        >
+                            <?= __('Buy Now') ?>
+                        </button>
+                    </div>
+                    <div class="flex">
+                        <?= $block->getChildHtml('addtocart.shortcut.buttons') ?>
+                    </div>
+                    <script>
+                        function ahyBuyNow(){
+                            return {
+                                buyNowProduct(){
+                                    // Trigger click event on the add-to-cart button
+                                    window.setAjaxBuyNow();
+                                },
+                            }
+                        }
+                    </script>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <?php if ($tierPriceBlock = $block->getChildHtml("product.price.tier")): ?>
+            <div class="py-4 my-2 tier-price-container">
+                <?= /** @noEscape */ $tierPriceBlock ?>
+            </div>
+        <?php endif; ?>
+
+            <?= $block->getChildHtml("product.info.additional") ?>
+        <?php endif; ?>
+        
+        <!-- short description -->
+        <!-- <?php if ($shortDescription = $productViewModel->getShortDescription()): ?>
+            <div class="mb-4 leading-relaxed product-description prose text-[#59555c] text-sm md:text-base font-medium max-w-full marker:text-[#59555c]"><?= $this->helper('Magento\Catalog\Helper\Output')->productAttribute($this->getProduct(), $this->getProduct()->getShortDescription(), 'short_description') ?></div>
+        <?php endif; ?> -->
+    
+    <!-- meet marcus for desktop -->
+    <div 
+        x-on:resize.window="isDesktop = (window.innerWidth >= 768) ? true : false" 
+        id="meet-marcus" 
+        class="lg:flex flex-col w-full" 
+        x-data="{
+            isDesktop: (window.innerWidth >= 768) ? true : false,
+            open: false
+        }"
+    >
+        <template x-if="isDesktop">
+            <!-- meet marcus -->
+            <div class="pt-6">
+                <hr class="pb-4">
+                <div class="meet-marcus-section text-ahy-blue flex flex-col lg:flex-row pb-4 text-center">
+                    <div class="customer-support p-2 pt-6 pl-6 lg:pl-2 lg:pt-2 flex flex-row lg:flex-col gap-4 lg:gap-2 lg:w-1/2">
+                        <div class="customer-support-icon flex justify-center items-center">
+                            <img src="/media/icons/contact-us-icon.png" width="50" height="50" alt="customer support" class="h-12 w-12 rounded-full" />
+                        </div>
+                        <div class="meet-marcus-content flex flex gap-1 flex-col items-center justify-center w-full flex-col items-center justify-center">
+                            <div class="customer-support-title leading-none font-bold text-xs lg:h-6">
+                                <span class="capitalize">customer support</span>
+                            </div>
+                            <div class="customer-support-description text-[10px]">
+                                <span class="capitalize">
+                                    <a href="tel:1-866-806-0934" class="">1-866-806-0934</a>
+                                    meet <span @click="open = true" class="underline-offset-4 cursor-pointer underline">marcus</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="">
+                    <div class="shop-secure-promise p-2 pl-6 lg:pl-2 flex flex-row lg:flex-col gap-4 lg:gap-2 lg:w-1/2">
+                        <div class="shop-secure-promise-icon flex justify-center items-center">
+                            <img src="/media/icons/shop-secure-promise-icon.png" width="50" height="50" alt="shop secure promise" class="h-12 w-12" />
+                        </div>
+                        <div class="meet-marcus-content flex gap-1 flex-col items-center justify-center w-full">
+                            <div class="shop-secure-promise-title leading-none font-bold text-xs lg:h-6">
+                                <span class="capitalize">shop secure promise</span>
+                            </div>
+                            <div class="shop-secure-promise-description text-[10px]">
+                                <span class="capitalize">securely processed</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="">
+                    <div class="give-back-fund p-2 flex pl-6 lg:pl-2 flex-row lg:flex-col gap-4 lg:gap-2 lg:w-1/2">
+                        <div class="give-back-fund-icon flex justify-center items-center">
+                            <img src="/media/icons/give-back-fund-icon.png" alt="give back fund" class="h-12 w-12" />
+                        </div>
+                        <div class="meet-marcus-content flex gap-1 flex-col items-center justify-center w-full">
+                            <div class="give-back-fund-title relative ">
+                                <div class="leading-none text-xs lg:h-6">
+                                    <span class="capitalize leading-none font-bold">give back fund</span>
+                                </div>
+                                <div class="ahy-tooltip -top-0.5 !absolute md:-right-8 lg:-right-5 xl:-right-7 2xl:-right-8">
+                                    <img src="/media/icons/info-icon-up.svg" alt="info-icon-up" width="50" height="50" class="w-8 h-4 img-info-up">
+                                    <img src="/media/icons/info-icon-over.svg" alt="info-icon-over" width="50" height="50" class="w-8 h-4 hidden">
+                                    <div class="ahy-tooltip-text bg-white shadow-xl p-4 flex flex-col gap-4">
+                                        <div class="ahy-tooltip-header"><span class="capitalize text-lg font-bold">give back fund</span></div>
+                                        <div class="ahy-tooltip-description">
+                                            <p class="text-[12px] font-medium">We prioritize serving those who serve nature. Everest represents the boundless outdoors. Find out how we give back.</p>
+                                        </div>
+                                        <div class="ahy-tooltip-button">
+                                            <a href="/give-back-fund" class="">
+                                                <button class="border-ahy-blue border-2 text-[11px] rounded-full px-8 py-1 font-bold">Details</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="give-back-fund-description text-[10px]">
+                                <span class="capitalize">supporting outdoor causes</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="">
+                    <div class="price-match-guarantee p-2 pl-6 lg:pl-2 flex flex-row lg:flex-col gap-4 lg:gap-2 lg:w-1/2 items-center justify-between w-full ">
+                        <div class="price-match-guarantee-icon flex justify-center items-center">
+                            <img src="/media/icons/price-match-guarantee-icon.png" alt="price match guarantee" class="h-12 w-12" />
+                        </div>
+                        <div class="meet-marcus-content flex gap-1 flex-col items-center justify-center w-full">
+                            <div class="price-match-guarantee-title flex justify-center items-center relative">
+                                <div class="lg:leading-none text-xs lg:h-6">
+                                    <span class="capitalize lg:leading-none font-bold">price match guarantee</span>
+                                </div>
+                                <div class="ahy-tooltip !absolute -top-0.5 -right-7 xl:-right-4 2xl:-right-1">
+                                    <img src="/media/icons/info-icon-up.svg" alt="info-icon-up" width="50" height="50" class="w-8 h-4 img-info-up">
+                                    <img src="/media/icons/info-icon-over.svg" alt="info-icon-over" width="50" height="50" class="w-8 h-4 hidden">
+                                    <div class="ahy-tooltip-text bg-white shadow-xl p-4 flex flex-col gap-4 lg:!left-[-400%] after:lg:!left-[90%]">
+                                        <div class="ahy-tooltip-header"><span class="capitalize text-lg font-bold">price match guarantee</span></div>
+                                        <div class="ahy-tooltip-description">
+                                            <p class="text-[12px] font-medium">Ready to wrestle Yetis over prices? Everest is up for the challenge with our Price Match guarantee.</p>
+                                        </div>
+                                        <div class="ahy-tooltip-button">
+                                            <a href="/price-match-guarantee" class="">
+                                                <button class="border-ahy-blue border-2 text-[11px] rounded-full px-8 py-1 font-bold">Details</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="price-match-guarantee-description text-[10px]">
+                                <span class="">Found a lower price? We'll match it.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="pt-1">
+                 <?= $block->getChildHtml('pdp.cart.carousel') ?>
+                <div class="pt-2" x-data="{open:false}">
+                    <button @click="open = true" class="text-ahy-blue-light hover:text-ahy-blue hover:underline hover:underline-offset-6 font-bold"> Shipping & Returns </button>
+                    <template x-if="true">
+                        <div role="dialog"
+                            aria-labelledby="shipping-and-returns-title"
+                            aria-modal="true"
+                            class="fixed inset-y-0 right-0 z-[500] flex max-w-full"
+                        >
+                            <div class="backdrop"
+                                x-show="open"
+                                x-transition:enter="ease-in-out duration-500"
+                                x-transition:enter-start="opacity-0"
+                                x-transition:enter-end="opacity-100"
+                                x-transition:leave="ease-in-out duration-500"
+                                x-transition:leave-start="opacity-100"
+                                x-transition:leave-end="opacity-0"
+                                @click="open=false"
+                                aria-label="Close panel"
+                            >
+                            </div>
+                            <div class="relative w-screen max-w-lg shadow-2xl"
+                                x-show="open"
+                                x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700"
+                                x-transition:enter-start="translate-x-full"
+                                x-transition:enter-end="translate-x-0"
+                                x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
+                                x-transition:leave-start="translate-x-0"
+                                x-transition:leave-end="translate-x-full"
+                            >
+                                <div
+                                    x-show="open"
+                                    x-transition:enter="ease-in-out duration-500"
+                                    x-transition:enter-start="opacity-0"
+                                    x-transition:enter-end="opacity-100"
+                                    x-transition:leave="ease-in-out duration-500"
+                                    x-transition:leave-start="opacity-100"
+                                    x-transition:leave-end="opacity-0" class="absolute top-0 right-0 z-20  flex p-2 mt-2"
+                                >
+                                    <button @click="open=false" aria-label="Close panel"
+                                            class="p-2 card rounded-full text-ahy-blue transition duration-150 ease-in-out hover:text-black">
+                                        <?= $heroicons->xHtml(); ?>
+                                    </button>
+                                </div>
+                                <div class="flex flex-col h-full overflow-y-scroll pt-6 bg-white shadow-xl">
+                                    <?= $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('shipping-and-return-slideout-content')->toHtml();?>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div class="free-gift-global-banner py-6">
+                    <?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('pdp-free-gift-global-banner')->toHtml(); ?>
+                </div>
+                <div class="w-full flex flex-wrap flex-col gap-10 py-4">
+                    <!-- <a href="/search/?q=Dirwin%20Bike&productListFilters=product_brand%3ADirwin%20Bike" class="" >
+                        <img src="/media/wysiwyg/ads/Dirwin-PDP-ad.jpg" alt="dirwin ebikes">
+                    </a> -->
+                    <a href="/The-Everest-Collection" class="" >
+                        <img src="/media/wysiwyg/ads/Everest-PDP-ad.jpg" class="w-full h-full" width="840" height="688" alt="everest collection">
+                    </a>
+                </div>
+            </div>
+        </template>
+        <!-- meet marcus end -->
+        <template x-if="true">
+            <div role="dialog"
+                aria-labelledby="meet-marcus-title"
+                aria-modal="true"
+                class="fixed inset-y-0 right-0 z-[500] flex max-w-full"
+            >
+                <div class="backdrop"
+                    x-show="open"
+                    x-transition:enter="ease-in-out duration-500"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="ease-in-out duration-500"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    @click="open=false"
+                    aria-label="Close panel"
+                >
+                </div>
+                <div class="relative w-screen max-w-lg shadow-2xl"
+                    x-show="open"
+                    x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700"
+                    x-transition:enter-start="translate-x-full"
+                    x-transition:enter-end="translate-x-0"
+                    x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
+                    x-transition:leave-start="translate-x-0"
+                    x-transition:leave-end="translate-x-full"
+                >
+                    <div
+                        x-show="open"
+                        x-transition:enter="ease-in-out duration-500"
+                        x-transition:enter-start="opacity-0"
+                        x-transition:enter-end="opacity-100"
+                        x-transition:leave="ease-in-out duration-500"
+                        x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0" class="absolute top-0 right-0 z-20  flex p-2 mt-2"
+                    >
+                        <button @click="open=false" aria-label="Close panel"
+                                class="p-2 card rounded-full text-ahy-blue transition duration-150 ease-in-out hover:text-black">
+                            <?= $heroicons->xHtml(); ?>
+                        </button>
+                    </div>
+                    <div class="flex flex-col h-full overflow-y-scroll pt-6 bg-white shadow-xl">
+                        <?= $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('meet-marcus-slideout-content')->toHtml();?>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+    <!-- meet marcus for mobile -->
+    <div 
+        x-on:resize.window="isMobile = (window.innerWidth < 768) ? true : false" 
+        class="" 
+        x-data="{
+            isMobile: (window.innerWidth < 768) ? true : false,
+            open: false
+        }"
+    >
+        <hr class="md:hidden">
+           
+        <template x-if="isMobile">
+<div>
+     <?= $block->getChildHtml('pdp.cart.carousel') ?>
+            <div class="free-gift-global-banner py-6">
+                <?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('pdp-free-gift-global-banner')->toHtml(); ?>
+            </div>
+            <div class="pb-6" x-data="{open:false}">
+                <button @click="open = true" class="text-ahy-blue-light hover:text-ahy-blue hover:underline hover:underline-offset-6 font-bold"> Shipping & Returns </button>
+                <template x-if="true">
+                    <div role="dialog"
+                        aria-labelledby="shipping-and-returns-title"
+                        aria-modal="true"
+                        class="fixed inset-y-0 right-0 z-[500] flex max-w-full"
+                    >
+                        <div class="backdrop"
+                            x-show="open"
+                            x-transition:enter="ease-in-out duration-500"
+                            x-transition:enter-start="opacity-0"
+                            x-transition:enter-end="opacity-100"
+                            x-transition:leave="ease-in-out duration-500"
+                            x-transition:leave-start="opacity-100"
+                            x-transition:leave-end="opacity-0"
+                            @click="open=false"
+                            aria-label="Close panel"
+                        >
+                        </div>
+                        <div class="relative w-screen max-w-lg shadow-2xl"
+                            x-show="open"
+                            x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700"
+                            x-transition:enter-start="translate-x-full"
+                            x-transition:enter-end="translate-x-0"
+                            x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
+                            x-transition:leave-start="translate-x-0"
+                            x-transition:leave-end="translate-x-full"
+                        >
+                            <div
+                                x-show="open"
+                                x-transition:enter="ease-in-out duration-500"
+                                x-transition:enter-start="opacity-0"
+                                x-transition:enter-end="opacity-100"
+                                x-transition:leave="ease-in-out duration-500"
+                                x-transition:leave-start="opacity-100"
+                                x-transition:leave-end="opacity-0" class="absolute top-0 right-0 z-20  flex p-2 mt-2"
+                            >
+                                <button @click="open=false" aria-label="Close panel"
+                                        class="p-2 card rounded-full text-ahy-blue transition duration-150 ease-in-out hover:text-black">
+                                    <?= $heroicons->xHtml(); ?>
+                                </button>
+                            </div>
+                            <div class="flex flex-col h-full overflow-y-scroll pt-6 bg-white shadow-xl">
+                                <?= $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('shipping-and-return-slideout-content')->toHtml();?>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <!-- meet marcus -->
+            <div class="meet-marcus-section text-ahy-blue flex flex-col lg:flex-row gap-4 lg:gap-0 pb-4">
+                <div class="customer-support p-2 pt-6 pl-6 lg:pl-2 lg:pt-2 flex flex-row lg:flex-col gap-4 lg:gap-0">
+                    <div class="customer-support-icon">
+                        <img src="/media/icons/contact-us-icon.png" width="50" height="50" alt="customer support" class="h-12 w-12 rounded-full" />
+                    </div>
+                    <div class="meet-marcus-content">
+                        <div class="customer-support-title text-lg font-bold">
+                            <span class="capitalize">customer support</span>
+                        </div>
+                        <div class="customer-support-description text-[12px]">
+                            <span class="capitalize">
+                                <a href="tel:1-866-806-0934" class="">1-866-806-0934</a>
+                                meet <span @click="open = true" class="underline-offset-4 cursor-pointer underline">marcus</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="">
+
+                <div class="shop-secure-promise p-2 pl-6 lg:pl-2 flex flex-row lg:flex-col gap-4 lg:gap-0">
+                    <div class="shop-secure-promise-icon">
+                        <img src="/media/icons/shop-secure-promise-icon.png" width="50" height="50" alt="shop secure promise" class="h-12 w-12" />
+                    </div>
+                    <div class="meet-marcus-content">
+                        <div class="shop-secure-promise-title text-lg font-bold">
+                            <span class="capitalize">shop secure promise</span>
+                        </div>
+                        <div class="shop-secure-promise-description text-[12px]">
+                            <span class="capitalize">securely processed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="">
+
+                <div class="give-back-fund p-2 flex pl-6 lg:pl-2 flex-row lg:flex-col gap-4 lg:gap-0">
+                    <div class="give-back-fund-icon">
+                        <img src="/media/icons/give-back-fund-icon.png" width="50" height="50" alt="give back fund" class="h-12 w-12" />
+                    </div>
+                    <div class="meet-marcus-content">
+                        <div class="give-back-fund-title flex lg:justify-between items-baseline">
+                            <div class=""><span class="capitalize text-lg font-bold">give back fund</span></div>
+                            <div class="ahy-tooltip">
+                                <img src="/media/icons/info-icon-up.svg" alt="" width="50" height="50" class="w-8 h-4 img-info-up">
+                                <img src="/media/icons/info-icon-over.svg" alt="" width="50" height="50" class="w-8 h-4 hidden">
+                                <div class="ahy-tooltip-text bg-white shadow-xl p-4 flex flex-col gap-4">
+                                    <div class="ahy-tooltip-header"><span class="capitalize text-lg font-bold">give back fund</span></div>
+                                    <div class="ahy-tooltip-description">
+                                        <p class="text-[12px] font-medium">We prioritize serving those who serve nature. Everest represents the boundless outdoors. Find out how we give back.</p>
+                                    </div>
+                                    <div class="ahy-tooltip-button">
+                                        <a href="/give-back-fund" class="">
+                                            <button class="border-ahy-blue border-2 text-[11px] rounded-full px-8 py-1 font-bold">Details</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="give-back-fund-description text-[12px]">
+                            <span class="capitalize">supporting outdoor causes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="">
+
+                <div class="price-match-guarantee p-2 pl-6 lg:pl-2 flex flex-row lg:flex-col gap-4 lg:gap-0">
+                    <div class="price-match-guarantee-icon">
+                        <img src="/media/icons/price-match-guarantee-icon.png" alt="price match guarantee" width="50" height="50" class="h-12 w-12" />
+                    </div>
+                    <div class="meet-marcus-content">
+                        <div class="price-match-guarantee-title flex lg:justify-between items-baseline">
+                            <div class=""><span class="capitalize text-base lg:text-lg leading-7 font-bold">price match guarantee</span></div>
+                            <div class="ahy-tooltip">
+                                <img src="/media/icons/info-icon-up.svg" alt="" width="50" height="50" class="w-8 h-4 img-info-up">
+                                <img src="/media/icons/info-icon-over.svg" alt="" width="50" height="50" class="w-8 h-4 hidden">
+                                <div class="ahy-tooltip-text bg-white shadow-xl p-4 flex flex-col gap-4">
+                                    <div class="ahy-tooltip-header"><span class="capitalize text-lg font-bold">price match guarantee</span></div>
+                                    <div class="ahy-tooltip-description">
+                                        <p class="text-[12px] font-medium">Ready to wrestle Yetis over prices? Everest is up for the challenge with our Price Match guarantee.</p>
+                                    </div>
+                                    <div class="ahy-tooltip-button">
+                                        <a href="/price-match-guarantee" class="">
+                                            <button class="border-ahy-blue border-2 text-[11px] rounded-full px-8 py-1 font-bold">Details</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="price-match-guarantee-description text-[12px]">
+                            <span class="">Found a lower price? We'll match it.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="">
+
+                <!-- <div class="w-full flex flex-wrap flex-col gap-10 py-4">
+                    <a href="/search/?q=Dirwin%20Bike&productListFilters=product_brand%3ADirwin%20Bike" class="" >
+                        <img src="/media/wysiwyg/ads/Dirwin-PDP-ad.jpg" alt="dirwin ebikes">
+                    </a>
+                    <a href="/The-Everest-Collection" class="" >
+                        <img src="/media/wysiwyg/ads/Everest-PDP-ad.jpg" alt="everest collection">
+                    </a>
+                </div> -->
+            </div>
+</div>    
+    </template>
+        <!-- meet marcus end -->
+        <template x-if="true">
+            <div role="dialog"
+                aria-labelledby="cart-drawer-title"
+                aria-modal="true"
+                class="fixed inset-y-0 right-0 z-[500] flex max-w-full"
+            >
+                <div class="backdrop"
+                    x-show="open"
+                    x-transition:enter="ease-in-out duration-500"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="ease-in-out duration-500"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    @click="open=false"
+                    aria-label="Close panel"
+                >
+                </div>
+                <div class="relative w-screen max-w-lg shadow-2xl"
+                    x-show="open"
+                    x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700"
+                    x-transition:enter-start="translate-x-full"
+                    x-transition:enter-end="translate-x-0"
+                    x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
+                    x-transition:leave-start="translate-x-0"
+                    x-transition:leave-end="translate-x-full"
+                >
+                    <div
+                        x-show="open"
+                        x-transition:enter="ease-in-out duration-500"
+                        x-transition:enter-start="opacity-0"
+                        x-transition:enter-end="opacity-100"
+                        x-transition:leave="ease-in-out duration-500"
+                        x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0" class="absolute top-0 right-0 z-20 flex p-2 mt-2"
+                    >
+                        <button @click="open=false" aria-label="Close panel"
+                                class="p-2 card rounded-full text-ahy-blue transition duration-150 ease-in-out hover:text-black">
+                            <?= $heroicons->xHtml(); ?>
+                        </button>
+                    </div>
+                    <div class="flex flex-col h-full overflow-y-scroll pt-6 bg-white shadow-xl">
+                        <?= $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('meet-marcus-slideout-content')->toHtml();?>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    
+</div>
+
+
+<style>
+    p{
+        padding:0.25rem;
+    }
+
+    section.meet-seller-tabs.text-ahy-blue .prose * {
+        text-align: left !important;
+    }
+    .catalog-product-view .prose :where(li):not(:where([class~=not-prose] *)) {
+        margin-bottom: 1.25rem;
+    }
+    .catalog-product-view .more-items-to-explore form.item.product.product-item.product_addtocart_form.card.card-interactive.flex.flex-col.w-full, 
+    .catalog-product-view .more-items-to-explore .item.product.product-item.card.card-interactive.flex.flex-col.w-full {
+        flex-direction: row !important;
+        align-items: center;
+        padding: 1rem 0.25rem;
+    }
+    .catalog-product-view .more-items-to-explore form.item.product.product-item.product_addtocart_form.card.card-interactive.flex.flex-col.w-full .mt-auto.pt-3.flex.flex-wrap.justify-center.items-center {
+        display: none;
+    }
+    .catalog-product-view .more-items-to-explore a.product.photo.product-item-photo.block.mx-auto.mb-3 {
+        width: 90px;
+        margin: 0;
+    }
+    .catalog-product-view .more-items-to-explore .card-interactive:hover {
+        background-color: white;
+    }
+    .catalog-product-view .more-items-to-explore img.hover\:shadow-sm.object-contain.product-image-photo {
+        box-shadow: none;
+        min-width: 90px;
+        height: 5rem;
+    }
+    .catalog-product-view .more-items-to-explore .product-info.flex.flex-col.grow .py-1.mx-auto {
+        order: 1;
+        margin: 0;
+        padding: 0;
+    }
+    .catalog-product-view .more-items-to-explore .product-info.flex.flex-col.grow .mt-2.mb-1.items-center.justify-center.text-primary.font-semibold.text-lg {
+        order: 2;
+        text-align: start;
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        margin: 0;
+    }
+    .catalog-product-view .more-items-to-explore .product-info.flex.flex-col.grow .pt-1.text-gray-900 {
+        order: 3;
+        padding: 0;
+    }
+    .catalog-product-view .more-items-to-explore .product-info {
+        justify-content: center;
+        height: 100%;
+    }
+    .catalog-product-view .more-items-to-explore .product-info .py-1.mx-auto{
+        height: 14px;
+    }
+    .catalog-product-view .more-items-to-explore .product-info.flex.flex-col.grow .py-1.mx-auto .rating-summary svg{
+        width: 0.85rem;
+        height: 0.85rem;
+    }
+    .catalog-product-view .more-items-to-explore .product-info button.rounded-full.w-9.h-9.bg-gray-200.p-0.border-0.inline-flex.shrink-0.items-center.justify-center.text-gray-500,
+    .catalog-product-view .more-items-to-explore .product-info .swatch-attribute.border-t.last\:border-b.border-container,
+    .catalog-product-view .more-items-to-explore .product-info.flex.flex-col.grow .price-box.price-final_price span.price-label {
+        display: none;
+    }
+    .catalog-product-view .more-items-to-explore .lg\:grid-cols-4 {
+        grid-template-columns: repeat(3,minmax(0,1fr));
+    }
+    .catalog-product-view .more-items-to-explore .product-info.flex.flex-col.grow .product-item-link{
+        text-overflow: ellipsis;
+    } 
+    .catalog-product-view .more-items-to-explore .product-info.flex.flex-col.grow .price-box.price-final_price span[data-price-type="oldPrice"] .price{
+        font-size: 13px;
+    }
+    .catalog-product-view .more-items-to-explore .product-info.flex.flex-col.grow .price-box.price-final_price span[data-price-type="oldPrice"] {
+        text-decoration: line-through;
+        font-size: 13px;
+    }
+    .catalog-product-view .more-items-to-explore .product-info.flex.flex-col.grow .price-box.price-final_price span.price-wrapper {
+    margin-right: 0.25rem;
+    }
+    .catalog-product-view .more-items-to-explore .product-info.flex.flex-col.grow .price-box.price-final_price {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+    }
+    .catalog-product-view .more-items-to-explore .product-info.flex.flex-col.grow .product-item-link{
+        font-size: 14px;
+    } 
+    .catalog-product-view .more-items-to-explore .product-info.flex.flex-col.grow .price-box.price-final_price .price {
+        font-size: 16px;
+    }
+    .catalog-product-view .more-items-to-explore .product-info.flex.flex-col.grow .product-item-link, 
+    .catalog-product-view .more-items-to-explore .product-info.flex.flex-col.grow .price-box.price-final_price .price {
+        color: #0d2f47;
+        font-weight: 700;
+    }
+
+    @media screen and (max-width: 1023px) {
+        .catalog-product-view .more-items-to-explore .mx-auto.grid.gap-4.sm\:grid-cols-2.lg\:grid-cols-4{
+            display: flex;
+            width: 100vw;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            right: 50%;
+            left: 50%;
+            position: relative;
+            overflow: scroll;
+            padding: 2rem 1.5rem;
+            background: #efeadd;
+        }
+        .catalog-product-view .more-items-to-explore .mx-auto.grid.gap-4.sm\:grid-cols-2.lg\:grid-cols-4::-webkit-scrollbar {
+            width: 1px;
+            background-color: #ccc;
+            border-radius: 17px;
+        }
+        .catalog-product-view .more-items-to-explore .mx-auto.grid.gap-4.sm\:grid-cols-2.lg\:grid-cols-4::-webkit-scrollbar-thumb {
+            background-color: #064f84;
+            border-radius: 17px;
+        }
+        .catalog-product-view .more-items-to-explore img.hover\:shadow-sm.object-contain.product-image-photo {
+            width: 5rem;
+            height: 5rem;
+        }
+        .catalog-product-view .more-items-to-explore .product-info{
+            min-width: 220px;
+        }
+    }
+
+    @media screen and (max-width: 363px) {
+        .catalog-product-view .more-items-to-explore .product-info{
+            min-width: 190px;
+        }
+    }
+    @media screen and (min-width: 1024px) {
+        .catalog-product-view .more-items-to-explore img.hover\:shadow-sm.object-contain.product-image-photo{
+            object-fit: contain;
+        }
+    }
+    @media screen and (min-width: 430px){
+        .catalog-product-view .more-items-to-explore .product-info{
+            /* height: 80% */
+        }
+    }
+
+    .ahy-tooltip {
+        position: relative;
+        display: inline-block;
+    }
+
+    .ahy-tooltip:hover img.img-info-up {
+        display: none;
+    }
+
+    .ahy-tooltip:hover img.hidden {
+        display: block;
+    }
+
+    .ahy-tooltip .ahy-tooltip-text {
+        display:none;
+        width: 300px;
+        position: absolute;
+        z-index: 1;
+        bottom: 149%;
+        left: 50%;
+        margin-left: -149px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .ahy-tooltip .ahy-tooltip-text::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -15px;
+        border-width: 15px;
+        border-style: solid;
+        border-color: #0d2f47 transparent transparent transparent;
+    }
+
+    div#product_list,
+    div#wk_list_header,
+    div.wk-ap-price-block {
+        display: none;
+    }
+
+    .ahy-tooltip:hover .ahy-tooltip-text {
+        display:flex;
+        opacity: 1;
+        border-bottom: 5px solid;
+    }
+
+    .ahy-tooltip-button button:hover{
+        box-shadow: #0d2f47 0px 0px 0px 1px inset;
+    }
+
+    .sticky-header-price .price-label,
+    .sticky-header-price .event-sale-label,
+    .sticky-header-price .ahy-discount-container
+    {
+        display: none !important;
+
+    }
+    .sticky-header-price span.price-wrapper.title-font.font-extrabold.text-4xl{
+        font-size: 1rem;
+        line-height: 1;
+    }
+    .sticky-header-price span.price-wrapper.title-font.font-bold.line-through.text-ahy-blue {
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .sticky-header-price .flex.items-start.justify-between.flex-col.md\:flex-row.pb-4{
+        padding: 0;
+    }
+
+    @media screen and (max-width: 319px) {
+        .ahy-tooltip .ahy-tooltip-text {
+            width: 250px;
+            left: -250%;
+        }
+        .ahy-tooltip .ahy-tooltip-text::after {
+            left: 88%;
+        }
+    }
+    @media screen and (min-width: 320px) and (max-width: 339px) {
+        .ahy-tooltip .ahy-tooltip-text {
+            width: 260px;
+            left: -250%;
+        }
+        .ahy-tooltip .ahy-tooltip-text::after {
+            left: 88%;
+        }
+    }
+    @media screen and (min-width: 340px) and (max-width: 369px) {
+        .ahy-tooltip .ahy-tooltip-text {
+            width: 260px;
+            left: -220%;
+        }
+        .ahy-tooltip .ahy-tooltip-text::after {
+            left: 88%;
+        }
+    }
+    @media screen and (min-width: 350px) and (max-width: 369px) {
+        .ahy-tooltip .ahy-tooltip-text {
+            width: 260px;
+            left: -220%;
+        }
+        .ahy-tooltip .ahy-tooltip-text::after {
+            left: 88%;
+        }
+    }
+    @media screen and (min-width: 370px) and (max-width: 399px) {
+        .ahy-tooltip .ahy-tooltip-text {
+            width: 260px;
+            left: -200%;
+        }
+        .ahy-tooltip .ahy-tooltip-text::after {
+            left: 88%;
+        }
+    }
+    @media screen and (min-width: 400px) and (max-width: 449px) {
+        .ahy-tooltip .ahy-tooltip-text {
+            width: 300px;
+            left: -200%;
+        }
+        .ahy-tooltip .ahy-tooltip-text::after {
+            left: 76%;
+        }
+    }
+    @media screen and (min-width: 450px) and (max-width: 499px) {
+        .ahy-tooltip .ahy-tooltip-text {
+            left: -50%;
+        }
+        .ahy-tooltip .ahy-tooltip-text::after {
+            left: 60%;
+        }
+    }
+</style>

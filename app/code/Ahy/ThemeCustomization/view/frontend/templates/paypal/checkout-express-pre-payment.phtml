@@ -1,0 +1,23 @@
+<div id="express-checkout-title"
+     class="py-4 text-center font-semibold text-ahy-blue hidden">
+    Express Checkout
+</div>
+
+<script>
+(function () {
+    const showTitle = () => {
+        const title = document.getElementById('express-checkout-title');
+        if (title) {
+            title.classList.remove('hidden');
+        }
+    };
+
+    // Case 1: event happens AFTER listener
+    window.addEventListener('express-payment-visible', showTitle);
+
+    // Case 2: event already happened BEFORE listener
+    if (window.__hasExpressPayment === true) {
+        showTitle();
+    }
+})();
+</script>

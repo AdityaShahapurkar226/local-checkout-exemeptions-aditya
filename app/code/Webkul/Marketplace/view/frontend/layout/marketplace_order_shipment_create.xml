@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <update handle="marketplace_styles"/>
+    <body>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">New Shipment</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block class="Webkul\Marketplace\Block\Order\View"  name="marketplace_order_shipment_create" template="Webkul_Marketplace::order/shipment/new.phtml" cacheable="false">
+                <block class="Webkul\Marketplace\Block\Order\View" name="marketplace_order_info" template="Webkul_Marketplace::order/info.phtml">
+                    <arguments>
+                        <argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+                    </arguments>
+                </block>
+                <block class="Webkul\Marketplace\Block\Order\View" name="marketplace_order_new_shipment_tracking" template="Webkul_Marketplace::order/shipment/new/tracking.phtml"/>
+                <block class="Webkul\Marketplace\Block\Order\Shipment\Create\Items" name="marketplace_order_new_shipment_items" template="Webkul_Marketplace::order/shipment/new/items.phtml" cacheable="false">
+                    <block class="Magento\Theme\Block\Html\Pager" name="marketplace_order_item_pager"/>
+                </block>
+            </block>
+            <referenceBlock name="marketplace_order_shipment_create">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+                </arguments>
+            </referenceBlock>
+            <referenceBlock name="marketplace_order_info">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+                </arguments>
+            </referenceBlock>
+            <referenceBlock name="marketplace_order_new_shipment_tracking">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+                </arguments>
+            </referenceBlock>
+            <referenceBlock name="marketplace_order_new_shipment_items">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Webkul\Marketplace\ViewModel\HelperViewModel</argument>
+                </arguments>
+            </referenceBlock>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,12 @@
+<div class="data-grid-cell-content">
+    <!-- ko if: $row().conditional -->
+        <!-- ko foreach: $row().conditional -->
+        <div>
+            <!-- ko i18n: '%1% (%2 items)'.replace('%1', discount).replace('%2', count) --><!-- /ko -->
+        </div>
+        <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko ifnot: $row().conditional -->
+        <span data-bind="text: $col.getLabel($row())"></span>
+    <!-- /ko -->
+</div>

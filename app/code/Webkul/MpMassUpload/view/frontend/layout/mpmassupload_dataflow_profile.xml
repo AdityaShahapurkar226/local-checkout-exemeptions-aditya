@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <head>
+        <css src="Webkul_Marketplace::css/wk_block.css"/>
+        <css src="Webkul_Marketplace::css/style.css"/>
+        <css src="Webkul_Marketplace::css/product.css"/>
+        <css src="Webkul_Marketplace::css/layout.css"/>
+        <css src="Webkul_MpMassUpload::css/styles.css"/>
+    </head>
+    <body>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">Mass Upload Dataflow Profile</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block class="Webkul\MpMassUpload\Block\Dataflow\Profile" name="mpmassupload_dataflow_profile" template="Webkul_MpMassUpload::account/dataflow_profile.phtml" cacheable="false"></block>
+        </referenceContainer>
+    </body>
+</page>

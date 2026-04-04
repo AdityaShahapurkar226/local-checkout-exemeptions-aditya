@@ -1,0 +1,411 @@
+<?php
+
+/** @var \Webkul\Marketplace\Block\Adminhtml\Customer\Edit\Tab\PaymentInfo $block */
+$tokens = $block->getVaultPaymentTokens();
+$deleteUrl = $block->getUrl('marketplace/customer/deleteVaultToken');
+$createUrl = $block->getUrl('marketplace/customer/createVaultToken');
+$countries = $block->getCountryOptions();
+$regionsByCountry = $block->getRegionsByCountry();
+$defaultCountry = 'US';
+
+$fields = [
+    'billing_first_name' => 'First Name',
+    'billing_last_name'  => 'Last Name',
+    'billing_company'    => 'Company (Optional)',
+    'billing_street'     => 'Street Address',
+    'billing_city'       => 'City',
+    // State + Country will be placed right after city
+    'billing_zip'        => 'ZIP',
+    'billing_phone'      => 'Phone Number',
+    'billing_fax'        => 'Fax Number (Optional)',
+];
+?>
+
+<style>
+    .required-asterisk::after {
+        content: '*';
+        margin-left: 4px;
+        color: #e22626;
+    }
+</style>
+
+<div class="admin__fieldset-wrapper opened">
+    <div class="admin__fieldset-wrapper-title">
+        <strong class="title">
+            <span><?= $block->escapeHtml(__('Payment Information')) ?></span>
+        </strong>
+    </div>
+
+    <div class="admin__fieldset-wrapper-content">
+        <fieldset class="admin__fieldset">
+            <?php if (count($tokens)): ?>
+                <?php foreach ($tokens as $token): ?>
+                    <?php
+                    $details = json_decode($token->getDetails(), true);
+                    $cardType = $details['type'] ?? 'N/A';
+                    $maskedCC = $details['maskedCC'] ?? '****';
+                    $expDate  = $details['expirationDate'] ?? 'N/A';
+                    $expParts = explode('/', $expDate);
+                    $expMonth = $expParts[0] ?? '';
+                    $expYear = $expParts[1] ?? '';
+                    $tokenId = $token->getEntityId();
+                    ?>
+                    <div class="admin__page-section-item" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 6px;">
+                        <div>
+                            <strong><?= __('Card Type:') ?></strong> <?= $block->escapeHtml($cardType) ?><br />
+                            <strong><?= __('Card Number:') ?></strong> **** **** **** <?= $block->escapeHtml($maskedCC) ?><br />
+                            <strong><?= __('Expiration Date:') ?></strong> <?= $block->escapeHtml($expDate) ?><br />
+                        </div>
+
+                        <div style="margin-top: 10px;">
+                            <form method="post" action="<?= $deleteUrl ?>" style="display: inline-block;">
+                                <input type="hidden" name="token_id" value="<?= $tokenId ?>">
+                                <input type="hidden" name="customer_id" value="<?= $block->getCustomerId() ?>">
+                                <?= $block->getBlockHtml('formkey') ?>
+                                <button type="submit" class="action-delete" onclick="return confirm('Are you sure you want to delete this saved card?');">
+                                    <?= __('Delete') ?>
+                                </button>
+                            </form>
+
+                            <button type="button" onclick="document.getElementById('edit-form-<?= $tokenId ?>').classList.toggle('hidden');" class="action-edit">
+                                <?= __('Edit') ?>
+                            </button>
+                        </div>
+
+                        <div id="edit-form-<?= $tokenId ?>" class="hidden" style="margin-top: 15px;">
+                            <form method="post" action="<?= $block->getUrl('marketplace/customer/updateVaultToken') ?>">
+                                <?= $block->getBlockHtml('formkey') ?>
+                                <input type="hidden" name="customer_id" value="<?= $block->getCustomerId() ?>">
+                                <input type="hidden" name="token_id" value="<?= $tokenId ?>">
+                                <input type="hidden" name="payment_profile_id" value="<?= $token->getGatewayToken() ?>">
+
+                                <div class="card-address-wrapper">
+                                    <fieldset class="admin__fieldset card-column">
+                                        <legend class="admin__legend"><?= __('Card Details') ?></legend>
+
+                                        <div class="admin__field">
+                                            <label class="admin__field-label required-asterisk"><?= __('Card Number') ?></label>
+                                            <div class="admin__field-control">
+                                                <input type="text" name="card_number" class="admin__control-text" maxlength="19" required />
+                                                <label class="admin__field-error" style="display:none;">This is a required field.</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="admin__field">
+                                            <label class="admin__field-label required-asterisk"><?= __('Expiry Month (MM)') ?></label>
+                                            <div class="admin__field-control">
+                                                <input type="text" name="exp_month" class="admin__control-text" maxlength="2" value="<?= $block->escapeHtml($expMonth) ?>" required />
+                                                <label class="admin__field-error" style="display:none;">This is a required field.</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="admin__field">
+                                            <label class="admin__field-label required-asterisk"><?= __('Expiry Year (YYYY)') ?></label>
+                                            <div class="admin__field-control">
+                                                <input type="text" name="exp_year" class="admin__control-text" maxlength="4" value="<?= $block->escapeHtml($expYear) ?>" required />
+                                                <label class="admin__field-error" style="display:none;">This is a required field.</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="admin__field">
+                                            <label class="admin__field-label required-asterisk"><?= __('CVV') ?></label>
+                                            <div class="admin__field-control">
+                                                <input type="text" name="cvv" class="admin__control-text" maxlength="4" required />
+                                                <label class="admin__field-error" style="display:none;">This is a required field.</label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset class="admin__fieldset card-column">
+                                        <legend class="admin__legend"><?= __('Cardholder Address') ?></legend>
+
+                                        <?php foreach ($fields as $name => $label): ?>
+                                            <?php if ($name === 'billing_city'): ?>
+                                                <!-- City -->
+                                                <div class="admin__field">
+                                                    <label class="admin__field-label required-asterisk"><?= __($label) ?></label>
+                                                    <div class="admin__field-control">
+                                                        <input type="text" name="<?= $name ?>" class="admin__control-text" required />
+                                                        <label class="admin__field-error" style="display:none;">This is a required field.</label>
+                                                    </div>
+                                                </div>
+
+                                                <!-- State/Province -->
+                                                <div class="admin__field">
+                                                    <label class="admin__field-label required-asterisk"><?= __('State / Province') ?></label>
+                                                    <div class="admin__field-control">
+                                                        <select name="billing_state" id="billing_state_edit_<?= $tokenId ?>" class="admin__control-select" required>
+                                                            <option value=""><?= __('-- Select Region --') ?></option>
+                                                            <?php foreach ($regionsByCountry[$defaultCountry] ?? [] as $region): ?>
+                                                                <option value="<?= $region['region_id'] ?>"><?= $region['default_name'] ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                        <label class="admin__field-error" style="display:none;">This is a required field.</label>
+
+                                                        <!-- <input type="text" name="billing_state_text" id="billing_state_text_edit_<?//= $tokenId ?>" class="admin__control-text" style="display: none;" placeholder="<?//= __('Enter Region') ?>" required /> -->
+                                                    </div>
+                                                </div>
+
+                                                <!-- Country -->
+                                                <div class="admin__field">
+                                                    <label class="admin__field-label required-asterisk"><?= __('Country') ?></label>
+                                                    <div class="admin__field-control">
+                                                        <select name="billing_country" id="billing_country_edit_<?= $tokenId ?>" class="admin__control-select" required onchange="updateRegions(this.value, 'edit_<?= $tokenId ?>')">
+                                                            <option value=""><?= __('-- Select Country --') ?></option>
+                                                            <?php foreach ($countries as $country): ?>
+                                                                <option value="<?= $block->escapeHtmlAttr($country['value']) ?>" <?= $country['value'] === $defaultCountry ? 'selected' : '' ?>>
+                                                                    <?= $block->escapeHtml($country['label']) ?>
+                                                                </option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                        <label class="admin__field-error" style="display:none;">This is a required field.</label>
+                                                    </div>
+                                                </div>
+                                            <?php else: ?>
+                                                <!-- Other fields -->
+                                                <div class="admin__field">
+                                                    <label class="admin__field-label <?= (str_contains($label, 'Optional') ? '' : 'required-asterisk') ?>"><?= __($label) ?></label>
+                                                    <div class="admin__field-control">
+                                                        <input type="text" name="<?= $name ?>" class="admin__control-text" <?= (str_contains($label, 'Optional') ? '' : 'required') ?> />
+                                                        <?php if (!str_contains($label, 'Optional')): ?>
+                                                            <label class="admin__field-error" style="display:none;">This is a required field.</label>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </fieldset>
+                                </div>
+
+                                <div class="admin__actions">
+                                    <button type="submit" class="action-save primary" onclick="return validateFields(this.form);"><?= __('Save Changes') ?></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <address><?= $block->escapeHtml(__('No saved payment information available.')) ?></address>
+            <?php endif; ?>
+        </fieldset>
+
+        <hr />
+        <h3 class="margin-top"><?= __('Add New Card') ?></h3>
+        <div class="card-form-wrapper">
+            <form method="post" action="<?= $createUrl ?>" class="admin__fieldset" onsubmit="return validateFields(this)" novalidate>
+                <?= $block->getBlockHtml('formkey') ?>
+                <input type="hidden" name="customer_id" value="<?= $block->getCustomerId() ?>">
+
+                <div class="card-address-wrapper">
+                    <!-- Card Details -->
+                    <fieldset class="admin__fieldset card-column">
+                        <legend class="admin__legend"><?= __('Card Details') ?></legend>
+
+                        <div class="admin__field">
+                            <label class="admin__field-label required-asterisk"><?= __('Card Number') ?></label>
+                            <div class="admin__field-control">
+                                <input type="text" name="card_number" class="admin__control-text" id="card-number" required />
+                                <label class="admin__field-error" style="display:none;">This is a required field.</label>
+                            </div>
+                        </div>
+
+                        <div class="admin__field">
+                            <label class="admin__field-label required-asterisk"><?= __('Expiry Month (MM)') ?></label>
+                            <div class="admin__field-control">
+                                <input type="text" name="exp_month" maxlength="2" class="admin__control-text" required />
+                                <label class="admin__field-error" style="display:none;">This is a required field.</label>
+                            </div>
+                        </div>
+
+                        <div class="admin__field">
+                            <label class="admin__field-label required-asterisk"><?= __('Expiry Year (YYYY)') ?></label>
+                            <div class="admin__field-control">
+                                <input type="text" name="exp_year" maxlength="4" class="admin__control-text" required />
+                                <label class="admin__field-error" style="display:none;">This is a required field.</label>
+                            </div>
+                        </div>
+
+                        <div class="admin__field">
+                            <label class="admin__field-label required-asterisk"><?= __('CVV') ?></label>
+                            <div class="admin__field-control">
+                                <input type="text" name="cvv" maxlength="4" class="admin__control-text" required />
+                                <label class="admin__field-error" style="display:none;">This is a required field.</label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Cardholder Address -->
+                    <fieldset class="admin__fieldset card-column">
+                        <legend class="admin__legend"><?= __('Cardholder Address') ?></legend>
+
+                        <?php foreach ($fields as $name => $label): ?>
+                            <?php if ($name === 'billing_city'): ?>
+                                <!-- City -->
+                                <div class="admin__field">
+                                    <label class="admin__field-label required-asterisk"><?= __($label) ?></label>
+                                    <div class="admin__field-control">
+                                        <input type="text" name="<?= $name ?>" class="admin__control-text" required />
+                                        <label class="admin__field-error" style="display:none;">This is a required field.</label>
+                                    </div>
+                                </div>
+
+                                <!-- State/Province -->
+                                <div class="admin__field">
+                                    <label class="admin__field-label required-asterisk"><?= __('State / Province') ?></label>
+                                    <div class="admin__field-control">
+                                        <select name="billing_state" id="billing_state_new" class="admin__control-select" required>
+                                            <option value=""><?= __('-- Select Region --') ?></option>
+                                            <?php foreach ($regionsByCountry[$defaultCountry] ?? [] as $region): ?>
+                                                <option value="<?= $region['region_id'] ?>"><?= $region['default_name'] ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <label class="admin__field-error" style="display:none;">This is a required field.</label>
+
+                                        <!-- <input type="text" name="billing_state_text" id="billing_state_text_new" class="admin__control-text" style="display: none;" placeholder="<?//= __('Enter Region') ?>" required /> -->
+                                    </div>
+                                </div>
+
+                                <!-- Country -->
+                                <div class="admin__field">
+                                    <label class="admin__field-label required-asterisk"><?= __('Country') ?></label>
+                                    <div class="admin__field-control">
+                                        <select name="billing_country" id="billing_country_new" class="admin__control-select" onchange="updateRegions(this.value, 'new')" required>
+                                            <option value=""><?= __('-- Select Country --') ?></option>
+                                            <?php foreach ($countries as $country): ?>
+                                                <option value="<?= $block->escapeHtmlAttr($country['value']) ?>" <?= $country['value'] === $defaultCountry ? 'selected' : '' ?>>
+                                                    <?= $block->escapeHtml($country['label']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <label class="admin__field-error" style="display:none;">This is a required field.</label>
+                                    </div>
+                                </div>
+                            <?php else: ?>
+                                <!-- Other fields -->
+                                <div class="admin__field">
+                                    <label class="admin__field-label <?= (str_contains($label, 'Optional') ? '' : 'required-asterisk') ?>"><?= __($label) ?></label>
+                                    <div class="admin__field-control">
+                                        <input type="text" name="<?= $name ?>" class="admin__control-text" <?= (str_contains($label, 'Optional') ? '' : 'required') ?> />
+                                        <?php if (!str_contains($label, 'Optional')): ?>
+                                            <label class="admin__field-error" style="display:none;">This is a required field.</label>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </fieldset>
+                </div>
+
+                <div class="admin__actions">
+                    <button type="submit" class="action-primary"><?= __('Save Card') ?></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const regionsByCountry = <?= json_encode($regionsByCountry) ?>;
+
+    function updateRegions(countryId, formType) {
+        const regionSelect = document.getElementById(`billing_state_${formType}`);
+        const regionInput = document.getElementById(`billing_state_text_${formType}`);
+
+        regionSelect.innerHTML = '<option value=""><?= __('-- Select Region --') ?></option>';
+
+        if (regionsByCountry[countryId] && regionsByCountry[countryId].length > 0) {
+            regionSelect.style.display = 'inline-block';
+            regionInput.style.display = 'none';
+            regionInput.value = '';
+
+            regionsByCountry[countryId].forEach(region => {
+                const option = document.createElement('option');
+                option.value = region.region_id;
+                option.textContent = region.default_name;
+                regionSelect.appendChild(option);
+            });
+        } else {
+            regionSelect.style.display = 'none';
+            regionInput.style.display = 'inline-block';
+            regionInput.value = '';
+        }
+    }
+
+    function validateFields(form) {
+        let isValid = true;
+        form.querySelectorAll('.admin__field-control').forEach(control => {
+            const input = control.querySelector('input[required], select[required], textarea[required]');
+            const errorLabel = control.querySelector('.admin__field-error');
+            if (input) {
+                if (!input.value.trim()) {
+                    if (errorLabel) errorLabel.style.display = 'block';
+                    isValid = false;
+                } else {
+                    if (errorLabel) errorLabel.style.display = 'none';
+                }
+            }
+        });
+        return isValid;
+    }
+</script>
+</div>
+</div>
+
+<style>
+    .margin-top {
+        margin-top: 2rem !important;
+    }
+
+    .card-form-wrapper {
+        border: 1px solid #d6d6d6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-address-wrapper {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .card-column {
+        flex: 1 1 40%;
+        min-width: 300px;
+    }
+
+    .admin__control-text {
+        max-width: 100%;
+    }
+
+    .admin__field {
+        margin-bottom: 15px;
+    }
+
+    .admin__fieldset {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        margin-bottom: 30px;
+    }
+
+    .admin__legend {
+        font-weight: 600;
+        font-size: 16px;
+        padding: 0 5px;
+    }
+
+    .admin__actions {
+        margin-top: 20px;
+    }
+
+    .admin__field-label {
+        min-width: 150px;
+    }
+</style>
+</div>
+</div>

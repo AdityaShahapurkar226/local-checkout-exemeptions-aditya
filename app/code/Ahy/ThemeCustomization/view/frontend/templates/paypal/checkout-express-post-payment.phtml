@@ -1,0 +1,16 @@
+<div
+    x-data="{ hasExpressPayment: false }"
+    @express-payment-visible.window="hasExpressPayment = true"
+>
+    <template x-if="hasExpressPayment">
+        <div class="flex flex-row gap-4 items-center py-6">
+            <div class="w-[47%]">
+                <hr class="border border-ahy-blue">
+            </div>
+            <div class="text-center">OR</div>
+            <div class="w-[47%]">
+                <hr class="border border-ahy-blue">
+            </div>
+        </div>
+    </template>
+</div>

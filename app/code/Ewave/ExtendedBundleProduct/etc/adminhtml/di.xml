@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="Ewave\ExtendedBundleProduct\Model\ResourceModel\Product\CollectionFactory" type="Magento\Catalog\Model\ResourceModel\Product\CollectionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Ewave\ExtendedBundleProduct\Model\ResourceModel\Product\Collection</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Bundle\Ui\DataProvider\Product\BundleDataProvider">
+        <arguments>
+            <argument name="collectionFactory" xsi:type="object">Ewave\ExtendedBundleProduct\Model\ResourceModel\Product\CollectionFactory</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Bundle\Ui\DataProvider\Product\Form\Modifier\Composite">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="configurablePanel" xsi:type="string">Ewave\ExtendedBundleProduct\Ui\DataProvider\Product\Form\Modifier\ConfigurablePanel</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- PREPARE "ORDER ITEM" OF BUNDLE PRODUCTS TO APPLY CONFIGURABLE PRODUCTS -->
+    <type name="Magento\Sales\Model\AdminOrder\Create">
+        <plugin name="Ewave_ExtendedBundleProduct::MagentoSalesModelAdminOrderCreate"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\Sales\Model\AdminOrder\CreatePlugin"
+                sortOrder="10" />
+    </type>
+    <preference for="Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid" type="Ewave\ExtendedBundleProduct\Preferences\Magento\ConfigurableProduct\Order\Create\Items\Grid"/>
+
+    <type name="Magento\Bundle\Block\Adminhtml\Sales\Order\View\Items\Renderer">
+        <plugin name="Ewave_ExtendedBundleProduct::MagentoBundleBlockAdminhtmlSalesOrderViewItemsRenderer"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\Bundle\Block\Sales\Order\Items\RendererPlugin"
+                sortOrder="10" />
+    </type>
+    <type name="Magento\Bundle\Block\Adminhtml\Sales\Order\Items\Renderer">
+        <plugin name="Ewave_ExtendedBundleProduct::MagentoBundleBlockAdminhtmlSalesOrderItemsRenderer"
+                type="Ewave\ExtendedBundleProduct\Plugin\Magento\Bundle\Block\Sales\Order\Items\RendererPlugin"
+                sortOrder="10" />
+    </type>
+</config>

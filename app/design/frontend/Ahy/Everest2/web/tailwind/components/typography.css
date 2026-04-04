@@ -1,0 +1,78 @@
+@layer utilities {
+	/* This class only exists for backwards compatibility, */
+	/* The default is applied in tailwind.config.js since Hyvä 1.2.0 */
+	.text-sans-serif {
+		font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+	}
+}
+/* poppins-300 - latin */
+@font-face {
+	font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+	font-family: "Poppins";
+	font-style: normal;
+	font-weight: 300;
+	src: url("../fonts/Poppins/poppins-v20-latin-300.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* poppins-regular - latin */
+@font-face {
+	font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+	font-family: "Poppins";
+	font-style: normal;
+	font-weight: 400;
+	src: url("../fonts/Poppins/poppins-v20-latin-regular.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* poppins-500 - latin */
+@font-face {
+	font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+	font-family: "Poppins";
+	font-style: normal;
+	font-weight: 500;
+	src: url("../fonts/Poppins/poppins-v20-latin-500.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* poppins-600 - latin */
+@font-face {
+	font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+	font-family: "Poppins";
+	font-style: normal;
+	font-weight: 600;
+	src: url("../fonts/Poppins/poppins-v20-latin-600.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* poppins-700 - latin */
+@font-face {
+	font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+	font-family: "Poppins";
+	font-style: normal;
+	font-weight: 700;
+	src: url("../fonts/Poppins/poppins-v20-latin-700.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* poppins-800 - latin */
+@font-face {
+	font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+	font-family: "Poppins";
+	font-style: normal;
+	font-weight: 800;
+	src: url("../fonts/Poppins/poppins-v20-latin-800.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* poppins-900 - latin */
+@font-face {
+	font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+	font-family: "Poppins";
+	font-style: normal;
+	font-weight: 900;
+	src: url("../fonts/Poppins/poppins-v20-latin-900.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* league-gothic-regular - latin */
+@font-face {
+	font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+	font-family: "League Gothic";
+	font-style: normal;
+	font-weight: 400;
+	src: url("../fonts/League_Gothic/league-gothic-v11-latin-regular.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+html {
+	@apply antialiased;
+}
+
+body {
+	@apply text-black leading-normal text-base tracking-normal;
+}

@@ -1,0 +1,158 @@
+/*! Ahy-styles start */
+body {
+	font-family: "Poppins", sans-serif;
+}
+
+/* .font-league-gothic {
+	font-family: "League Gothic", sans-serif;
+} */
+
+a[title="Deals"] {
+	color: #ff4545;
+}
+.checkout-ahy.hyva_checkout-index-index .page-main .price-summary.card {
+	@apply !bg-ahy-yellow-card;
+}
+
+#hyva-checkout-main #quote-summary > .price-summary {
+	@apply !rounded-none;
+}
+.kuEmptySearchBox.klevuTarget.kuQuickSearchResultsContainer.kuPersonalizedSearchRecsEnabled>div {
+    display: none;
+}
+.ahy-custom-btn {
+	@apply rounded-full duration-300 focus:ring-transparent;
+	box-shadow: #12334b47 0px 0px 14px 8px, #00000024 0px -1px 0px inset !important;
+	transition-timing-function: ease-in-out;
+}
+@media only screen and (min-width: 1024px) {
+	#product-swatch-gallery-html .js_thumbs_slides.thumbs-wrapper.relative.flex.flex-nowrap.w-full.overflow-auto.js_slides.snap.md\:px-4.md\:flex-col.h-auto {
+		padding: 0 !important;
+	}
+}
+div#product-swatch-gallery-html > div {
+	width: 100%;
+	padding: 0;
+}
+div#product-swatch-gallery-html .js_thumbs_slides.thumbs-wrapper.relative.flex.flex-nowrap.overflow-auto.js_slides.snap.md\:px-4.md\:flex-col.h-auto {
+	padding: 0;
+}
+div#product-swatch-gallery-html div#gallery > div {
+	gap: 1rem;
+}
+@media screen and (min-width: 768px) {
+	div#product-swatch-gallery-html .order-1.md\:w-\[36\%\].lg\:w-\[25\%\].xl\:w-\[15\%\] {
+		width: 19% !important;
+	}
+}
+.cms-home.cms-index-index {
+	.causes-we-back::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		height: 100%;
+		width: 100vw;
+		background: url("/media/wysiwyg/causes-we-back/background-causes-img1.jpg");
+		background-position: 12% 100%;
+		background-repeat: no-repeat;
+	}
+	@media screen and (max-width: 768px) {
+		.causes-we-back::before {
+			background-image: url("/media/wysiwyg/causes-we-back/background-causes-img.png");
+		}
+	}
+	@media screen and (min-width: 1920px) {
+		.causes-we-back::before {
+			background-image: url("/media/wysiwyg/causes-we-back/background-causes-img.png");
+		}
+	}
+}
+
+@keyframes ahy-pulse {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+}
+
+li.klevuProduct .klevu-desc-l2 * {
+	font-size: 13px !important;
+	font-family: inherit !important;
+	font-weight: 400 !important;
+}
+
+.ahy-scrollbar::-webkit-scrollbar {
+	width: 1px;
+	background-color: #ccc;
+	border-radius: 17px;
+}
+.ahy-scrollbar::-webkit-scrollbar-thumb {
+	background-color: #064f84;
+	border-radius: 17px;
+}
+
+.catalog-product-view #wk-mp-ask-data {
+	display: none;
+}
+.homepage-category-option .category-image-ahy:hover img,
+.ahy-newsletter-section .ahy-newsletter-title-image:hover,
+picture.creator-content-img:hover .creator-content-img {
+	@apply scale-[1.01];
+	-webkit-transform: scale(1.01);
+}
+.homepage-category-option .category-image-ahy img,
+.ahy-newsletter-section .ahy-newsletter-title-image,
+picture.creator-content-img .creator-content-img {
+	@apply transition-[0.45s] duration-[ease-in-out] scale-100;
+	-webkit-transform: scale(1);
+	-webkit-transition: 0.45s ease-in-out;
+}
+.homepage-category-option .category-image-ahy,
+picture.creator-content-img {
+	@apply overflow-hidden;
+}
+section.hero-banner .hero-banner-container img:hover {
+	@apply brightness-110;
+	-webkit-filter: brightness(1.1);
+}
+.ahy-swipeable::-webkit-scrollbar {
+	@apply w-px bg-[#ccc] rounded-[17px];
+}
+.ahy-swipeable::-webkit-scrollbar-thumb {
+	@apply bg-[#064f84] rounded-[17px];
+}
+@media only screen and (max-width: 767px) and (min-width: 601px) {
+	section.hero-banner .ahy-swipeable-content-image {
+		@apply w-[400px];
+	}
+}
+@media only screen and (max-width: 600px) and (min-width: 431px) {
+	section.hero-banner .ahy-swipeable-content-image {
+		@apply w-[300px];
+	}
+}
+@media only screen and (max-width: 430px) {
+	section.hero-banner .ahy-swipeable-content-image {
+		@apply w-[195px];
+	}
+}
+
+img.kuProdImg,
+img.prodImg {
+	height: 244px !important;
+	aspect-ratio: 3/3;
+	object-fit: contain;
+}
+
+@layer base {
+}
+
+@layer components {
+}
+/*! Ahy-styles end */
+

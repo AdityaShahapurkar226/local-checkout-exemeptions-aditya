@@ -1,0 +1,101 @@
+<?php /* @var $block \Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Checkbox */ ?>
+<?php $_option = $block->getOption() ?>
+<?php $_selections = $_option->getSelections() ?>
+<?php $isEnableImages = $this->helper('Ewave\ExtendedBundleProduct\Helper\Data')->showImages(); ?>
+<div class="field option <?php echo ($_option->getRequired()) ? ' required': ''; ?>">
+    <label class="label">
+        <span><?php echo $block->escapeHtml($_option->getTitle()) ?></span>
+    </label>
+    <div class="control">
+        <div class="nested options-list">
+            <?php if ($block->showSingle()): ?>
+                <?php if ($isEnableImages): ?>
+                    <?php $imageUrl = $this->helper('Magento\Catalog\Helper\Image')->init($_selections[0], 'product_thumbnail_image')->getUrl(); ?>
+                    <div class="bundle-item -image">
+                        <div class="content">
+                            <?php /* @escapeNotVerified */ echo $block->getSelectionQtyTitlePrice($_selections[0]) ?>
+                            <?php if ($tierPriceBlock = $block->getTierPriceRenderer()): ?>
+                                <?= /* @noEscape */ $tierPriceBlock->renderTierPrice($_selections[0]) ?>
+                            <?php endif; ?>
+                            <input type="hidden"
+                                   class="bundle-option-<?php /* @escapeNotVerified */ echo $_option->getId() ?>  product bundle option"
+                                   name="bundle_option[<?php /* @escapeNotVerified */ echo $_option->getId() ?>]"
+                                   id="bundle-option-<?php echo (int)$_option->getId() ?>-<?php echo (int)$_selections[0]->getSelectionId() ?>"
+                                   value="<?php /* @escapeNotVerified */ echo $_selections[0]->getSelectionId() ?>"/>
+                        </div>
+                        <div class="image">
+                            <img data-image="bundle-option-<?php /* @escapeNotVerified */ echo $_option->getId() ?>-<?php /* @escapeNotVerified */ echo $_selections[0]->getSelectionId() ?>" class="img" src="<?php echo $block->escapeUrl($imageUrl); ?>" alt="<?php echo $block->escapeHtml($_selections[0]->getName()) ?>">
+                        </div>
+                    </div>
+                <?php else:?>
+                    <?php /* @escapeNotVerified */ echo $block->getSelectionQtyTitlePrice($_selections[0]) ?>
+                    <?php if ($tierPriceBlock = $block->getTierPriceRenderer()): ?>
+                        <?= /* @noEscape */ $tierPriceBlock->renderTierPrice($_selections[0]) ?>
+                    <?php endif; ?>
+                    <input type="hidden"
+                           class="bundle-option-<?php /* @escapeNotVerified */ echo $_option->getId() ?>  product bundle option"
+                           name="bundle_option[<?php /* @escapeNotVerified */ echo $_option->getId() ?>]"
+                           value="<?php /* @escapeNotVerified */ echo $_selections[0]->getSelectionId() ?>"/>
+                <?php endif; ?>
+                <?php if ($selectionBlock = $block->getChildBlock('product.info.bundle.option.checkbox.selection')): ?>
+                    <?php /* @escapeNotVerified */ echo $selectionBlock->setOption($_option)->setSelection($_selections[0])->toHtml(); ?>
+                <?php endif; ?>
+            <?php else:?>
+                <?php foreach($_selections as $_selection): ?>
+                    <?php if ($isEnableImages): ?>
+                        <?php $imageUrl = $this->helper('Magento\Catalog\Helper\Image')->init($_selection, 'product_thumbnail_image')->getUrl(); ?>
+                        <div class="bundle-item -image">
+                            <div class="field choice content">
+                                <input class="bundle-option-<?php /* @escapeNotVerified */ echo $_option->getId() ?> checkbox product bundle option change-container-classname"
+                                       id="bundle-option-<?php /* @escapeNotVerified */ echo $_option->getId() ?>-<?php /* @escapeNotVerified */ echo $_selection->getSelectionId() ?>"
+                                       type="checkbox"
+                                       <?php if ($_option->getRequired()) echo 'data-validate="{\'validate-one-required-by-name\':\'input[name^=&quot;bundle_option[' . $_option->getId() . ']&quot;]:checked\'}"'?>
+                                       name="bundle_option[<?php /* @escapeNotVerified */ echo $_option->getId() ?>][<?php /* @escapeNotVerified */ echo $_selection->getId() ?>]"
+                                       data-selector="bundle_option[<?php /* @escapeNotVerified */ echo $_option->getId() ?>][<?php /* @escapeNotVerified */ echo $_selection->getId() ?>]"
+                                       <?php if ($block->isSelected($_selection)) echo ' checked="checked"' ?>
+                                       <?php if (!$_selection->isSaleable()) echo ' disabled="disabled"' ?>
+                                       value="<?php /* @escapeNotVerified */ echo $_selection->getSelectionId() ?>"/>
+                                <label class="label"
+                                       for="bundle-option-<?php /* @escapeNotVerified */ echo $_option->getId() ?>-<?php /* @escapeNotVerified */ echo $_selection->getSelectionId() ?>">
+                                    <span><?php /* @escapeNotVerified */ echo $block->getSelectionQtyTitlePrice($_selection) ?></span>
+                                </label>
+                                <?php if ($tierPriceBlock = $block->getTierPriceRenderer()): ?>
+                                    <?= /* @noEscape */ $tierPriceBlock->renderTierPrice($_selection) ?>
+                                <?php endif; ?>
+                                <?php if ($block->getChildBlock('bundle.option.checkbox.qty')): ?>
+                                    <?php echo /* @noEscape */ $block->getChildBlock('bundle.option.checkbox.qty')->setOption($_option)->setSelection($_selection)->toHtml();?>
+                                <?php endif; ?>
+                            </div>
+                            <div class="image">
+                                <img data-image="bundle-option-<?php /* @escapeNotVerified */ echo $_option->getId() ?>-<?php /* @escapeNotVerified */ echo $_selection->getSelectionId() ?>" class="img" src="<?php echo $block->escapeUrl($imageUrl); ?>" alt="<?php echo $block->escapeHtml($_selection->getName()) ?>">
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <div class="field choice">
+                            <input class="bundle-option-<?php /* @escapeNotVerified */ echo $_option->getId() ?> checkbox product bundle option change-container-classname"
+                                   id="bundle-option-<?php /* @escapeNotVerified */ echo $_option->getId() ?>-<?php /* @escapeNotVerified */ echo $_selection->getSelectionId() ?>"
+                                   type="checkbox"
+                                <?php if ($_option->getRequired()) echo 'data-validate="{\'validate-one-required-by-name\':\'input[name^=&quot;bundle_option[' . $_option->getId() . ']&quot;]:checked\'}"'?>
+                                   name="bundle_option[<?php /* @escapeNotVerified */ echo $_option->getId() ?>][<?php /* @escapeNotVerified */ echo $_selection->getId() ?>]"
+                                   data-selector="bundle_option[<?php /* @escapeNotVerified */ echo $_option->getId() ?>][<?php /* @escapeNotVerified */ echo $_selection->getId() ?>]"
+                                <?php if ($block->isSelected($_selection)) echo ' checked="checked"' ?>
+                                <?php if (!$_selection->isSaleable()) echo ' disabled="disabled"' ?>
+                                   value="<?php /* @escapeNotVerified */ echo $_selection->getSelectionId() ?>"/>
+                            <label class="label"
+                                   for="bundle-option-<?php /* @escapeNotVerified */ echo $_option->getId() ?>-<?php /* @escapeNotVerified */ echo $_selection->getSelectionId() ?>">
+                                <span><?php /* @escapeNotVerified */ echo $block->getSelectionQtyTitlePrice($_selection) ?></span>
+                            </label>
+                            <?php if ($tierPriceBlock = $block->getTierPriceRenderer()): ?>
+                                <?= /* @noEscape */ $tierPriceBlock->renderTierPrice($_selection) ?>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($selectionBlock = $block->getChildBlock('product.info.bundle.option.checkbox.selection')): ?>
+                        <?php /* @escapeNotVerified */ echo $selectionBlock->setOption($_option)->setSelection($_selection)->toHtml(); ?>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+                <div id="bundle-option-<?php /* @escapeNotVerified */ echo $_option->getId() ?>-container"></div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,188 @@
+Module's blog url: https://webkul.com/blog/magento2-job-board-recruitment-listing/
+
+Graph QL API
+
+For Testing can use the application 'Altair GraphQL' :- https://altair.sirmuel.design/
+
+End point :  https://<your store url>/graphql
+
+################# To setup customer authentication follow the steps given below #############################
+
+* Generate customer token
+
+Request:
+
+mutation {
+  generateCustomerToken(email: "customer_email", password: "customer_password") {
+    token
+  }
+}
+
+Response:
+
+{
+  "data": {
+    "generateCustomerToken": {
+      "token": "Generated Token"
+    }
+  }
+}
+
+* Put that customer token in the header of the GraphQL IDE you use (use -> https://altair.sirmuel.design/)
+
+NAME                      |                VALUE
+
+Authorization             |                Bearer <generated_customer_token>
+
+
+Note: To Excecute the queries and mutation given below you have to follow the above steps (Customer Authentication)
+
+
+1. Query to fetch the list of sub sellers by customerID
+
+Request:
+
+query {
+  getSubSellerList(customerId: "8") {
+    created_at
+    customer_id
+    email
+    entity_id
+    name
+    permissionType
+    seller_id
+    status
+    updated_at
+  }
+}
+
+Response:
+
+{
+  "data": {
+    "getSubSellerList": [
+      {
+        "created_at": "2022-09-15 06:20:37",
+        "customer_id": "33",
+        "email": "munassir.alam632@webkul.in",
+        "entity_id": "34",
+        "name": "Test GraphQl",
+        "permissionType": [
+          "marketplace/account/dashboard",
+          "marketplace/transaction/history",
+          "marketplace/transaction/history"
+        ],
+        "seller_id": "8",
+        "status": "1",
+        "updated_at": "2022-09-15 06:20:37"
+      }
+    ]
+  }
+}
+
+2. Query to fetch the allowed permissions to seller by admin
+
+Request:
+
+query {
+  getAllowedPermissionByAdminToSeller(customerId: "8") {
+    permissions
+  }
+}
+
+Response:
+
+{
+  "data": {
+    "getAllowedPermissionByAdminToSeller": {
+      "permissions": [
+        "marketplace/account/dashboard",
+        "marketplace/account/editprofile",
+        "marketplace/product_attribute/new",
+        "marketplace/product/add",
+        "marketplace/product/productlist",
+        "marketplace/transaction/history",
+        "marketplace/order/shipping",
+        "marketplace/order/history",
+        "marketplace/account/earning"
+      ]
+    }
+  }
+}
+
+Important: Permission type must be comma (,) separated like ( marketplace/account/dashboard, marketplace/product_attribute/new )
+
+3.Mutation to create a seller sub account
+
+Request:
+
+mutation {
+  createSellerSubAccount(
+    customerId: "8"
+    firstname: "Test"
+    lastname: "GraphQl2"
+    email: "TestGraphQl@webkul.in"
+    permissionType: "marketplace/account/dashboard,marketplace/product_attribute/new"
+    status: "1"
+  ) {
+    errorMessage
+    successMessage
+  }
+}
+
+Response:
+
+{
+  "data": {
+    "createSellerSubAccount": {
+      "errorMessage": null,
+      "successMessage": "Sub Account was saved successfully"
+    }
+  }
+}
+
+4. Mutation to update the seller sub Account
+
+mutation {
+  updateSellerSubAccount(
+    id:"35"
+    customerId: "8"
+    firstname: "Test"
+    lastname: "GraphQl2Updated"
+    email: "TestGraphQl@webkul.in"
+    permissionType: "marketplace/account/dashboard,marketplace/product_attribute/new"
+    status: "1"
+  ) {
+    message
+  }
+}
+
+Response:
+
+{
+  "data": {
+    "updateSellerSubAccount": {
+      "message": "SubAccount updated successfully"
+    }
+  }
+}
+
+5. Mutation to delete the seller sub account ( You can give multiple ids separated by commas (,) to mass-delete action )
+
+Request:
+
+mutation {
+  deleteSubSellerAccount(customerId: "8", id: "34,35") {
+    message
+  }
+}
+
+Response:
+
+{
+  "data": {
+    "deleteSubSellerAccount": {
+      "message": "2 accounts deleted successfully"
+    }
+  }
+}

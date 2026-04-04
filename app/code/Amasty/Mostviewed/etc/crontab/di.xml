@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="Amasty\Mostviewed\Model\Indexer\TogetherCondition\Specification\ViewedTogetherConditionSpecification"
+                 type="Amasty\Mostviewed\Model\Indexer\TogetherCondition\Specification\ConditionSpecification">
+        <arguments>
+            <argument name="tableName"
+                      xsi:type="const">Amasty\Mostviewed\Model\ResourceModel\Group\TogetherCondition\ViewedTogetherIndex::TABLE_NAME</argument>
+            <argument name="replicaTableName"
+                      xsi:type="const">Amasty\Mostviewed\Model\ResourceModel\Group\TogetherCondition\ViewedTogetherIndex::REPLICA_TABLE_NAME</argument>
+            <argument name="loader"
+                      xsi:type="object">Amasty\Mostviewed\Model\Indexer\TogetherCondition\Loader\ViewedTogetherLoader</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\Mostviewed\Model\Indexer\TogetherCondition\Specification\BoughtTogetherConditionSpecification"
+                 type="Amasty\Mostviewed\Model\Indexer\TogetherCondition\Specification\ConditionSpecification">
+        <arguments>
+            <argument name="tableName"
+                      xsi:type="const">Amasty\Mostviewed\Model\ResourceModel\Group\TogetherCondition\BoughtTogetherIndex::TABLE_NAME</argument>
+            <argument name="replicaTableName"
+                      xsi:type="const">Amasty\Mostviewed\Model\ResourceModel\Group\TogetherCondition\BoughtTogetherIndex::REPLICA_TABLE_NAME</argument>
+            <argument name="loader"
+                      xsi:type="object">Amasty\Mostviewed\Model\Indexer\TogetherCondition\Loader\BoughtTogetherLoader</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Amasty\Mostviewed\Model\Indexer\TogetherCondition\CollectIndexData">
+        <arguments>
+            <argument name="togetherConditions" xsi:type="array">
+                <item name="viewed"
+                      xsi:type="object">Amasty\Mostviewed\Model\Indexer\TogetherCondition\Specification\ViewedTogetherConditionSpecification</item>
+                <item name="bought"
+                      xsi:type="object">Amasty\Mostviewed\Model\Indexer\TogetherCondition\Specification\BoughtTogetherConditionSpecification</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

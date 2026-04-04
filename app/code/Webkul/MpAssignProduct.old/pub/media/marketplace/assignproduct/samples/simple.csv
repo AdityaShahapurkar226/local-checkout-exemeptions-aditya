@@ -1,0 +1,7 @@
+Sku,Product Type,Product Condition,Price,Quantity,Description,Product Images,Parent Product Sku
+simple-product1,Simple,Used,45,150,Simple product,images.jpg,,
+WH08-XS-Orange,Simple,New,50,150,Simple Product of configurable product,,WH08
+Virtual-product2,Virtual,New,60,100,xcfvhj,,,
+WH08-XS-Red,Simple,New,55,120,Xyx,,ghjk,
+24-WB04,Simple,New,50,100,Pushit messaneger,images-1.jpg,,
+WJ03-XS-Blue,Simple,Used,55,120, Simple product of config product,2.jpg,WJ03

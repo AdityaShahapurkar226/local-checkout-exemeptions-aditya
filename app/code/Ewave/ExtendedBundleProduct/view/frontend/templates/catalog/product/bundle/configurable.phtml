@@ -1,0 +1,49 @@
+<?php
+/** @var \Ewave\ExtendedBundleProduct\Block\Product\Bundle\Configurable $block */
+/** @var \Ewave\ExtendedBundleProduct\Helper\Product $_helper */
+
+$_product = $block->getProduct();
+$_bundleOption = $block->getOption();
+$_attributes = $block->decorateArray($block->getAllowAttributes());
+$_helper = $this->helper('Ewave\ExtendedBundleProduct\Helper\Product');
+?>
+<?php if ($_product->isSaleable() && count($_attributes)): ?>
+    <div class="bundle-configurable fieldset<?php if (!$_product->getIsDefault()) : ?> no-display<?php endif;?>" id="bundle_configurable_form-<?php echo (int)$_product->getSelectionId()?>">
+        <input type="hidden" name="selection_configurable_option[<?php echo (int)$_product->getSelectionId()?>]" value="" />
+        <?php foreach ($_attributes as $_attribute): ?>
+            <div class="field configurable required">
+                <label class="label" for="attribute<?= /* @escapeNotVerified */ $_attribute->getAttributeId() ?>-<?= /* @escapeNotVerified */ $_product->getSelectionId() ?>">
+                    <span><?= $block->escapeHtml($_attribute->getProductAttribute()->getStoreLabel()) ?></span>
+                </label>
+                <div class="control">
+                    <select name="bundle_super_attribute[<?= /* @escapeNotVerified */ $_product->getSelectionId() ?>][<?= /* @escapeNotVerified */ $_attribute->getAttributeId() ?>]"
+                            data-rule-required="<?php if ($_product->getIsDefault()):?>true<?php else: ?>false<?php endif;?>"
+                            id="attribute<?= /* @escapeNotVerified */ $_attribute->getAttributeId() ?>-<?= /* @escapeNotVerified */ $_product->getSelectionId() ?>"
+                            class="super-attribute-select">
+                        <option value=""><?= /* @escapeNotVerified */ __('Choose an Option...') ?></option>
+                    </select>
+                </div>
+            </div>
+        <?php endforeach; ?>
+        <?php if ($tierPriceBlock = $block->getChildBlock('bundle.options.selection.configurable.tier')): ?>
+            <?php /* @escapeNotVerified */ echo $tierPriceBlock->setSelectionId($_product->getSelectionId())->toHtml(); ?>
+        <?php endif; ?>
+        <script type="text/x-magento-init">
+            {
+                "#bundle_configurable_form-<?php echo (int)$_product->getSelectionId()?>": {
+                    "bundleConfigurable": {
+                        "spConfig": <?php /* @escapeNotVerified */ echo $block->getJsonConfig() ?>,
+                        "containerId": "#bundle_configurable_form-<?php echo (int)$_product->getSelectionId()?>",
+                        "selectSimpleProduct": "[name='selection_configurable_option[<?php echo (int)$_product->getSelectionId()?>]']",
+                        "bundleOption": <?php echo (int)$_bundleOption->getOptionId()?>,
+                        "selectionId": <?php echo (int)$_product->getSelectionId()?>,
+                        "configurableOptions": <?php /* @escapeNotVerified */ echo $block->getJson($_helper->getSelectionConfigurableOptions($_product)) ?>,
+                        "inputType": "<?php /* @escapeNotVerified */ echo $_bundleOption->getType() ?>",
+                        "tierPriceTemplateSelector": "#tier-prices-template-<?php echo (int)$_product->getSelectionId()?>",
+                        "tierPriceBlockSelector": "[data-role='tier-price-block-<?php echo (int)$_product->getSelectionId()?>']"
+                    }
+                }
+            }
+        </script>
+    </div>
+<?php endif;?>

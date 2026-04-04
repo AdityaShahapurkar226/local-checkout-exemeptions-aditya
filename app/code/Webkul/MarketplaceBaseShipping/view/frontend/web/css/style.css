@@ -1,0 +1,53 @@
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceBaseShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+.shipment.checkbox.admin__control-checkbox{
+    margin-top: 0!important;
+    opacity: 0!important;
+}
+.shipment.input-text.admin__control-text.qty{
+    width: auto!important;
+}
+.shipment.action-delete{
+    margin-top: 0!important;
+}
+.admin__page-subsection{
+    margin-top: 1.5rem;
+}
+
+#packaging_window h2,
+#packaging_window .form-sharing-info .admin__legend span,
+#packaging_window .admin__page-section-title strong,
+#packaging_window .admin__page-section-title .title {
+    color: #41362f;
+    font-weight: 400;
+    line-height: 1.2;
+    font-size: 2rem;
+}
+
+#packaging_window .admin__page-section-title .actions._primary{
+    float: right;
+    display: inline-block;
+    margin-left: .5rem;
+}
+#packaging_window .admin__control-addon{
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    display: inline-flex;
+    flex-flow: row nowrap;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+}
+#create_shipping_label {
+    display:none;
+}

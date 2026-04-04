@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Wishlist\Block\Customer\Wishlist\Item\Column\Cart;
+use Magento\Wishlist\Model\Item;
+use Magento\Wishlist\ViewModel\AllowedQuantity;
+
+/** @var Cart $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var Item $item */
+$item = $block->getItem();
+$product = $item->getProduct();
+$productId = $item->getProductId();
+/** @var AllowedQuantity $viewModel */
+$viewModel = $viewModels->require(AllowedQuantity::class);
+$allowedQty = $viewModel->setItem($item)->getMinMaxQty();
+?>
+<?php foreach ($block->getChildNames() as $childName): ?>
+    <?= /* @noEscape */ $block->getLayout()->renderElement($childName, false) ?>
+<?php endforeach; ?>
+<div class="box-tocart"
+     id="item_<?= $escaper->escapeHtmlAttr($item->getId()) ?>"
+     data-item-id-wrapper="<?= $escaper->escapeHtmlAttr($item->getId()) ?>"
+     x-data='wishlistCartHandler(
+         <?= (int) $item->getProductId() ?>,
+         "<?= $escaper->escapeJs($item->getId()) ?>",
+         <?= json_encode($block->getItemAddToCartParams($item)) ?>
+     )'>
+    <fieldset class="fieldset">
+        <?php if ($item->canHaveQty() && $product->isVisibleInSiteVisibility()): ?>
+            <!--  -->
+        <?php endif; ?>
+        <?php if ($product->isSaleable()): ?>
+            <div class="product-item-actions">
+                <div class="actions-primary">
+                    <div class="product-item-actions">
+                        <div class="actions-primary">
+                            <button
+                                type="button"
+                                @click.prevent="handleAddToCart($event)"
+                                data-role="tocart"
+                                data-product-id="<?= (int) $item->getProductId() ?>"
+                                data-item-id="<?= $escaper->escapeHtmlAttr($item->getId()) ?>"
+                                data-cart-params='<?= $escaper->escapeHtmlAttr(json_encode($block->getItemAddToCartParams($item))) ?>'
+                                title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>"
+                                class="action tocart primary btn btn-primary bg-ahy-red hover:bg-ahy-red-light rounded-full mt-5 mb-2 font-medium">
+                                <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
+                            </button>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php else: ?>
+            <?php if ($product->getIsSalable()): ?>
+                <p class="available stock" title="<?= $escaper->escapeHtmlAttr(__('Availability')) ?>">
+                    <span><?= $escaper->escapeHtml(__('In stock')) ?></span>
+                </p>
+            <?php else: ?>
+                <p class="unavailable stock" title="<?= $escaper->escapeHtmlAttr(__('Availability')) ?>">
+                    <span><?= $escaper->escapeHtml(__('Out of stock')) ?></span>
+                </p>
+            <?php endif; ?>
+        <?php endif; ?>
+    </fieldset>
+</div>
+<script>
+    function wishlistCartHandler(productId, itemId, cartParams) {
+    return {
+        productId,
+        itemId,
+        cartParams,
+        isRestricted: false,
+
+        async init() {
+            
+            await this.checkRestriction();
+        },
+
+        async handleAddToCart(event) {
+           
+            await this.checkRestriction();
+
+            if (this.isRestricted) {
+                console.warn('Blocked by restriction logic');
+                return;
+            }
+
+            const store = Alpine.store('estateApi');
+
+            if (typeof store.addToCartByWishlistItem === 'function') {
+                await store.addToCartByWishlistItem({
+                    product_id: this.productId
+                });
+
+                if (typeof hyva !== "undefined" && typeof hyva.postForm === "function") {
+                    hyva.postForm({
+                        action: '/wishlist/index/remove',
+                        data: {
+                            item: this.itemId,
+                            uenc: window.btoa(window.location.href)
+                        }
+                    });
+                }
+            } else {
+                console.warn('addToCartByWishlistItem function not found');
+            }
+        },
+
+        async checkRestriction() {
+            const store = Alpine.store('estateApi');
+            const result = await store.checkProductRestriction(this.productId, null);
+            this.isRestricted = result !== 1;
+
+            if (this.isRestricted) {
+                this.highlightRestricted(this.$root);
+            }
+        },
+
+        highlightRestricted(container) {
+            if (!container) return;
+            const itemId = container.dataset.itemIdWrapper;
+            const card = document.querySelector(`.product-item-info[data-item-id-wrapper="${itemId}"]`);
+
+            if (card) {
+                card.classList.add('border', 'border-red-600', 'rounded-md', 'p-2');
+
+                if (!card.querySelector('.restriction-message')) {
+                    const message = document.createElement('div');
+                    message.className = 'restriction-message text-red-700 font-semibold mt-2';
+                    message.textContent = 'This product is restricted and cannot be added to cart.';
+                    card.appendChild(message);
+                }
+            }
+        }
+    };
+}
+
+</script>

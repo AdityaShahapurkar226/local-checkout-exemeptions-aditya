@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+	<table name="ahy_ffl_fflcentres" resource="default" engine="innodb" comment="ahy_ffl_fflcentres Table">
+		<column xsi:type="int" name="fflcentres_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
+		<constraint xsi:type="primary" referenceId="PRIMARY">
+			<column name="fflcentres_id"/>
+		</constraint>
+		<column name="CentreName" nullable="true" xsi:type="text" comment="Centre Name"/>
+		<column name="State" nullable="true" xsi:type="text" comment="FFL State"/>
+		<column name="AddressLine1" nullable="true" xsi:type="text" comment="AddressLine1"/>
+		<column name="AddressLine2" nullable="true" xsi:type="text" comment="AddressLine2"/>
+		<column name="City" nullable="true" xsi:type="text" comment="City"/>
+		<column name="email" nullable="true" xsi:type="varchar" comment="email" length="255"/>
+		<column name="region_id" nullable="true" xsi:type="varchar" comment="region_id" length="5"/>
+		<column name="country_id" nullable="true" xsi:type="varchar" comment="country_id" length="5"/>
+		<column name="phone_no" nullable="true" xsi:type="varchar" comment="phone_no" length="20"/>
+		<column name="fax" nullable="true" xsi:type="varchar" comment="fax" length="20"/>
+		<column name="working_time" nullable="true" xsi:type="varchar" comment="working_time" length="255"/>
+		<column name="transfer_fee" nullable="true" xsi:type="varchar" comment="transfer_fee" length="255"/>
+		<column name="lat" nullable="true" xsi:type="varchar" comment="lat" length="20"/>
+		<column name="long" nullable="true" xsi:type="varchar" comment="long" length="20"/>
+		<column name="zipcode" nullable="true" xsi:type="varchar" comment="zipcode" length="20"/>
+		<column name="status" nullable="false" xsi:type="boolean" comment="status" default="1"/>
+		<column name="created_at" nullable="false" xsi:type="timestamp" comment="created_at" default="CURRENT_TIMESTAMP"/>
+	</table>
+</schema>

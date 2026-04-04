@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ * @category  Webkul
+ * @package   Webkul_MpMassUpload
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ *
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+
+    <route url="/V1/mpuploadapi/getattributeset" method="POST">
+        <service class="Webkul\MpMassUpload\Api\DataflowRepositoryInterface" method="getAttributeSetList"/>
+            <resources>
+                <resource ref="self"/>
+            </resources>
+    </route>
+
+    <route url="/V1/mpuploadapi/mapattributeset" method="POST">
+        <service class="Webkul\MpMassUpload\Api\DataflowRepositoryInterface" method="saveAttributeSetProfile"/>
+            <resources>
+                <resource ref="self"/>
+            </resources>
+    </route>
+
+    <route url="/V1/mpuploadapi/attributeslist" method="POST">
+        <service class="Webkul\MpMassUpload\Api\DataflowRepositoryInterface" method="getAttributeList"/>
+            <resources>
+                <resource ref="self"/>
+            </resources>
+    </route>
+
+    <route url="/V1/mpuploadapi/attributeprofilelist" method="POST">
+        <service class="Webkul\MpMassUpload\Api\DataflowRepositoryInterface" method="getAttributeProfileList"/>
+            <resources>
+                <resource ref="self"/>
+            </resources>
+            <data>
+                <parameter name="sellerId" force="true">%customer_id%</parameter>
+            </data>
+    </route>
+
+    <route url="/V1/mpuploadapi/mapattributes" method="POST">
+        <service class="Webkul\MpMassUpload\Api\DataflowRepositoryInterface" method="mapAttributes"/>
+            <resources>
+                <resource ref="self"/>
+            </resources>
+    </route>
+
+
+    <route url="/V1/mpuploadapi/uploader" method="POST">
+        <service class="Webkul\MpMassUpload\Api\FileUploaderInterface" method="fileUpload"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+    </route>
+    <route url="/V1/mpuploadapi/saveprofile" method="POST">
+        <service class="Webkul\MpMassUpload\Api\ProfileUploadInterface" method="saveProfile"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+    </route>
+    <route url="/V1/mpuploadapi/getprofilerlist" method="POST">
+        <service class="Webkul\MpMassUpload\Api\ProfilerRepositoryInterface" method="getBySeller"/>
+            <resources>
+                <resource ref="self"/>
+            </resources>
+    </route>
+    <route url="/V1/mpuploadapi/runprofile" method="POST">
+        <service class="Webkul\MpMassUpload\Api\ProfilerRepositoryInterface" method="runProfile"/>
+            <resources>
+                <resource ref="self"/>
+            </resources>
+    </route>
+
+    <route url="/V1/mpuploadapi/getmappedAttribute" method="POST">
+        <service class="Webkul\MpMassUpload\Api\DataflowRepositoryInterface" method="getMappedAttributeDetails"/>
+            <resources>
+                <resource ref="self"/>
+            </resources>
+    </route>
+
+    <route url="/V1/mpuploadapi/getsamplefiles" method="POST">
+        <service class="Webkul\MpMassUpload\Api\DataflowRepositoryInterface" method="getSampleFiles"/>
+            <resources>
+                <resource ref="anonymous"/>
+            </resources>
+    </route>
+
+     <route url="/V1/mpuploadapi/getsuperattributes" method="POST">
+        <service class="Webkul\MpMassUpload\Api\DataflowRepositoryInterface" method="getSuperAttributes"/>
+            <resources>
+                <resource ref="self"/>
+            </resources>
+    </route>
+
+    <route url="/V1/mpuploadapi/getsuperattributeoption" method="POST">
+        <service class="Webkul\MpMassUpload\Api\DataflowRepositoryInterface" method="getSuperAttributeOption"/>
+            <resources>
+                <resource ref="self"/>
+            </resources>
+    </route>
+
+    <route url="/V1/mpuploadapi/deleteattributeprofile" method="POST">
+        <service class="Webkul\MpMassUpload\Api\DataflowRepositoryInterface" method="deleteAttributeProfile"/>
+            <resources>
+                <resource ref="self"/>
+            </resources>
+    </route>
+
+    <route url="/V1/mpuploadapi/deleteprofiler" method="POST">
+        <service class="Webkul\MpMassUpload\Api\ProfilerRepositoryInterface" method="deleteProfiler"/>
+            <resources>
+                <resource ref="self"/>
+            </resources>
+    </route>
+
+    <route url="/V1/mpuploadapi/productexport" method="POST">
+        <service class="Webkul\MpMassUpload\Api\DataflowRepositoryInterface" method="getProductExport"/>
+            <resources>
+                <resource ref="self"/>
+            </resources>
+    </route>
+</routes>

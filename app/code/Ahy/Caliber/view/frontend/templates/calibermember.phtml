@@ -1,0 +1,12 @@
+<?php
+/**
+ * @var $block \Ahy\Caliber\Block\CaliberMember
+ */
+?>
+<?php if($block->isCaliberMember()): ?>
+<div class="py-4">
+	<p class="text-4xl text-ahy-blue capitalize">
+		remaining points: <?= ($block->getBalancePoints()) ?>
+	</p>
+</div>
+<?php endif; ?>

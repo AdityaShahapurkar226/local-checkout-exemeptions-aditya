@@ -1,0 +1,390 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php $order = $block->getOrder() ?>
+<?php $items = $block->getItems(); ?>
+<?php $itemsQtyToShip = $block->getShipItemsQty($items); ?>
+<?php
+$colSpan = 3;
+$orderId = $order->getId();
+?>
+<section class="wk-mp-order-shipment-items-info">
+    <div class="order-details-items ordered">
+        <div class="order-title">
+            <strong><?= $escaper->escapeHtml(__('Items Ordered')) ?></strong>
+        </div>
+        <div class="table-wrapper order-items">
+            <table class="data table table-order-items" id="my-orders-table" 
+            summary="<?= $escaper->escapeHtml(__('Items Ordered')) ?>">
+                <caption class="table-caption"><?= $escaper->escapeHtml(__('Items Ordered')) ?></caption>
+                <thead>
+                    <tr>
+                        <th class="col name"><?= $escaper->escapeHtml(__('Product Name')) ?></th>
+                        <th class="col qty"><?= $escaper->escapeHtml(__('Qty')) ?></th>
+                        <th class="col qty"><?= $escaper->escapeHtml(__('Qty to Ship')) ?></th>
+                    </tr>
+                </thead>
+                <?php
+                $i = 0;
+                $count = count($items);
+                foreach ($items as $item) {
+                    if ($item->getParentItem()) {
+                        continue;
+                    } elseif (!isset($itemsQtyToShip[$item->getItemId()])) {
+                        continue;
+                    } elseif (!$itemsQtyToShip[$item->getItemId()]) {
+                        continue;
+                    }
+                    $i++;
+                    $qtyToShip = $itemsQtyToShip[$item->getItemId()];
+                    $orderedQty = $item->getQtyOrdered();
+                    $result = [];
+                    if ($options = $item->getProductOptions()) {
+                        $result = $block->getItemOptionData($options, $result);
+                    }
+                    // for bundle product
+                    $bundleitems = $block->getMergedItems($item);
+                    $count = count($bundleitems);
+                    $_index = 0;
+                    $_prevOptionId = '';
+                    ?>
+                    <tbody>
+                        <?php if ($item->getProductType()!='bundle') { ?>
+                            <tr class="border" id="order-item-row-<?= $escaper->escapeHtml($item->getId()) ?>">
+                                <td class="col name" data-th="<?= $escaper->escapeHtml(__('Product Name')); ?>">
+                                    <strong class="product name product-item-name">
+                                        <?= $escaper->escapeHtml($item->getName()) ?></strong>
+                                    <span>
+                                        <?= $escaper->escapeHtml(__('SKU')) ?>: 
+                                        <?= $escaper->escapeHtml($item->getSku()) ?>
+                                    </span>
+                                    <?php if ($_options = $result): ?>
+                                        <dl class="item-options">
+                                        <?php foreach ($_options as $_option): ?>
+                                            <dt><?= $escaper->escapeHtml($_option['label']) ?></dt>
+                                            <?php if (!$block->getPrintStatus()): ?>
+                                                <?php $_formatedOptionValue = $block->getFormatedOptionValue($_option)?>
+                                                <dd>
+                                                    <?php if (isset($_formatedOptionValue['full_view'])): ?>
+                                                        <?= /* @noEscape */ $_formatedOptionValue['full_view'] ?>
+                                                    <?php else: ?>
+                                                        <?= /* @noEscape */ $_formatedOptionValue['value'] ?>
+                                                    <?php endif; ?>
+                                                </dd>
+                                            <?php else: ?>
+                                                <dd>
+                                                    <?= /* @noEscape */ nl2br($escaper
+                                                    ->escapeHtml((isset($_option['print_value'])
+                                                     ? $_option['print_value'] : $_option['value']))) ?>
+                                                </dd>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                        </dl>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="col qty" data-th="<?= $escaper->escapeHtml(__('Qty')); ?>">
+                                    <ul class="items-qty">
+                                        <?php if ($item->getQtyOrdered() > 0): ?>
+                                            <li class="item">
+                                                <span class="title"><?= $escaper->escapeHtml(__('Ordered')); ?></span>
+                                                <span class="content">
+                                                    <?= $escaper->escapeHtml($item->getQtyOrdered()*1) ?></span>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if ($item->getQtyInvoiced() > 0): ?>
+                                            <li class="item">
+                                                <span class="title"><?= $escaper->escapeHtml(__('Invoiced')); ?></span>
+                                                <span class="content">
+                                                    <?= $escaper->escapeHtml($item->getQtyInvoiced()*1) ?></span>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if ($item->getQtyShipped() > 0): ?>
+                                            <li class="item">
+                                                <span class="title"><?= $escaper->escapeHtml(__('Shipped')); ?></span>
+                                                <span class="content">
+                                                    <?= $escaper->escapeHtml($item->getQtyShipped()*1) ?></span>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if ($item->getQtyCanceled() > 0): ?>
+                                            <li class="item">
+                                                <span class="title"><?= $escaper->escapeHtml(__('Canceled')); ?></span>
+                                                <span class="content">
+                                                    <?= $escaper->escapeHtml($item->getQtyCanceled()*1) ?></span>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if ($item->getQtyRefunded() > 0): ?>
+                                            <li class="item">
+                                                <span class="title"><?= $escaper->escapeHtml(__('Refunded')); ?></span>
+                                                <span class="content">
+                                                    <?= $escaper->escapeHtml($item->getQtyRefunded()*1) ?></span>
+                                            </li>
+                                        <?php endif; ?>
+                                    </ul>
+                                </td>
+                                <td class="col qty"  data-th="<?= $escaper->escapeHtml(__('Qty to Ship')) ?>">
+                                    <input type="text" data-orig= "<?= /* @noEscape */ $qtyToShip?>"
+                                     class="wk-qty-input required-entry validate-number" 
+                                        name="shipment[items][<?= $escaper->escapeHtml($item->getItemId())?>]" 
+                                        value="<?= $escaper->escapeHtml($qtyToShip*1)?>"/>
+                                </td>
+                            </tr>
+                        <?php } else { ?>
+                            <?php foreach ($bundleitems as $_bundleitem): ?>
+                                <?php
+                                if (!isset($itemsQtyToShip[$_bundleitem->getItemId()])) {
+                                    continue;
+                                } elseif (!$itemsQtyToShip[$_bundleitem->getItemId()]) {
+                                    continue;
+                                }
+                                $qtyToShip = $itemsQtyToShip[$_bundleitem->getItemId()];
+                                $orderedQty = $_bundleitem->getQtyOrdered();
+                                ?>
+                                <?php $attributes_option = $block->getSelectionAttribute($_bundleitem); ?>
+                                <?php if ($_bundleitem->getParentItem()): ?>
+                                    <?php $attributes = $attributes_option ?>
+                                    <?php if ($_prevOptionId != $attributes['option_id']): ?>
+                                    <tr class="options-label">
+                                        <td class="col label" colspan="3"
+                                         data-th="<?= $escaper->escapeHtml(__('Product Name')); ?>">
+                                            <?= $escaper->escapeHtml($attributes['option_label']) ?>
+                                        </td>
+                                    </tr>
+                                        <?php $_prevOptionId = $attributes['option_id'] ?>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                <tr<?= (++$_index==$count)?' class="border bundle"':' class="bundle"' ?>
+                                     id="order-item-row-<?= $escaper->escapeHtml($_bundleitem->getId()) ?>">
+                                    <?php
+                                    if (!$_bundleitem->getParentItem()) {?>
+                                        <td>
+                                            <h3 class="product-name">
+                                                <?= $escaper->escapeHtml($_bundleitem->getName()) ?>
+                                            </h3>
+                                            <span>
+                                                <?= $escaper->escapeHtml(__('SKU')) ?>: 
+                                                <?= $escaper->escapeHtml($item->getSku()) ?>
+                                            </span>
+                                        </td>
+                                        <?= /* @noEscape */ $order->formatPrice($item->getPrice());?></td>
+                                        <td class="col qty item_status"
+                                         data-rwd-label="<?= $escaper->escapeHtml(__('Qty')) ?>">
+                                            <ul class="items-qty">
+                                                <?php if ($_bundleitem->getQtyOrdered() > 0): ?>
+                                                    <li class="item">
+                                                        <span class="title">
+                                                            <?= $escaper->escapeHtml(__('Ordered')); ?></span>
+                                                        <span class="content">
+                                                            <?= $escaper->escapeHtml($_bundleitem->getQtyOrdered()*1)?>
+                                                        </span>
+                                                    </li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </td>
+                                        <td class="col qty" data-th="<?= $escaper->escapeHtml(__('Qty to Ship')) ?>">
+                                            <input type="text" 
+                                            class="wk-qty-input required-entry validate-number"
+                                             data-orig= "<?= /* @noEscape */ $qtyToShip?>"
+                                            name="shipment[items][<?= /* @noEscape */ $_bundleitem
+                                            ->getItemId()?>]" 
+                                            value="<?= $escaper->escapeHtml($qtyToShip*1)?>"/>
+                                        </td>
+                                        <?php
+                                    } else { ?>
+                                        <td class="col value"
+                                         data-th="<?= $escaper->escapeHtml(__('Product Name')); ?>">
+                                            <?= $block->getValueHtml($_bundleitem)?>
+                                            <?php $addInfoBlock = $block->getOrderItemAdditionalInfoBlock(); ?>
+                                            <?php if ($addInfoBlock): ?>
+                                                <?= $addInfoBlock->setItem($_bundleitem)->toHtml() ?>
+                                            <?php endif;?>
+                                        </td>
+                                        <td class="col qty item_status"
+                                         data-rwd-label="<?= $escaper->escapeHtml(__('Qty')) ?>">
+                                            <ul class="items-qty">
+                                                <?php if ($_bundleitem->getQtyOrdered() > 0): ?>
+                                                    <li class="item">
+                                                        <span class="title">
+                                                            <?= $escaper->escapeHtml(__('Ordered')); ?></span>
+                                                        <span class="content">
+                                                            <?= $escaper->escapeHtml($_bundleitem
+                                                            ->getQtyOrdered()*1) ?></span>
+                                                    </li>
+                                                <?php endif; ?>
+                                                <?php if ($_bundleitem->getQtyInvoiced() > 0): ?>
+                                                    <li class="item">
+                                                        <span class="title">
+                                                            <?= $escaper->escapeHtml(__('Invoiced')); ?></span>
+                                                        <span class="content">
+                                                            <?= $escaper->escapeHtml($_bundleitem
+                                                            ->getQtyInvoiced()*1) ?></span>
+                                                    </li>
+                                                <?php endif; ?>
+                                                <?php if ($_bundleitem->getQtyShipped() > 0
+                                                 && !$block->isShipmentSeparately()): ?>
+                                                    <li class="item">
+                                                        <span class="title">
+                                                            <?= $escaper->escapeHtml(__('Shipped')); ?></span>
+                                                        <span class="content">
+                                                            <?= $escaper->escapeHtml($_bundleitem->getQtyShipped()*1) ?>
+                                                        </span>
+                                                    </li>
+                                                <?php endif; ?>
+                                                <?php if ($_bundleitem->getQtyCanceled() > 0): ?>
+                                                    <li class="item">
+                                                        <span class="title">
+                                                            <?= $escaper->escapeHtml(__('Canceled')); ?>
+                                                        </span>
+                                                        <span class="content">
+                                                            <?= $escaper->escapeHtml($_bundleitem->getQtyCanceled()*1)?>
+                                                        </span>
+                                                    </li>
+                                                <?php endif; ?>
+                                                <?php if ($_bundleitem->getQtyRefunded() > 0): ?>
+                                                    <li class="item">
+                                                        <span class="title">
+                                                            <?= $escaper->escapeHtml(__('Refunded')); ?>
+                                                        </span>
+                                                        <span class="content">
+                                                            <?= $escaper->escapeHtml($_bundleitem->getQtyRefunded()*1)?>
+                                                        </span>
+                                                    </li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </td>
+                                        <td class="lin-hide">&nbsp;</td>
+                                        <?php
+                                    }?>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php }?>
+                    </tbody>
+                    <?php
+                } ?>
+                <tfoot>
+                    <?php if ($block->isPagerDisplayed()): ?>
+                        <tr>
+                            <td colspan="<?= /* @noEscape */ $colSpan ?>"
+                             data-block="order-items-pager-bottom" 
+                             class="order-pager-wrapper order-pager-wrapper-bottom">
+                                <?= $block->getPagerHtml() ?>
+                            </td>
+                        </tr>
+                    <?php endif ?>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</section>
+<div class="entry-edit-head"><h2><?= $escaper->escapeHtml(__('Shipment Totals')) ?></h2></div>
+<section class="wk-mp-order-shipment-comment">
+    <div class="wk-mp-order-info-box">
+        <div class="entry-edit-head"><h4><?= $escaper->escapeHtml(__('Shipment Comments')) ?></h4></div>
+        <fieldset id="history_form">
+            <label class="normal" for="shipment_comment_text">
+                <?= $escaper->escapeHtml(__('Shipment Comments')) ?></label><br>
+            <textarea id="shipment_comment_text" name="shipment[comment_text]" 
+            rows="3" cols="5" style="width: 100%; margin-left: 0px; margin-right: 0px;">
+            </textarea>
+        </fieldset>
+    </div>
+</section>
+<section class="wk-mp-order-shipment-total">
+    <div class="wk-mp-order-info-box">
+        <div class="box">
+            <div class="box-right entry-edit">
+                <input type="hidden" name="id" value="<?= $escaper->escapeHtml($orderId) ?>">
+                <!-- for buyer mail -->
+                <div class="order-totals-bottom" style="text-align:right;">
+                    <div class="divider"></div>
+                    <p>
+                        <label class="normal" for="wk-mp-notify-customer">
+                            <?= $escaper->escapeHtml(__('Append Comments')) ?></label>
+                        <input id="wk-mp-notify-customer" name="shipment[comment_customer_notify]"
+                         value="1" type="checkbox"/>
+                    </p>
+                    <p>
+                        <label class="normal" for="wk-mp-send-email">
+                            <?= $escaper->escapeHtml(__('Email Copy of Shipment')) ?></label>
+                        <input id="wk-mp-send-email" name="shipment[send_email]" value="1" type="checkbox">
+                    </p>
+                </div>
+
+                <?= $block->getChildHtml('marketplace_shipment_submit_before') ?>
+                <div class="buttons-set wk-order-shipment-button">
+                    <button class="button" type="submit" id="wk_mp_submit_shipment">
+                        <span>
+                            <span>
+                                <?= $escaper->escapeHtml(__('Submit Shipment')) ?>
+                            </span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<?php
+$enableSubmitButton = 1;
+$scriptString = <<<script
+
+require([
+    "jquery",
+    "Magento_Ui/js/modal/alert",
+    "prototype"
+], function(jQuery, alert){
+
+//<![CDATA[
+    if (jQuery('#wk-mp-send-email').length) {
+        jQuery('#wk-mp-send-email').on('change', shipmentSendEmail);
+        shipmentSendEmail();
+    }
+    function shipmentSendEmail() {
+        if (jQuery('#wk-mp-send-email').prop('checked') == true) {
+            jQuery('#wk-mp-notify-customer').prop('disabled', false);
+        } else {
+            jQuery('#wk-mp-notify-customer').prop('checked', false);
+            jQuery('#wk-mp-notify-customer').prop('disabled', true);
+        }
+    }
+    jQuery('#wk_mp_submit_shipment').on('click', submitSellerShipment);
+
+    function submitSellerShipment() {
+        if (!validShipmentItemsQty()) {
+            alert({
+                content: '{$block->escapeJs(__('Invalid value for Qty to Ship'))}'
+            });
+            return false;
+        }
+    }
+    function validShipmentItemsQty() {
+        var valid = true;
+        $$('.wk-qty-input').each(function(shipmentItem) {
+            var orderQty =  jQuery('.wk-qty-input').attr('data-orig');
+            var val = parseFloat(shipmentItem.value);                                
+            if (isNaN(val) || val < 0) {
+                valid = false;
+            }
+            if(val > orderQty) {
+                valid = false;
+            }
+        });
+        return valid;
+    }
+    window.submitSellerShipment = submitSellerShipment;
+    window.validShipmentItemsQty = validShipmentItemsQty;
+    window.shipmentSendEmail = shipmentSendEmail;
+//]]>
+
+});
+script;
+?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>

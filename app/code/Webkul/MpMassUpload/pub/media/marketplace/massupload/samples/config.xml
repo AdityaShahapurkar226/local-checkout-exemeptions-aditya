@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<node>
+	<product>
+		<status>1</status>
+		<type>configurable</type>
+		<category>Men,Women</category>
+		<attribute_mapping_category>Men</attribute_mapping_category>
+		<name>Configurable Product1</name>
+		<description>Configurable Product1</description>
+		<short_description>Configurable Product1</short_description>
+		<sku>configurable_product1</sku>
+		<price>90</price>
+		<special_price/>
+		<special_from_date/>
+		<special_to_date/>
+		<tax_class_id>None</tax_class_id>
+		<is_in_stock>In Stock</is_in_stock>
+		<stock/>
+		<weight>1</weight>
+		<meta_title>Test Meta Title</meta_title>
+		<meta_keyword>Test Meta Keyword</meta_keyword>
+		<meta_description>Test Meta Description</meta_description>
+		<_super_attribute_code>color,size</_super_attribute_code>
+		<_super_attribute_option/>
+		<images>1.jpg,2.jpg</images>
+		<color>Red</color><!-- create a separate tag for each custom attribute -->
+		<custom_option>[
+  {
+    "is_require": 1,
+    "title": "Color",
+    "type": "drop_down",
+    "sort_order": 0,
+    "sku": "co01",
+    "values": [
+ {"title":"cream", "price": 50,
+        "price_type": "fixed","sku":"co011","sort_order": 5},{"title":"cream1", "price": 50,
+        "price_type": "fixed","sku":"co012","sort_order": 5}  ]
+  }, {
+    "is_require": 1,
+    "title": "Color2",
+    "type": "drop_down",
+    "sort_order": 0,
+    "sku": "co02",
+    "values": [
+ {"title":"cream", "price": 50,
+        "price_type": "fixed","sku":"co021","sort_order": 5},{"title":"cream1", "price": 50,
+        "price_type": "fixed","sku":"co022","sort_order": 5}  ]
+  }]</custom_option>
+  	<tier_price>
+  		[
+  {
+    "cust_group": "ALL GROUPS",
+    "price_qty": "2",
+    "price": "10"
+  }, {
+    "cust_group":"Wholesale" ,
+    "price_qty": "10",
+    "price": "40"
+  }]
+  	</tier_price>
+    <related_skus></related_skus>
+    <crosssell_skus></crosssell_skus>
+    <upsell_skus></upsell_skus>
+	</product>
+	<product>
+		<type>simple</type>
+		<category/>
+		<name>Configurable Product-Red-S</name>
+		<description>Configurable Product-Red-S</description>
+		<short_description>Configurable Product-Red-S</short_description>
+		<sku>configurable_product-red-s</sku>
+		<price>90</price>
+		<special_price/>
+		<special_from_date/>
+		<special_to_date/>
+		<tax_class_id>None</tax_class_id>
+		<is_in_stock>In Stock</is_in_stock>
+		<stock>100</stock>
+		<weight>1</weight>
+		<meta_title/>
+		<meta_keyword/>
+		<meta_description/>
+		<_super_attribute_code>color,size</_super_attribute_code>
+		<_super_attribute_option>Red,S</_super_attribute_option>
+		<images>3.jpg,3.jpg</images>
+		<color/>
+		<custom_option/>
+		<tier_price/>
+	</product>
+	<product>
+			<type>simple</type>
+			<category/>
+			<name>Configurable Product-Black-M</name>
+			<description>Configurable Product-Black-M</description>
+			<short_description>Configurable Product-Black-M</short_description>
+			<sku>configurable_product-black-m</sku>
+			<price>90</price>
+			<special_price/>
+			<special_from_date/>
+			<special_to_date/>
+			<tax_class_id>None</tax_class_id>
+			<is_in_stock>In Stock</is_in_stock>
+			<stock>50</stock>
+			<weight>5</weight>
+			<meta_title/>
+			<meta_keyword/>
+			<meta_description/>
+			<_super_attribute_code>color,size</_super_attribute_code>
+			<_super_attribute_option>Black,M</_super_attribute_option>
+			<images>4.jpg,5.jpg</images>
+			<color/>
+			<custom_option/>
+			<tier_price/>
+	</product>
+</node>

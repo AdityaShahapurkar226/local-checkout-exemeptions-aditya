@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpFixedRateshipping
+ * @author    Webkul
+ * @copyright Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <mpfixrate>
+                <active>0</active>
+                <sallowspecific>0</sallowspecific>
+                <allowed_methods>delivery</allowed_methods>
+                <method_title>Webkul Marketplace Fix Rate Shipping</method_title>
+                <model>Webkul\MpFixedRateshipping\Model\Carrier</model>
+                <title>Webkul Fixrate Shipping</title>
+                <specificerrmsg>This shipping method is currently unavailable. If you would like to ship using this shipping method, please contact us.</specificerrmsg>
+                <default_amount>10</default_amount>
+                <shipping_up_to>500</shipping_up_to>
+                <handling_type>F</handling_type>
+            </mpfixrate>
+        </carriers>
+    </default>
+</config>

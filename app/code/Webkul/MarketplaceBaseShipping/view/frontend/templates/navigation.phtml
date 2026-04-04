@@ -1,0 +1,31 @@
+<?php
+    /**
+     * Webkul Software.
+     *
+     * @category Webkul
+     * @package Webkul_MarketplaceBaseShipping
+     * @author Webkul
+     * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+     * @license https://store.webkul.com/license.html
+     */
+    $helperBlock = $block->getLayout()->createBlock(\Webkul\MarketplaceBaseShipping\Block\Marketplacehelper::class);
+    $_helper=$helperBlock->helperObj();
+//$helper = $this->helper('Webkul\MarketplaceBaseShipping\Helper\Data');
+$isPartner = $_helper->isSeller();
+$magentoCurrentUrl = $block->getCurrentUrl();
+?>
+<?php
+if ($isPartner) { ?>
+        <li class="nav item <?= strpos($magentoCurrentUrl, 'baseshipping/shipping') !== false ? "current":"";?>">
+       <?php
+        if (strpos($magentoCurrentUrl, 'baseshipping/shipping') !== false) { ?>
+            <strong><?= /* @noEscape */ __('Shipping Setting') ?></strong>
+            <?php
+        } else { ?>
+            <a href="<?= /* @noEscape */ $block->getUrl('baseshipping/shipping'); ?>">
+                <?= /* @noEscape */ __('Shipping Setting') ?>
+            </a>
+            <?php
+        } ?>
+        </li>
+<?php }?>

@@ -1,0 +1,41 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Amasty\Mostviewed\ViewModel\Pack\Analytic\RecommendationList $recommendationViewModel */
+
+$recommendationViewModel = $block->getData('recommendation_view_model');
+$badPacks = $recommendationViewModel->getList();
+?>
+
+<?php if (count($badPacks)): ?>
+<div class="amrelated-dropdown-block">
+    <button class="amrelated-toggle"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          data-mage-init='{"dropdown":{}}'>
+        <?= $escaper->escapeHtml(__('Check Recommendations')) ?>
+     </button>
+    <div class="amrelated-options" data-target="dropdown">
+        <div class="amrelated-inner">
+            <?= $escaper->escapeHtml(__('The following bundle packs may require your attention:')) ?>
+
+            <?php $lastIndex = count($badPacks) - 1 ?>
+            <?php foreach ($badPacks as $index => $pack): ?>
+                <span class="amrelated-separator">
+                    <a href="<?= $escaper->escapeUrl($recommendationViewModel->getPackUrl((int) $pack->getPackId())) ?>">
+                        <?= $escaper->escapeHtml($pack->getName()) ?>
+                    </a>
+                    <?php if ($recommendationViewModel->isPackNew($pack)): ?>
+                        <?= $escaper->escapeHtml(' (' . __('created less than a month ago') . ')') ?>
+                    <?php endif; ?>
+                </span>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

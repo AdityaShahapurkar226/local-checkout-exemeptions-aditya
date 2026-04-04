@@ -1,0 +1,92 @@
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category  BSS
+ * @package   Bss_ProductStockAlert
+ * @author    Extension Team
+ * @copyright Copyright (c) 2017-2018 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license   http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+
+//
+//  Common
+//  _____________________________________________
+
+& when (@media-common = true) {
+	.stockalert {
+		.title {
+			margin-bottom: 10px;
+			cursor: pointer;
+		}
+	}
+	.bss_productstockaler {
+		.field {
+			float: left;
+			width: 58%;
+			margin-right: 10px;
+			.control {
+				width: 100% !important;
+				input.stockalert_email {
+					margin: 0 !important;
+				}
+			}
+		}
+		.padding{
+			button.action.primary {
+				padding: 7px 20px;
+			}
+		}
+		button.action.primary {
+			background: #2D7DB3;margin: 0;
+		}
+	}
+	.productstockalert-index-index {
+		.bss-stock-list{
+			.product-image-container {
+				float: left;
+				margin-right: 50px;
+			}
+			.product-item-details {
+				float: left;
+			}
+		}
+	}
+	.product_alert_notify,
+    .btn-stock-cookie {
+		margin-top: 5px;
+	}
+	.products-grid {
+		.product-item-details {
+			.product-item-actions {
+				margin: 0 0 10px;
+			}
+		}
+	}
+
+	.products-grid {
+		.product-item-info {
+			.notify_me_bss {
+				display:none;
+				margin-bottom: 10px;
+			}
+		}
+
+	}
+	.products.wrapper ~ .toolbar.bss-stock-index .toolbar-amount {
+		display: block;
+	}
+
+	.stockalert .field-recaptcha > div,
+	#stockalert-form .field-recaptcha > div {
+		width: 100%;
+		float: left;
+		padding: 5px 0;
+	}
+}

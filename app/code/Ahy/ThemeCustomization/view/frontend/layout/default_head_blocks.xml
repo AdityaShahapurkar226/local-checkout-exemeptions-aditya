@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <remove src="Webkul_Marketplace::css/wk_block.css"/>
+        <remove src="Webkul_MpAssignProduct::css/styles.css"/>
+    </head>
+    <body>
+        <!--
+            Add our custom code to the klevu.interactive call
+        -->
+        <referenceBlock name="klevu_frontendjs.js_init.additional.before">
+            <block class="Magento\Framework\View\Element\Template" name="ahy_themecustomization.klevu.js_init.additional.before.quicksearch" template="Ahy_ThemeCustomization::html/head/js_init/additional_before/quicksearch.phtml"/>
+
+        </referenceBlock>
+
+        <!--
+            Add our new quick search template between klevu.interactive and the core theme files
+        -->
+        <referenceBlock name="head.additional">
+            <!-- search bar result product block -->
+
+            <!-- search bar result auto suggestion block -->
+            <block class="Klevu\FrontendJs\Block\Template" after="klevu_frontendjs.js_init" before="klevu_frontendjs.js_includes" name="ahy_themecustomization.klevu.quick_auto_suggestions_template" template="Ahy_ThemeCustomization::klevu/quick_auto_suggestions.phtml">
+                <arguments>
+                    <!--
+                        We will use the existing condition from the Klevu_Search module to ensure
+                        that our changes to the frontend search options only take place when the
+                        relevant configuration is enabled
+                    -->
+                    <argument name="is_enabled_conditions_fqcn" xsi:type="array">
+                        <item name="klevu_search_themev2" xsi:type="string">Klevu\Search\Service\ThemeV2\IsEnabledCondition</item>
+                    </argument>
+                </arguments>
+            </block>
+
+            <!-- search bar result page suggestion block -->
+            <block class="Klevu\FrontendJs\Block\Template" after="klevu_frontendjs.js_init" before="klevu_frontendjs.js_includes" name="ahy_themecustomization.klevu.quick_page_suggestions_template" template="Ahy_ThemeCustomization::klevu/quick_page_suggestions.phtml">
+                <arguments>
+                    <!--
+                        We will use the existing condition from the Klevu_Search module to ensure
+                        that our changes to the frontend search options only take place when the
+                        relevant configuration is enabled
+                    -->
+                    <argument name="is_enabled_conditions_fqcn" xsi:type="array">
+                        <item name="klevu_search_themev2" xsi:type="string">Klevu\Search\Service\ThemeV2\IsEnabledCondition</item>
+                    </argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

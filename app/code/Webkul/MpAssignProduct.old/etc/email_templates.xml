@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+	<template id="product_template" label="Assign Product" file="product_template.html" type="html" module="Webkul_MpAssignProduct" area="frontend"/>
+	<template id="product_approve" label="Assign Product Approved" file="approve_product.html" type="html" module="Webkul_MpAssignProduct" area="frontend"/>
+	<template id="product_disapprove" label="Assign Product Disapproved" file="disapprove_product.html" type="html" module="Webkul_MpAssignProduct" area="frontend"/>
+</config>

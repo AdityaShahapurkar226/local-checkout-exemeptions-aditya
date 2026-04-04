@@ -1,0 +1,729 @@
+<!--
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+-->
+<?php
+$blockObj= $block->getLayout()->createBlock(\Webkul\MpSellerBuyerCommunication\Block\Seller\History::class);
+$helper = $blockObj->getMpHelperSellerView();
+
+$_helper = $blockObj->getHelperSellerView();
+$flagReasons = $block->getProductFlagReasons();
+$product=$block->getProduct();
+$cardType = $helper->getDisplayCardType();
+
+$sellerId = 0;
+$logo = '';
+$marketplaceProduct = $helper->getSellerProductDataByProductId($product['entity_id']);
+foreach ($marketplaceProduct as $value) {
+    $sellerId = $value['seller_id'];
+}
+$guestQueryApproval = $_helper->getGuestQueryApproval();
+$respnseRate = $_helper->getResponseRateOfSeller($sellerId);
+$avgResponse = $_helper->getResponseTimeOfSeller($sellerId);
+$sellerInfo = $helper->getSellerInfo($sellerId);
+$shopUrl = $sellerInfo['shop_url'];
+$captchenable = $helper->getCaptchaEnable();
+$rowsocial = $helper->getSellerDataBySellerId($sellerId);
+$rating = $helper->getSelleRating($sellerId);
+$companyLocality = isset($sellerInfo['company_locality'])?trim($sellerInfo['company_locality']):"";
+$companyLocality = $escaper->escapeHtml($companyLocality);
+$productCount = $sellerInfo['product_count'];
+if ($productCount > 1) {
+    $productLabel = __("%1 Products", $productCount);
+} else {
+    $productLabel = __("%1 Product", $productCount);
+}
+$shoptitle = '';
+$shop_url = '';
+foreach ($rowsocial as $value) {
+    $shoptitle = $value['shop_title'];
+    $shop_url = $value['shop_url'];
+    $logo = $value['logo_pic'];
+
+    if (!$shoptitle) {
+        $shoptitle = $value->getShopUrl();
+    }
+}
+if ($logo == "") {
+    $logo = "noimage.png";
+}
+$logo = $helper->getMediaUrl().'avatar/'.$logo;
+$feeds = $helper->getFeedTotal($sellerId);
+$collectionPageUrl = $helper->getRewriteUrl('marketplace/seller/collection/shop/'.$shopUrl);
+$lochopUrl = $helper->getRewriteUrl('marketplace/seller/location/shop/'.$shopUrl)."?loc=".$companyLocality;
+if ($sellerId) {
+    ?>
+    <div class="wk-seller-block wk-block no-display" id="mp-wk-block">
+        <div class="wk-seller-card-container wk-card-type<?= $escaper->escapeHtml($cardType); ?>">
+            <?php if ($cardType == 2) { ?>
+                <div class="wk-seller-card-details-block">
+                <div class="wk-seller-card-details-img-block">
+                    <a href="
+                        <?= $escaper->escapeHtml(
+                            $helper->getRewriteUrl('marketplace/seller/profile/shop/'.$shop_url)
+                        );?>" title="<?= $escaper->escapeHtml(__('Visit Shop')) ?>" target="_blank">
+                        <img src="<?= $escaper->escapeHtml($logo); ?>">
+                    </a>
+                </div>
+                <div class="wk-seller-card-details-content-block">
+                    <div class="wk-seller-card-row">
+                        <div class="wk-seller-shop-title">
+                            <a href="
+                                <?= $escaper->escapeHtml(
+                                    $helper->getRewriteUrl('marketplace/seller/profile/shop/'.$shop_url)
+                                );?>" 
+                                title="<?= $escaper->escapeHtml(__('Visit Shop')) ?>" 
+                                id="profileconnect" target="_blank">
+                                <?= $escaper->escapeHtml($shoptitle); ?>
+                            </a>
+                        </div>
+                        <?php if ($rating > 0):?>
+                            <div class="wk-seller-rating-block">
+                                <div class="wk-seller-rating-number">
+                                    <?= $escaper->escapeHtml(number_format($rating, 1)); ?>
+                                </div>
+                                <div class="wk-seller-rating-summery">
+                                    <div class="wk-seller-rating wk-mp-design-inner">
+                                        <div class="wk-seller-feedback-title">
+                                            <span>
+                                                <?php
+                                                $review_percentage = (($rating*100)/5);
+                                                echo $escaper->escapeHtml(
+                                                    $review_percentage."% ".__('positive feedback')." (".__(
+                                                        '%1 ratings',
+                                                        number_format($feeds['feedcount'])
+                                                    ).") "
+                                                );
+                                                ?>
+                                            </span>
+                                        </div>
+                                        <div class="wk-mp-row">
+                                            <div class="mpfeedback">
+                                                <div class="price">
+                                                    <span class="wk-ordertitle-label">
+                                                        <?= $escaper->escapeHtml(__('Price')) ?> 
+                                                    </span>
+                                                    <span>:</span>
+                                                    <div class="ratingslider-box">
+                                                        <div class="rating" style="width:
+                                                            <?= $escaper->escapeHtml(ceil($feeds['price']));?>%;"></div>
+                                                    </div>
+                                                    <span>&nbsp;(<?= $escaper->escapeHtml(round(
+                                                        ($feeds['price']/20),
+                                                        1,
+                                                        PHP_ROUND_HALF_UP
+                                                    )) ?>/5)</span>
+                                                    <div class="clear"></div>
+                                                </div>
+                                                <div class="value">
+                                                    <span class="wk-ordertitle-label">
+                                                        <?= $escaper->escapeHtml(__('Value')) ?> 
+                                                    </span>
+                                                    <span>:</span>
+                                                    <div class="ratingslider-box" >
+                                                        <div class="rating" style="width:
+                                                            <?= $escaper->escapeHtml(ceil($feeds['value']));?>%;"></div>
+                                                    </div>
+                                                    <span>&nbsp;(<?= $escaper->escapeHtml(round(
+                                                        ($feeds['value']/20),
+                                                        1,
+                                                        PHP_ROUND_HALF_UP
+                                                    ))?>/5)</span>
+                                                    <div class="clear"></div>
+                                                </div>
+                                                <div class="quality">
+                                                    <span class="wk-ordertitle-label">
+                                                        <?= $escaper->escapeHtml(__('Quality')) ?> 
+                                                    </span>
+                                                    <span>:</span>
+                                                    <div class="ratingslider-box">
+                                                        <div class="rating" style="width:
+                                                            <?= $escaper->escapeHtml(ceil($feeds['quality']));?>%;">
+                                                        </div>
+                                                    </div>
+                                                    <span>&nbsp;(<?= $escaper->escapeHtml(round(
+                                                        ($feeds['quality']/20),
+                                                        1,
+                                                        PHP_ROUND_HALF_UP
+                                                    ))?>/5)</span>
+                                                    <div class="wk-clear"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php if ($companyLocality != ""): ?>
+                        <div class="wk-seller-card-row">
+                            <a class="wk-seller-location-link" 
+                            title="<?= $escaper->escapeHtml(__($companyLocality)); ?>"
+                            href="<?= $escaper->escapeHtml($lochopUrl)?>" 
+                            target="_blank"> 
+                                <?= $escaper->escapeHtml(__($companyLocality)); ?>
+                            </a>
+                        </div>
+                    <?php endif;
+                    ?>
+
+                    <div class="wk-seller-card-row">
+                        <div class="wk-ask-question-link ">
+                            <a class="ask_que" id="askque">
+                                <?= $escaper->escapeHtml(__('Contact Seller')) ?>
+                            </a>
+                        </div>
+                        <div class="wk-seller-response-container">
+                            <div class ="wk-seller-response">
+                                <span class="response">
+                                    <span id="reponseRate<?= $escaper->escapeHtml($cardType); ?>">0</span>
+                                    <?= $escaper->escapeHtml(__('% response rate,')) ?>
+                                    <span id="avgTime<?= $escaper->escapeHtml($cardType); ?>">0</span>
+                                    <?= $escaper->escapeHtml(__('-mins response time')) ?>
+                                </span>
+                            </div>
+                        </div>
+                        <?=  $block->getChildHtml();?>
+                    </div>
+                    <?php if ($helper->getProductFlagStatus() &&
+                    (($flagReasons->getSize() && $helper->getProductFlagData('reason'))
+                    || $helper->getProductFlagData('other_reason'))): ?>
+                        <div class="wk-seller-card-row">
+                            <span class="wk-report-flag-link">
+                            <a id="reportflag"><?= /* @noEscape */
+                            $helper->getProductFlagData('product_flag_label') ?></a></span>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="wk-seller-card-product-block">
+                <?php if ($productCount > 0): ?>
+                    <div class="wk-seller-card-product-container">
+                        <?php $collection = $helper->getSellerProductCollection(
+                            $sellerId,
+                            $product['entity_id'],
+                            $productCount
+                        ); ?>
+                        <?php foreach ($collection as $_product): ?>
+                            <div class="wk-seller-card-product">
+                                <a href="<?= $escaper->escapeHtml($_product->getProductUrl()); ?>" target="_blank" 
+                                title="<?= $escaper->escapeHtml($_product->getName()); ?>">
+                                    <img src="<?= $escaper->escapeHtml($helper->getImageUrl($_product)); ?>">
+                                </a>
+                            </div>
+                        <?php endforeach; ?>
+                        <?php if ($productCount > 5): ?>
+                            <div class="wk-seller-card-product">
+                                <a href="<?= $escaper->escapeHtml($collectionPageUrl); ?>" target="_blank">
+                                    <span><?= $escaper->escapeHtml(__("View All %1 Products", $productCount)); ?></span>
+                                </a>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <?php } else { ?>
+                <div>
+                    <span class="wk-block-font-bold-up"><?= $escaper->escapeHtml(__('Sold By'))?></span> <br/>
+                    <span class="wk-block-title-css">
+                        <a href="
+                        <?=$escaper->escapeHtml($helper->getRewriteUrl('marketplace/seller/profile/shop/'.$shop_url));?>
+                        " title="<?= $escaper->escapeHtml(__('Visit Shop')) ?>" id="profileconnect">
+                            <?= $escaper->escapeHtml($shoptitle); ?>
+                        </a>
+                    </span> <br/>
+                    <span class="wk-block-rating">
+                        <?= $escaper->escapeHtml($helper->getSelleRating($sellerId)); ?> / 5
+                    </span>
+                    <div class="wk-seller-rating wk-mp-design-inner">
+                        <div style="padding: 5px 0;">
+                            <span>
+                                <?php
+                                    $reviewPercentage = (($helper->getSelleRating($sellerId)*100)/5);
+                                    echo $escaper->escapeHtml($reviewPercentage."% ".__('positive feedback')." (".__(
+                                        '%1 ratings',
+                                        number_format($feeds['feedcount'])
+                                    ).") ");
+                                ?>
+                            </span>
+                        </div>
+                        <div class="wk-mp-row">
+                            <div class="mpfeedback">
+                                <div class="price">
+                                    <span class="wk-ordertitle-label">
+                                        <?= $escaper->escapeHtml(__('Price')) ?> 
+                                    </span>
+                                    <span>:</span>
+                                    <div class="ratingslider-box">
+                                        <div class="rating" style="width:
+                                        <?= $escaper->escapeHtml(ceil($feeds['price']));?>%;"></div>
+                                    </div>
+                                    <span>&nbsp;(<?= $escaper->escapeHtml(round(
+                                        ($feeds['price']/20),
+                                        1,
+                                        PHP_ROUND_HALF_UP
+                                    )) ?>/5)</span>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="value">
+                                    <span class="wk-ordertitle-label">
+                                        <?= $escaper->escapeHtml(__('Value')) ?> 
+                                    </span>
+                                    <span>:</span>
+                                    <div class="ratingslider-box" >
+                                        <div class="rating" style="width:
+                                        <?= $escaper->escapeHtml(ceil($feeds['value']));?>%;"></div>
+                                    </div>
+                                    <span>&nbsp;(<?= $escaper->escapeHtml(round(
+                                        ($feeds['value']/20),
+                                        1,
+                                        PHP_ROUND_HALF_UP
+                                    ))?>/5)</span>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="quality">
+                                    <span class="wk-ordertitle-label">
+                                        <?= $escaper->escapeHtml(__('Quality')) ?> 
+                                    </span>
+                                    <span>:</span>
+                                    <div class="ratingslider-box">
+                                        <div class="rating" style="width:
+                                        <?= $escaper->escapeHtml(ceil($feeds['quality']));?>%;"></div>
+                                    </div>
+                                    <span>&nbsp;(<?= $escaper->escapeHtml(round(
+                                        ($feeds['quality']/20),
+                                        1,
+                                        PHP_ROUND_HALF_UP
+                                    ))?>/5)</span>
+                                    <div class="wk-clear"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wk-seller-card-col">
+                        <a class="wk-seller-product-count" href="
+                            <?= $escaper->escapeUrl($collectionPageUrl); ?>" target="_blank">
+                            <?= $escaper->escapeHtml($productLabel); ?>
+                        </a>
+                    </div>
+                </div>
+                <div class="wk-seller-card-row">
+                    <div class="wk-ask-question-link ">
+                        <a class="ask_que" id="askque">
+                            <?= $escaper->escapeHtml(__('Contact Seller')) ?>
+                        </a>
+                    </div>
+                    <div class="wk-seller-response-container">
+                        <div class ="wk-seller-response">
+                            <span class="response wk-customsection">
+                                <span id="reponseRate<?= $escaper->escapeHtml($cardType); ?>">0</span>
+                                <?= $escaper->escapeHtml(__('% response rate,')) ?>
+                                <span id="avgTime<?= $escaper->escapeHtml($cardType); ?>">0</span>
+                                <?= $escaper->escapeHtml(__('-mins response time')) ?>
+                            </span>
+                        </div>
+                    </div>
+                    <?= $block->getChildHtml();?>
+                </div>
+                <?php if ($helper->getProductFlagStatus() &&
+                (($flagReasons->getSize() && $helper->getProductFlagData('reason'))
+                || $helper->getProductFlagData('other_reason'))): ?>
+                    <div class="wk-seller-card-row">
+                        <span class="wk-report-flag-link">
+                        <a id="reportflag"><?=  /* @noEscape */
+                        $helper->getProductFlagData('product_flag_label') ?></a></span>
+                    </div>
+                <?php endif; ?>
+            <?php } ?>
+        </div>    
+    </div>
+<?php } else { ?>
+    <div class="wk-seller-block wk-block no-display" id="mp-wk-block">
+        <div class="wk-seller-card-container wk-card-type<?= $escaper->escapeHtml($cardType); ?>">
+        <?php if ($cardType == 2) { ?>
+            <div class="wk-seller-card-details-block">
+                <div class="wk-seller-card-details-content-block">
+                    <div class="wk-seller-card-row">
+                        <div class="wk-ask-question-link ">
+                            <a class="ask_que" id="askque">
+                                <?= $escaper->escapeHtml(__('Contact Seller')) ?>
+                            </a>
+                        </div>
+                        <div class="wk-seller-response-container">
+                            <div class ="wk-seller-response">
+                                <span class="response">
+                                    <span id="reponseRate<?= $escaper->escapeHtml($cardType); ?>">0</span>
+                                    <?= $escaper->escapeHtml(__('% response rate,')) ?>
+                                    <span id="avgTime<?= $escaper->escapeHtml($cardType); ?>">0</span>
+                                    <?= $escaper->escapeHtml(__('-mins response time')) ?>
+                                </span>
+                            </div>
+                        </div>
+                        <?=  $block->getChildHtml();?>
+                    </div>
+                </div>
+            </div>
+        <?php } else { ?>
+            <div class="wk-seller-card-row">
+                <div class="wk-ask-question-link ">
+                    <a class="ask_que" id="askque">
+                        <?= $escaper->escapeHtml(__('Contact Seller')) ?>
+                    </a>
+                </div>
+                <div class="wk-seller-response-container">
+                    <div class ="wk-seller-response">
+                        <span class="response">
+                            <span id="reponseRate<?= $escaper->escapeHtml($cardType); ?>">0</span>
+                            <?= $escaper->escapeHtml(__('% response rate,')) ?>
+                            <span id="avgTime<?= $escaper->escapeHtml($cardType); ?>">0</span>
+                            <?= $escaper->escapeHtml(__('-mins response time')) ?>
+                        </span>
+                    </div>
+                </div>
+                <?= $block->getChildHtml();?>
+            </div>
+        <?php } ?>
+        </div>
+    </div>
+<?php } ?>    
+    <div class="ask-que">
+        <div id="wk-mp-ask-data" style="display:none">
+            <?php
+            if ($_helper->isLoggedIn()) {
+                $readonly = "readonly='readonly'";
+                $customerId = $_helper->getCurrentCustomer();
+                $customer = $_helper->getCustomerData($customerId);
+                $buyerName = $customer->getName();
+                $buyerEmail = $customer->getEmail();
+
+            } else {
+                $readonly = '';
+                $buyerName = '';
+                $buyerEmail = '';
+                
+                ?>
+        
+            <?php  }
+            ?>
+            <form id="ask-form" method="post" action="#" class="fieldset" data-mage-init='{"validation":{}}'
+             enctype="multipart/form-data" >
+                <div class="form-list field required" data-bind="scope: 'customer'">
+                    <label class="label"><?= $escaper->escapeHtml(__('Support Type')) ?> :</label>
+                    <select name="support_type" class="validate-select required-entry">
+                        <?php foreach ($_helper->getSupportTypes() as $key => $value) { ?>
+                            <option value=<?= $escaper->escapeHtml($key); ?>>
+                                <?= $escaper->escapeHtml($value); ?>
+                            </option>
+                        <?php }  ?>
+                    </select>
+
+                    <label class="label"><?= $escaper->escapeHtml(__('Your Name')) ?> :</label>
+                    <input type="text" name="name" class="queryemail wk-contact_input_fields 
+                    validate-no-html-tags required-entry" id="name" value="<?= $escaper->escapeHtml($buyerName)?>" 
+                    <?= /* @noEscape */ $readonly?>/>
+
+                    <label class="label"><?= $escaper->escapeHtml(__('Your Email')) ?> :</label>
+                    <input type="email" name="email" id="email" class="queryemail validate-no-html-tags required-entry 
+                    validate-email wk-contact_input_fields" value="<?= $escaper->escapeHtml($buyerEmail)?>" 
+                    <?= /* @noEscape */ $readonly?>/>
+
+                    <label class="label"><?= $escaper->escapeHtml(__('Subject')) ?> :</label>
+                    <input type="text" name="subject" class="wk-contact_input_fields validate-no-html-tags 
+                    required-entry"/>
+
+                    <label class="label"><?= $escaper->escapeHtml(__('Your Query')) ?> :</label>
+                    <textarea id="queryquestion"  name="ask" 
+                    class="queryquestion wk-contact_input_fields required-entry 
+                    " style="width:100%;"></textarea>
+
+                    <input type="hidden" name="seller-id" value="<?= $escaper->escapeHtml($sellerId);?>"/>
+                    <input type="hidden" name="product-id" value="<?= $escaper->escapeHtml($product['entity_id']);?>" />
+                    <?php
+                    if ($captchenable) {?>
+                        <div>
+                            <span>
+                                <label for="wk-mp-captcha">
+                                    <span id="wk-mp-captchalable1"><?= $escaper->escapeHtml(rand(1, 20))?></span>
+                                     + <span id="wk-mp-captchalable2"><?= $escaper->escapeHtml(rand(1, 20))?></span>
+                                     =</label>
+                            </span>
+                            <input type="text" class="required-entry wk-contact_input_fields" name="wk-mp-captcha" 
+                            id="wk-mp-captcha" />
+                        </div>
+                        <?php
+                    }?>
+                    <label class="file" class=""><?= $escaper->escapeHtml(__('Add Image/File')) ?> :</label>
+                    <div class="input-box">
+                        <div class="image-con">
+                            <input type="file" name="img_attachment[]" class="wk_imagevalidate"/>
+                            <a href="javascript:void(0)" class="remove_attch" style="display:none">
+                                <?= $escaper->escapeHtml(__('Remove')); ?>
+                            </a>
+                        </div>
+                        <div id="otherimages" class="image-con"></div>
+                        <a href="javascript:void(0)" class="product_images">
+                            <?= $escaper->escapeHtml(__("Add More")); ?>
+                        </a><br />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php if ($helper->getProductFlagStatus()): ?>
+      <div class="product-flag">
+          <div id="wk-mp-flag-data">
+              <div class="wk-mp-modals-wrapper">
+                  <aside tabindex="0" data-type="popup" data-role="modal" 
+                  class="modal-popup modal-slide _inner-scroll wk-mp-model-flag-popup">
+                      <div tabindex="0" data-role="focusable-start"></div>
+                      <div data-role="focusable-scope" class="modal-inner-wrap">
+                          <header class="modal-header">
+                              <h4 class="modal-title"><?= /* @noEscape */
+                                $helper->getProductFlagData('product_flag_label') ?></h4>
+                              <button type="button" data-role="closeBtn" class="action-close wk-product-flag-close">
+                                  <span><?= /* @noEscape */ __('Close')?></span>
+                              </button>
+                              <span class="wk-product-flag-clear"></span>
+                          </header>
+                          <?php
+                            if ($helper->isCustomerLoggedIn()) {
+                                $readonly = "readonly='readonly'";
+                                $customer = $helper->getCustomerData();
+                                $reporterName = $customer->getName();
+                                $reporterEmail = $customer->getEmail();
+                            } else {
+                                $readonly = '';
+                                $reporterName = '';
+                                $reporterEmail = '';
+                            }
+                            ?>
+                          <form id="flag-form" method="post" action="#" class="fieldset">
+                              <div class="modal-body form-list field wk-flag-form required">
+                                  <label class="label"><?= $escaper->escapeHtml(__('Your Name')) ?> :</label>
+                                  <input type="text" name="name" 
+                                  class="queryemail wk-contact_input_fields required-entry" 
+                                  value="<?= $escaper->escapeHtml($reporterName)?>" <?= /* @noEscape */ $readonly?>/>
+                                  <label class="label"><?= $escaper->escapeHtml(__('Your Email')) ?> :</label>
+                                  <input type="text" name="email" 
+                                  class="queryemail required-entry validate-email wk-contact_input_fields"
+                                   value="<?= $escaper->escapeHtml($reporterEmail)?>" <?= /* @noEscape */ $readonly?>/>
+                                  <?php if ($helper->getProductFlagData('reason')):
+                                        ?>
+                                    <label class="label"><?=
+                                    $escaper->escapeHtml(__('Choose an appropriate reason to flag')) ?> :</label>
+                                        <?php foreach ($flagReasons as $flagReason): ?>
+                                      <div class="wk-flagreasons">
+                                        <input type="radio" name="reason"
+                                         id="<?=  /* @noEscape */ $flagReason->getId() ?>" 
+                                        class="flag-reason required-entry" 
+                                        value="<?=  /* @noEscape */$flagReason->getReason()?>" >
+                                        <label for="<?= /* @noEscape */ $flagReason->getId() ?>">
+                                            <?=  /* @noEscape */ $flagReason->getReason() ?></label>
+                                      </div>
+                                    <?php endforeach; ?>
+                                        <?php if ($helper->getProductFlagData('other_reason')): ?>
+                                      <div class="wk-flagreasons">
+                                        <input type="radio" name="reason" id="reason_other"
+                                         class="flag-reason required-entry" value="other_value" checked>
+                                        <label for="reason_other"><?= /* @noEscape */
+                                         $helper->getProductFlagData('other_reason_label') ?></label>
+                                      </div>
+                                      <textarea name="flag_other_reason" 
+                                      placeholder="Write a reason to flag this product" 
+                                      class="wk-full-width wk-flag-other-reason required-entry"></textarea>
+                                    <?php endif; ?>
+                                    <?php endif; ?>
+                                  <input type="hidden" name="seller_id" 
+                                  value="<?= $escaper->escapeHtml($sellerId);?>"/>
+                                  <input type="hidden" name="product_id" 
+                                  value="<?= $escaper->escapeHtml($product['entity_id']);?>" />
+                                  <input type="hidden" name="product_name" 
+                                  value="<?= $escaper->escapeHtml($product->getName());?>" />
+                              </div>
+                              <div class="modal-footer">
+                                  <span class="error"></span>
+                                  <span class="errormail"></span>
+                                  <input type="reset"
+                                   value="<?= $escaper->escapeHtml(__('Reset')) ?>" 
+                                   id="resetflagbtn" class="wk-btn wk-btn-product-flag_default"/>
+                                  <input type="submit" 
+                                  value="<?= $escaper->escapeHtml(__('Submit')) ?>" id="flagbtn" 
+                                  class="wk-btn wk-btn-product-flag-primary clickflag"/>
+                                  <span class="wk-product-flag-clear"></span>
+                              </div>
+                          </form>
+                      </div>
+                      <div tabindex="0" data-role="focusable-end"></div>
+                  </aside>
+              </div>
+          </div>
+      </div>
+      <div class="wk-alert-modal-content">
+        <div class="wk-flag-status-content">
+          <p><?= $escaper->escapeHtml(__('Thank you.'))?></p>
+          <p><?= $escaper->escapeHtml(__('Your report against '))?><b>
+          <?= $escaper->escapeHtml($product->getName())?></b>
+          <?= $escaper->escapeHtml(__(' has been submitted.'))?></p>
+          <p><?= $escaper->escapeHtml(__('We will re-verify the product Information and 
+see if it violates any of our policy or selling guidelines.'))?>
+        </p>
+        </div>
+      </div>
+    <?php endif;?>
+    <div id="wk-zcv-login-popup" style="display:none">
+               
+                <?= /* @noEscape */ $block->getLayout()->createBlock(
+                    \Magento\Customer\Block\Form\Login::class
+                )->setData(
+                    'captcha_status',
+                    $captchenable
+                )->setTemplate(
+                    "Webkul_MpSellerBuyerCommunication::customer/login.phtml"
+                )->toHtml();?>
+    </div>
+    <script id="attachment-template" type="text/x-magento-template">
+        <div id='childDiv<%- fields.index %>' class="image-con">
+            <input type='file' name='img_attachment[]' class='wk_imagevalidate'/>
+            <a href="javascript:void(0)" class="remove_attch"><?= $escaper->escapeHtml(__('Remove')); ?></a>
+        </div>
+    </script>
+
+    <?php
+        $releventFormData = [
+            'targetAjaxUrl' => $block->getUrl(
+                "mpsellerbuyercommunication/seller/sendmail",
+                ["_secure" => $blockObj->isSecureData()]
+            ),
+            'captchenable'  => $captchenable,
+            'cardType' => $cardType,
+            'varificationMsg' => __(' enable to varifiy captcha'),
+            'formValidator' => '#ask-form',
+            'attachmentTemplate' => '#attachment-template',
+            'saveAjaxFileUrl' => $block->getUrl(
+                "mpsellerbuyercommunication/seller/saveFiles",
+                ["_secure" => $blockObj->isSecureData()]
+            ),
+            'product_id'=>$product['entity_id'],
+            'isLoggedIn' => $_helper->isLoggedIn(),
+            'guestQueryApproval' => $guestQueryApproval,
+            'getResponseAjaxUrl' => $block->getUrl(
+                "mpsellerbuyercommunication/seller/getResponse",
+                ["_secure" => $blockObj->isSecureData()]
+            ),
+            'wysiwygUrl' => $blockObj->getWysiwygUrl()
+        ];
+
+        $serializedData = $blockObj->getJson()->jsonEncode($releventFormData);
+        ?>
+
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "wkBlockFormplugin": <?= $escaper->escapeJsQuote($serializedData); ?>
+            }
+        }
+    </script>
+
+
+    <script>
+        require([
+            "jquery",
+            "Magento_Ui/js/modal/alert",
+            "mage/mage"
+        ], function($, alert) {
+            var askDataForm = $('#ask-form');
+            var cardType = <?= $escaper->escapeHtml($cardType); ?>;
+
+            askDataForm.mage('validation', {});
+            var flagDataForm = $('#flag-form');
+            flagDataForm.mage('validation', {});
+            if (cardType == 2) {
+                $('.product-info-main').before($('#mp-wk-block'));
+            } else {
+                $('.product-info-main').append($('#mp-wk-block'));
+            }
+            $('#mp-wk-block').show();
+
+            $('body').append($('#wk-mp-flag-data'))
+           
+            $('#reportflag').click(function() {
+                $('#flag-form input,#flag-form textarea').removeClass('mage-error');
+                $('.page-wrapper').css('opacity','0.4');
+                $('.wk-mp-model-flag-popup').addClass('_show');
+                $('#wk-mp-flag-data').show();
+            });
+            $('.wk-product-flag-close').click(function() {
+                $('.page-wrapper').css('opacity','1');
+                $('#resetflagbtn').trigger('click');
+                $('#wk-mp-flag-data').hide();
+                $('#flag-form .validation-failed').each(function() {
+                    $(this).removeClass('validation-failed');
+                });
+                $('#flag-form .validation-advice').each(function() {
+                    $(this).remove();
+                });
+            });
+            $('.flag-reason').on('change',function(e) {
+                if($(this).val() == "other_value") {
+                $('.wk-flag-other-reason').show();
+                $('.wk-flag-other-reason').addClass('required-entry');
+              } else {
+                $('.wk-flag-other-reason').hide();
+                $('.wk-flag-other-reason').removeClass('required-entry');
+              }
+            });
+            $('#resetflagbtn').on('click', function(e) {
+              $('.wk-flag-other-reason').show();
+              $('.wk-flag-other-reason').addClass('required-entry');
+            });
+            $('#flagbtn').click(function() {
+                if (flagDataForm.valid()!=false) {
+                    var thisthis = $(this);
+                    if (thisthis.hasClass("clickflag")) {
+                        thisthis.removeClass('clickflag');
+                        $('#wk-mp-flag-data').addClass('mail-procss');
+                        $.ajax({
+                            url:'<?= $escaper->escapeUrl($block
+                            ->getUrl("marketplace/product/reportflag", ["_secure" =>
+                            $block->getRequest()->isSecure()])) ?>',
+                            data:$('#flag-form').serialize(),
+                            type:'post',
+                            dataType:'json',
+                            success:function(content) {
+                                var messageContent = $('.wk-alert-modal-content').html();
+                                thisthis.addClass('clickflag');
+                                $('#wk-mp-flag-data').removeClass('mail-procss')
+                                  alert({
+                                      title: $.mage.__('Report Product'),
+                                      content: $('.wk-flag-status-content'),
+                                      actions: {
+                                          always: function(){
+                                            $('.wk-product-flag-close,#resetflagbtn').trigger('click');
+                                            $('.wk-flag-other-reason').show();
+                                            $('.wk-flag-other-reason').addClass('required-entry');
+                                          }
+                                      },
+                                      buttons: [{
+                                          text: $.mage.__('Close'),
+                                          class: 'action primary close',
+                                          click: function () {
+                                              this.closeModal(true);
+                                          }
+                                      }]
+                                  });
+                                  $('.wk-alert-modal-content').append(messageContent);
+                            }
+                        });
+                    }
+                    return false;
+                }
+            });
+        });
+    </script>

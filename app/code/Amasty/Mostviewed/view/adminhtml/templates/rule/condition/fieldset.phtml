@@ -1,0 +1,44 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */
+// @codingStandardsIgnoreFile
+/** @var \Magento\Backend\Block\Widget\Form\Renderer\Fieldset $block */
+/** @var  \Magento\Framework\Data\Form\Element\AbstractElement $element */
+?>
+<?php
+$element = $block->getElement();
+$jsObjectName = $block->getFieldSetId() != null ? $block->getFieldSetId() : $element->getHtmlId();
+$jsObjectName = $block->escapeHtml($jsObjectName);
+?>
+
+<div class="rule-tree">
+    <?php if ($block->getComment()): ?>
+        <legend class="legend"><?= $block->escapeHtml($block->getComment()) ?></legend>
+    <?php endif; ?>
+    <fieldset id="<?= /* @escapeNotVerified */
+    $jsObjectName ?>"
+        <?= /* @escapeNotVerified */
+        $element->serialize(['class']) ?>
+              class="fieldset">
+        <div class="rule-tree-wrapper">
+            <?= $element->getChildrenHtml() ?>
+        </div>
+    </fieldset>
+</div>
+<script>
+    require([
+        "Magento_Rule/rules",
+        "prototype"
+    ], function (VarienRulesForm) {
+        window.<?= $jsObjectName;?> =
+            new VarienRulesForm('<?= $jsObjectName;?>', '<?= $block->escapeUrl($block->getNewChildUrl());?>');
+
+        <?php if ($element->getReadonly()): ?>
+        <?= $element->getHtmlId() ?>.
+        setReadonly(true);
+        <?php endif; ?>
+    });
+</script>

@@ -1,0 +1,12 @@
+{
+    "marketplace_custom_attribute": {
+        "column": {
+            "entity_id": true,
+            "attribute_id": true,
+            "status": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

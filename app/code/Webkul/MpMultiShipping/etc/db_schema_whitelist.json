@@ -1,0 +1,13 @@
+{
+    "marketplace_orders": {
+        "column": {
+            "multiship_method": true
+        }
+    },
+    "marketplace_saleslist": {
+        "column": {
+            "shipping_method": true,
+            "shipping_price": true
+        }
+    }
+}

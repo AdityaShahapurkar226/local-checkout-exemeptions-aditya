@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget id="amrelated_bundle_list" class="Amasty\Mostviewed\Block\Widget\PackList" is_email_compatible="true"
+            placeholder_image="Magento_Cms::images/widget_block.png">
+        <label translate="true">Amasty Related Products: Bundle Packs List</label>
+        <description translate="true">List of your bundle packs containers.</description>
+        <parameters>
+            <parameter name="columns" xsi:type="text" visible="true">
+                <label translate="true">Number of Columns</label>
+            </parameter>
+            <parameter name="template" xsi:type="select" visible="true">
+                <label translate="true">Template</label>
+                <options>
+                    <option name="default" value="bundle/list.phtml" selected="true">
+                        <label translate="true">Index</label>
+                    </option>
+                </options>
+            </parameter>
+        </parameters>
+    </widget>
+    <widget id="amrelated_group_block" class="Amasty\Mostviewed\Block\Widget\Related" is_email_compatible="true"
+            placeholder_image="Magento_Cms::images/widget_block.png">
+        <label translate="true">Amasty Related Products: Products Block by Rule Id</label>
+        <description translate="true">List of products by conditions.</description>
+        <parameters>
+            <parameter name="group_id" xsi:type="text" visible="true">
+                <label translate="true">Product Rule Id</label>
+            </parameter>
+            <parameter name="template" xsi:type="select" visible="true">
+                <label translate="true">Template</label>
+                <options>
+                    <option name="default" value="content/grid.phtml" selected="true">
+                        <label translate="true">Index</label>
+                    </option>
+                </options>
+            </parameter>
+        </parameters>
+    </widget>
+    <widget id="amrelated_bundle_pack" class="Amasty\Mostviewed\Block\Product\BundlePackCustom" is_email_compatible="true"
+            placeholder_image="Magento_Cms::images/widget_block.png">
+        <label translate="true">Amasty Related Products: Product Page Bundle Pack</label>
+        <description translate="true">Bundle pack.</description>
+        <parameters>
+            <parameter name="template" xsi:type="select" visible="true">
+                <label translate="true">Template</label>
+                <options>
+                    <option name="default" value="Amasty_Mostviewed::bundle/pack.phtml" selected="true">
+                        <label translate="true">Default</label>
+                    </option>
+                </options>
+            </parameter>
+        </parameters>
+        <containers>
+            <container name="content">
+                <template name="grid" value="default" />
+            </container>
+            <container name="content.top">
+                <template name="grid" value="default" />
+            </container>
+            <container name="content.bottom">
+                <template name="grid" value="default" />
+            </container>
+        </containers>
+    </widget>
+    <widget id="amrelated_bundle_pack_custom" class="Amasty\Mostviewed\Block\Widget\PackWidgetWrapper"
+            is_email_compatible="true" placeholder_image="Magento_Cms::images/widget_block.png">
+        <label translate="true">Amasty Related Products: Bundle Pack</label>
+        <description translate="true">Bundle pack.</description>
+        <parameters>
+            <parameter name="bundle_pack_id" xsi:type="select" visible="true" required="true"
+                       source_model="Amasty\Mostviewed\Model\OptionSource\EnabledPacks">
+                <label translate="true">Bundle Pack</label>
+            </parameter>
+            <parameter name="main_product_id" xsi:type="block" visible="true">
+                <label translate="true">Main Product ID</label>
+                <description translate="true">
+                    Extension will display main product according to the set product ID.
+                    Leave empty for bundle packs with single main item.
+                </description>
+                <block class="Amasty\Mostviewed\Block\Adminhtml\Widget\Digits" />
+            </parameter>
+            <parameter name="template" xsi:type="select" visible="true">
+                <label translate="true">Template</label>
+                <options>
+                    <option name="default" value="Amasty_Mostviewed::widget/content/pack.phtml" selected="true">
+                        <label translate="true">Default</label>
+                    </option>
+                </options>
+            </parameter>
+        </parameters>
+        <containers>
+            <container name="content">
+                <template name="grid" value="default" />
+            </container>
+            <container name="content.top">
+                <template name="grid" value="default" />
+            </container>
+            <container name="content.bottom">
+                <template name="grid" value="default" />
+            </container>
+        </containers>
+    </widget>
+</widgets>

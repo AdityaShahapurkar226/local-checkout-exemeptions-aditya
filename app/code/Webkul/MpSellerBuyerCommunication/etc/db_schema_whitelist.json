@@ -1,0 +1,41 @@
+{
+    "marketplace_sellerbuyercommunication": {
+        "column": {
+            "entity_id": true,
+            "product_id": true,
+            "seller_id": true,
+            "customer_id": true,
+            "email_id": true,
+            "subject": true,
+            "created_at": true,
+            "updated_at": true,
+            "status": true,
+            "query_status": true,
+            "support_type": true,
+            "attachment_status": true,
+            "product_name": true,
+            "customer_name": true,
+            "order_id": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "marketplace_sellerbuyercommunication_conversation": {
+        "column": {
+            "entity_id": true,
+            "comm_id": true,
+            "message": true,
+            "sender": true,
+            "sender_type": true,
+            "created_at": true,
+            "updated_at": true,
+            "attachments": true,
+            "response_time": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_4AE86C21D535562AA971EF252851799E": true
+        }
+    }
+}

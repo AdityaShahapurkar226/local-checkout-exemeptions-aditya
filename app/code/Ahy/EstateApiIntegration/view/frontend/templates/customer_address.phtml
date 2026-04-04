@@ -1,0 +1,22 @@
+<?php
+// Get Object Manager instance
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+// Get customer session
+$customerSession = $objectManager->get('\Magento\Customer\Model\Session');
+
+if ($customerSession->isLoggedIn()) {
+    $customer = $customerSession->getCustomer();
+    $address = $customer->getDefaultShippingAddress();
+
+    if ($address) {
+        echo "<h2>Customer Shipping Address:</h2>";
+        echo "<p>" . $address->getStreetLine(1) . "</p>";
+        echo "<p>" . $address->getCity() . ", " . $address->getRegion() . " " . $address->getPostcode() . "</p>";
+        echo "<p>" . $address->getCountryId() . "</p>";
+    } else {
+        echo "<p>No default shipping address found.</p>";
+    }
+} else {
+    echo "<p>Customer is not logged in.</p>";
+}

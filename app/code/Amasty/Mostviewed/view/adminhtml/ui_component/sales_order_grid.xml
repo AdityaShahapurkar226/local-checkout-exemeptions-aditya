@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2023 Amasty (https://www.amasty.com)
+ * @package Automatic Related Products for Magento 2
+ */-->
+
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <columns name="sales_order_columns">
+        <column name="mostviewed_includes_bundles" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <filter>select</filter>
+                <options class="Magento\Config\Model\Config\Source\Yesno" />
+                <dataType>select</dataType>
+                <label translate="true">Includes Bundle Pack</label>
+            </settings>
+        </column>
+        <column name="mostviewed_bundles">
+            <settings>
+                <filter>select</filter>
+                <options class="Amasty\Mostviewed\Model\OptionSource\Packs" />
+                <dataType>select</dataType>
+                <label translate="true">Bundle Pack(s)</label>
+            </settings>
+        </column>
+    </columns>
+</listing>

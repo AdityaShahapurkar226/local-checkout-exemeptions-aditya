@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="before.body.end">
+            <!-- Estate API Block -->
+            <block class="Magento\Framework\View\Element\Template" name="ahy.estate.api" template="Ahy_EstateApiIntegration::js/estateApi.phtml">
+                <arguments>
+                    <argument name="viewModel" xsi:type="object">Ahy\EstateApiIntegration\ViewModel\CustomerInfo</argument>
+                </arguments>
+            </block>
+
+            <!-- Customer Address Block -->
+            <block class="Magento\Framework\View\Element\Template" name="ahy.customer.address" template="Ahy_EstateApiIntegration::customer_address.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

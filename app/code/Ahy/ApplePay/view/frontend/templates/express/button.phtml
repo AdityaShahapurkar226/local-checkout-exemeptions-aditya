@@ -1,0 +1,145 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+declare(strict_types=1);
+
+use PayPal\Braintree\Block\ApplePay\Shortcut\Button;
+use Magento\Framework\Escaper;
+use Ahy\GooglePay\ViewModel\ApplePay\RestrictVisibility;
+
+/** @var Escaper $escaper */
+/** @var Button $block */
+/** @var RestrictVisibility $viewModel */
+
+try {
+    $id = sprintf('%s%s', $block->getContainerId(), random_int(PHP_INT_MIN, PHP_INT_MAX));
+} catch (Exception $e) {
+    /**
+     * Exception only thrown if an appropriate source of randomness cannot be found.
+     *
+     * @link https://www.php.net/manual/en/function.random-int.php
+     */
+    $id = 0;
+}
+
+$viewModel = $block->getData('viewModel');
+$shouldShowApplePayButton = $viewModel->shouldShowButton();
+
+?>
+<?php if ($shouldShowApplePayButton && $block->getAmount() > 0): ?>
+    <div id="<?= $escaper->escapeHtmlAttr($id); ?>"
+        x-data="initBraintreeApplePayExpress()"
+        x-init="$nextTick(() => { init() })"
+        data-success="<?= $escaper->escapeUrl($block->getActionSuccess()); ?>"
+        data-client-token="<?= $escaper->escapeHtmlAttr($block->getClientToken()); ?>"
+        data-display-name="<?= $escaper->escapeHtmlAttr($block->getMerchantName()); ?>"
+        data-amount="<?= $escaper->escapeHtmlAttr(number_format((float)$block->getAmount(), 2, '.', '')); ?>"
+        data-is-logged-in="<?= $escaper->escapeHtmlAttr($block->isCustomerLoggedIn() ? 'true' : 'false'); ?>"
+        data-store-code="<?= $escaper->escapeHtmlAttr($block->getStorecode()); ?>"
+        data-quote-id="<?= $escaper->escapeHtmlAttr($block->getQuoteId()); ?>"
+        class="braintree-applepay-minicart <?= $escaper->escapeHtmlAttr($block->getExtraClassname()); ?>"></div>
+<?php endif; ?>
+
+<!-- TODO: Make this work in web/apple-pay.css OR Tailwind: -->
+<style>
+    .braintree-applepay-container-product {
+        display: inline-block;
+    }
+
+    .braintree-applepay-container-product .braintree-apple-pay-button {
+        padding: 10px 0;
+        margin: 0;
+        margin-bottom: 15px;
+    }
+
+    .braintree-apple-pay-button {
+        -webkit-appearance: -apple-pay-button;
+        -apple-pay-button-type: plain;
+        display: block;
+        width: 100%;
+        min-height: 3.5rem;
+        border: 1px solid black;
+        background-image: -webkit-named-image(apple-pay-logo-black);
+        background-size: 100% ~ 'calc(60% + 2px)';
+        background-repeat: no-repeat;
+        background-color: black;
+        background-position: 50% 50%;
+        border-radius: 100vh;
+        padding: 27px;
+        margin: 20px auto;
+        transition: background-color 0.15s;
+        cursor: pointer;
+
+        margin: 0px !important;
+        margin-bottom: 1.5rem;
+    }
+
+    div.braintree-apple-pay-button:nth-child(2) {
+        display: none
+    }
+
+    .braintree-applepay-minicart {
+        margin: 1rem 0;
+    }
+
+    #cart-drawer .braintree-applepay-minicart {
+        margin: 0;
+        padding-left: .80rem;
+        padding-right: .80rem;
+    }
+
+    #cart-drawer .braintree-applepay-minicart:empty {
+        display: none;
+    }
+
+
+    body.checkout-ahy.hyva_checkout-index-index.page-layout-checkout .braintree-applepay-minicart.minicart {
+        width: 100%;
+
+    }
+
+    body.checkout-ahy.hyva_checkout-index-index.page-layout-checkout .braintree-apple-pay-button {
+        border-radius: 5px !important;
+        padding: 11px;
+        height: 37px;
+        border: 2px solid #FEF9EB;
+        margin-top: 5px !important;
+        min-height: 2.5rem;
+    }
+
+
+    @media (max-width: 768px) {
+        body.checkout-ahy.hyva_checkout-index-index.page-layout-checkout .braintree-apple-pay-button {
+            border-radius: 5px !important;
+            padding: 11px;
+            height: 45px;
+            border: none;
+            margin-top: 5px !important;
+        }
+
+        body.checkout-ahy.hyva_checkout-index-index.page-layout-checkout .googlepay-minicart-logo {
+            margin-bottom: 2.5rem;
+        }
+    }
+
+
+    body.checkout-ahy.hyva_checkout-index-index.page-layout-checkout .braintree-applepay-minicart.minicart:empty {
+        display: none;
+    }
+
+
+    body.checkout-ahy.hyva_checkout-index-index.page-layout-checkout:has(.braintree-applepay-minicart.minicart:empty) .braintree-googlepay-button {
+        height: 48.5px;
+        padding: 13px;
+        border: 2.5px solid #FEF9EB;
+        margin-top: 5.5px !important;
+    }
+    body.checkout-cart-index.page-layout-1column .braintree-applepay-minicart {
+    margin-bottom: 1.5rem;
+}
+
+</style>

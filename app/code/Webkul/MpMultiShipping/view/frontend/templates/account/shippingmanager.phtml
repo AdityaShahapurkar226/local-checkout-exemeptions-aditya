@@ -1,0 +1,39 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpMultiShipping
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$shippingMethods = $block->getViewModel()->getActiveCarriers();
+$allowedshipping = $block->getAllowedShipping();
+?>
+<?php if ($block->getViewModel()->isMultiShippingActive()): ?>
+    <form class="form" action="<?= /* @noEscape */ $block->getViewModel()->getActionUrl('multiship/shipping'); ?>" 
+    method="post" id="form-validate"  data-mage-init='{"validation":{}}' 
+    data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>" autocomplete="off">
+        <div class="wk-mp-page-title page-title">
+            <h2><?= /* @noEscape */ __('Allowed Shipping') ?></h2>
+            <button class="button wk-mp-btn" title="<?= /* @noEscape */ __('Save') ?>" type="submit" id="save-btn">
+                <span><span><?= /* @noEscape */ __('Save') ?></span></span>
+            </button>
+        </div>
+        <fieldset class="fieldset info">
+            <?= /* @noEscape */ $block->getBlockHtml('formkey')?>
+            <div class="field">
+            <?php foreach ($shippingMethods as $method): ?>
+                <div class="control">
+                    <input type="checkbox" name="shippingmethod[]" value="<?= /* @noEscape */ $method['value'];?>" 
+                    <?= /* @noEscape */ in_array($method['value'], $allowedshipping)? "checked='checked'":"";?> />
+                    <label class="label"><span><?= /* @noEscape */ $method['label'];?></span></label>
+                </div>
+            <?php endforeach; ?>
+            </div>
+        </fieldset>
+    </form>
+<?php endif; ?>

@@ -1,0 +1,232 @@
+{
+    "amasty_mostviewed_product_index": {
+        "column": {
+            "index_id": true,
+            "rule_id": true,
+            "product_id": true,
+            "relation": true,
+            "store_id": true,
+            "position": true,
+            "entity_id": true
+        },
+        "index": {
+            "AMASTY_MOSTVIEWED_PRODUCT_INDEX_RULE_ID_PRODUCT_ID": true,
+            "AMASTY_MOSTVIEWED_PRODUCT_INDEX_RULE_ID": true,
+            "AMASTY_MOSTVIEWED_PRODUCT_INDEX_PRODUCT_ID": true,
+            "AMASTY_MOSTVIEWED_PRODUCT_INDEX_ENT_ID_PST_RLT_STR_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_mostviewed_group": {
+        "column": {
+            "group_id": true,
+            "status": true,
+            "priority": true,
+            "name": true,
+            "block_position": true,
+            "stores": true,
+            "customer_group_ids": true,
+            "where_conditions_serialized": true,
+            "category_ids": true,
+            "conditions_serialized": true,
+            "same_as_conditions_serialized": true,
+            "block_title": true,
+            "block_layout": true,
+            "source_type": true,
+            "same_as": true,
+            "replace_type": true,
+            "add_to_cart": true,
+            "max_products": true,
+            "sorting": true,
+            "for_out_of_stock": true,
+            "show_out_of_stock": true,
+            "layout_update_id": true,
+            "current_category": true,
+            "display_wishlist_button": true,
+            "display_compare_button": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "mostviewed_view_temp": {
+        "column": {
+            "id": true,
+            "visitor_id": true,
+            "block_id": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "mostviewed_click_temp": {
+        "column": {
+            "id": true,
+            "visitor_id": true,
+            "product_id": true,
+            "block_id": true,
+            "click_type": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "mostviewed_analytics": {
+        "column": {
+            "id": true,
+            "type": true,
+            "counter": true,
+            "block_id": true,
+            "version_id": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_mostviewed_pack": {
+        "column": {
+            "pack_id": true,
+            "status": true,
+            "store_id": true,
+            "priority": true,
+            "name": true,
+            "customer_group_ids": true,
+            "product_ids": true,
+            "block_title": true,
+            "discount_type": true,
+            "apply_for_parent": true,
+            "discount_amount": true,
+            "created_at": true,
+            "cart_message": true,
+            "date_from": true,
+            "date_to": true,
+            "products_info": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_mostviewed_pack_product": {
+        "column": {
+            "entity_id": true,
+            "pack_id": true,
+            "store_id": true,
+            "product_id": true
+        },
+        "index": {
+            "AMASTY_MOSTVIEWED_PACK_PRODUCT_PACK_ID": true,
+            "AMASTY_MOSTVIEWED_PACK_PRODUCT_STORE_ID": true,
+            "AMASTY_MOSTVIEWED_PACK_PRODUCT_PRODUCT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_MOSTVIEWED_PACK_PRD_PCK_ID_AMASTY_MOSTVIEWED_PACK_PCK_ID": true,
+            "AMASTY_MOSTVIEWED_PACK_PRD_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true,
+            "AMASTY_MOSTVIEWED_PACK_PRD_ENTT_ID_PACK_ID_STORE_ID_PRD_ID": true,
+            "AMASTY_MOSTVIEWED_PACK_PRD_ENTT_ID_PACK_ID_PRD_ID": true
+        }
+    },
+    "amasty_mostviewed_pack_store": {
+        "column": {
+            "pack_id": true,
+            "store_id": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AMASTY_MOSTVIEWED_PACK_STR_PCK_ID_AMASTY_MOSTVIEWED_PACK_PCK_ID": true,
+            "AMASTY_MOSTVIEWED_PACK_STR_STR_ID_STORE_STORE_ID": true
+        }
+    },
+    "amasty_mostviewed_pack_sales_history": {
+        "column": {
+            "pack_id": true,
+            "pack_name": true,
+            "order_id": true,
+            "qty": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        },
+        "index": {
+            "AMASTY_MSTVWD_PCK_SLS_HSTR_ORDR_ID": true
+        }
+    },
+    "amasty_mostviewed_pack_conditional_discounts": {
+        "column": {
+            "id": true,
+            "pack_id": true,
+            "number_items": true,
+            "discount_amount": true
+        },
+        "constraint": {
+          "PRIMARY": true,
+          "AMASTY_MOSTVIEWED_PACK_CND_DSC_PCK_ID_AMASTY_MOSTVIEWED_PACK_PCK_ID": true
+        }
+    },
+      "amasty_mostviewed_pack_sales": {
+        "column": {
+            "id": true,
+            "pack_id": true,
+            "pack_name": true,
+            "product_names": true,
+            "order_id": true,
+            "base_subtotal": true,
+            "base_grand_total": true,
+            "grand_total": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "sales_order_item": {
+        "index": {
+            "AMASTY_MOSTVIEWED_ORDER_ITEM_PRODUCT_ID": true
+        }
+    },
+    "amasty_mostviewed_product_bought_index": {
+        "column": {
+            "source_product_id": true,
+            "product_id": true,
+            "store_id": true,
+            "count": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_mostviewed_product_bought_index_replica": {
+        "column": {
+            "source_product_id": true,
+            "product_id": true,
+            "store_id": true,
+            "count": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_mostviewed_product_viewed_index": {
+        "column": {
+            "source_product_id": true,
+            "product_id": true,
+            "store_id": true,
+            "count": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "amasty_mostviewed_product_viewed_index_replica": {
+        "column": {
+            "source_product_id": true,
+            "product_id": true,
+            "store_id": true,
+            "count": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

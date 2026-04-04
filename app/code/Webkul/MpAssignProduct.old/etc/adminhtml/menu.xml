@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+	<menu>
+		<add id="Webkul_MpAssignProduct::product" title="Manage Assign Products" module="Webkul_MpAssignProduct" sortOrder="20" parent="Webkul_Marketplace::menu" action="mpassignproduct/product" resource="Webkul_MpAssignProduct::product"/>
+	</menu>
+</config>

@@ -1,0 +1,6 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- <type name="Magento\Catalog\Helper\Product\View">
+        <plugin name="ahy_buybox_view_plugin" type="Ahy\BuyBox\Plugin\Catalog\Helper\Product\View" sortOrder="1" disabled="false" />
+    </type> -->
+    <preference for="Magento\Catalog\Block\Product\View" type="Ahy\BuyBox\Block\Product\View" />
+</config>

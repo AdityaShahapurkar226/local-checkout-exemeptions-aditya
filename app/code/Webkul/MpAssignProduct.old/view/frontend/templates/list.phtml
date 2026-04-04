@@ -1,0 +1,155 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+    $productList = $block->getLayout()->createBlock(\Webkul\MpAssignProduct\Block\Product\ProductList::class);
+    $helper = $productList->getHelperObject();
+    $isPartner = $productList->getHelperObject('marketplaceHelper')->isSeller();
+    $collection = $block->getAllProducts();
+    $editAction = $block->getUrl('mpassignproduct/product/edit');
+    $deleteAction = $block->getUrl('mpassignproduct/product/delete');
+    $url = $block->getUrl('mpassignproduct/product/massdelete');
+?>
+<?php if ($isPartner == 1): ?>
+    <?php if ($collection->getSize()): ?>
+        <button title="<?= $block->escapeHtml(__('Delete')); ?>" class="wk-ap-del action primary">
+            <span><?= $block->escapeHtml(__("Delete")); ?></span>
+        </button>
+        <a href="<?= $block->escapeUrl($block->productViewUrl())?>">
+            <button title="<?= $block->escapeHtml(__('Assign New Product')); ?>" class="action primary">
+                <span><?= $block->escapeHtml(__("Assign New Product")); ?></span>
+            </button>
+        </a>
+        <fieldset class="fieldset wk-ap-fieldset">
+            <form method="post" action="<?= $block->escapeUrl($url); ?>" id="wk_mpassignproduct_delete_form">
+                <table class="data table wk-table-product-list">
+                    <thead>
+                        <th class="wk-check-first-td">
+                            <span>
+                                <input type="checkbox" name="mpselecctall" value="all" id="mpselecctall"/>
+                            </span>
+                        </th>
+                        <th><?= $block->escapeHtml(__("Thumbnail")); ?></th>
+                        <th><?= $block->escapeHtml(__("Name")); ?></th>
+                        <th><?= $block->escapeHtml(__("Description")); ?></th>
+                        <th><?= $block->escapeHtml(__("Price")); ?></th>
+                        <th><?= $block->escapeHtml(__("Qty")); ?></th>
+                        <th><?= $block->escapeHtml(__("Status")); ?></th>
+                        <th><?= $block->escapeHtml(__("Condition")); ?></th>
+                        <th><?= $block->escapeHtml(__("Action")); ?></th>
+                    </thead>
+                    <?php foreach ($collection as $product): ?>
+                        <?php
+                            $productUrl = $block->getProductUrl($product->getProductId());
+                            $_product = $block->getProduct($product->getAssignProductId());
+                            $stockItem = $_product->getExtensionAttributes()->getStockItem();
+                            $price = $productList->getFormatedPrice($product->getPrice());
+                            $condition = $product->getCondition();
+                        if ($condition == 1) {
+                            $condition = __("New");
+                        } else {
+                            $condition = __("Used");
+                        }
+                            $status = $product->getStatus();
+                        if ($status == 1) {
+                            $status = __("Approved");
+                        } else {
+                            $status = __("Unapproved");
+                        }
+                        $fullDescription = $block->escapeHtml($_product->getDescription());
+                        if (strlen($fullDescription) > 20) {
+                            $description = substr($fullDescription, 0, 19)."...";
+                        } else {
+                            $description = $fullDescription;
+                        }
+                        $image = "noimage.jpg";
+                        $image = $helper->getImageUrl($image);
+                        if (($_product->getThumbnail() != "no_selection") && $_product->getThumbnail()) {
+                            $image = $productList->imageHelperObj()->init($_product, 'product_listing_thumbnail')
+                            ->setImageFile($_product->getThumbnail())
+                            ->getUrl();
+                        }
+                        ?>
+                        <tr>
+                            <td class="col">
+                                <input class="wk-ap-del-chkbox" type="checkbox" name="wk_delete[]" 
+                                value="<?= $block->escapeHtml($product->getId()); ?>">
+                            </td>
+                            <td class="col"><img class="wk-ap-img2" src="<?= /* @noEscape */ $image; ?>" /></td>
+                            <td data-title="<?= $block->escapeHtml(__("Name")); ?>" 
+                            class="col">
+                            <a class="wk-ap-pn" 
+                            href="<?=$block->escapeUrl($productUrl); ?>" target="_blank">
+                            <?= $block->escapeHtml($_product->getName()); ?>
+                            </a></td>
+                            <td data-title="<?= $block->escapeHtml(__("Description")); ?>" 
+                            class="col" title="<?= $block->escapeHtml($fullDescription); ?>">
+                                <?= $block->escapeHtml($description); ?>
+                            </td>
+                            <td data-title="<?= $block->escapeHtml(__("Price")); ?>" class="col">
+                                <?= $block->escapeHtml($price); ?>
+                            </td>
+                            <td data-title="<?= $block->escapeHtml(__("Quantity")); ?>" class="col">
+                                <?= $block->escapeHtml($stockItem->getQty()); ?>
+                            </td>
+                            <td data-title="<?= $block->escapeHtml(__("Status")); ?>" class="col">
+                                <?= $block->escapeHtml($status); ?>
+                            </td>
+                            <td data-title="<?= $block->escapeHtml(__("Condition")); ?>" class="col">
+                                <?= $block->escapeHtml($condition); ?>
+                            </td>
+                            <td class="col">
+                                <span class="wk-ap-edit-item" data-id="<?= $block->escapeHtml($product->getId()); ?>">
+                                </span>
+                                <span class="wk-ap-delete-item" data-id="<?= $block->escapeHtml($product->getId()); ?>">
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            </form>
+        </fieldset>
+    <?php else: ?>
+        <div>
+            <?= $block->escapeHtml(__("No Product Found")); ?>
+            <a href="<?= $block->escapeUrl($block->productViewUrl()) ?>">
+                <button title="<?= $block->escapeHtml(__('Assign New Product')); ?>" class="action primary">
+                    <span><?= $block->escapeHtml(__("Assign New Product")); ?></span>
+                </button>
+            </a>
+        </div>
+    <?php endif ?>
+    <?php if ($block->getPagerHtml()): ?>
+        <div class="order-products-toolbar toolbar bottom">
+            <?= $block->getPagerHtml(); ?>
+        </div>
+    <?php endif ?>
+<?php else: ?>
+    <h2 class="wk-mp-error-msg">
+        <?= $block->escapeHtml(__("To Become Seller Please Contact to Admin.")); ?>
+    </h2>
+<?php endif; ?>
+<?php
+    $data = [];
+    $data["editTitle"] = __('Do you want to edit?');
+    $data["editAction"] = $editAction;
+    $data["deleteTitle"] = __('Do you want to delete product?');
+    $data["deleteAction"] = $deleteAction;
+    $data["msg"] = __('Please select products to delete.');
+    $data = json_encode($data);
+?>
+<script type="text/x-magento-init">
+    {
+        "body": {
+            "Webkul_MpAssignProduct/js/list": <?= /* @noEscape */ $data ?>
+        }
+    }
+</script>

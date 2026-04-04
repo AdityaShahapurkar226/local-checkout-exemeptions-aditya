@@ -1,0 +1,199 @@
+<?xml version="1.0" ?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+
+    <!-- Provider config -->
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">orchid_ffl_dealers_listing.orchid_ffl_dealers_listing_data_source</item>
+        </item>
+    </argument>
+
+    <!-- General settings -->
+    <settings>
+        <spinner>orchid_ffl_dealers_columns</spinner>
+        <deps>
+            <dep>orchid_ffl_dealers_listing.orchid_ffl_dealers_listing_data_source</dep>
+        </deps>
+        <buttons>
+            <button name="add">
+                <url path="ahy_efflapiintegration/orchid/new"/>
+                <class>primary</class>
+                <label translate="true">Add New Dealer</label>
+            </button>
+
+        </buttons>
+    </settings>
+
+    <!-- Data Source -->
+    <dataSource name="orchid_ffl_dealers_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">entity_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>Ahy_EfflApiIntegration::dealers</aclResource>
+
+        <dataProvider name="orchid_ffl_dealers_listing_data_source"
+                      class="Ahy\EfflApiIntegration\Ui\Component\DataProvider\DealersDataProvider">
+            <settings>
+                <requestFieldName>entity_id</requestFieldName>
+                <primaryFieldName>entity_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <!-- Toolbar -->
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+
+    <!-- Columns -->
+    <columns name="orchid_ffl_dealers_columns">
+        <settings>
+            <editorConfig>
+                <param name="selectProvider" xsi:type="string">
+                    orchid_ffl_dealers_listing.orchid_ffl_dealers_listing.orchid_ffl_dealers_columns.ids
+                </param>
+                <param name="enabled" xsi:type="boolean">true</param>
+                <param name="indexField" xsi:type="string">entity_id</param>
+                <param name="clientConfig" xsi:type="array">
+                    <item name="saveUrl" xsi:type="url" path="effl/dealers/inlineEdit"/>
+                    <item name="validateBeforeSave" xsi:type="boolean">false</item>
+                </param>
+            </editorConfig>
+            <childDefaults>
+                <param name="fieldAction" xsi:type="array">
+                    <item name="provider" xsi:type="string">
+                        orchid_ffl_dealers_listing.orchid_ffl_dealers_listing.orchid_ffl_dealers_columns_editor
+                    </item>
+                    <item name="target" xsi:type="string">startEdit</item>
+                    <item name="params" xsi:type="array">
+                        <item name="0" xsi:type="string">${ $.$data.rowIndex }</item>
+                        <item name="1" xsi:type="boolean">true</item>
+                    </item>
+                </param>
+            </childDefaults>
+        </settings>
+
+        <!-- Checkbox selections -->
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>entity_id</indexField>
+            </settings>
+        </selectionsColumn>
+
+        <!-- ID -->
+        <column name="entity_id">
+            <settings>
+                <filter>text</filter>
+                <sorting>asc</sorting>
+                <label translate="true">ID</label>
+            </settings>
+        </column>
+
+        <!-- Dealer Name -->
+        <column name="dealer_name">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Dealer Name</label>
+                <editor>
+                    <editorType>text</editorType>
+                </editor>
+            </settings>
+        </column>
+
+        <!-- FFL ID -->
+        <column name="ffl_id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">FFL ID</label>
+                <editor>
+                    <editorType>text</editorType>
+                </editor>
+            </settings>
+        </column>
+
+        <!-- Latitude -->
+        <column name="latitude">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Latitude</label>
+            </settings>
+        </column>
+
+        <!-- Longitude -->
+        <column name="longitude">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Longitude</label>
+            </settings>
+        </column>
+
+       <!-- Expiration Date -->
+        <column name="ffl_expiration_date" class="Magento\Ui\Component\Listing\Columns\Column">
+            <settings>
+                <label translate="true">Expiration Date</label>
+                <sortable>true</sortable>
+                <filter>text</filter> <!-- simple text filter -->
+            </settings>
+        </column>
+
+        <column name="street">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Street</label>
+            </settings>
+        </column>
+        <!-- City -->
+        <column name="city">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">City</label>
+            </settings>
+        </column>
+
+        <!-- State -->
+        <column name="state">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">State</label>
+            </settings>
+        </column>
+
+        <!-- ZIP Code -->
+        <column name="zip_code">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">ZIP Code</label>
+            </settings>
+        </column>
+
+        <!-- Is Active -->
+        <column name="is_ffl_active" class="Magento\Ui\Component\Listing\Columns\Column">
+            <settings>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Is Active</label>
+                <options class="Ahy\EfflApiIntegration\Model\Config\Source\OneZero"/>
+            </settings>
+        </column>
+
+
+        <!-- Actions column -->
+        <actionsColumn name="actions" class="Ahy\EfflApiIntegration\Ui\Component\Listing\Column\DealersActions">
+            <settings>
+                <indexField>entity_id</indexField>
+                <resizeEnabled>true</resizeEnabled>
+                <resizeDefaultWidth>107</resizeDefaultWidth>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

@@ -1,0 +1,140 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpAssignProduct
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+    
+    $collection = $block->getAllProducts();
+    $queryString = $block->getRequest()->getParam('search-product');
+?>
+<div class="search-product-sku-container">
+    <form method="get" 
+    action="<?= /* @noEscape */ $block->getUrl('mpassignproduct/upload/view'); ?>" 
+    id="wk_searchproduct_fom" enctype="multipart/form-data" data-mage-init='{"validation":{}}'>
+        <fieldset class="fieldset">
+            <?= /* @noEscape */ $block->getFormKeyBlockHtml(); ?>
+            <div class="field required">
+                <label for="attribute_set" class="label">
+                    <span><?= /* @noEscape */ __("Search For Product"); ?></span>
+                </label>
+                <div class="control">
+                    <input value="<?= /* @noEscape */$queryString ?>" type="text" 
+                    data-validate="{required:true}" class="input-text required-entry" 
+                    title="query" name="search-product" id="search-productquery" aria-required="true">
+                    <button class="button wk-ap-btn" type="submit">
+                        <span><span><?= /* @noEscape */ __("Search"); ?></span></span>
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <?php if ($collection->getSize()): ?>
+        <fieldset class="fieldset wk-ap-fieldset">
+            <table class="data table wk-table-product-list">
+                <thead>
+                    <th><?= $block->escapeHtml(__("Image")); ?></th>
+                    <th><?= $block->escapeHtml(__("Name")); ?></th>
+                    <th><?= $block->escapeHtml(__("Sku")); ?></th>
+                    <th><?= $block->escapeHtml(__("Associated Products")); ?></th>
+                </thead>
+                <?php foreach ($collection as $product):
+                
+                    ?>
+                    <tr>
+                        <td class="col wk-ap-img-col">
+                            <img src="<?= $block->escapeUrl($block->getProductImage($product)); ?>" />
+                        </td>
+                        <td class="col">
+                            <a href="<?= $block->escapeUrl($product->getProductUrl())?>">
+                            <?= $block->escapeHtml($product->getName()); ?></a>
+                        </td>
+                        <td class="col">
+                            <?= $block->escapeHtml($product->getSku()); ?>
+                        </td>
+                        <td class="col">
+                            <?php if ($product->getTypeId() == 'configurable'):?>
+                                <?php $childProducts = $block->getAssociatedProduct($product->getId());
+                                ?>
+                            <a class="check-associated-product" 
+                            data-productId = "<?= /*@noEscape*/ $product->getId()?>">
+                                <?= $block->escapeHtml(__('Check Associated Products')); ?></a>
+                            <div id="child-config-products-<?= /*@noEscape*/ $product->getId()?>" style="display:none">
+                            <table>
+                            <thead>
+                                
+                                <th><?= $block->escapeHtml(__("Name")); ?></th>
+                                <th><?= $block->escapeHtml(__("Sku")); ?></th>
+                                
+                            </thead>
+                            
+                                <?php foreach ($childProducts as $child):?>
+                                <tr>
+                                    <td>
+                                        <?= $block->escapeHtml($child->getName()); ?>
+                                    </td>
+                                    <td>
+                                        <?= $block->escapeHtml($child->getSku()); ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach;?>
+                            </table>
+                            </div>
+                            <?php endif;?>
+                        </td>
+                        
+                    </tr>
+                <?php endforeach;?>
+            </table>
+        </fieldset>
+    <?php elseif ($block->getRequest()->getParam('search-product')!= ''): ?>
+        <br>
+        <div class="wk-profile-alert">
+            <?= /* @noEscape */ __("No Product Found"); ?>
+        </div>
+<?php endif; ?>
+<?php if ($block->getPagerHtml()): ?>
+        <div class="order-products-toolbar toolbar bottom"><?= /* @noEscape */ $block->getPagerHtml(); ?></div>
+    <?php endif ?>
+</div>
+<script>
+    require(
+        [
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ],
+        function(
+            $,
+            modal
+        ) {
+            var options = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: true,
+                title: 'Associated Products',
+                buttons: [{
+                    text: $.mage.__('Close'),
+                    class: '',
+                    click: function () {
+                        this.closeModal();
+                    }
+                }]
+            };
+
+            
+            $(".check-associated-product").on('click',function(){ 
+                var productId = $(this).data('productid');
+                console.log(productId);
+                var popup = modal(options, $("#child-config-products-"+productId));
+                $("#child-config-products-"+productId).modal("openModal");
+            });
+
+        }
+    );
+</script>

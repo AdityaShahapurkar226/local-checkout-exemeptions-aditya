@@ -1,0 +1,92 @@
+{
+    "marketplace_assignproduct_items": {
+        "column": {
+            "id": true,
+            "product_id": true,
+            "owner_id": true,
+            "seller_id": true,
+            "qty": true,
+            "price": true,
+            "description": true,
+            "options": true,
+            "image": true,
+            "condition": true,
+            "type": true,
+            "created_at": true,
+            "status": true,
+            "shipping_country_charge": true,
+            "assign_product_id": true
+        },
+        "index": {
+            "MARKETPLACE_ASSIGNPRODUCT_ITEMS_ASSIGN_PRODUCT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MARKETPLACE_ASSIGNPRD_ITEMS_ASSIGN_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true
+        }
+    },
+    "marketplace_assignproduct_quote": {
+        "column": {
+            "id": true,
+            "item_id": true,
+            "owner_id": true,
+            "seller_id": true,
+            "qty": true,
+            "product_id": true,
+            "quote_id": true,
+            "assign_id": true,
+            "child_assign_id": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "marketplace_assignproduct_associated_products": {
+        "column": {
+            "id": true,
+            "product_id": true,
+            "parent_id": true,
+            "parent_product_id": true,
+            "qty": true,
+            "price": true,
+            "options": true,
+            "assign_product_id": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "marketplace_assignproduct_data": {
+        "column": {
+            "id": true,
+            "type": true,
+            "assign_id": true,
+            "value": true,
+            "date": true,
+            "is_default": true,
+            "status": true,
+            "store_view": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "marketplace_assignupload_profile": {
+        "column": {
+            "entity_id": true,
+            "seller_id": true,
+            "profile_name": true,
+            "csv_file": true,
+            "product_type": true,
+            "time": true,
+            "status": true,
+            "created_date": true,
+            "image_file": true,
+            "data_row": true,
+            "file_type": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

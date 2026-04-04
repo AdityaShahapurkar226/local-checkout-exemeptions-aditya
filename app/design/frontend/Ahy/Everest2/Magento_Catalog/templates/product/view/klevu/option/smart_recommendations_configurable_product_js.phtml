@@ -1,0 +1,204 @@
+<script>
+    function fetchConfigurableProductSwatches() {
+        return {
+            async fetchSwatches(productId) {
+                const swatchHtml = `
+                        <div role="status" class="md:flex">
+                            <div class="relative w-full md:order-2">
+                                <div
+                                    class="border-grey-300 hover:border-ahy-blue focus:border-ahy-blue border-ahy-blue relative mb-6 block h-[400px] w-full animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-white dark:bg-gray-700 md:h-[290px] md:w-[290px] md:shadow-[0px_20px_54px_0px_rgb(13_47_71_/_15%)]">
+                                </div>
+                            </div>
+                            <div class="order-1">
+                                <div class="flex items-center" style="min-height: 100px">
+                                    <div class="relative flex w-full flex-nowrap overflow-auto md:flex-col md:px-4">
+                                        <div class="mb-3 mr-2 flex shrink-0 md:mr-0">
+                                            <div
+                                                class="border-grey-300 hover:border-ahy-blue focus:border-ahy-blue border-ahy-blue block h-[59px] w-[59px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 mr-2 flex shrink-0 md:mr-0">
+                                            <div
+                                                class="border-grey-300 hover:border-ahy-blue focus:border-ahy-blue border-ahy-blue block h-[59px] w-[59px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 mr-2 flex shrink-0 md:mr-0">
+                                            <div
+                                                class="border-grey-300 hover:border-ahy-blue focus:border-ahy-blue border-ahy-blue block h-[59px] w-[59px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 mr-2 flex shrink-0 md:mr-0">
+                                            <div
+                                                class="border-grey-300 hover:border-ahy-blue focus:border-ahy-blue border-ahy-blue block h-[59px] w-[59px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="sr-only">Loading...</span>
+                        </div>
+        
+                        <div>
+                            <span class="block h-[26px] w-[50px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                            <span class="block h-[40px] w-[100px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                        </div>
+        
+                        <h2 class="title-font mb-4 block h-[35px] w-[180px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></h2>
+        
+                        <div class="border-container flex flex-col border-b border-t">
+                            <h2 class="title-font mb-4 mt-5 block h-[25px] w-[180px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></h2>
+                            <div class="flex gap-4">
+                                <div class="flex flex-col items-center gap-2 py-2">
+                                    <label
+                                        class="ring-offset-3 relative h-10 w-10 animate-[ahy-pulse_3s_linear_infinite] cursor-pointer rounded-full bg-gray-300 shadow-sm ring-1 ring-offset-white dark:bg-gray-700 sm:ring-2 sm:hover:ring">
+                                    </label>
+                                    <div class="swatches-price-ahy flex flex-col items-center">
+                                        <span class="block h-[26px] w-[40px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-center gap-2 py-2">
+                                    <label
+                                        class="ring-offset-3 relative h-10 w-10 animate-[ahy-pulse_3s_linear_infinite] cursor-pointer rounded-full bg-gray-300 shadow-sm ring-1 ring-offset-white dark:bg-gray-700 sm:ring-2 sm:hover:ring">
+                                    </label>
+                                    <div class="swatches-price-ahy flex flex-col items-center">
+                                        <span class="block h-[26px] w-[40px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-center gap-2 py-2">
+                                    <label
+                                        class="ring-offset-3 relative h-10 w-10 animate-[ahy-pulse_3s_linear_infinite] cursor-pointer rounded-full bg-gray-300 shadow-sm ring-1 ring-offset-white dark:bg-gray-700 sm:ring-2 sm:hover:ring">
+                                    </label>
+                                    <div class="swatches-price-ahy flex flex-col items-center">
+                                        <span class="block h-[26px] w-[40px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-center gap-2 py-2">
+                                    <label
+                                        class="ring-offset-3 relative h-10 w-10 animate-[ahy-pulse_3s_linear_infinite] cursor-pointer rounded-full bg-gray-300 shadow-sm ring-1 ring-offset-white dark:bg-gray-700 sm:ring-2 sm:hover:ring">
+                                    </label>
+                                    <div class="swatches-price-ahy flex flex-col items-center">
+                                        <span class="block h-[26px] w-[40px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-container flex flex-col border-b border-t">
+                            <h2 class="title-font mb-4 mt-5 block h-[25px] w-[180px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></h2>
+                            <div class="flex gap-4">
+                                <div class="flex flex-col items-center gap-2 py-2">
+                                    <div class="swatches-price-ahy flex flex-col items-center">
+                                        <span class="block h-[40px] w-[80px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-center gap-2 py-2">
+                                    <div class="swatches-price-ahy flex flex-col items-center">
+                                        <span class="block h-[40px] w-[80px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-center gap-2 py-2">
+                                    <div class="swatches-price-ahy flex flex-col items-center">
+                                        <span class="block h-[40px] w-[80px] animate-[ahy-pulse_3s_linear_infinite] rounded border-2 bg-gray-300 dark:bg-gray-700"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                    `;
+                const swatchHtmlEl = document.getElementById("swatch_html");
+                swatchHtmlEl.innerHTML = swatchHtml;
+                try {
+                    const response = await fetch(`${BASE_URL}ahy_themecustomization/index/GetProductSwatchesDetails?product_id=` + productId);
+                    const data = await response.json();
+        
+                    if (data.success === true) {
+                        const oldScriptElem = document.getElementById("swatchesScriptContentDynamic");
+                        if (oldScriptElem) {
+                            oldScriptElem.parentNode.removeChild(oldScriptElem);
+                        }
+        
+                        const scriptElem = document.createElement("script");
+                        scriptElem.type = "text/javascript";
+                        scriptElem.id = "swatchesScriptContentDynamic";
+                        scriptElem.innerHTML = data.swatch_script;
+                        document.body.appendChild(scriptElem);
+        
+                        const scriptPriceElem = document.createElement("script");
+                        scriptPriceElem.type = "text/javascript";
+                        scriptPriceElem.id = "swatchesPriceScript";
+                        scriptPriceElem.innerHTML = data.product_price_script;
+                        document.body.appendChild(scriptPriceElem);
+        
+                        const scriptSwatchGalleryElem = document.createElement("script");
+                        scriptSwatchGalleryElem.type = "text/javascript";
+                        scriptSwatchGalleryElem.id = "swatchesGalleryScript";
+                        scriptSwatchGalleryElem.innerHTML = data.product_swatch_gallery_script;
+                        document.body.appendChild(scriptSwatchGalleryElem);
+        
+                        swatchHtmlEl.innerHTML = data.swatch_html;
+        
+                        const productPriceSwatch = document.getElementById("product-price-ahy");
+                        productPriceSwatch.innerHTML = data.product_price_html;
+        
+                        const productSwatchGalleryHtml = document.getElementById("product-swatch-gallery-html");
+                        productSwatchGalleryHtml.innerHTML = data.product_swatch_gallery_html;
+                        // remove gallery image class
+                        const element = document.getElementById("product-swatch-gallery-html");
+                        const innerHtml = element.innerHTML;
+                        const modifiedHtml = innerHtml.replace(/<div[^>]*\bclass\s*=\s*(['"])(?:(?!\1)[^>])*\border-1\s+w-full\s+md:w-5\/12\s+lg:w-1\/2\s+(?:(?!\1)[^>])*\1[^>]*>/gi, "<div>");
+                        // remove meet marcus section from the response
+                        element.innerHTML = modifiedHtml;
+                        const kuProductCards = document.querySelectorAll('.ku-product-card');
+                        if (kuProductCards) {
+                            kuProductCards.forEach((kuProductCard) => {
+                                const meetMarcusElement = kuProductCard.querySelector('#meet-marcus');
+                                if (meetMarcusElement) {
+                                    meetMarcusElement.parentNode.removeChild(meetMarcusElement);
+                                }
+                            });
+                        }
+                        const kuAddToCartButtonEl = document.querySelector(".kuAddtocart.quickview-sidecart");
+                        kuAddToCartButtonEl.style.display = "block";
+                    } else {
+                        swatchHtmlEl.innerHTML = data.message;
+        
+                        const scriptSwatchGalleryElem = document.createElement("script");
+                        scriptSwatchGalleryElem.type = "text/javascript";
+                        scriptSwatchGalleryElem.id = "swatchesGalleryScript";
+                        scriptSwatchGalleryElem.innerHTML = data.product_swatch_gallery_script;
+                        document.body.appendChild(scriptSwatchGalleryElem);
+        
+                        const productSwatchGalleryHtml = document.getElementById("product-swatch-gallery-html");
+                        productSwatchGalleryHtml.innerHTML = data.product_swatch_gallery_html;
+                        // remove gallery image class
+                        const element = document.getElementById("product-swatch-gallery-html");
+                        const innerHtml = element.innerHTML;
+                        const modifiedHtml = innerHtml.replace(/<div[^>]*\bclass\s*=\s*(['"])(?:(?!\1)[^>])*\border-1\s+w-full\s+md:w-5\/12\s+lg:w-1\/2\s+(?:(?!\1)[^>])*\1[^>]*>/gi, "<div>");
+                        // remove meet marcus section from the response
+                        element.innerHTML = modifiedHtml;
+                        const kuProductCards = document.querySelectorAll('.ku-product-card');
+                        if (kuProductCards) {
+                            kuProductCards.forEach((kuProductCard) => {
+                                const meetMarcusElement = kuProductCard.querySelector('#meet-marcus');
+                                if (meetMarcusElement) {
+                                    meetMarcusElement.parentNode.removeChild(meetMarcusElement);
+                                }
+                            });
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching swatches:", error);
+                }
+            }
+        }
+    }
+</script>
+<style>
+    @keyframes ahy-pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: .5;
+        }
+    }
+</style>

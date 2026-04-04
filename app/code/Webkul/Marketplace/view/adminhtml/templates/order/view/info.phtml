@@ -1,0 +1,34 @@
+<?php
+$fflDealer   = $order->getData('ffl_dealer');
+$fflDealerId = $order->getData('selected_ffl_dealer_id');
+?>
+
+<?php if ($fflDealer || $fflDealerId): ?>
+    <div class="block block-order-details-view">
+        <div class="block-title">
+            <pre><?php var_dump($order->getData()); ?></pre>
+
+            <strong><?= $block->escapeHtml(__('FFL Dealer Information')) ?></strong>
+        </div>
+        <div class="block-content">
+            <div class="box">
+                <div class="box-content">
+                    <div class="wk-row">
+                        <span class="label">
+                            <?= $block->escapeHtml(__('FFL Dealer')) ?>:
+                            <?= $block->escapeHtml($fflDealer ?: 'N/A') ?>
+                        </span>
+                    </div>
+                </div>
+                <?php if ($fflDealerId): ?>
+                    <div class="box-content">
+                        <div class="wk-row">
+                            <span class="label"><?= $block->escapeHtml(__('FFL Dealer ID')) ?>:</span>
+                            <span class="value"><?= $block->escapeHtml($fflDealerId) ?></span>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>

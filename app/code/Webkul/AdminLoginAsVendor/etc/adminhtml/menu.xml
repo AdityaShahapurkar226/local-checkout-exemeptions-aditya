@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_AdminLoginAsVendor
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Webkul_AdminLoginAsVendor::adminloginasvendor" title="Admin Login As Vendor" module="Webkul_AdminLoginAsVendor" translate="title" sortOrder="10" resource="Webkul_AdminLoginAsVendor::adminloginasvendor"/>
+        
+        <add id="Webkul_AdminLoginAsVendor::index" title="Manage Login Attempts" module="Webkul_AdminLoginAsVendor" translate="title" sortOrder="1" parent="Webkul_AdminLoginAsVendor::adminloginasvendor" action="adminloginasvendor/index" resource="Webkul_AdminLoginAsVendor::index"/>
+
+        <add id="Webkul_AdminLoginAsVendor::menu" title="Menu" module="Webkul_AdminLoginAsVendor" translate="title" sortOrder="10" parent="Webkul_AdminLoginAsVendor::adminloginasvendor" dependsOnModule="Webkul_AdminLoginAsVendor" resource="Webkul_AdminLoginAsVendor::adminloginasvendor"/>
+
+        <add id="Webkul_AdminLoginAsVendor::adminloginasvendor_support" title="Support" translate="title" module="Webkul_AdminLoginAsVendor" sortOrder="200" parent="Webkul_AdminLoginAsVendor::adminloginasvendor" resource="Webkul_AdminLoginAsVendor::adminloginasvendor_support"/>
+
+        <add id="Webkul_AdminLoginAsVendor::adminloginasvendor_userguide" title="User Guide" translate="title" module="Webkul_AdminLoginAsVendor" sortOrder="100" parent="Webkul_AdminLoginAsVendor::adminloginasvendor_support" action="adminloginasvendor/support/blog" resource="Webkul_AdminLoginAsVendor::adminloginasvendor_userguide"/>
+
+        <add id="Webkul_AdminLoginAsVendor::adminloginasvendor_extension" title="Store Extension" translate="title" module="Webkul_AdminLoginAsVendor" sortOrder="200" parent="Webkul_AdminLoginAsVendor::adminloginasvendor_support" action="adminloginasvendor/support/store" resource="Webkul_AdminLoginAsVendor::adminloginasvendor_extension"/>
+
+        <add id="Webkul_AdminLoginAsVendor::adminloginasvendor_uvdesk" title="Ticket/Customisations" translate="title" module="Webkul_AdminLoginAsVendor" sortOrder="300" parent="Webkul_AdminLoginAsVendor::adminloginasvendor_support" action="adminloginasvendor/support/uvdesk" resource="Webkul_AdminLoginAsVendor::adminloginasvendor_uvdesk"/>
+
+        <add id="Webkul_AdminLoginAsVendor::adminloginasvendor_services" title="Services" translate="title" module="Webkul_AdminLoginAsVendor" sortOrder="300" parent="Webkul_AdminLoginAsVendor::adminloginasvendor_support" action="adminloginasvendor/support/services" resource="Webkul_AdminLoginAsVendor::adminloginasvendor_services"/>
+
+        <add id="Webkul_AdminLoginAsVendor::adminloginasvendor_reviews" title="Reviews" translate="title" module="Webkul_AdminLoginAsVendor" sortOrder="300" parent="Webkul_AdminLoginAsVendor::adminloginasvendor_support" action="adminloginasvendor/support/storereview" resource="Webkul_AdminLoginAsVendor::adminloginasvendor_reviews"/>
+    </menu>
+</config>

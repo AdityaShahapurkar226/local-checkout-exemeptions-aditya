@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_AdminLoginAsVendor
+ * @author    Webkul
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Ui/etc/ui_configuration.xsd">
+    <container name="listing_top"/>
+    <columns name="marketplace_sellers_columns">
+        <actionsColumn name="login_as_vendor" class="Webkul\AdminLoginAsVendor\Ui\Component\Listing\Columns\ManageAction">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="urlEntityParamName" xsi:type="string">seller_id</item>
+                    <item name="label" xsi:type="string" translate="true">Login As Vendor</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="number">200</item>
+                </item>
+            </argument>
+        </actionsColumn>
+    </columns>
+</listing>

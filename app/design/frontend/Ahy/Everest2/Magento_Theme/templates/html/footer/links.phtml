@@ -1,0 +1,588 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Customer;
+use Hyva\Theme\ViewModel\StoreConfig;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var Customer $customer */
+$customer = $viewModels->require(Customer::class);
+/** @var StoreConfig $storeConfig */
+$storeConfig = $viewModels->require(StoreConfig::class);
+?>
+<div x-on:resize.window="isMobile = (window.innerWidth < 768) ? true : false" class="border-t md:px-4 md:pt-10 md:pb-5 md:hidden" x-data="{isMobile: (window.innerWidth < 768) ? true : false}">
+    <template x-if="isMobile">
+        <div class="flex flex-wrap md:max-w-screen-lg mx-auto mb-8">
+            <section class="relative text-gray-700 font-light font-light border-b border-white px-4 pb-4 md:py-3 w-full md:border-none md:w-1/4">
+                <div class="md:hidden">
+                    <button onclick="toggleFooterSection(event)" class="footer-dropdown-title font-bold text-lg leading-6 text-ahy-blue flex py-4 w-full flex justify-between items-center" type="button">
+                            Shop Everest
+                    </button>
+                </div>
+                <article class="h-0 md:h-auto -mt-4 md:mt-0 overflow-hidden footer-accordion">
+                    <ul role="list" class="mt-6 space-y-4">
+                        <li>
+                            <a href="/optics.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Optics</a>
+                        </li>
+
+                        <li>
+                            <a href="/archery-all.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Archery</a>
+                        </li>
+
+                        <li>
+                            <a href="/camping-and-outdoor-gear.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Camping Gear</a>
+                        </li>
+
+                        <!-- <li>
+                            <a href="/shooting-sports.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Shooting Sports</a>
+                        </li> -->
+
+                        <li>
+                            <a href="/fishing-gear.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Fishing Gear</a>
+                        </li>
+
+                        <li>
+                            <a href="/boating-gear.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Boating Gear</a>
+                        </li>
+
+                        <li>
+                            <a href="/hunting-gear.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Hunting Gear</a>
+                        </li>
+
+                        <li>
+                            <a href="/survival-gear.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Survival Gear</a>
+                        </li>
+
+                        <li>
+                            <a href="/apparel.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Apparel</a>
+                        </li>
+
+                        <li x-data="{ text: window.innerWidth <= 768 ? 'Explore All' : 'Explore All Passions' }" x-on:resize.window="text = window.innerWidth <= 768 ? 'Explore All' : 'Explore All Passions'">
+                            <a href="/all-passions" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6" :title="text" x-text="text"></a>
+                        </li>
+                    </ul>
+                </article>
+            </section>
+            <section class="relative text-gray-700 font-light font-light border-b border-white px-4 pb-4 md:py-3 w-full md:border-none md:w-1/4">
+                <div class="md:hidden">
+                    <button onclick="toggleFooterSection(event)" class="footer-dropdown-title font-bold text-lg leading-6 text-ahy-blue flex py-4 w-full flex justify-between items-center" type="button">
+                        Get to Know Us
+                    </button>
+                </div>
+                <article class="h-0 md:h-auto -mt-4 md:mt-0 overflow-hidden">
+                    <ul role="list" class="mt-6 space-y-4">
+                        <li>
+                            <a href="/about-us" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">About Us</a>
+                        </li>
+
+                        <li>
+                            <a href="/storefront" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Become a Seller</a>
+                        </li>
+
+                        <li>
+                            <a href="/partners" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Advertising Resources</a>
+                        </li>
+
+
+                        <li>
+                            <a href="/creator-store" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Creator Stores</a>
+                        </li>
+
+                        <li>
+                            <a href="/give-back-fund" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Give Back Fund</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/investor" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Investor Relations</a>
+                        </li>
+
+                        <li>
+                            <a href="/accessibility-policy" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Accessibility Policy</a>
+                        </li>
+
+                        <li>
+                            <a href="/privacy-policy" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Privacy Policy</a>
+                        </li>
+
+                        <li>
+                            <a href="/terms-and-conditions" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Terms & Conditions</a>
+                        </li>
+
+                        <!-- <li>
+                            <a href="/storefront" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Become a Ambassador</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Creator Store Signup</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Careers</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Investors</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Press</a>
+                        </li> -->
+                    </ul>
+                </article>
+            </section>
+            <section class="relative text-gray-700 font-light font-light border-b border-white px-4 pb-4 md:py-3 w-full md:border-none md:w-1/4">
+                <div class="md:hidden">
+                    <button onclick="toggleFooterSection(event)" class="footer-dropdown-title font-bold text-lg leading-6 text-ahy-blue flex py-4 w-full flex justify-between items-center" type="button">
+                        Customer Service
+                    </button>
+                </div>
+                <article class="h-0 md:h-auto -mt-4 md:mt-0 overflow-hidden">
+                    <ul role="list" class="mt-6 space-y-4">
+                        <li>
+                            <a href="/customer/account/" class="leading-6 capitalize font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">My Account</a>
+                        </li>
+
+                        <li>
+                            <a href="/sales/order/history/" class="leading-6 capitalize font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">order status</a>
+                        </li>
+
+                        <li>
+                            <a href="/wishlist/" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">My Wishlist</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/contact" class="leading-6 capitalize font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Contact us</a>
+                        </li>
+
+                        <li>
+                            <a href="/returns" class="leading-6 capitalize font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">returns</a>
+                        </li>
+
+                        <li>
+                            <a href="/shipping-policy" class="leading-6 capitalize font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Shipping policy</a>
+                        </li>
+
+                        <li>
+                            <a href="/price-match-guarantee" class="leading-6 capitalize font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Price match guarantee</a>
+                        </li>
+
+                        <li>
+                            <a href="/marketplace/account/login/" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Are You a Seller? Login in Here</a>
+                        </li>
+
+                        <li>
+                            <a href="/creator-program" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Creator Hub</a>
+                        </li>
+                    </ul>
+                </article>
+            </section>
+            <section class="relative text-gray-700 font-light font-light border-b border-white px-4 pb-4 md:py-3 w-full md:border-none md:w-1/4">
+                <div class="md:hidden">
+                    <button onclick="toggleFooterSection(event)" class="footer-dropdown-title font-bold text-lg leading-6 text-ahy-blue flex py-4 w-full flex justify-between items-center" type="button">
+                        Everest Digest
+                    </button>
+                </div>
+                <article class="h-0 md:h-auto -mt-4 md:mt-0 overflow-hidden">
+                    <ul role="list" class="mt-6 space-y-4">
+                        <li>
+                            <a href="/everestdigest/category/articles/"  target="_blank" rel="noopener noreferrer" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Outdoor Tips</a>
+                        </li>
+
+                        <li>
+                            <a href="/everestdigest/category/hunting/"  target="_blank" rel="noopener noreferrer" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Hunting Tips</a>
+                        </li>
+
+                        <li>
+                            <a href="/everestdigest/category/fishing/"  target="_blank" rel="noopener noreferrer" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Fishing Tips</a>
+                        </li>
+
+                        <li>
+                            <a href="/everestdigest/category/camping/"  target="_blank" rel="noopener noreferrer" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Camping Tips</a>
+                        </li>
+
+                        <li>
+                            <a href="/everestdigest" target="_blank" rel="noopener noreferrer"  class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">More Tips</a>
+                        </li>
+                    </ul>
+                </article>
+            </section>
+            <section class="relative hidden text-gray-700 hidden font-light font-light border-b border-white px-4 pb-4 md:py-3 w-full md:border-none md:w-1/4">
+                <div class="md:hidden">
+                    <button onclick="toggleFooterSection(event)" class="footer-dropdown-title font-bold text-lg leading-6 text-ahy-blue flex py-4 w-full flex justify-between items-center" type="button">
+                        Sellers
+                    </button>
+                </div>
+                <article class="h-0 md:h-auto -mt-4 md:mt-0 overflow-hidden">
+                    <ul role="list" class="mt-6 space-y-4">
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Explore Selling on Everest</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">FAQs & Pricing</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Seller Dashboard</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Seller Success</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Seller App</a>
+                        </li>
+                    </ul>
+                </article>
+            </section>
+            <section class="relative hidden text-gray-700 font-light font-light border-b border-white px-4 pb-4 md:py-3 w-full md:border-none md:w-1/4">
+                <div class="md:hidden">
+                    <button onclick="toggleFooterSection(event)" class="footer-dropdown-title font-bold text-lg leading-6 text-ahy-blue flex py-4 w-full flex justify-between items-center">
+                        <span class="flex">Caliber Nation<span class="flex items-center"><img src="/media/icons/caliber-nation-icon.svg" onclick="toggleFooterSectionImage(event)" alt="" class="w-4 h-4 ml-2"></span></span>
+                    </button>
+                </div>
+                <article class="h-0 md:h-auto -mt-4 md:mt-0 overflow-hidden">
+                    <ul role="list" class="mt-6 space-y-4">
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Manage Membership</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">How to save $3,000 Yearly</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Benefits Overviews</a>
+                        </li>
+                    </ul>
+                </article>
+            </section>
+            <section class="relative hidden text-gray-700 font-light font-light border-b border-white px-4 pb-4 md:py-3 w-full md:border-none md:w-1/4">
+                <div class="md:hidden">
+                    <button onclick="toggleFooterSection(event)" class="footer-dropdown-title font-bold text-lg leading-6 text-ahy-blue flex py-4 w-full flex justify-between items-center" type="button">
+                        Caliber Video
+                    </button>
+                </div>
+                <article class="h-0 md:h-auto -mt-4 md:mt-0 overflow-hidden">
+                    <ul role="list" class="mt-6 space-y-4">
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Watch Outdoor Content</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Documentaries</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Adventure</a>
+                        </li>
+                    </ul>
+                </article>
+            </section>
+        </div>
+    </template>
+</div>
+
+<div x-on:resize.window="isDesktop = (window.innerWidth >= 768) ? true : false" class="md:col-span-2" x-data="{isDesktop: (window.innerWidth >= 768) ? true : false}">
+    <template x-if="isDesktop">
+        <div class="grid grid-cols-2 gap-8 xl:col-span-2">
+            <div class="md:grid md:grid-cols-2 md:gap-8">
+                <div>
+                    <h3 class="font-bold text-lg leading-6 text-ahy-blue">Shop Everest</h3>
+                    <ul role="list" class="mt-6 space-y-4">
+                        <li>
+                            <a href="/optics.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Optics</a>
+                        </li>
+
+                        <li>
+                            <a href="/archery-all.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Archery</a>
+                        </li>
+
+                        <li>
+                            <a href="/camping-and-outdoor-gear.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Camping Gear</a>
+                        </li>
+
+                        <!-- <li>
+                            <a href="/shooting-sports.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Shooting Sports</a>
+                        </li> -->
+
+                        <li>
+                            <a href="/fishing-gear.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Fishing Gear</a>
+                        </li>
+
+                        <li>
+                            <a href="/boating-gear.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Boating Gear</a>
+                        </li>
+
+                        <li>
+                            <a href="/hunting-gear.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Hunting Gear</a>
+                        </li>
+
+                        <li>
+                            <a href="/survival-gear.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Survival Gear</a>
+                        </li>
+
+                        <li>
+                            <a href="/apparel.html" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Apparel</a>
+                        </li>
+
+                        <li  x-data="{ text: window.innerWidth <= 768 ? 'Explore All' : 'Explore All Passions' }" x-on:resize.window="text = window.innerWidth <= 768 ? 'Explore All' : 'Explore All Passions'">
+                            <a href="/all-passions" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6" :title="text" x-text="text"></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mt-10 md:mt-0">
+                    <h3 class="font-bold text-lg leading-6 text-ahy-blue">Get to Know Us</h3>
+                    <ul role="list" class="mt-6 space-y-4">
+                        <li>
+                            <a href="/about-us" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">About Us</a>
+                        </li>
+
+                        <li>
+                            <a href="/storefront" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Become a Seller</a>
+                        </li>
+
+                        <li>
+                            <a href="/partners" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Advertising Resources</a>
+                        </li>
+
+
+                        <li>
+                            <a href="/creator-store" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Creator Stores</a>
+                        </li>
+
+                        <li>
+                            <a href="/give-back-fund" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Give Back Fund</a>
+                        </li>
+
+                        <li>
+                            <a href="/investor" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Investor Relations</a>
+                        </li>
+
+                        <li>
+                            <a href="/accessibility-policy" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Accessibility Policy</a>
+                        </li>
+
+                        <li>
+                            <a href="/privacy-policy" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Privacy Policy</a>
+                        </li>
+
+                        <li>
+                            <a href="/terms-and-conditions" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Terms & Conditions</a>
+                        </li>
+
+                        <!-- <li>
+                            <a href="/storefront" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Become a Ambassador</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Creator Store Signup</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Careers</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Investors</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Press</a>
+                        </li> -->
+                    </ul>
+                </div>
+            </div>
+            <div class="md:grid md:grid-cols-2 md:gap-8">
+                <div>
+                    <h3 class="font-bold text-lg leading-6 text-ahy-blue">Customer Service</h3>
+                    <ul role="list" class="mt-6 space-y-4">
+                        <li>
+                            <a href="/customer/account/" class="leading-6 capitalize font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">My Account</a>
+                        </li>
+
+                        <li>
+                            <a href="/sales/order/history/" class="leading-6 capitalize font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">order status</a>
+                        </li>
+
+                        <li>
+                            <a href="/contact" class="leading-6 capitalize font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Contact us</a>
+                        </li>
+
+                        <li>
+                            <a href="/returns" class="leading-6 capitalize font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">returns</a>
+                        </li>
+
+                        <li>
+                            <a href="/shipping-policy" class="leading-6 capitalize font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Shipping policy</a>
+                        </li>
+
+                        <li>
+                            <a href="/price-match-guarantee" class="leading-6 capitalize font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Price match guarantee</a>
+                        </li>
+
+                        <li>
+                            <a href="/marketplace/account/login/" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Are You a Seller? Login in Here</a>
+                        </li>
+
+                        <li>
+                            <a href="/creator-program" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Creator Hub</a>
+                        </li>
+                    </ul>
+                    <!-- <h3 class="font-bold hidden text-lg leading-6 text-ahy-blue mt-6">Sellers</h3>
+                    <ul role="list" class="mt-6 hidden space-y-4">
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Explore Selling on Everest</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">FAQs & Pricing</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Seller Dashboard</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Seller Success</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Seller App</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Press</a>
+                        </li>  -->
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg leading-6 text-ahy-blue">Everest Digest</h3>
+                    <ul role="list" class="mt-6 space-y-4">
+                        <li>
+                            <a href="/everestdigest/category/articles/" target="_blank" rel="noopener noreferrer" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Outdoor Tips</a>
+                        </li>
+
+                        <li>
+                            <a href="/everestdigest/category/hunting/" target="_blank" rel="noopener noreferrer" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Hunting Tips</a>
+                        </li>
+
+                        <li>
+                            <a href="/everestdigest/category/fishing/" target="_blank" rel="noopener noreferrer" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Fishing Tips</a>
+                        </li>
+
+                        <li>
+                            <a href="/everestdigest/category/camping/" target="_blank" rel="noopener noreferrer" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Camping Tips</a>
+                        </li>
+
+                        <li>
+                            <a href="/everestdigest" target="_blank" rel="noopener noreferrer" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">More Tips</a>
+                        </li>
+                    </ul>
+                    <h3 class="font-bold hidden text-lg leading-6 text-ahy-blue mt-6">Sellers</h3>
+                    <ul role="list" class="mt-6 hidden space-y-4">
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Explore Selling on Everest</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">FAQs & Pricing</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Seller Dashboard</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Seller Success</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Seller App</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mt-10 md:mt-0 hidden">
+                    <h3 class="font-bold text-lg leading-6 text-ahy-blue flex items-center">Caliber Nation <span class="ml-2"><img src="/media/icons/caliber-nation-icon.svg" alt="" class="w-4 h-4"></span></h3>
+                    <ul role="list" class="mt-6 space-y-4">
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Manage Membership</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">How to save $3,000 Yearly</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Benefits Overviews</a>
+                        </li>
+                    </ul>
+                    <h3 class="font-bold text-lg leading-6 text-ahy-blue mt-6">Caliber Video</h3>
+                    <ul role="list" class="mt-6 space-y-4">
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Watch Outdoor Content</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Documentaries</a>
+                        </li>
+
+                        <li>
+                            <a href="#" class="leading-6 font-medium  text-ahy-blue hover:text-gray-900 hover:underline underline-offset-6">Adventure</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>
+<script>
+    function toggleFooterSection(e) {
+        let list = e.target.parentElement.parentElement.querySelector(
+            "article"
+        );
+        if (list == null){
+            list = e.target.parentElement.parentElement.parentElement.querySelector("article");
+            if (list.classList.contains("h-0")) {
+                list.classList.remove("h-0");
+            } else {
+                list.classList.add("h-0");
+            }
+        }else if (list.classList.contains("h-0")) {
+            list.classList.remove("h-0");
+        } else {
+            list.classList.add("h-0");
+        }
+    }
+    function toggleFooterSectionImage(e) {
+        let list = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.querySelector("article");
+
+        if (list.classList.contains("h-0")) {
+            list.classList.remove("h-0");
+        } else {
+            list.classList.add("h-0");
+        }
+    }
+</script>
+<style>
+    .footer-dropdown-title:after {
+        content: '';
+        background: url(/media/icons/arrow-nav.svg) no-repeat;
+        padding: 0.5rem;
+        background-size: contain;
+    }
+</style>

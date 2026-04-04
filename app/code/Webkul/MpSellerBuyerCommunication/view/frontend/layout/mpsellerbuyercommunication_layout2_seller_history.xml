@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software
+ *
+ * @category    Webkul
+ * @package     Webkul_MpSellerBuyerCommunication
+ * @author      Webkul
+ * @copyright   Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license     https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="seller-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Webkul_MpSellerBuyerCommunication::css/mpsellerbuyercomm.css"/>
+        <css src="Webkul_Marketplace::css/wk_block.css"/>
+        <css src="Webkul_Marketplace::css/style.css"/>
+        <css src="Webkul_Marketplace::css/product.css"/>
+        <css src="Webkul_Marketplace::css/layout.css"/>
+    </head>
+    <body>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">My Communication History</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="seller.content">
+            <block class="Webkul\MpSellerBuyerCommunication\Block\Seller\History" name="mpsellerbuyercommunication_layout2_seller_history" template="seller/history.phtml" cacheable="false"/>
+        </referenceContainer>
+    </body>
+</page>
+

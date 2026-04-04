@@ -1,0 +1,39 @@
+<!--@subject Re:Customer Query Notification : {{var myvar2}}  @-->
+<!--@vars {
+"var this.getUrl($store, 'customer/account/')":"Customer Account URL",
+"var customer.email":"Customer Email",
+"var customer.name":"Customer Name",
+"var myvar1":"Customer Name",
+"var myvar2":"Subject",
+"var myvar3":"Customer Name",
+"var myvar4|raw":"Message"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <p class="greeting">{{trans "%customer_name," customer_name=$myvar1}}</p>
+        </td>
+    </tr>
+    <tr class="email-summary">
+        <td>
+            {{trans "A Reply mail has come from " }}{{var myvar3}}{{trans " regarding query."}}
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <table class="query-details">
+                <tr>
+                    <td class="query-details">
+                        <h3>{{trans "Message"}}</h3>
+                        <p>{{var myvar4|raw}}</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}
